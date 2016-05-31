@@ -19,7 +19,7 @@ class TableCrud extends Command
      *
      * @var string
      */
-    protected $signature = 'laracogs:table-crud {table} {--api} {--migration} {--bootstrap} {--semantic}';
+    protected $signature = 'dwijsbs:table-crud {table} {--api} {--migration} {--bootstrap} {--semantic}';
 
     /**
      * The console command description.

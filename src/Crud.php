@@ -35,7 +35,7 @@ class Crud extends Command
      */
     public function handle()
     {
-        //$section = false;
+        $section = false;
         $crudGenerator = new CrudGenerator();
         $filesystem = new Filesystem();
 
@@ -95,7 +95,7 @@ class Crud extends Command
             '_ucCamel_casePlural_'       => ucfirst(str_plural(camel_case($table))),
         ];
 
-        $templateDirectory = __DIR__.'/../Templates';
+        $templateDirectory = __DIR__.'/Templates';
 
         if (is_dir(base_path('resources/laracogs/crud'))) {
             $templateDirectory = base_path('resources/laracogs/crud');
