@@ -1,13 +1,13 @@
 <?php
 
-namespace Yab\Laracogs\Console;
+namespace Dwijitso\Sbscrud\Console;
 
 use Config;
 use Artisan;
 use Illuminate\Console\Command;
-use Yab\Laracogs\Utilities\FormMaker;
+// use Dwijitso\Sbscrud\Utilities\FormMaker;
 use Illuminate\Filesystem\Filesystem;
-use Yab\Laracogs\Generators\CrudGenerator;
+use Dwijitso\Sbscrud\CrudGenerator;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 
 class TableCrud extends Command
@@ -75,6 +75,7 @@ class TableCrud extends Command
      */
     private function tableDefintion($table)
     {
+        /*
         $columnStringArray = [];
         $formMaker = new FormMaker();
         $columns = $formMaker->getTableColumns($table, true);
@@ -90,5 +91,6 @@ class TableCrud extends Command
         $columnString = implode(',', $columnStringArray);
 
         return $columnString;
+        */
     }
 }
