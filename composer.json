@@ -1,0 +1,29 @@
+ {
+    "name": "dwijitso/sbscrud",
+    "description": "This is proprietory package of Dwij SBS for for Dwij SBS for CRUD generation from defined models.",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/support": "5.*",
+        "laravelcollective/html": "^5.2|^5.1",
+        "illuminate/container": "^5.2|^5.1"
+    },
+    "authors": [
+        {
+            "name": "Ganesh Bhosale",
+            "email": "gdb.sci123@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dwijitso\\Sbscrud\\": "packages/dwijitso/sbscrud/src/",
+            "App\\": "app/"
+        },
+        "files": [
+        //   "src/Helpers/form_maker.php",
+        //   "src/Helpers/input_maker.php",
+        //   "src/Helpers/crypto.php"
+        ]
+    },
+    "minimum-stability": "stable"
+}
