@@ -15,11 +15,11 @@ class SbsCrudProvider extends ServiceProvider
      */
     public function boot()
     {
-        // @mkdir(base_path('resources/laracogs/crud'));
-        // $this->publishes([
-        //     __DIR__.'/Templates' => base_path('resources/laracogs/crud'),
-        //     __DIR__.'/Starter/config/laracogs.php' => base_path('config/laracogs.php'),
-        // ]);
+        @mkdir(base_path('resources/laracogs/crud'));
+        $this->publishes([
+            __DIR__.'/Templates' => base_path('resources/sbscrud'),
+            __DIR__.'/config.php' => base_path('config/sbscrud.php'),
+        ]);
     }
 
     /**
@@ -54,7 +54,7 @@ class SbsCrudProvider extends ServiceProvider
         $loader->alias('Form', \Collective\Html\FormFacade::class);
         $loader->alias('HTML', \Collective\Html\HtmlFacade::class);
         
-        $this->app->make('Dwijitso\Sbscrud\CrudController');
+        //$this->app->make('Dwijitso\Sbscrud\CrudController');
         
         /*
         |--------------------------------------------------------------------------
@@ -90,8 +90,8 @@ class SbsCrudProvider extends ServiceProvider
         */
         
         $this->commands([
-            // \Yab\Laracogs\Console\Crud::class,
-            // \Yab\Laracogs\Console\TableCrud::class
+            \Dwijitso\Sbscrud\Crud::class,
+            \Dwijitso\Sbscrud\TableCrud::class
         ]);
 
         

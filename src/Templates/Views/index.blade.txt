@@ -1,0 +1,50 @@
+<div class="container">
+
+    <div class="">
+        {{ Session::get('message') }}
+    </div>
+
+    <div class="row">
+        <div class="pull-right">
+            {!! Form::open(['url' => '_sectionPrefix__lower_casePlural_/search']) !!}
+            <input class="form-control form-inline pull-right" name="search" placeholder="Search">
+            {!! Form::close() !!}
+        </div>
+        <h1 class="pull-left">_ucCamel_casePlural_</h1>
+        <a class="btn btn-primary pull-right" style="margin-top: 25px" href="{!! route('_sectionPrefix__lower_casePlural_.create') !!}">Add New</a>
+    </div>
+
+    <div class="row">
+        @if($_lower_casePlural_->isEmpty())
+            <div class="well text-center">No _camel_casePlural_ found.</div>
+        @else
+            <table class="table">
+                <thead>
+                    <th>Name</th>
+                    <th width="50px">Action</th>
+                </thead>
+                <tbody>
+                @foreach($_lower_casePlural_ as $_lower_case_)
+                    <tr>
+                        <td>
+                            <a href="{!! route('_sectionPrefix__lower_casePlural_.edit', [$_lower_case_->id]) !!}">{{ $_lower_case_->name }}</a>
+                        </td>
+                        <td>
+                            <a href="{!! route('_sectionPrefix__lower_casePlural_.edit', [$_lower_case_->id]) !!}"><i class="fa fa-pencil"></i> Edit</a>
+                            <form method="post" action="{!! url('_sectionPrefix__lower_casePlural_/'.$_lower_case_->id) !!}">
+                                {!! csrf_field() !!}
+                                {!! method_field('DELETE') !!}
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this _lower_case_?')"><i class="fa fa-trash"></i> Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+
+            <div class="row">
+                {!! $_lower_casePlural_; !!}
+            </div>
+        @endif
+    </div>
+</div>

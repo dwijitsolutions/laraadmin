@@ -1,0 +1,107 @@
+<?php
+
+namespace _namespace_repository_;
+
+use _namespace_repository_\_camel_case_;
+use Illuminate\Support\Facades\Schema;
+
+class _camel_case_Repository
+{
+    public function __construct(_camel_case_ $_lower_case_)
+    {
+        $this->model = $_lower_case_;
+    }
+
+    /**
+     * Returns all _camel_casePlural_
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function all()
+    {
+        return $this->model->orderBy('created_at', 'desc')->get();
+    }
+
+    /**
+     * Returns all paginated $MODEL_NAME_PLURAL$
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function paginated($paginate)
+    {
+        return $this->model->orderBy('created_at', 'desc')->paginate($paginate);
+    }
+
+    /**
+     * Search _camel_case_
+     *
+     * @param string $input
+     *
+     * @return _camel_case_
+     */
+    public function search($input, $paginate)
+    {
+        $query = $this->model->orderBy('created_at', 'desc');
+
+        $columns = Schema::getColumnListing('_lower_casePlural_');
+
+        foreach ($columns as $attribute) {
+            $query->orWhere($attribute, 'LIKE', '%'.$input.'%');
+        };
+
+        return $query->paginate($paginate);
+    }
+
+    /**
+     * Stores _camel_case_ into database
+     *
+     * @param array $input
+     *
+     * @return _camel_case_
+     */
+    public function create($input)
+    {
+        return $this->model->create($input);
+    }
+
+    /**
+     * Find _camel_case_ by given id
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Support\Collection|null|static|_camel_case_
+     */
+    public function find($id)
+    {
+        return $this->model->find($id);
+    }
+
+    /**
+     * Destroy _camel_case_
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Support\Collection|null|static|_camel_case_
+     */
+    public function destroy($id)
+    {
+        return $this->model->find($id)->delete();
+    }
+
+    /**
+     * Updates _camel_case_ in the database
+     *
+     * @param int $id
+     * @param array $inputs
+     *
+     * @return _camel_case_
+     */
+    public function update($id, $inputs)
+    {
+        $_lower_case_ = $this->model->find($id);
+        $_lower_case_->fill($inputs);
+        $_lower_case_->save();
+
+        return $_lower_case_;
+    }
+}

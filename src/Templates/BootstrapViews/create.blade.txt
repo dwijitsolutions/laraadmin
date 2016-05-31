@@ -1,0 +1,31 @@
+@extends('dashboard', ['pageTitle' => '_camelUpper_casePlural_ &raquo; Create'])
+
+@section('content')
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    {!! Form::open(['url' => '_sectionPrefix__lower_casePlural_/search']) !!}
+                    <input class="form-control form-inline pull-right" name="search" placeholder="Search">
+                    {!! Form::close() !!}
+                </div>
+                <h1 class="pull-left" style="margin: 0;">_ucCamel_casePlural_: Create</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                {!! Form::open(['route' => '_sectionPrefix__lower_casePlural_.store']) !!}
+
+                @form_maker_table("_sectionTablePrefix__lower_casePlural_")
+
+                {!! Form::submit('Save', ['class' => 'btn btn-primary pull-right']) !!}
+
+                {!! Form::close() !!}
+
+            </div>
+        </div>
+    </div>
+
+@stop

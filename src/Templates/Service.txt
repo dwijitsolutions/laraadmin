@@ -1,0 +1,49 @@
+<?php
+
+namespace _namespace_services_;
+
+use _namespace_repository_\_camel_case_Repository;
+
+class _camel_case_Service
+{
+    public function __construct(_camel_case_Repository $_lower_case_Repository)
+    {
+        $this->repo = $_lower_case_Repository;
+    }
+
+    public function all()
+    {
+        return $this->repo->all();
+    }
+
+    public function paginated()
+    {
+        return $this->repo->paginated(env('paginate', 25));
+    }
+
+    public function search($input)
+    {
+        return $this->repo->search($input, env('paginate', 25));
+    }
+
+    public function create($input)
+    {
+        return $this->repo->create($input);
+    }
+
+    public function find($id)
+    {
+        return $this->repo->find($id);
+    }
+
+    public function update($id, $input)
+    {
+        return $this->repo->update($id, $input);
+    }
+
+    public function destroy($id)
+    {
+        return $this->repo->destroy($id);
+    }
+
+}

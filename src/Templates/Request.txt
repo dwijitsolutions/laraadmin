@@ -1,0 +1,34 @@
+<?php
+
+namespace _namespace_request_;
+
+use Auth;
+use _app_namespace_Http\Requests\Request;
+use _namespace_repository_\_camel_case_;
+
+class _camel_case_Request extends Request
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        if (Auth::user()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return _camel_case_::$rules;
+    }
+}

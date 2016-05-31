@@ -1,0 +1,124 @@
+<?php
+
+namespace _namespace_controller_;
+
+use Illuminate\Http\Request;
+use _app_namespace_Http\Controllers\Controller;
+use _namespace_services_\_camel_case_Service;
+use _namespace_request_\_camel_case_Request;
+
+class _camel_case_Controller extends Controller
+{
+    public function __construct(_camel_case_Service $_lower_case_Service)
+    {
+        $this->service = $_lower_case_Service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $_lower_casePlural_ = $this->service->paginated();
+        return view('_sectionPrefix__lower_casePlural_.index')->with('_lower_casePlural_', $_lower_casePlural_);
+    }
+
+    /**
+     * Display a listing of the resource searched.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $_lower_casePlural_ = $this->service->search($request->search);
+        return view('_sectionPrefix__lower_casePlural_.index')->with('_lower_casePlural_', $_lower_casePlural_);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('_sectionPrefix__lower_casePlural_.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\_camel_case_Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(_camel_case_Request $request)
+    {
+        $result = $this->service->create($request->except('_token'));
+
+        if ($result) {
+            return redirect('_sectionRoutePrefix__lower_casePlural_/'.$result->id.'/edit')->with('message', 'Successfully created');
+        }
+
+        return redirect('_sectionRoutePrefix__lower_casePlural_')->with('message', 'Failed to create');
+    }
+
+    /**
+     * Display the _lower_casePlural_.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $_lower_case_ = $this->service->find($id);
+        return view('_sectionPrefix__lower_casePlural_.show')->with('_lower_case_', $_lower_case_);
+    }
+
+    /**
+     * Show the form for editing the _lower_casePlural_.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $_lower_case_ = $this->service->find($id);
+        return view('_sectionPrefix__lower_casePlural_.edit')->with('_lower_case_', $_lower_case_);
+    }
+
+    /**
+     * Update the _lower_casePlural_ in storage.
+     *
+     * @param  \Illuminate\Http\_camel_case_Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(_camel_case_Request $request, $id)
+    {
+        $result = $this->service->update($id, $request->except('_token'));
+
+        if ($result) {
+            return back()->with('message', 'Successfully updated');
+        }
+
+        return back()->with('message', 'Failed to update');
+    }
+
+    /**
+     * Remove the _lower_casePlural_ from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $result = $this->service->destroy($id);
+
+        if ($result) {
+            return redirect('_sectionRoutePrefix__lower_casePlural_')->with('message', 'Successfully deleted');
+        }
+
+        return redirect('_sectionRoutePrefix__lower_casePlural_')->with('message', 'Failed to delete');
+    }
+}

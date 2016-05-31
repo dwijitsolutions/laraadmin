@@ -1,0 +1,15 @@
+<?php
+
+namespace _namespace_facade_;
+
+use Illuminate\Support\Facades\Facade;
+
+class _camel_case_ extends Facade
+{
+    /**
+     * Create the Facade
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return '_camel_case_'; }
+}

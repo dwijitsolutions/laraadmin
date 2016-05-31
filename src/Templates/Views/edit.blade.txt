@@ -1,0 +1,14 @@
+<div class="">
+    {{ Session::get('message') }}
+</div>
+
+<div class="container">
+
+    {!! Form::model($_lower_case_, ['route' => ['_sectionPrefix__lower_casePlural_.update', $_lower_case_->id], 'method' => 'patch']) !!}
+
+    @form_maker_object($_lower_case_, FormMaker::getTableColumns('_sectionTablePrefix__lower_casePlural_'))
+
+    {!! Form::submit('Update') !!}
+
+    {!! Form::close() !!}
+</div>

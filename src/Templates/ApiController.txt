@@ -1,0 +1,102 @@
+<?php
+
+namespace _namespace_api_controller_;
+
+use Illuminate\Http\Request;
+use _app_namespace_Http\Controllers\Controller;
+use _namespace_services_\_camel_case_Service;
+use _namespace_request_\_camel_case_Request;
+
+class _camel_case_Controller extends Controller
+{
+    public function __construct(_camel_case_Service $_lower_case_Service)
+    {
+        $this->service = $_lower_case_Service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $_lower_casePlural_ = $this->service->paginated();
+        return response()->json($_lower_casePlural_);
+    }
+
+    /**
+     * Display a listing of the resource searched.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $_lower_casePlural_ = $this->service->search($request->search);
+        return response()->json($_lower_casePlural_);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\_camel_case_Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(_camel_case_Request $request)
+    {
+        $result = $this->service->create($request->except('_token'));
+
+        if ($result) {
+            return response()->json($result);
+        }
+
+        return response()->json(['error' => 'Unable to create _lower_case_'], 500);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $_lower_case_ = $this->service->find($id);
+        return response()->json($_lower_case_);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\_camel_case_Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(_camel_case_Request $request, $id)
+    {
+        $result = $this->service->update($id, $request->except('_token'));
+
+        if ($result) {
+            return response()->json($result);
+        }
+
+        return response()->json(['error' => 'Unable to update _lower_case_'], 500);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $result = $this->service->destroy($id);
+
+        if ($result) {
+            return response()->json(['success' => '_lower_case_ was deleted'], 200);
+        }
+
+        return response()->json(['error' => 'Unable to delete _lower_case_'], 500);
+    }
+}

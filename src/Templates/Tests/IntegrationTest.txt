@@ -1,0 +1,74 @@
+<?php
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+class _camel_case_IntegrationTest extends TestCase
+{
+    use DatabaseMigrations;
+    use WithoutMiddleware;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->_lower_case_ = factory(_namespace_repository_\_camel_case_::class)->make([
+            // _camel_case_ table data
+        ]);
+        $this->_lower_case_Edited = factory(_namespace_repository_\_camel_case_::class)->make([
+            // _camel_case_ table data
+        ]);
+        $user = factory(_app_namespace_Repositories\User\User::class)->make();
+        $this->actor = $this->actingAs($user);
+    }
+
+    public function testIndex()
+    {
+        $response = $this->actor->call('GET', '/_lower_casePlural_');
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertViewHas('_lower_casePlural_');
+    }
+
+    public function testCreate()
+    {
+        $response = $this->actor->call('GET', '/_lower_casePlural_/create');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testStore()
+    {
+        $response = $this->actor->call('POST', '_lower_casePlural_', $this->_lower_case_->toArray());
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertRedirectedTo('_lower_casePlural_/'.$this->_lower_case_->id.'/edit');
+    }
+
+    public function testEdit()
+    {
+        $this->actor->call('POST', '_lower_casePlural_', $this->_lower_case_->toArray());
+
+        $response = $this->actor->call('GET', '/_lower_casePlural_/'.$this->_lower_case_->id.'/edit');
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertViewHas('_lower_case_');
+    }
+
+    public function testUpdate()
+    {
+        $this->actor->call('POST', '_lower_casePlural_', $this->_lower_case_->toArray());
+        $response = $this->actor->call('PATCH', '/_lower_casePlural_/1', $this->_lower_case_Edited->toArray());
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->seeInDatabase('_lower_casePlural_', $this->_lower_case_Edited->toArray());
+        $this->assertRedirectedTo('/');
+    }
+
+    public function testDelete()
+    {
+        $this->actor->call('POST', '_lower_casePlural_', $this->_lower_case_->toArray());
+
+        $response = $this->call('DELETE', '/_lower_casePlural_/'.$this->_lower_case_->id);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertRedirectedTo('/_lower_casePlural_');
+    }
+
+}

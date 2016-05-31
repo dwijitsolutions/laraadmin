@@ -1,0 +1,44 @@
+@extends('dashboard', ['pageTitle' => '_camelUpper_casePlural_ &raquo; Edit'])
+
+@section('content')
+
+    <div class="ui fluid container">
+        <div class="row">
+            <div class="ui four column grid">
+                <div class="column">
+                    <h1>_ucCamel_casePlural_: Create</h1>
+                </div>
+                <div class="column right floated">
+                    <div class="ui two column grid">
+                        <div class="column">
+                            {!! Form::open(['url' => '_sectionPrefix__lower_casePlural_/search', 'class' => 'ui form']) !!}
+                            <div class="field">
+                                <input class="fluid" name="search" placeholder="Search">
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                        <div class="column">
+                            <a class="ui button primary right floated" href="{!! route('_sectionPrefix__lower_casePlural_.create') !!}">Add New</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <div class="raw-margin-top-24">
+                    {!! Form::model($_lower_case_, ['route' => ['_sectionPrefix__lower_casePlural_.update', $_lower_case_->id], 'method' => 'patch', 'class' => 'ui form']) !!}
+                    @form_maker_object($_lower_case_, FormMaker::getTableColumns('_sectionTablePrefix__lower_casePlural_'), '_sectionPrefix__lower_casePlural_.form')
+                    <div class="field">
+                        <div class="raw-margin-top-24">
+                            {!! Form::submit('Update', ['class' => 'ui button primary right floated']) !!}
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+@stop
