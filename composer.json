@@ -16,8 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Dwijitso\\Sbscrud\\": "packages/dwijitso/sbscrud/src/",
-            "App\\": "app/"
+            "Dwijitso\\Sbscrud\\": "src/"
         },
         "files": [
         ]
