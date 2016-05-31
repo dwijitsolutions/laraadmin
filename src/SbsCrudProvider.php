@@ -15,11 +15,15 @@ class SbsCrudProvider extends ServiceProvider
      */
     public function boot()
     {
-        @mkdir(base_path('resources/laracogs/crud'));
+        @mkdir(base_path('resources/sbscrud'));
         $this->publishes([
             __DIR__.'/Templates' => base_path('resources/sbscrud'),
             __DIR__.'/config.php' => base_path('config/sbscrud.php'),
         ]);
+        $this->publishes([
+            __DIR__.'Migrations/' => database_path('migrations')
+        ], 'migrations');
+        
     }
 
     /**
@@ -90,8 +94,8 @@ class SbsCrudProvider extends ServiceProvider
         */
         
         $this->commands([
-            \Dwijitso\Sbscrud\Crud::class,
-            \Dwijitso\Sbscrud\TableCrud::class
+            \Dwijitso\Sbscrud\Commands\Crud::class,
+            \Dwijitso\Sbscrud\Commands\TableCrud::class
         ]);
 
         

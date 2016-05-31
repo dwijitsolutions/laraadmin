@@ -1,6 +1,6 @@
 <?php
 
-namespace Dwijitso\Sbscrud;
+namespace Dwijitso\Sbscrud\Commands;
 
 use Config;
 use Artisan;

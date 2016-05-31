@@ -1,4 +1,4 @@
-<?php namespace Dwijitso\Sbscrud;
+<?php namespace Dwijitso\Sbscrud\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Config;
