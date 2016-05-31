@@ -2,6 +2,8 @@
 
 namespace Dwijitso\Sbscrud;
 
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class SbsCrudProvider extends ServiceProvider
@@ -27,7 +29,7 @@ class SbsCrudProvider extends ServiceProvider
      */
     public function register()
     {
-        include __DIR__.'/Http/routes.php';
+        include __DIR__.'/routes.php';
         
         /*
         |--------------------------------------------------------------------------
