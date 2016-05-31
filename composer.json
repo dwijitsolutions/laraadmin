@@ -20,9 +20,6 @@
             "App\\": "app/"
         },
         "files": [
-        //   "src/Helpers/form_maker.php",
-        //   "src/Helpers/input_maker.php",
-        //   "src/Helpers/crypto.php"
         ]
     },
     "minimum-stability": "stable"
