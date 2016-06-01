@@ -6,7 +6,8 @@
         "php": ">=5.5.9",
         "illuminate/support": "5.*",
         "laravelcollective/html": "^5.2|^5.1",
-        "illuminate/container": "^5.2|^5.1"
+        "illuminate/container": "^5.2|^5.1",
+        "yajra/laravel-datatables-oracle": "~6.0"
     },
     "authors": [
         {
