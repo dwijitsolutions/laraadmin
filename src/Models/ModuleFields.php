@@ -9,7 +9,7 @@ class ModuleFields extends Model
     protected $table = 'module_fields';
     
     protected $fillable = [
-        "colname", "label", "module", "field_type", "readonly", "defaultvalue", "minlength", "maxlength"
+        "colname", "label", "module", "field_type", "readonly", "defaultvalue", "minlength", "maxlength", "required"
     ];
     
     protected $hidden = [

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\ModuleFieldTypes;
+use Dwijitso\Sbscrud\Models\ModuleFieldTypes;
 
 class CreateModuleFieldTypesTable extends Migration
 {
