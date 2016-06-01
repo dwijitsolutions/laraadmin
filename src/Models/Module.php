@@ -47,7 +47,8 @@ class Module extends Model
                         'readonly' => $field->readonly,
                         'defaultvalue' => $field->defaultvalue,
                         'minlength' => $field->minlength,
-                        'maxlength' => $field->maxlength
+                        'maxlength' => $field->maxlength,
+                        'required' => $field->required
                     ]);
                 }
                 
@@ -278,6 +279,11 @@ class Module extends Model
                 $obj->maxlength = 0;
             } else {
                 $obj->maxlength = $field[6];
+            }
+            if(!isset($field[6])) {
+                $obj->required = 0;
+            } else {
+                $obj->required = $field[7];
             }
             
             $out[] = $obj;
