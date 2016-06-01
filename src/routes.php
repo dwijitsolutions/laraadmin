@@ -1,2 +1,5 @@
 <?php
-Route::get('sbscrud', 'CrudController@index');
+
+//use Dwijitso\Sbscrud\Controllers\CrudController;
+
+//Route::get('sbscrud', 'CrudController@index');

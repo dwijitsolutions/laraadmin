@@ -20,31 +20,36 @@ class Module extends Model
     ];
     
     public static function generate($module_name, $module_name_db, $fields) {
-        $module = Module::create([
-            'name' => $module_name,
-            'name_db' => $module_name_db
-        ]);
         
+        $module = Module::where('name', $module_name)->first();
+        if(!isset($module->id)) {
+            $module = Module::create([
+                'name' => $module_name,
+                'name_db' => $module_name_db
+            ]);
+        }
         $fields = Module::format_fields($fields);
         
         //print_r($module);
         //print_r($fields);
         
-        
         Schema::create($module_name_db, function (Blueprint $table) use ($fields, $module) {
             $table->increments('id');
             foreach ($fields as $field) {
                 
-                ModuleFields::create([
-                    'module' => $module->id,
-                    'colname' => $field->colname,
-                    'label' => $field->label,
-                    'field_type' => $field->field_type,
-                    'readonly' => $field->readonly,
-                    'defaultvalue' => $field->defaultvalue,
-                    'minlength' => $field->minlength,
-                    'maxlength' => $field->maxlength
-                ]);
+                $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
+                if(!isset($mod->id)) {
+                    ModuleFields::create([
+                        'module' => $module->id,
+                        'colname' => $field->colname,
+                        'label' => $field->label,
+                        'field_type' => $field->field_type,
+                        'readonly' => $field->readonly,
+                        'defaultvalue' => $field->defaultvalue,
+                        'minlength' => $field->minlength,
+                        'maxlength' => $field->maxlength
+                    ]);
+                }
                 
                 switch ($field->field_type) {
                     case 'Address':
