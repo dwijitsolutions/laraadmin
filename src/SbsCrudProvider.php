@@ -15,14 +15,14 @@ class SbsCrudProvider extends ServiceProvider
      */
     public function boot()
     {
-        @mkdir(base_path('resources/sbscrud'));
-        @mkdir(base_path('database/migrations/sbscrud'));
+        // @mkdir(base_path('resources/sbscrud'));
+        // @mkdir(base_path('database/migrations/sbscrud'));
         $this->publishes([
             //__DIR__.'/Templates' => base_path('resources/sbscrud'),
             //__DIR__.'/config.php' => base_path('config/sbscrud.php'),
-            __DIR__.'/Migrations' => base_path('database/migrations/sbscrud')
+            //__DIR__.'/Migrations' => base_path('database/migrations/sbscrud')
         ]);
-        $exitCode = Artisan::call('migrate', ['--path' => "database/migrations/sbscrud/"]);
+        Artisan::call('migrate', ['--path' => "vendor/dwijitso/sbscrud/src/Migrations/"]);
         // Execute by php artisan vendor:publish --provider="Dwijitso\Sbscrud\SbsCrudProvider"
     }
 
