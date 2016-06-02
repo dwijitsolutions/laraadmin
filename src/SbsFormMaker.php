@@ -51,6 +51,18 @@ class SbsFormMaker
 				$params['rows'] = 3;
 				$out .= Form::textarea($field_name, $default_val, $params);
 				break;
+			case 'Checkbox':
+				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				// ############### Remaining
+				unset($params['placeholder']);
+				unset($params['data-rule-maxlength']);
+				
+				if($default_val == null) {
+					$default_val = array();
+				}
+				$out .= Form::text($field_name, $default_val, $params);
+				break;
 			case 'Currency':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				

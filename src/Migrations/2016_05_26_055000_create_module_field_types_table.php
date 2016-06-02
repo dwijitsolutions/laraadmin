@@ -20,6 +20,7 @@ class CreateModuleFieldTypesTable extends Migration
         });
         // Note: Do not edit below lines
         ModuleFieldTypes::create(["name" => "Address"]);
+        ModuleFieldTypes::create(["name" => "Checkbox"]);
         ModuleFieldTypes::create(["name" => "Currency"]);
         ModuleFieldTypes::create(["name" => "Date"]);
         ModuleFieldTypes::create(["name" => "Datetime"]);

@@ -23,6 +23,7 @@ class CreateModuleFieldsTable extends Migration
             $table->integer('minlength')->unsigned();
             $table->integer('maxlength')->unsigned();
             $table->boolean('required')->default(false);
+            $table->text('values');
             $table->timestamps();
         });
     }

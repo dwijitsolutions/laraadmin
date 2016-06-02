@@ -50,7 +50,8 @@ class Module extends Model
                         'defaultvalue' => $field->defaultvalue,
                         'minlength' => $field->minlength,
                         'maxlength' => $field->maxlength,
-                        'required' => $field->required
+                        'required' => $field->required,
+                        'values' => $field->values
                     ]);
                 }
                 
@@ -59,6 +60,17 @@ class Module extends Model
                         $var = null;
                         if($field->maxlength == 0) {
                             $var = $table->text($field->colname);
+                        } else {
+                            $var = $table->string($field->colname, $field->maxlength);
+                        }
+                        if($field->defaultvalue != "") {
+                            $var->default($field->defaultvalue);
+                        }
+                        break;
+                    case 'Checkbox':
+                        $var = null;
+                        if($field->maxlength == 0) {
+                            $var = $table->string($field->colname);
                         } else {
                             $var = $table->string($field->colname, $field->maxlength);
                         }
@@ -293,12 +305,20 @@ class Module extends Model
             } else {
                 $obj->maxlength = $field[6];
             }
-            if(!isset($field[6])) {
+            if(!isset($field[7])) {
                 $obj->required = 0;
             } else {
                 $obj->required = $field[7];
             }
-            
+            if(!isset($field[8])) {
+                $obj->values = "";
+            } else {
+                if(is_array($field[8])) {
+                    $obj->values = json_encode($field[8]);
+                } else {
+                    $obj->values = $field[8];
+                }
+            }
             $out[] = $obj;
         }
         return $out;
