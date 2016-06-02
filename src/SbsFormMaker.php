@@ -80,10 +80,13 @@ class SbsFormMaker
 			case 'Dropdown':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
-				// ############### Remaining
 				unset($params['data-rule-maxlength']);
-				$params['class'] = "select2";
-				$out .= Form::select($field_name, $default_val, $params);
+				unset($params['placeholder']);
+				$params['rel'] = "select2";
+				if($default_val == null) {
+					$default_val = array();
+				}
+				$out .= Form::select($field_name, $default_val, null, $params);
 				break;
 			case 'Email':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -122,9 +125,13 @@ class SbsFormMaker
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
 				unset($params['data-rule-maxlength']);
+				unset($params['placeholder']);
 				$params['multiple'] = "true";
-				$params['class'] = "select2";
-				$out .= Form::select($field_name, $default_val, $params);
+				$params['rel'] = "select2";
+				if($default_val == null) {
+					$default_val = array();
+				}
+				$out .= Form::select($field_name, $default_val, null, $params);
 				break;
 			case 'Name':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -138,6 +145,12 @@ class SbsFormMaker
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
 				// ############### Remaining
+				unset($params['placeholder']);
+				unset($params['data-rule-maxlength']);
+				
+				if($default_val == null) {
+					$default_val = array();
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'String':
@@ -147,11 +160,17 @@ class SbsFormMaker
 			case 'Taginput':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
-				// ############### Remaining
-				unset($params['data-rule-maxlength']);
-				$params['class'] = "form-control taginput";
+				if(isset($params['data-rule-maxlength'])) {
+					$params['maximumSelectionLength'] = $params['data-rule-maxlength'];
+					unset($params['data-rule-maxlength']);
+				}
+				unset($params['placeholder']);
+				$params['multiple'] = "true";
 				$params['rel'] = "taginput";
-				$out .= Form::text($field_name, $default_val, $params);
+				if($default_val == null) {
+					$default_val = array();
+				}
+				$out .= Form::select($field_name, $default_val, null, $params);
 				break;
 			case 'Textarea':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
