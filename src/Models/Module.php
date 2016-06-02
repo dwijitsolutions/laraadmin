@@ -199,6 +199,17 @@ class Module extends Model
                             $var->default($field->defaultvalue);
                         }
                         break;
+                    case 'Taginput':
+                        $var = null;
+                        if($field->maxlength == 0) {
+                            $var = $table->text($field->colname);
+                        } else {
+                            $var = $table->text($field->colname);
+                            if($field->defaultvalue != "") {
+                                $var->default($field->defaultvalue);
+                            }
+                        }
+                        break;
                     case 'Textarea':
                         $var = null;
                         if($field->maxlength == 0) {

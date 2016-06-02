@@ -36,6 +36,7 @@ class CreateModuleFieldTypesTable extends Migration
         ModuleFieldTypes::create(["name" => "Password"]);
         ModuleFieldTypes::create(["name" => "Radio"]);
         ModuleFieldTypes::create(["name" => "String"]);
+        ModuleFieldTypes::create(["name" => "Taginput"]);
         ModuleFieldTypes::create(["name" => "Textarea"]);
         ModuleFieldTypes::create(["name" => "TextField"]);
         ModuleFieldTypes::create(["name" => "URL"]);
