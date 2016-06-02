@@ -29,21 +29,23 @@ class Module extends Model
             ]);
         }
         $fields = Module::format_fields($fields);
-        
+        $ftypes = ModuleFieldTypes::getFTypes();
+        //print_r($ftypes);
         //print_r($module);
         //print_r($fields);
         
-        Schema::create($module_name_db, function (Blueprint $table) use ($fields, $module) {
+        Schema::create($module_name_db, function (Blueprint $table) use ($fields, $module, $ftypes) {
             $table->increments('id');
             foreach ($fields as $field) {
                 
                 $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
                 if(!isset($mod->id)) {
+                    
                     ModuleFields::create([
                         'module' => $module->id,
                         'colname' => $field->colname,
                         'label' => $field->label,
-                        'field_type' => $field->field_type,
+                        'field_type' => $ftypes[$field->field_type],
                         'readonly' => $field->readonly,
                         'defaultvalue' => $field->defaultvalue,
                         'minlength' => $field->minlength,

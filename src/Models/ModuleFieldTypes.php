@@ -15,4 +15,14 @@ class ModuleFieldTypes extends Model
     protected $hidden = [
         
     ];
+    
+    // ModuleFieldTypes::getFTypes()
+    public static function getFTypes() {
+        $fields = ModuleFieldTypes::all();
+        $fields2 = array();
+        foreach ($fields as $field) {
+            $fields2[$field['name']] = $field['id'];
+        }
+        return $fields2;
+    }
 }
