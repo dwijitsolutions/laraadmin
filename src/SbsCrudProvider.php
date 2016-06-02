@@ -25,7 +25,9 @@ class SbsCrudProvider extends ServiceProvider
             __DIR__.'/Migrations' => base_path('database/migrations/sbscrud')
         ]);
         */
+        echo "SBSCrud Migrations started...";
         Artisan::call('migrate', ['--path' => "vendor/dwijitso/sbscrud/src/Migrations/"]);
+        echo "Migrations completed !!!.";
         // Execute by php artisan vendor:publish --provider="Dwijitso\Sbscrud\SbsCrudProvider"
     }
 
