@@ -67,15 +67,23 @@ class SbsFormMaker
 				break;
 			case 'Datetime':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				// ############### Remaining
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Decimal':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				unset($params['data-rule-maxlength']);
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Dropdown':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
-				$out .= Form::text($field_name, $default_val, $params);
+				
+				// ############### Remaining
+				unset($params['data-rule-maxlength']);
+				$params['class'] = "select2";
+				$out .= Form::select($field_name, $default_val, $params);
 				break;
 			case 'Email':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -85,11 +93,16 @@ class SbsFormMaker
 				break;
 			case 'Float':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				unset($params['data-rule-maxlength']);
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'HTML':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
-				$out .= Form::text($field_name, $default_val, $params);
+				
+				// ############### Remaining
+				$out .= '<div class="htmlbox" id="htmlbox_'.$field_name.'" contenteditable>'.$default_val.'</div>';
+				$out .= Form::hidden($field_name, $default_val, $params);
 				break;
 			case 'Image':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -97,6 +110,8 @@ class SbsFormMaker
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				unset($params['data-rule-maxlength']);
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Mobile':
@@ -105,7 +120,11 @@ class SbsFormMaker
 				break;
 			case 'Multiselect':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
-				$out .= Form::text($field_name, $default_val, $params);
+				
+				unset($params['data-rule-maxlength']);
+				$params['multiple'] = "true";
+				$params['class'] = "select2";
+				$out .= Form::select($field_name, $default_val, $params);
 				break;
 			case 'Name':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -117,6 +136,8 @@ class SbsFormMaker
 				break;
 			case 'Radio':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				// ############### Remaining
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'String':
@@ -126,8 +147,10 @@ class SbsFormMaker
 			case 'Taginput':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				// ############### Remaining
 				unset($params['data-rule-maxlength']);
 				$params['class'] = "form-control taginput";
+				$params['rel'] = "taginput";
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Textarea':
