@@ -69,6 +69,11 @@ class SbsCrudProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         
+        // SbsForm Maker
+        Blade::directive('sbsform_field', function($expression) {
+            return "<?php echo SbsFormMaker::field$expression; ?>";
+        });
+        
         // Form Maker
         Blade::directive('form_maker_table', function($expression) {
             return "<?php echo FormMaker::fromTable$expression; ?>";
