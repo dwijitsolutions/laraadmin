@@ -41,17 +41,37 @@ class Module extends Model
                 $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
                 if(!isset($mod->id)) {
                     
+                    if($field->field_type == "Multiselect") {
+                        if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
+                            $dvalue = json_encode([$field->defaultvalue]);
+                        } else {
+                            $dvalue = json_encode($field->defaultvalue);
+                        }
+                    } else {
+                        $dvalue = $field->defaultvalue;
+                        if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
+                            $dvalue = $field->defaultvalue;
+                        } else if(is_array($field->defaultvalue) && is_object($field->defaultvalue)) {
+                            $dvalue = json_encode($field->defaultvalue);
+                        }
+                    }
+                    
+                    $pvalues = $field->popup_vals;
+                    if(is_array($field->popup_vals) || is_object($field->popup_vals)) {
+                        $pvalues = json_encode($field->popup_vals);
+                    }
+                    
                     ModuleFields::create([
                         'module' => $module->id,
                         'colname' => $field->colname,
                         'label' => $field->label,
                         'field_type' => $ftypes[$field->field_type],
                         'readonly' => $field->readonly,
-                        'defaultvalue' => $field->defaultvalue,
+                        'defaultvalue' => $dvalue,
                         'minlength' => $field->minlength,
                         'maxlength' => $field->maxlength,
                         'required' => $field->required,
-                        'popup_vals' => $field->popup_vals
+                        'popup_vals' => $pvalues
                     ]);
                 }
                 
@@ -109,8 +129,12 @@ class Module extends Model
                         break;
                     case 'Dropdown':
                         if($field->popup_vals == "") {
-                            $var = $table->integer($field->colname)->unsigned();
                             if(is_int($field->defaultvalue)) {
+                                $var = $table->integer($field->colname)->unsigned();
+                                $var->default($field->defaultvalue);
+                                break;
+                            } else if(is_string($field->defaultvalue)) {
+                                $var = $table->string($field->colname);
                                 $var->default($field->defaultvalue);
                                 break;
                             }
@@ -123,6 +147,11 @@ class Module extends Model
                             }
                         } else if(is_object($popup_vals)) {
                             // ############### Remaining
+                            $var = $table->integer($field->colname)->unsigned();
+                            // if(is_int($field->defaultvalue)) {
+                            //     $var->default($field->defaultvalue);
+                            //     break;
+                            // }
                         }
                         break;
                     case 'Email':
@@ -175,7 +204,17 @@ class Module extends Model
                         break;
                     case 'Multiselect':
                         $var = $table->string($field->colname, 256);
-                        if($field->defaultvalue != "") {
+                        if(is_string($field->defaultvalue)) {
+                            $field->defaultvalue = json_encode([$field->defaultvalue]);
+                            echo "string: ".$field->defaultvalue;
+                            $var->default($field->defaultvalue);
+                        } else if(is_array($field->defaultvalue)) {
+                            $field->defaultvalue = json_encode($field->defaultvalue);
+                            echo "array: ".$field->defaultvalue;
+                            $var->default($field->defaultvalue);
+                        } else if(is_int($field->defaultvalue)) {
+                            $field->defaultvalue = json_encode([$field->defaultvalue]);
+                            echo "int: ".$field->defaultvalue;
                             $var->default($field->defaultvalue);
                         }
                         break;
@@ -203,13 +242,30 @@ class Module extends Model
                         break;
                     case 'Radio':
                         $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
+                        if($field->popup_vals == "") {
+                            if(is_int($field->defaultvalue)) {
+                                $var = $table->integer($field->colname)->unsigned();
+                                $var->default($field->defaultvalue);
+                                break;
+                            } else if(is_string($field->defaultvalue)) {
+                                $var = $table->string($field->colname);
+                                $var->default($field->defaultvalue);
+                                break;
+                            }
                         }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
+                        $popup_vals = json_decode($field->popup_vals);
+                        if(is_array($popup_vals)) {
+                            $var = $table->string($field->colname);
+                            if($field->defaultvalue != "") {
+                                $var->default($field->defaultvalue);
+                            }
+                        } else if(is_object($popup_vals)) {
+                            // ############### Remaining
+                            $var = $table->integer($field->colname)->unsigned();
+                            // if(is_int($field->defaultvalue)) {
+                            //     $var->default($field->defaultvalue);
+                            //     break;
+                            // }
                         }
                         break;
                     case 'String':
