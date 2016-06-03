@@ -264,28 +264,26 @@ class SbsFormMaker
 					$params['maximumSelectionLength'] = $params['data-rule-maxlength'];
 					unset($params['data-rule-maxlength']);
 				}
-				unset($params['placeholder']);
 				$params['multiple'] = "true";
 				$params['rel'] = "taginput";
+				unset($params['placeholder']);
 				
 				if($default_val == null) {
-					$default_val = array();
-				}
-				if($default_val == null) {
-					if($defaultvalue != "") {
-						$defaultvalue = json_decode($defaultvalue);
-						if(is_array($defaultvalue)) {
-							$default_val = $defaultvalue;
-						} else if(is_string($defaultvalue)) {
-							$default_val = [$defaultvalue];
+					$defaultvalue2 = json_decode($defaultvalue);
+					if(is_array($defaultvalue2)) {
+						$default_val = $defaultvalue;
+					} else if(is_string($defaultvalue)) {
+						if (strpos($defaultvalue, ',') !== false) {
+							$default_val = array_map('trim', explode(",", $defaultvalue));
 						} else {
-							$default_val = array();
+							$default_val = [$defaultvalue];
 						}
 					} else {
 						$default_val = array();
 					}
 				}
-				$out .= Form::select($field_name, $default_val, null, $params);
+				$default_val = SbsFormMaker::process_values($default_val);
+				$out .= Form::select($field_name, $default_val, $default_val, $params);
 				break;
 			case 'Textarea':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -322,7 +320,11 @@ class SbsFormMaker
 	
 	private static function process_values($json) {
 		$out = array();
-		$array = json_decode($json);
+		if(is_string($json)) {
+			$array = json_decode($json);
+		} else {
+			$array = $json;
+		}
 		foreach ($array as $value) {
 			$out[$value] = $value;
 		}
