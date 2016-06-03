@@ -96,6 +96,8 @@ class SbsFormMaker
 				unset($params['data-rule-maxlength']);
 				unset($params['placeholder']);
 				$params['rel'] = "select2";
+				
+				//echo $defaultvalue;
 				if($default_val == null) {
 					if($defaultvalue != "") {
 						$default_val = $defaultvalue;
@@ -104,7 +106,8 @@ class SbsFormMaker
 					}
 				}
 				if($popup_vals != "") {
-					$popup_vals = json_decode($popup_vals);
+					$popup_vals = SbsFormMaker::process_values($popup_vals);
+					//print_r(json_encode($popup_vals));
 				} else {
 					$popup_vals = array();
 				}
@@ -152,13 +155,13 @@ class SbsFormMaker
 				$params['rel'] = "select2";
 				if($default_val == null) {
 					if($defaultvalue != "") {
-						$default_val = $defaultvalue;
+						$default_val = json_decode($defaultvalue);
 					} else {
 						$default_val = "";
 					}
 				}
 				if($popup_vals != "") {
-					$popup_vals = json_decode($popup_vals);
+					$popup_vals = SbsFormMaker::process_values($popup_vals);
 				} else {
 					$popup_vals = array();
 				}
@@ -187,13 +190,17 @@ class SbsFormMaker
 					}
 				}
 				if($popup_vals != "") {
-					$popup_vals = json_decode($popup_vals);
+					$popup_vals = array_values(json_decode($popup_vals));
 				} else {
 					$popup_vals = array();
 				}
 				$out .= '<div class="radio">';
 				foreach ($popup_vals as $value) {
-					$out .= '<label>'.(Form::radio($field_name, $value)).' '.$value.' </label>';
+					$sel = false;
+					if($default_val != "" && $default_val == $value) {
+						$sel = true;
+					}
+					$out .= '<label>'.(Form::radio($field_name, $value, $sel)).' '.$value.' </label>';
 				}
 				$out .= '</div>';
 				break;
@@ -234,6 +241,15 @@ class SbsFormMaker
 				break;
 		}
 		$out .= '</div>';
+		return $out;
+	}
+	
+	private static function process_values($json) {
+		$out = array();
+		$array = json_decode($json);
+		foreach ($array as $value) {
+			$out[$value] = $value;
+		}
 		return $out;
 	}
 }
