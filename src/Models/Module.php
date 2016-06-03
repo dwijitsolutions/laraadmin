@@ -40,8 +40,7 @@ class Module extends Model
                 
                 $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
                 if(!isset($mod->id)) {
-                    
-                    if($field->field_type == "Multiselect") {
+                    if($field->field_type == "Multiselect" || $field->field_type == "Taginput") {
                         if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
                             $dvalue = json_encode([$field->defaultvalue]);
                         } else {
@@ -88,15 +87,8 @@ class Module extends Model
                         }
                         break;
                     case 'Checkbox':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
+                        $var = $table->boolean($field->colname);
+                        $var->default($field->defaultvalue);
                         break;
                     case 'Currency':
                         $var = $table->double($field->colname, 15, 2);
@@ -206,15 +198,15 @@ class Module extends Model
                         $var = $table->string($field->colname, 256);
                         if(is_string($field->defaultvalue)) {
                             $field->defaultvalue = json_encode([$field->defaultvalue]);
-                            echo "string: ".$field->defaultvalue;
+                            //echo "string: ".$field->defaultvalue;
                             $var->default($field->defaultvalue);
                         } else if(is_array($field->defaultvalue)) {
                             $field->defaultvalue = json_encode($field->defaultvalue);
-                            echo "array: ".$field->defaultvalue;
+                            //echo "array: ".$field->defaultvalue;
                             $var->default($field->defaultvalue);
                         } else if(is_int($field->defaultvalue)) {
                             $field->defaultvalue = json_encode([$field->defaultvalue]);
-                            echo "int: ".$field->defaultvalue;
+                            //echo "int: ".$field->defaultvalue;
                             $var->default($field->defaultvalue);
                         }
                         break;
@@ -281,13 +273,15 @@ class Module extends Model
                         break;
                     case 'Taginput':
                         $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->text($field->colname);
-                        } else {
-                            $var = $table->text($field->colname);
-                            if($field->defaultvalue != "") {
-                                $var->default($field->defaultvalue);
-                            }
+                        $var = $table->string($field->colname, 1000);
+                        if(is_string($field->defaultvalue)) {
+                            $field->defaultvalue = json_encode([$field->defaultvalue]);
+                            //echo "string: ".$field->defaultvalue;
+                            $var->default($field->defaultvalue);
+                        } else if(is_array($field->defaultvalue)) {
+                            $field->defaultvalue = json_encode($field->defaultvalue);
+                            //echo "array: ".$field->defaultvalue;
+                            $var->default($field->defaultvalue);
                         }
                         break;
                     case 'Textarea':

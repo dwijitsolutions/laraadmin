@@ -48,6 +48,10 @@ class SbsFormMaker
 			case 'Address':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				
 				$params['cols'] = 30;
 				$params['rows'] = 3;
 				$out .= Form::textarea($field_name, $default_val, $params);
@@ -60,12 +64,18 @@ class SbsFormMaker
 				unset($params['data-rule-maxlength']);
 				
 				if($default_val == null) {
-					$default_val = array();
+					$default_val = $defaultvalue;
 				}
-				$out .= Form::text($field_name, $default_val, $params);
+				
+				$out .= Form::checkbox($field_name, $field_name, $default_val, $params);
+				$out .= '<div class="Switch Round On" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>';
 				break;
 			case 'Currency':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				
 				unset($params['data-rule-maxlength']);
 				$params['data-rule-currency'] = "true";
@@ -74,6 +84,10 @@ class SbsFormMaker
 			case 'Date':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				
 				unset($params['data-rule-maxlength']);
 				$params['data-rule-date'] = "true";
 				$out .= Form::date($field_name, $default_val, $params);
@@ -81,11 +95,19 @@ class SbsFormMaker
 			case 'Datetime':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				
 				// ############### Remaining
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Decimal':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				
 				unset($params['data-rule-maxlength']);
 				$out .= Form::number($field_name, $default_val, $params);
@@ -99,11 +121,7 @@ class SbsFormMaker
 				
 				//echo $defaultvalue;
 				if($default_val == null) {
-					if($defaultvalue != "") {
-						$default_val = $defaultvalue;
-					} else {
-						$default_val = "";
-					}
+					$default_val = $defaultvalue;
 				}
 				if($popup_vals != "") {
 					$popup_vals = SbsFormMaker::process_values($popup_vals);
@@ -116,11 +134,19 @@ class SbsFormMaker
 			case 'Email':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				
 				$params['data-rule-email'] = "true";
 				$out .= Form::email($field_name, $default_val, $params);
 				break;
 			case 'Float':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				
 				unset($params['data-rule-maxlength']);
 				$out .= Form::number($field_name, $default_val, $params);
@@ -128,22 +154,37 @@ class SbsFormMaker
 			case 'HTML':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				
 				// ############### Remaining
 				$out .= '<div class="htmlbox" id="htmlbox_'.$field_name.'" contenteditable>'.$default_val.'</div>';
 				$out .= Form::hidden($field_name, $default_val, $params);
 				break;
 			case 'Image':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
 				unset($params['data-rule-maxlength']);
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Mobile':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Multiselect':
@@ -169,10 +210,18 @@ class SbsFormMaker
 				break;
 			case 'Name':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Password':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::password($field_name, $default_val, $params);
 				break;
 			case 'Radio':
@@ -183,11 +232,7 @@ class SbsFormMaker
 				unset($params['data-rule-maxlength']);
 				
 				if($default_val == null) {
-					if($defaultvalue != "") {
-						$default_val = $defaultvalue;
-					} else {
-						$default_val = "";
-					}
+					$default_val = $defaultvalue;
 				}
 				if($popup_vals != "") {
 					$popup_vals = array_values(json_decode($popup_vals));
@@ -206,6 +251,10 @@ class SbsFormMaker
 				break;
 			case 'String':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Taginput':
@@ -218,24 +267,51 @@ class SbsFormMaker
 				unset($params['placeholder']);
 				$params['multiple'] = "true";
 				$params['rel'] = "taginput";
+				
 				if($default_val == null) {
 					$default_val = array();
+				}
+				if($default_val == null) {
+					if($defaultvalue != "") {
+						$defaultvalue = json_decode($defaultvalue);
+						if(is_array($defaultvalue)) {
+							$default_val = $defaultvalue;
+						} else if(is_string($defaultvalue)) {
+							$default_val = [$defaultvalue];
+						} else {
+							$default_val = array();
+						}
+					} else {
+						$default_val = array();
+					}
 				}
 				$out .= Form::select($field_name, $default_val, null, $params);
 				break;
 			case 'Textarea':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
 				$params['cols'] = 30;
 				$params['rows'] = 3;
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::textarea($field_name, $default_val, $params);
 				break;
 			case 'TextField':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'URL':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
 				$params['data-rule-url'] = "true";
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
