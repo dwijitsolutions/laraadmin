@@ -15,6 +15,7 @@ class SbsFormMaker
 		$minlength = $module->fields[$field_name]['minlength'];
 		$maxlength = $module->fields[$field_name]['maxlength'];
 		$required = $module->fields[$field_name]['required'];
+		$popup_vals = $module->fields[$field_name]['popup_vals'];
 		
 		if($required2 != null) {
 			$required = $required2;
@@ -96,9 +97,18 @@ class SbsFormMaker
 				unset($params['placeholder']);
 				$params['rel'] = "select2";
 				if($default_val == null) {
-					$default_val = array();
+					if($defaultvalue != "") {
+						$default_val = $defaultvalue;
+					} else {
+						$default_val = "";
+					}
 				}
-				$out .= Form::select($field_name, $default_val, null, $params);
+				if($popup_vals != "") {
+					$popup_vals = json_decode($popup_vals);
+				} else {
+					$popup_vals = array();
+				}
+				$out .= Form::select($field_name, $popup_vals, $default_val, $params);
 				break;
 			case 'Email':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -141,9 +151,18 @@ class SbsFormMaker
 				$params['multiple'] = "true";
 				$params['rel'] = "select2";
 				if($default_val == null) {
-					$default_val = array();
+					if($defaultvalue != "") {
+						$default_val = $defaultvalue;
+					} else {
+						$default_val = "";
+					}
 				}
-				$out .= Form::select($field_name, $default_val, null, $params);
+				if($popup_vals != "") {
+					$popup_vals = json_decode($popup_vals);
+				} else {
+					$popup_vals = array();
+				}
+				$out .= Form::select($field_name, $popup_vals, $default_val, $params);
 				break;
 			case 'Name':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -154,16 +173,29 @@ class SbsFormMaker
 				$out .= Form::password($field_name, $default_val, $params);
 				break;
 			case 'Radio':
-				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' : </label><br>';
 				
 				// ############### Remaining
 				unset($params['placeholder']);
 				unset($params['data-rule-maxlength']);
 				
 				if($default_val == null) {
-					$default_val = array();
+					if($defaultvalue != "") {
+						$default_val = $defaultvalue;
+					} else {
+						$default_val = "";
+					}
 				}
-				$out .= Form::text($field_name, $default_val, $params);
+				if($popup_vals != "") {
+					$popup_vals = json_decode($popup_vals);
+				} else {
+					$popup_vals = array();
+				}
+				$out .= '<div class="radio">';
+				foreach ($popup_vals as $value) {
+					$out .= '<label>'.(Form::radio($field_name, $value)).' '.$value.' </label>';
+				}
+				$out .= '</div>';
 				break;
 			case 'String':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';

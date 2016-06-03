@@ -51,7 +51,7 @@ class Module extends Model
                         'minlength' => $field->minlength,
                         'maxlength' => $field->maxlength,
                         'required' => $field->required,
-                        'values' => $field->values
+                        'popup_vals' => $field->popup_vals
                     ]);
                 }
                 
@@ -108,9 +108,21 @@ class Module extends Model
                         }
                         break;
                     case 'Dropdown':
-                        $var = $table->integer($field->colname)->unsigned();
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
+                        if($field->popup_vals == "") {
+                            $var = $table->integer($field->colname)->unsigned();
+                            if(is_int($field->defaultvalue)) {
+                                $var->default($field->defaultvalue);
+                                break;
+                            }
+                        }
+                        $popup_vals = json_decode($field->popup_vals);
+                        if(is_array($popup_vals)) {
+                            $var = $table->string($field->colname);
+                            if($field->defaultvalue != "") {
+                                $var->default($field->defaultvalue);
+                            }
+                        } else if(is_object($popup_vals)) {
+                            // ############### Remaining
                         }
                         break;
                     case 'Email':
@@ -162,7 +174,7 @@ class Module extends Model
                         }
                         break;
                     case 'Multiselect':
-                        $var = $table->integer($field->colname)->unsigned();
+                        $var = $table->string($field->colname, 256);
                         if($field->defaultvalue != "") {
                             $var->default($field->defaultvalue);
                         }
@@ -311,12 +323,12 @@ class Module extends Model
                 $obj->required = $field[7];
             }
             if(!isset($field[8])) {
-                $obj->values = "";
+                $obj->popup_vals = "";
             } else {
                 if(is_array($field[8])) {
-                    $obj->values = json_encode($field[8]);
+                    $obj->popup_vals = json_encode($field[8]);
                 } else {
-                    $obj->values = $field[8];
+                    $obj->popup_vals = $field[8];
                 }
             }
             $out[] = $obj;
