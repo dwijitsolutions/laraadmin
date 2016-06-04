@@ -387,13 +387,18 @@ class Module extends Model
     }
     
     public static function get($module_name) {
-        $module = Module::where('name', $module_name)->first()->toArray();
-        $fields = ModuleFields::where('module', $module['id'])->get()->toArray();
-        $fields2 = array();
-        foreach ($fields as $field) {
-            $fields2[$field['colname']] = $field;
+        $module = Module::where('name', $module_name)->first();
+        if(isset($module)) {
+            $module = $module->toArray();
+            $fields = ModuleFields::where('module', $module['id'])->get()->toArray();
+            $fields2 = array();
+            foreach ($fields as $field) {
+                $fields2[$field['colname']] = $field;
+            }
+            $module['fields'] = $fields2;
+            return (object)$module;
+        } else {
+            return null;
         }
-        $module['fields'] = $fields2;
-        return (object)$module;
     }
 }
