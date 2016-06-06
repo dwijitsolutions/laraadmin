@@ -401,4 +401,54 @@ class Module extends Model
             return null;
         }
     }
+    
+    public static function validate($module_name, $request) {
+        $module = Module::get($module_name);
+        $rules = [];
+        if(isset($module)) {
+            $module_path = "App\\".$module_name;
+            foreach ($module->fields as $field) {
+                if(isset($request->$field['colname'])) {
+                    $col = "";
+                    if($field['required']) {
+                        $col .= "required|";
+                    }
+                    if($field['minlength'] != 0) {
+                        $col .= "min:".$field['minlength']."|";
+                    }
+                    if($field['maxlength'] != 0) {
+                        $col .= "max:".$field['maxlength']."|";
+                    }
+                    // 'name' => 'required|unique|min:5|max:256',
+                    // 'author' => 'required|max:50',
+                    // 'price' => 'decimal',
+                    // 'pages' => 'integer|max:5',
+                    // 'genre' => 'max:500',
+                    // 'description' => 'max:1000'
+                    if($col != "") {
+                        $rules[$field['colname']] = trim($col, "|");
+                    }
+                }
+            }
+            return $rules;
+        } else {
+            return $rules;
+        }
+    }
+    
+    public static function insert($module_name, $request) {
+        $module = Module::get($module_name);
+        if(isset($module)) {
+            $module_path = "App\\".$module_name;
+            $row = new $module_path;
+            foreach ($module->fields as $field) {
+                if(isset($request->$field['colname'])) {
+                    $row->$field['colname'] = $request->$field['colname'];
+                }
+            }
+            $row->save();
+        } else {
+            return null;
+        }
+    }
 }
