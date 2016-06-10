@@ -402,22 +402,27 @@ class Module extends Model
         }
     }
     
-    public static function validate($module_name, $request) {
+    public static function validateRules($module_name, $request) {
         $module = Module::get($module_name);
         $rules = [];
         if(isset($module)) {
             $module_path = "App\\".$module_name;
+            $ftypes = ModuleFieldTypes::getFTypes2();
             foreach ($module->fields as $field) {
                 if(isset($request->$field['colname'])) {
                     $col = "";
                     if($field['required']) {
                         $col .= "required|";
                     }
-                    if($field['minlength'] != 0) {
-                        $col .= "min:".$field['minlength']."|";
-                    }
-                    if($field['maxlength'] != 0) {
-                        $col .= "max:".$field['maxlength']."|";
+                    if(in_array($ftypes[$field['field_type']], array("Currency", "Decimal"))) {
+                        // No min + max length
+                    } else {
+                        if($field['minlength'] != 0) {
+                            $col .= "min:".$field['minlength']."|";
+                        }
+                        if($field['maxlength'] != 0) {
+                            $col .= "max:".$field['maxlength']."|";
+                        }
                     }
                     // 'name' => 'required|unique|min:5|max:256',
                     // 'author' => 'required|max:50',
@@ -441,6 +446,23 @@ class Module extends Model
         if(isset($module)) {
             $module_path = "App\\".$module_name;
             $row = new $module_path;
+            foreach ($module->fields as $field) {
+                if(isset($request->$field['colname'])) {
+                    $row->$field['colname'] = $request->$field['colname'];
+                }
+            }
+            $row->save();
+        } else {
+            return null;
+        }
+    }
+    
+    public static function updateRow($module_name, $request, $id) {
+        $module = Module::get($module_name);
+        if(isset($module)) {
+            $module_path = "App\\".$module_name;
+            //$row = new $module_path;
+            $row = $module_path::find($id);
             foreach ($module->fields as $field) {
                 if(isset($request->$field['colname'])) {
                     $row->$field['colname'] = $request->$field['colname'];

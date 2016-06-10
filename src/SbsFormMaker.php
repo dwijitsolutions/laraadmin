@@ -7,6 +7,11 @@ class SbsFormMaker
 {
 	public static function field($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
 	{
+		$row = null;
+		if(isset($module->row)) {
+			$row = $module->row;
+		}
+		
 		//print_r($module->fields);
 		$label = $module->fields[$field_name]['label'];
 		$field_type = $module->fields[$field_name]['field_type'];
@@ -51,6 +56,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				
 				$params['cols'] = 30;
 				$params['rows'] = 3;
@@ -66,6 +75,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				
 				$out .= Form::checkbox($field_name, $field_name, $default_val, $params);
 				$out .= '<div class="Switch Round On" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>';
@@ -75,6 +88,10 @@ class SbsFormMaker
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
+				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
 				}
 				
 				unset($params['data-rule-maxlength']);
@@ -87,6 +104,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				
 				unset($params['data-rule-maxlength']);
 				$params['data-rule-date'] = "true";
@@ -98,6 +119,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				
 				// ############### Remaining
 				$out .= Form::text($field_name, $default_val, $params);
@@ -107,6 +132,10 @@ class SbsFormMaker
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
+				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
 				}
 				
 				unset($params['data-rule-maxlength']);
@@ -123,6 +152,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				if($popup_vals != "") {
 					$popup_vals = SbsFormMaker::process_values($popup_vals);
 					//print_r(json_encode($popup_vals));
@@ -137,6 +171,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				
 				$params['data-rule-email'] = "true";
 				$out .= Form::email($field_name, $default_val, $params);
@@ -147,6 +185,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				
 				unset($params['data-rule-maxlength']);
 				$out .= Form::number($field_name, $default_val, $params);
@@ -156,6 +198,10 @@ class SbsFormMaker
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
+				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
 				}
 				
 				// ############### Remaining
@@ -168,6 +214,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Integer':
@@ -177,6 +228,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Mobile':
@@ -185,6 +241,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Multiselect':
@@ -201,6 +262,11 @@ class SbsFormMaker
 						$default_val = "";
 					}
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				if($popup_vals != "") {
 					$popup_vals = SbsFormMaker::process_values($popup_vals);
 				} else {
@@ -214,6 +280,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Password':
@@ -222,6 +293,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::password($field_name, $default_val, $params);
 				break;
 			case 'Radio':
@@ -234,6 +310,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				if($popup_vals != "") {
 					$popup_vals = array_values(json_decode($popup_vals));
 				} else {
@@ -255,6 +336,10 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'Taginput':
@@ -267,6 +352,11 @@ class SbsFormMaker
 				$params['multiple'] = "true";
 				$params['rel'] = "taginput";
 				unset($params['placeholder']);
+				
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$defaultvalue = $row->$field_name;
+				}
 				
 				if($default_val == null) {
 					$defaultvalue2 = json_decode($defaultvalue);
@@ -294,6 +384,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::textarea($field_name, $default_val, $params);
 				break;
 			case 'TextField':
@@ -302,6 +397,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
 			case 'URL':
@@ -310,6 +410,11 @@ class SbsFormMaker
 				if($default_val == null) {
 					$default_val = $defaultvalue;
 				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				
 				$params['data-rule-url'] = "true";
 				$out .= Form::text($field_name, $default_val, $params);
 				break;
