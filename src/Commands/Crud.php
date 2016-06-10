@@ -95,7 +95,7 @@ class Crud extends Command
             '_ucCamel_casePlural_'       => ucfirst(str_plural(camel_case($table))),
         ];
 
-        $templateDirectory = __DIR__.'/Templates';
+        $templateDirectory = __DIR__.'/../Templates';
 
         if (is_dir(base_path('resources/laracogs/crud'))) {
             $templateDirectory = base_path('resources/laracogs/crud');
