@@ -1,9 +1,9 @@
 <?php
-namespace Dwijitso\Sbscrud;
+namespace Dwij\Laraadmin;
 
 use Collective\Html\FormFacade as Form;
-use Dwijitso\Sbscrud\Models\ModuleFieldTypes;
-class SbsFormMaker
+use Dwij\Laraadmin\Models\ModuleFieldTypes;
+class LAFormMaker
 {
 	public static function field($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
 	{
@@ -158,7 +158,7 @@ class SbsFormMaker
 				}
 				
 				if($popup_vals != "") {
-					$popup_vals = SbsFormMaker::process_values($popup_vals);
+					$popup_vals = LAFormMaker::process_values($popup_vals);
 					//print_r(json_encode($popup_vals));
 				} else {
 					$popup_vals = array();
@@ -268,7 +268,7 @@ class SbsFormMaker
 				}
 				
 				if($popup_vals != "") {
-					$popup_vals = SbsFormMaker::process_values($popup_vals);
+					$popup_vals = LAFormMaker::process_values($popup_vals);
 				} else {
 					$popup_vals = array();
 				}
@@ -372,7 +372,7 @@ class SbsFormMaker
 						$default_val = array();
 					}
 				}
-				$default_val = SbsFormMaker::process_values($default_val);
+				$default_val = LAFormMaker::process_values($default_val);
 				$out .= Form::select($field_name, $default_val, $default_val, $params);
 				break;
 			case 'Textarea':

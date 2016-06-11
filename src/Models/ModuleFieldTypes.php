@@ -1,6 +1,6 @@
 <?php
 
-namespace Dwijitso\Sbscrud\Models;
+namespace Dwij\Laraadmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

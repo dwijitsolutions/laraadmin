@@ -1,6 +1,6 @@
 <?php
 
-namespace Dwijitso\Sbscrud;
+namespace Dwij\Laraadmin;
 
 use Exception;
 use Illuminate\Filesystem\Filesystem;

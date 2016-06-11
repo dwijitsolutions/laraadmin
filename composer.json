@@ -1,6 +1,6 @@
  {
-    "name": "dwijitso/sbscrud",
-    "description": "This is proprietory package of Dwij IT Solutions for Dwij SBS for CRUD generation from defined models.",
+    "name": "dwij/laraadmin",
+    "description": "This is main package for LaraAdmin for Migrations, CRUD generation and Form Maker.",
     "license": "MIT",
     "require": {
         "php": ">=5.5.9",
@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Dwijitso\\Sbscrud\\": "src/"
+            "Dwij\\Laraadmin\\": "src/"
         },
         "files": [
         ]

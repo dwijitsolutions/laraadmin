@@ -14,7 +14,7 @@ return [
 
     'crud' => [
 
-        'template_source'               => base_path('resources/sbscrud'),
+        'template_source'               => base_path('resources/laraadmin'),
 
         /*
         |--------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-<?php namespace Dwijitso\Sbscrud\Controllers;
+<?php namespace Dwij\Laraadmin\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Config;

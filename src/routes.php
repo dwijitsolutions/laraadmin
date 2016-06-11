@@ -1,5 +1,5 @@
 <?php
 
-//use Dwijitso\Sbscrud\Controllers\CrudController;
+//use Dwij\Laraadmin\Controllers\CrudController;
 
-//Route::get('sbscrud', 'CrudController@index');
+//Route::get('laraadmin', 'CrudController@index');

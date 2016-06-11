@@ -1,13 +1,13 @@
 <?php
 
-namespace Dwijitso\Sbscrud;
+namespace Dwij\Laraadmin;
 
 use Artisan;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
-class SbsCrudProvider extends ServiceProvider
+class LAProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -16,19 +16,19 @@ class SbsCrudProvider extends ServiceProvider
      */
     public function boot()
     {
-        // @mkdir(base_path('resources/sbscrud'));
-        // @mkdir(base_path('database/migrations/sbscrud'));
+        // @mkdir(base_path('resources/laraadmin'));
+        // @mkdir(base_path('database/migrations/laraadmin'));
         /*
         $this->publishes([
-            __DIR__.'/Templates' => base_path('resources/sbscrud'),
-            __DIR__.'/config.php' => base_path('config/sbscrud.php'),
-            __DIR__.'/Migrations' => base_path('database/migrations/sbscrud')
+            __DIR__.'/Templates' => base_path('resources/laraadmin'),
+            __DIR__.'/config.php' => base_path('config/laraadmin.php'),
+            __DIR__.'/Migrations' => base_path('database/migrations/laraadmin')
         ]);
         */
-        //echo "SBSCrud Migrations started...";
-        Artisan::call('migrate', ['--path' => "vendor/dwijitso/sbscrud/src/Migrations/"]);
+        //echo "Laraadmin Migrations started...";
+        Artisan::call('migrate', ['--path' => "vendor/dwij/laraadmin/src/Migrations/"]);
         //echo "Migrations completed !!!.";
-        // Execute by php artisan vendor:publish --provider="Dwijitso\Sbscrud\SbsCrudProvider"
+        // Execute by php artisan vendor:publish --provider="Dwij\Laraadmin\LAProvider"
     }
 
     /**
@@ -63,7 +63,7 @@ class SbsCrudProvider extends ServiceProvider
         $loader->alias('Form', \Collective\Html\FormFacade::class);
         $loader->alias('HTML', \Collective\Html\HtmlFacade::class);
         
-        //$this->app->make('Dwijitso\Sbscrud\CrudController');
+        //$this->app->make('Dwij\Laraadmin\CrudController');
         
         /*
         |--------------------------------------------------------------------------
@@ -71,9 +71,9 @@ class SbsCrudProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         
-        // SbsForm Maker
-        Blade::directive('sbsform_field', function($expression) {
-            return "<?php echo SbsFormMaker::field$expression; ?>";
+        // LAForm Maker
+        Blade::directive('laform_field', function($expression) {
+            return "<?php echo LAFormMaker::field$expression; ?>";
         });
         
         // Form Maker
@@ -104,8 +104,8 @@ class SbsCrudProvider extends ServiceProvider
         */
         
         $this->commands([
-            \Dwijitso\Sbscrud\Commands\Crud::class,
-            \Dwijitso\Sbscrud\Commands\TableCrud::class
+            \Dwij\Laraadmin\Commands\Crud::class,
+            \Dwij\Laraadmin\Commands\TableCrud::class
         ]);
 
         

@@ -1,13 +1,13 @@
 <?php
 
-namespace Dwijitso\Sbscrud\Commands;
+namespace Dwij\Laraadmin\Commands;
 
 use Config;
 use Artisan;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Dwijitso\Sbscrud\CrudGenerator;
+use Dwij\Laraadmin\CrudGenerator;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 
 class Crud extends Command
@@ -19,7 +19,7 @@ class Crud extends Command
      *
      * @var string
      */
-    protected $signature = 'dwijsbs:crud {table} {--api} {--migration} {--bootstrap} {--semantic} {--schema=}';
+    protected $signature = 'la:crud {table} {--api} {--migration} {--bootstrap} {--semantic} {--schema=}';
 
     /**
      * The console command description.
