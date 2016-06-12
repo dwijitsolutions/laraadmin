@@ -76,6 +76,11 @@ class LAProvider extends ServiceProvider
             return "<?php echo LAFormMaker::field$expression; ?>";
         });
         
+        // LAForm Maker - Display Values
+        Blade::directive('laform_display', function($expression) {
+            return "<?php echo LAFormMaker::display$expression; ?>";
+        });
+        
         // Form Maker
         Blade::directive('form_maker_table', function($expression) {
             return "<?php echo FormMaker::fromTable$expression; ?>";

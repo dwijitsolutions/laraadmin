@@ -435,4 +435,22 @@ class LAFormMaker
 		}
 		return $out;
 	}
+	
+	public static function display($module, $field_name, $class = 'form-control')
+	{
+		$label = $module->fields[$field_name]['label'];
+		$field_type = $module->fields[$field_name]['field_type'];
+		$field_type = ModuleFieldTypes::find($field_type);
+		
+		$row = null;
+		if(isset($module->row)) {
+			$row = $module->row;
+		}
+		
+		$out = '<div class="form-group">';
+		$out .= '<label for="'.$field_name.'" class="col-md-2">'.$label.' :</label>';
+		$out .= '<div class="col-md-10 fvalue">'.$row->$field_name.'</div>';
+		$out .= '</div>';
+		return $out;
+	}
 }
