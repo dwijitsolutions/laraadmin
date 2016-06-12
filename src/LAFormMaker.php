@@ -449,7 +449,114 @@ class LAFormMaker
 		
 		$out = '<div class="form-group">';
 		$out .= '<label for="'.$field_name.'" class="col-md-2">'.$label.' :</label>';
-		$out .= '<div class="col-md-10 fvalue">'.$row->$field_name.'</div>';
+		
+		$value = $row->$field_name;
+		
+		switch ($field_type->name) {
+			case 'Address':
+				if($value != "") {
+					$value = $value.'<a target="_blank" class="pull-right btn btn-xs btn-primary btn-circle" href="http://maps.google.com?addr='.$value.'" data-toggle="tooltip" data-placement="left" title="Check location on Map"><i class="fa fa-map-marker"></i></a>';
+				}
+				break;
+			case 'Checkbox':
+				if($value == 0) {
+					$value = "<div class='label label-danger'>False</div>";
+				} else {
+					$value = "<div class='label label-success'>True</div>";
+				}
+				break;
+			case 'Currency':
+				
+				break;
+			case 'Date':
+				$dt = strtotime($value);
+				$value = date("d M Y", $dt);
+				break;
+			case 'Datetime':
+				$dt = strtotime($value);
+				$value = date("d M Y, h:i A", $dt);
+				break;
+			case 'Decimal':
+				
+				break;
+			case 'Dropdown':
+				
+				break;
+			case 'Email':
+				$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
+				break;
+			case 'Float':
+				
+				break;
+			case 'HTML':
+				break;
+			case 'Image':
+				$value = '<a class="preview" target="_blank" href="'.$value.'"><img src="'.$value.'"></a>';
+				break;
+			case 'Integer':
+				
+				break;
+			case 'Mobile':
+				$value = '<a target="_blank" href="tel:'.$value.'">'.$value.'</a>';
+				break;
+			case 'Multiselect':
+				$valueOut = "";
+				if (strpos($value, '[') !== false) {
+					$arr = json_decode($value);
+					foreach ($arr as $key) {
+						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+					}
+				} else if (strpos($value, ',') !== false) {
+					$arr = array_map('trim', explode(",", $value));
+					foreach ($arr as $key) {
+						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+					}
+				} else {
+					$valueOut = "<div class='label label-primary'>".$value."</div> ";
+				}
+				$value = $valueOut;
+				break;
+			case 'Name':
+				
+				break;
+			case 'Password':
+				$value = '<a href="#" data-toggle="tooltip" data-placement="top" title="Cannot be declassified !!!">********</a>';
+				break;
+			case 'Radio':
+				
+				break;
+			case 'String':
+				
+				break;
+			case 'Taginput':
+				$valueOut = "";
+				if (strpos($value, '[') !== false) {
+					$arr = json_decode($value);
+					foreach ($arr as $key) {
+						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+					}
+				} else if (strpos($value, ',') !== false) {
+					$arr = array_map('trim', explode(",", $value));
+					foreach ($arr as $key) {
+						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+					}
+				} else {
+					$valueOut = "<div class='label label-primary'>".$value."</div> ";
+				}
+				$value = $valueOut;
+				break;
+			case 'Textarea':
+				
+				break;
+			case 'TextField':
+				
+				break;
+			case 'URL':
+				$value = '<a target="_blank" href="'.$value.'">'.$value.'</a>';
+				break;
+		}
+		
+		$out .= '<div class="col-md-10 fvalue">'.$value.'</div>';
 		$out .= '</div>';
 		return $out;
 	}
