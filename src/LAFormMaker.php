@@ -5,7 +5,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 class LAFormMaker
 {
-	public static function field($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
+	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
 	{
 		$row = null;
 		if(isset($module->row)) {
