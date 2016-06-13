@@ -81,6 +81,7 @@ class Crud extends Command
             $this->createModel();
             $this->createViews();
             $this->appendRoutes();
+            $this->addMenu();
                         
         } catch (Exception $e) {
             throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
@@ -200,5 +201,17 @@ class Crud extends Command
         $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
         
         file_put_contents($routesFile, $md, FILE_APPEND);
+    }
+    
+    protected function addMenu() {
+        $this->line('Add Menu...');
+        
+        $menu = '<li><a href="{{ url("'.$this->dbTableName.'") }}"><i class="fa fa-cube"></i> <span>'.$this->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
+        
+        $md = file_get_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'));
+        
+        $md = str_replace("<!-- LAMenus -->", $menu, $md);
+        
+        file_put_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'), $md);
     }
 }
