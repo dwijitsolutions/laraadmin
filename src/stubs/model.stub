@@ -1,0 +1,21 @@
+<?php
+/**
+ * Model genrated using LaraAdmin
+ * Help: http://laraadmin.com
+ */
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class __model_class_name__ extends Model
+{
+    protected $table = '__db_table_name__';
+	
+	// By default making all fields fillable
+	// protected $fillable = [];
+	
+	protected $hidden = [
+        
+    ];
+}

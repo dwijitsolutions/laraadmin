@@ -74,7 +74,10 @@ class Crud extends Command
         $this->module = $module;
         
         try {
+            
             $this->createController();
+            $this->createModel();
+                        
         } catch (Exception $e) {
             throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
         }
@@ -105,5 +108,15 @@ class Crud extends Command
         $md = str_replace("__singular_var__", $this->singularVar, $md);
         
         file_put_contents(base_path('app/Http/Controllers/'.$this->controllerName.".php"), $md);
+    }
+    
+    protected function createModel() {
+        $this->line('Creating model...');
+        $md = file_get_contents($this->templateDirectory."/model.stub");
+        
+        $md = str_replace("__model_class_name__", $this->modelName, $md);
+        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
+        
+        file_put_contents(base_path('app/'.$this->modelName.".php"), $md);
     }
 }
