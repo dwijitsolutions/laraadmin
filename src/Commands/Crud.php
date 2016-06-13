@@ -8,28 +8,25 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\CrudGenerator;
-use Illuminate\Console\AppNamespaceDetectorTrait;
 
 class Crud extends Command
 {
-    use AppNamespaceDetectorTrait;
-
     /**
-     * The console command name.
+     * The command signature.
      *
      * @var string
      */
     protected $signature = 'la:crud {table} {--api} {--migration} {--bootstrap} {--semantic} {--schema=}';
 
     /**
-     * The console command description.
+     * The command description.
      *
      * @var string
      */
     protected $description = 'This is proprietory package of Dwij IT Solutions for Dwij SBS for CRUD generation from defined models.';
 
     /**
-     * Generate a CRUD stack
+     * Generate a CRUD files inclusing Controller, Model and Routes
      *
      * @return mixed
      */
@@ -95,7 +92,7 @@ class Crud extends Command
             '_ucCamel_casePlural_'       => ucfirst(str_plural(camel_case($table))),
         ];
 
-        $templateDirectory = __DIR__.'/../Templates';
+        $templateDirectory = __DIR__.'/../stubs';
 
         if (is_dir(base_path('resources/laracogs/crud'))) {
             $templateDirectory = base_path('resources/laracogs/crud');
@@ -146,7 +143,7 @@ class Crud extends Command
                 '_ucCamel_casePlural_'       => ucfirst(str_plural(camel_case($table))),
             ];
 
-            $templateDirectory = __DIR__.'/Templates';
+            $templateDirectory = __DIR__.'/stubs';
 
             if (is_dir(base_path('resources/laracogs/crud'))) {
                 $templateDirectory = base_path('resources/laracogs/crud');
@@ -177,7 +174,7 @@ class Crud extends Command
         }
 
         if (! isset($config['template_source'])) {
-            $config['template_source'] = __DIR__.'/Templates';
+            $config['template_source'] = __DIR__.'/stubs';
         }
 
         try {

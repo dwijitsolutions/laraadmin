@@ -3,6 +3,7 @@ namespace Dwij\Laraadmin;
 
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
+
 class LAFormMaker
 {
 	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')

@@ -109,8 +109,8 @@ class LAProvider extends ServiceProvider
         */
         
         $this->commands([
-            \Dwij\Laraadmin\Commands\Crud::class,
-            \Dwij\Laraadmin\Commands\TableCrud::class
+            \Dwij\Laraadmin\Commands\Migration::class,
+            \Dwij\Laraadmin\Commands\Crud::class
         ]);
 
         
