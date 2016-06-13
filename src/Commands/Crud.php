@@ -129,7 +129,7 @@ class Crud extends Command
         // Create Folder
         @mkdir("resources/views/".$this->dbTableName, 0777, true);
         
-        // ============== Listing / Index ==============
+        // ============================ Listing / Index ============================
         $md = file_get_contents($this->templateDirectory."/views/index.blade.stub");
         
         $md = str_replace("__module_name__", $this->moduleName, $md);
@@ -147,5 +147,42 @@ class Crud extends Command
         $md = str_replace("__input_fields__", $inputFields, $md);
         
         file_put_contents(base_path('resources/views/'.$this->dbTableName.'/index.blade.php'), $md);
+        
+        // ============================ Edit ============================
+        $md = file_get_contents($this->templateDirectory."/views/edit.blade.stub");
+        
+        $md = str_replace("__module_name__", $this->moduleName, $md);
+        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
+        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
+        $md = str_replace("__singular_var__", $this->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
+        
+        // Listing columns
+        $inputFields = "";
+        foreach ($this->module->fields as $field) {
+            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
+        }
+        $inputFields = trim($inputFields);
+        $md = str_replace("__input_fields__", $inputFields, $md);
+        
+        file_put_contents(base_path('resources/views/'.$this->dbTableName.'/edit.blade.php'), $md);
+        
+        // ============================ Show ============================
+        $md = file_get_contents($this->templateDirectory."/views/show.blade.stub");
+        
+        $md = str_replace("__module_name__", $this->moduleName, $md);
+        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
+        $md = str_replace("__singular_var__", $this->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
+        
+        // Listing columns
+        $displayFields = "";
+        foreach ($this->module->fields as $field) {
+            $displayFields .= "\t\t\t\t\t\t@la_display($"."module, '".$field['colname']."')\n";
+        }
+        $displayFields = trim($displayFields);
+        $md = str_replace("__display_fields__", $displayFields, $md);
+        
+        file_put_contents(base_path('resources/views/'.$this->dbTableName.'/show.blade.php'), $md);
     }
 }
