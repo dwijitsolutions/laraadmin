@@ -1,0 +1,5 @@
+
+
+/* ================== __module_name__ ================== */
+Route::resource('__db_table_name__', '__controller_class_name__');
+Route::get('__singular_var___dt_ajax', '__controller_class_name__@dtajax');

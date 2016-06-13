@@ -1,9 +1,0 @@
-
-/*
-|--------------------------------------------------------------------------
-| _camel_case_ Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::resource('_lower_casePlural_', '_camel_case_Controller', ['except' => ['show']]);
-Route::post('_lower_casePlural_/search', '_camel_case_Controller@search');

@@ -80,6 +80,7 @@ class Crud extends Command
             $this->createController();
             $this->createModel();
             $this->createViews();
+            $this->appendRoutes();
                         
         } catch (Exception $e) {
             throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
@@ -184,5 +185,20 @@ class Crud extends Command
         $md = str_replace("__display_fields__", $displayFields, $md);
         
         file_put_contents(base_path('resources/views/'.$this->dbTableName.'/show.blade.php'), $md);
+    }
+    
+    protected function appendRoutes() {
+        $this->line('Appending routes...');
+        $routesFile = app_path('Http/routes.php');
+        
+        $md = file_get_contents($this->templateDirectory."/routes.stub");
+        
+        $md = str_replace("__module_name__", $this->moduleName, $md);
+        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
+        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
+        $md = str_replace("__singular_var__", $this->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
+        
+        file_put_contents($routesFile, $md, FILE_APPEND);
     }
 }
