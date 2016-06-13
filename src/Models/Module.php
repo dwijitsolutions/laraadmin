@@ -444,8 +444,8 @@ class Module extends Model
     public static function insert($module_name, $request) {
         $module = Module::get($module_name);
         if(isset($module)) {
-            $module_path = "App\\".$module_name;
-            $row = new $module_path;
+            $model = "App\\".ucfirst(str_singular($module_name));
+            $row = new $model;
             $row = Module::processDBRow($module, $request, $row);
             $row->save();
         } else {
@@ -456,9 +456,9 @@ class Module extends Model
     public static function updateRow($module_name, $request, $id) {
         $module = Module::get($module_name);
         if(isset($module)) {
-            $module_path = "App\\".$module_name;
+            $model = "App\\".ucfirst(str_singular($module_name));
             //$row = new $module_path;
-            $row = $module_path::find($id);
+            $row = $model::find($id);
             $row = Module::processDBRow($module, $request, $row);
             $row->save();
         } else {
