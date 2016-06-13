@@ -11,20 +11,21 @@ class Module extends Model
     protected $table = 'modules';
     
     protected $fillable = [
-        "name", "name_db"
+        "name", "name_db", "view_col"
     ];
     
     protected $hidden = [
         
     ];
     
-    public static function generate($module_name, $module_name_db, $fields) {
+    public static function generate($module_name, $module_name_db, $view_col, $fields) {
         
         $module = Module::where('name', $module_name)->first();
         if(!isset($module->id)) {
             $module = Module::create([
                 'name' => $module_name,
-                'name_db' => $module_name_db
+                'name_db' => $module_name_db,
+                'view_col' => $view_col
             ]);
         }
         $fields = Module::format_fields($fields);

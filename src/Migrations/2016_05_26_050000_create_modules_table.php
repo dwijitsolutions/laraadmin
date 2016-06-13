@@ -16,6 +16,7 @@ class CreateModulesTable extends Migration
             $table->increments('id');
             $table->string('name', 100);
             $table->string('name_db', 100);
+            $table->string('view_col', 100);
             $table->timestamps();
         });
     }

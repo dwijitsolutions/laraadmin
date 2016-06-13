@@ -21,8 +21,9 @@ class __migration_class_name__ extends Migration
 		/*
 		Row Format:
 		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
-		
-		Module::generate("Books", 'books', [
+		Module::generate("Module_ Name", "Table_Name", "view_column_name" []);
+        
+		Module::generate("Books", 'books', 'name', [
             ["name", 'Name', 'Name', false, '', 5, 256, true],
             ["author", 'Author', 'String', false, '', 0, 50, true],
             ["author_address", 'Author Address', 'Address', false, '', 0, 1000, true],

@@ -112,7 +112,5 @@ class LAProvider extends ServiceProvider
             \Dwij\Laraadmin\Commands\Migration::class,
             \Dwij\Laraadmin\Commands\Crud::class
         ]);
-
-        
     }
 }

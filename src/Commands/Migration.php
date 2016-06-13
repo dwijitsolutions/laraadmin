@@ -7,7 +7,6 @@ use Artisan;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Dwij\Laraadmin\CrudGenerator;
 
 class Migration extends Command
 {
@@ -16,7 +15,7 @@ class Migration extends Command
      *
      * @var string
      */
-    protected $signature = 'la:migration {table} {--api} {--migration} {--bootstrap} {--semantic} {--schema=}';
+    protected $signature = 'la:migration {table}';
 
     /**
      * The command description.
@@ -32,7 +31,6 @@ class Migration extends Command
      */
     public function handle()
     {
-        $crudGenerator = new CrudGenerator();
         $filesystem = new Filesystem();
         
         $table = $this->argument('table');
@@ -42,7 +40,7 @@ class Migration extends Command
             $table = str_replace("_table", "",$tname);
         }
         
-        $model_name = ucfirst(str_singular($table));
+        $modelName = ucfirst(str_singular($table));
         $tableP = str_plural(strtolower($table));
         $tableS = str_singular(strtolower($table));
         $migrationName = 'create_'.$tableP.'_table';
@@ -51,7 +49,7 @@ class Migration extends Command
         $dbTableName = $tableP;
         $moduleName = ucfirst(str_plural($table));
         
-        $this->info("Model:\t   ".$model_name);
+        $this->info("Model:\t   ".$modelName);
         $this->info("Module:\t   ".$moduleName);
         $this->info("Table:\t   ".$dbTableName);
         $this->info("Migration: ".$migrationName."\n");
