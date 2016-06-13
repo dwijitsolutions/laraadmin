@@ -1,4 +1,8 @@
 <?php
+/**
+ * Migration genrated using LaraAdmin
+ * Help: http://laraadmin.com
+ */
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,7 +18,7 @@ class __migration_class_name__ extends Migration
      */
     public function up()
     {
-        Module::generate("__module_name__", '__db_table_name__', [
+        Module::generate("__module_name__", '__db_table_name__', '__view_column__', [
             
         ]);
 		

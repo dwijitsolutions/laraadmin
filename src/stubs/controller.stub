@@ -1,4 +1,9 @@
 <?php
+/**
+ * Controller genrated using LaraAdmin
+ * Help: http://laraadmin.com
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,8 +20,8 @@ use App\__model_name__;
 class __controller_class_name__ extends Controller
 {
     public $show_action = true;
-    public $view_col = 'name';
-    public $listing_cols = ['id', 'name', 'author', 'pages', 'price'];
+    public $view_col = '__view_column__';
+    public $listing_cols = ['id', __listing_cols__];
     
     public function __construct() {
         // for authentication (optional)
@@ -24,15 +29,15 @@ class __controller_class_name__ extends Controller
     }
     
     /**
-     * Display a listing of the books.
+     * Display a listing of the __module_name__.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $module = Module::get('Books');
+        $module = Module::get('__module_name__');
         
-        return View('books.listing', [
+        return View('__view_folder__.listing', [
             'show_actions' => $this->show_action,
             'listing_cols' => $this->listing_cols,
             'module' => $module
@@ -40,7 +45,7 @@ class __controller_class_name__ extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new __singular_var__.
      *
      * @return \Illuminate\Http\Response
      */
@@ -50,14 +55,14 @@ class __controller_class_name__ extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created __singular_var__ in database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $rules = Module::validateRules("Books", $request);
+        $rules = Module::validateRules("__module_name__", $request);
         
         $validator = Validator::make($request->all(), $rules);
         
@@ -65,52 +70,52 @@ class __controller_class_name__ extends Controller
             return redirect()->back()->withErrors($validator)->withInput();;
         }
             
-        $insert_id = Module::insert("Books", $request);
+        $insert_id = Module::insert("__module_name__", $request);
         
-        return redirect()->route('books.index');
+        return redirect()->route('__route_resource__.index');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified __singular_var__.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $book = __model_name__::find($id);
-        $module = Module::get('Books');
-        $module->row = $book;
-        return view('books.view', [
+        $__singular_var__ = __model_name__::find($id);
+        $module = Module::get('__module_name__');
+        $module->row = $__singular_var__;
+        return view('__view_folder__.view', [
             'module' => $module,
             'view_col' => $this->view_col,
             'no_header' => true,
             'no_padding' => "no-padding"
-        ])->with('book', $book);
+        ])->with('__singular_var__', $__singular_var__);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified __singular_var__.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $book = __model_name__::find($id);
+        $__singular_var__ = __model_name__::find($id);
         
-        $module = Module::get('Books');
+        $module = Module::get('__module_name__');
         
-        $module->row = $book;
+        $module->row = $__singular_var__;
         
-        return view('books.edit', [
+        return view('__view_folder__.edit', [
             'module' => $module,
             'view_col' => $this->view_col,
-        ])->with('book', $book);
+        ])->with('__singular_var__', $__singular_var__);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified __singular_var__ in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -118,7 +123,7 @@ class __controller_class_name__ extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = Module::validateRules("Books", $request);
+        $rules = Module::validateRules("__module_name__", $request);
         
         $validator = Validator::make($request->all(), $rules);
         
@@ -126,13 +131,13 @@ class __controller_class_name__ extends Controller
             return redirect()->back()->withErrors($validator)->withInput();;
         }
         
-        $insert_id = Module::updateRow("Books", $request, $id);
+        $insert_id = Module::updateRow("__module_name__", $request, $id);
         
-        return redirect()->route('books.index');
+        return redirect()->route('__route_resource__.index');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified __singular_var__ from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -141,7 +146,7 @@ class __controller_class_name__ extends Controller
     {
         __model_name__::find($id)->delete();
         // Redirecting to index() method
-        return redirect()->route('books.index');
+        return redirect()->route('__route_resource__.index');
     }
     
     /**
@@ -151,7 +156,7 @@ class __controller_class_name__ extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('books')->select($this->listing_cols);
+        $users = DB::table('__db_table_name__')->select($this->listing_cols);
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         
@@ -159,15 +164,15 @@ class __controller_class_name__ extends Controller
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
                 if($col == $this->view_col) {
-                    $data->data[$i][$j] = '<a href="'.url('books/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
+                    $data->data[$i][$j] = '<a href="'.url('__route_resource__/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
                 // else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
             }
             if($this->show_action) {
-                $output = '<a href="'.url('books/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
-                $output .= Form::open(['route' => ['books.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
+                $output = '<a href="'.url('__route_resource__/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+                $output .= Form::open(['route' => ['__route_resource__.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
                 $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
                 $output .= Form::close();
                 $data->data[$i][] = (string)$output;

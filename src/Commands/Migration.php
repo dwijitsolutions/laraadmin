@@ -63,6 +63,7 @@ class Migration extends Command
             $migrationData = str_replace("__migration_class_name__", $migrationClassName, $migrationData);
             $migrationData = str_replace("__db_table_name__", $dbTableName, $migrationData);
             $migrationData = str_replace("__module_name__", $moduleName, $migrationData);
+            $migrationData = str_replace("__view_column__", "write_view_column_name_here e.g. name", $migrationData);
             
             file_put_contents(base_path('database/migrations/'.$migrationFileName), $migrationData);
             

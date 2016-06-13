@@ -7,6 +7,7 @@ use Artisan;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Dwij\Laraadmin\Models\Module;
 
 class Crud extends Command
 {
@@ -25,12 +26,15 @@ class Crud extends Command
     protected $description = 'Generate CRUD Methods for given Table / Module.';
     
     /* ================ Config ================ */
+    var $module = null;
+    var $templateDirectory = "";
+    
     var $controllerName = "";
     var $modelName = "";
     var $moduleName = "";
     var $dbTableName = "";
+    var $singularVar = "";
     
-
     /**
      * Generate a CRUD files inclusing Controller, Model and Routes
      *
@@ -39,6 +43,7 @@ class Crud extends Command
     public function handle()
     {
         $filesystem = new Filesystem();
+        $this->templateDirectory = __DIR__.'/../stubs';
         
         $table = $this->argument('table');
         
@@ -53,13 +58,20 @@ class Crud extends Command
         $this->dbTableName = $tableP;
         $this->moduleName = ucfirst(str_plural($table));
         $this->controllerName = ucfirst(str_plural($table))."Controller";
+        $this->singularVar = str_singular($table);
         
         $this->info("Model:\t    ".$this->modelName);
         $this->info("Module:\t    ".$this->moduleName);
         $this->info("Table:\t    ".$this->dbTableName);
         $this->info("Controller: ".$this->controllerName);
         
-        $templateDirectory = __DIR__.'/../stubs';
+        $module = Module::get($this->moduleName);
+        
+        if(!isset($module->id)) {
+            throw new Exception("Please run 'php artisan migrate' for 'create_".$this->dbTableName."_table' in order to create CRUD.\nOr check if any problem in Module Name '".$this->moduleName."'.", 1);
+            return;
+        }
+        $this->module = $module;
         
         try {
             $this->createController();
@@ -72,12 +84,26 @@ class Crud extends Command
     
     protected function createController() {
         $this->line('Creating controller...');
-        $md = file_get_contents($templateDirectory."/controller.stub");
+        $md = file_get_contents($this->templateDirectory."/controller.stub");
         
         $md = str_replace("__controller_class_name__", $this->controllerName, $md);
         $md = str_replace("__model_name__", $this->modelName, $md);
-        $md = str_replace("__module_name__", $moduleName, $md);
+        $md = str_replace("__module_name__", $this->moduleName, $md);
+        $md = str_replace("__view_column__", $this->module->view_col, $md);
         
-        file_put_contents(base_path('app/Http/Controllers/'.$this->controllerName), $md);
+        // Listing columns
+        $listing_cols = "";
+        foreach ($this->module->fields as $field) {
+            $listing_cols .= "'".$field['colname']."', ";
+        }
+        $listing_cols = trim($listing_cols, ", ");
+        
+        $md = str_replace("__listing_cols__", $listing_cols, $md);
+        $md = str_replace("__view_folder__", $this->dbTableName, $md);
+        $md = str_replace("__route_resource__", $this->dbTableName, $md);
+        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
+        $md = str_replace("__singular_var__", $this->singularVar, $md);
+        
+        file_put_contents(base_path('app/Http/Controllers/'.$this->controllerName.".php"), $md);
     }
 }
