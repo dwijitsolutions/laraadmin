@@ -264,7 +264,7 @@ class LAFormMaker
 				}
 				// Override the edit value
 				if(isset($row) && isset($row->$field_name)) {
-					$default_val = $row->$field_name;
+					$default_val = json_decode($row->$field_name);
 				}
 				
 				if($popup_vals != "") {
@@ -272,7 +272,7 @@ class LAFormMaker
 				} else {
 					$popup_vals = array();
 				}
-				$out .= Form::select($field_name, $popup_vals, $default_val, $params);
+				$out .= Form::select($field_name."[]", $popup_vals, $default_val, $params);
 				break;
 			case 'Name':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -355,7 +355,7 @@ class LAFormMaker
 				
 				// Override the edit value
 				if(isset($row) && isset($row->$field_name)) {
-					$defaultvalue = $row->$field_name;
+					$default_val = json_decode($row->$field_name);
 				}
 				
 				if($default_val == null) {
@@ -373,7 +373,7 @@ class LAFormMaker
 					}
 				}
 				$default_val = LAFormMaker::process_values($default_val);
-				$out .= Form::select($field_name, $default_val, $default_val, $params);
+				$out .= Form::select($field_name."[]", $default_val, $default_val, $params);
 				break;
 			case 'Textarea':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -455,7 +455,7 @@ class LAFormMaker
 		switch ($field_type->name) {
 			case 'Address':
 				if($value != "") {
-					$value = $value.'<a target="_blank" class="pull-right btn btn-xs btn-primary btn-circle" href="http://maps.google.com?addr='.$value.'" data-toggle="tooltip" data-placement="left" title="Check location on Map"><i class="fa fa-map-marker"></i></a>';
+					$value = $value.'<a target="_blank" class="pull-right btn btn-xs btn-primary btn-circle" href="http://maps.google.com/?q='.$value.'" data-toggle="tooltip" data-placement="left" title="Check location on Map"><i class="fa fa-map-marker"></i></a>';
 				}
 				break;
 			case 'Checkbox':

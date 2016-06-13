@@ -445,11 +445,7 @@ class Module extends Model
         if(isset($module)) {
             $module_path = "App\\".$module_name;
             $row = new $module_path;
-            foreach ($module->fields as $field) {
-                if(isset($request->$field['colname'])) {
-                    $row->$field['colname'] = $request->$field['colname'];
-                }
-            }
+            $row = Module::processDBRow($module, $request, $row);
             $row->save();
         } else {
             return null;
@@ -462,14 +458,42 @@ class Module extends Model
             $module_path = "App\\".$module_name;
             //$row = new $module_path;
             $row = $module_path::find($id);
-            foreach ($module->fields as $field) {
-                if(isset($request->$field['colname'])) {
-                    $row->$field['colname'] = $request->$field['colname'];
-                }
-            }
+            $row = Module::processDBRow($module, $request, $row);
             $row->save();
         } else {
             return null;
         }
+    }
+    
+    public static function processDBRow($module, $request, $row) {
+        $ftypes = ModuleFieldTypes::getFTypes2();
+        
+        foreach ($module->fields as $field) {
+            if(isset($request->$field['colname'])) {
+                
+                switch ($ftypes[$field['field_type']]) {
+                    case 'Checkbox':
+                        #TODO: Bug fix
+                        $row->$field['colname'] = $request->$field['colname'];
+                        break;
+                    case 'Datetime':
+                        #TODO: Bug fix
+                        $row->$field['colname'] = $request->$field['colname'];
+                        break;
+                    case 'Multiselect':
+                        #TODO: Bug fix
+                        $row->$field['colname'] = json_encode($request->$field['colname']);
+                        break;
+                    case 'Taginput':
+                        #TODO: Bug fix
+                        $row->$field['colname'] = json_encode($request->$field['colname']);
+                        break;
+                    default:
+                        $row->$field['colname'] = $request->$field['colname'];
+                        break;
+                }
+            }
+        }
+        return $row;
     }
 }
