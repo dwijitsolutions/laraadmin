@@ -34,6 +34,7 @@ class Crud extends Command
     var $moduleName = "";
     var $dbTableName = "";
     var $singularVar = "";
+    var $singularCapitalVar = "";
     
     /**
      * Generate a CRUD files inclusing Controller, Model and Routes
@@ -59,6 +60,7 @@ class Crud extends Command
         $this->moduleName = ucfirst(str_plural($table));
         $this->controllerName = ucfirst(str_plural($table))."Controller";
         $this->singularVar = str_singular($table);
+        $this->singularCapitalVar = ucfirst(str_singular($table));
         
         $this->info("Model:\t    ".$this->modelName);
         $this->info("Module:\t    ".$this->moduleName);
@@ -77,6 +79,7 @@ class Crud extends Command
             
             $this->createController();
             $this->createModel();
+            $this->createViews();
                         
         } catch (Exception $e) {
             throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
@@ -118,5 +121,31 @@ class Crud extends Command
         $md = str_replace("__db_table_name__", $this->dbTableName, $md);
         
         file_put_contents(base_path('app/'.$this->modelName.".php"), $md);
+    }
+    
+    protected function createViews() {
+        $this->line('Creating views...');
+        
+        // Create Folder
+        @mkdir("resources/views/".$this->dbTableName, 0777, true);
+        
+        // ============== Listing / Index ==============
+        $md = file_get_contents($this->templateDirectory."/views/index.blade.stub");
+        
+        $md = str_replace("__module_name__", $this->moduleName, $md);
+        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
+        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
+        $md = str_replace("__singular_var__", $this->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
+        
+        // Listing columns
+        $inputFields = "";
+        foreach ($this->module->fields as $field) {
+            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
+        }
+        $inputFields = trim($inputFields);
+        $md = str_replace("__input_fields__", $inputFields, $md);
+        
+        file_put_contents(base_path('resources/views/'.$this->dbTableName.'/index.blade.php'), $md);
     }
 }

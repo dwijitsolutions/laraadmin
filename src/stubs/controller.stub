@@ -37,7 +37,7 @@ class __controller_class_name__ extends Controller
     {
         $module = Module::get('__module_name__');
         
-        return View('__view_folder__.listing', [
+        return View('__view_folder__.index', [
             'show_actions' => $this->show_action,
             'listing_cols' => $this->listing_cols,
             'module' => $module
@@ -86,7 +86,7 @@ class __controller_class_name__ extends Controller
         $__singular_var__ = __model_name__::find($id);
         $module = Module::get('__module_name__');
         $module->row = $__singular_var__;
-        return view('__view_folder__.view', [
+        return view('__view_folder__.show', [
             'module' => $module,
             'view_col' => $this->view_col,
             'no_header' => true,
