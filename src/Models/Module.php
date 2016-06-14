@@ -11,7 +11,7 @@ class Module extends Model
     protected $table = 'modules';
     
     protected $fillable = [
-        "name", "name_db", "view_col"
+        "name", "name_db", "label", "view_col"
     ];
     
     protected $hidden = [
@@ -20,14 +20,21 @@ class Module extends Model
     
     public static function generate($module_name, $module_name_db, $view_col, $fields) {
         
+        $moduleLabel = $module_name;
+        if (strpos($module_name, ' ') !== false) {
+            $module_name = str_replace(" ", "", $module_name);
+        }
+        
         $module = Module::where('name', $module_name)->first();
         if(!isset($module->id)) {
             $module = Module::create([
                 'name' => $module_name,
+                'label' => $moduleLabel,
                 'name_db' => $module_name_db,
                 'view_col' => $view_col
             ]);
         }
+        
         $fields = Module::format_fields($fields);
         $ftypes = ModuleFieldTypes::getFTypes();
         //print_r($ftypes);
@@ -496,5 +503,15 @@ class Module extends Model
             }
         }
         return $row;
+    }
+    
+    public static function itemCount($module_name) {
+        $module = Module::get($module_name);
+        if(isset($module)) {
+            $model = "App\\".ucfirst(str_singular($module_name));
+            return $model::count();
+        } else {
+            return 0;
+        }
     }
 }
