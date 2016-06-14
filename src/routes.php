@@ -1,5 +1,5 @@
 <?php
 
-//use Dwij\Laraadmin\Controllers\CrudController;
+//use Dwij\Laraadmin\Controllers\ModuleController;
 
-//Route::get('laraadmin', 'CrudController@index');
+//Route::get('laraadmin', 'ModuleController@index');
