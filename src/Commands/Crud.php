@@ -16,14 +16,14 @@ class Crud extends Command
      *
      * @var string
      */
-    protected $signature = 'la:crud {table}';
+    protected $signature = 'la:crud {module}';
 
     /**
      * The command description.
      *
      * @var string
      */
-    protected $description = 'Generate CRUD Methods for given Table / Module.';
+    protected $description = 'Generate CRUD Methods for given Module.';
     
     /* ================ Config ================ */
     var $module = null;
@@ -46,21 +46,21 @@ class Crud extends Command
         $filesystem = new Filesystem();
         $this->templateDirectory = __DIR__.'/../stubs';
         
-        $table = $this->argument('table');
+        $module = $this->argument('module');
         
-        if(starts_with($table, "create_")) {
-            $tname = str_replace("create_", "",$table);
-            $table = str_replace("_table", "",$tname);
+        if(starts_with($module, "create_")) {
+            $tname = str_replace("create_", "",$module);
+            $module = str_replace("_table", "",$tname);
         }
         
-        $this->modelName = ucfirst(str_singular($table));
-        $tableP = str_plural(strtolower($table));
-        $tableS = str_singular(strtolower($table));
+        $this->modelName = ucfirst(str_singular($module));
+        $tableP = str_plural(strtolower($module));
+        $tableS = str_singular(strtolower($module));
         $this->dbTableName = $tableP;
-        $this->moduleName = ucfirst(str_plural($table));
-        $this->controllerName = ucfirst(str_plural($table))."Controller";
-        $this->singularVar = str_singular($table);
-        $this->singularCapitalVar = ucfirst(str_singular($table));
+        $this->moduleName = ucfirst(str_plural($module));
+        $this->controllerName = ucfirst(str_plural($module))."Controller";
+        $this->singularVar = str_singular($module);
+        $this->singularCapitalVar = ucfirst(str_singular($module));
         
         $this->info("Model:\t    ".$this->modelName);
         $this->info("Module:\t    ".$this->moduleName);
