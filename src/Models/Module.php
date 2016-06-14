@@ -11,7 +11,7 @@ class Module extends Model
     protected $table = 'modules';
     
     protected $fillable = [
-        "name", "name_db", "label", "view_col"
+        "name", "name_db", "label", "view_col", "model", "controller", "is_gen"
     ];
     
     protected $hidden = [
@@ -24,6 +24,15 @@ class Module extends Model
         if (strpos($module_name, ' ') !== false) {
             $module_name = str_replace(" ", "", $module_name);
         }
+        $controllerName = $module_name."Controller";
+        $modelName = ucfirst(str_singular($module_name));
+        $is_gen = false;
+        
+        // Check is Generated
+        if(file_exists(base_path('app/Http/Controllers/'.$controllerName.".php")) && 
+            file_exists(base_path('app/'.$modelName.".php"))) {
+            $is_gen = true;
+        }
         
         $module = Module::where('name', $module_name)->first();
         if(!isset($module->id)) {
@@ -31,7 +40,10 @@ class Module extends Model
                 'name' => $module_name,
                 'label' => $moduleLabel,
                 'name_db' => $module_name_db,
-                'view_col' => $view_col
+                'view_col' => $view_col,
+                'model' => $modelName,
+                'controller' => $controllerName,
+                'is_gen' => $is_gen,
             ]);
         }
         
@@ -508,8 +520,13 @@ class Module extends Model
     public static function itemCount($module_name) {
         $module = Module::get($module_name);
         if(isset($module)) {
-            $model = "App\\".ucfirst(str_singular($module_name));
-            return $model::count();
+            $modelName = ucfirst(str_singular($module_name));
+            if(file_exists(base_path('app/'.$modelName.".php"))) {
+                $model = "App\\".$modelName;
+                return $model::count();
+            } else {
+                return "Model doesn't exists";
+            }
         } else {
             return 0;
         }

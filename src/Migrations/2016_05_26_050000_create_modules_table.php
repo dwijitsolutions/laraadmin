@@ -18,6 +18,9 @@ class CreateModulesTable extends Migration
             $table->string('label', 100);
             $table->string('name_db', 50);
             $table->string('view_col', 50);
+            $table->string('model', 50);
+            $table->string('controller', 100);
+            $table->boolean('is_gen');
             $table->timestamps();
         });
     }
