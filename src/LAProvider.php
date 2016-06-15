@@ -81,27 +81,6 @@ class LAProvider extends ServiceProvider
             return "<?php echo LAFormMaker::display$expression; ?>";
         });
         
-        // Form Maker
-        Blade::directive('form_maker_table', function($expression) {
-            return "<?php echo FormMaker::fromTable$expression; ?>";
-        });
-        Blade::directive('form_maker_array', function($expression) {
-            return "<?php echo FormMaker::fromArray$expression; ?>";
-        });
-        Blade::directive('form_maker_object', function($expression) {
-            return "<?php echo FormMaker::fromObject$expression; ?>";
-        });
-        Blade::directive('form_maker_columns', function($expression) {
-            return "<?php echo FormMaker::getTableColumns$expression; ?>";
-        });
-        // Label Maker
-        Blade::directive('input_maker_label', function($expression) {
-            return "<?php echo InputMaker::label$expression; ?>";
-        });
-        Blade::directive('input_maker_create', function($expression) {
-            return "<?php echo InputMaker::create$expression; ?>";
-        });
-        
         /*
         |--------------------------------------------------------------------------
         | Register the Commands

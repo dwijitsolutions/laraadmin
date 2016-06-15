@@ -93,250 +93,9 @@ class Module extends Model
                     ]);
                 }
                 
-                switch ($field->field_type) {
-                    case 'Address':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->text($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Checkbox':
-                        $var = $table->boolean($field->colname);
-                        $var->default($field->defaultvalue);
-                        break;
-                    case 'Currency':
-                        $var = $table->double($field->colname, 15, 2);
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Date':
-                        $var = $table->date($field->colname);
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Datetime':
-                        $var = $table->timestamp($field->colname);
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Decimal':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->decimal($field->colname, 15, 5);
-                        } else {
-                            $var = $table->decimal($field->colname, 15, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Dropdown':
-                        if($field->popup_vals == "") {
-                            if(is_int($field->defaultvalue)) {
-                                $var = $table->integer($field->colname)->unsigned();
-                                $var->default($field->defaultvalue);
-                                break;
-                            } else if(is_string($field->defaultvalue)) {
-                                $var = $table->string($field->colname);
-                                $var->default($field->defaultvalue);
-                                break;
-                            }
-                        }
-                        $popup_vals = json_decode($field->popup_vals);
-                        if(is_array($popup_vals)) {
-                            $var = $table->string($field->colname);
-                            if($field->defaultvalue != "") {
-                                $var->default($field->defaultvalue);
-                            }
-                        } else if(is_object($popup_vals)) {
-                            // ############### Remaining
-                            $var = $table->integer($field->colname)->unsigned();
-                            // if(is_int($field->defaultvalue)) {
-                            //     $var->default($field->defaultvalue);
-                            //     break;
-                            // }
-                        }
-                        break;
-                    case 'Email':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname, 100);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Float':
-                        $var = $table->float($field->colname);
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'HTML':
-                        $var = $table->longText($field->colname);
-                        break;
-                    case 'Image':
-                        $var = $table->string($field->colname);
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Integer':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname, 11);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Mobile':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Multiselect':
-                        $var = $table->string($field->colname, 256);
-                        if(is_string($field->defaultvalue)) {
-                            $field->defaultvalue = json_encode([$field->defaultvalue]);
-                            //echo "string: ".$field->defaultvalue;
-                            $var->default($field->defaultvalue);
-                        } else if(is_array($field->defaultvalue)) {
-                            $field->defaultvalue = json_encode($field->defaultvalue);
-                            //echo "array: ".$field->defaultvalue;
-                            $var->default($field->defaultvalue);
-                        } else if(is_int($field->defaultvalue)) {
-                            $field->defaultvalue = json_encode([$field->defaultvalue]);
-                            //echo "int: ".$field->defaultvalue;
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Name':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Password':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Radio':
-                        $var = null;
-                        if($field->popup_vals == "") {
-                            if(is_int($field->defaultvalue)) {
-                                $var = $table->integer($field->colname)->unsigned();
-                                $var->default($field->defaultvalue);
-                                break;
-                            } else if(is_string($field->defaultvalue)) {
-                                $var = $table->string($field->colname);
-                                $var->default($field->defaultvalue);
-                                break;
-                            }
-                        }
-                        $popup_vals = json_decode($field->popup_vals);
-                        if(is_array($popup_vals)) {
-                            $var = $table->string($field->colname);
-                            if($field->defaultvalue != "") {
-                                $var->default($field->defaultvalue);
-                            }
-                        } else if(is_object($popup_vals)) {
-                            // ############### Remaining
-                            $var = $table->integer($field->colname)->unsigned();
-                            // if(is_int($field->defaultvalue)) {
-                            //     $var->default($field->defaultvalue);
-                            //     break;
-                            // }
-                        }
-                        break;
-                    case 'String':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Taginput':
-                        $var = null;
-                        $var = $table->string($field->colname, 1000);
-                        if(is_string($field->defaultvalue)) {
-                            $field->defaultvalue = json_encode([$field->defaultvalue]);
-                            //echo "string: ".$field->defaultvalue;
-                            $var->default($field->defaultvalue);
-                        } else if(is_array($field->defaultvalue)) {
-                            $field->defaultvalue = json_encode($field->defaultvalue);
-                            //echo "array: ".$field->defaultvalue;
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'Textarea':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->text($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                            if($field->defaultvalue != "") {
-                                $var->default($field->defaultvalue);
-                            }
-                        }
-                        break;
-                    case 'TextField':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                    case 'URL':
-                        $var = null;
-                        if($field->maxlength == 0) {
-                            $var = $table->string($field->colname);
-                        } else {
-                            $var = $table->string($field->colname, $field->maxlength);
-                        }
-                        if($field->defaultvalue != "") {
-                            $var->default($field->defaultvalue);
-                        }
-                        break;
-                }
+                Schema::dropIfExists($module_name_db);
+                
+                Module::create_field_schema($table, $field);
             }
             
             // $table->string('name');
@@ -356,6 +115,253 @@ class Module extends Model
             // $table->double('salary_cur');
             $table->timestamps();
         });
+    }
+    
+    public static function create_field_schema($table, $field) {
+        switch ($field->field_type) {
+            case 'Address':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->text($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Checkbox':
+                $var = $table->boolean($field->colname);
+                $var->default($field->defaultvalue);
+                break;
+            case 'Currency':
+                $var = $table->double($field->colname, 15, 2);
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Date':
+                $var = $table->date($field->colname);
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Datetime':
+                $var = $table->timestamp($field->colname);
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Decimal':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->decimal($field->colname, 15, 5);
+                } else {
+                    $var = $table->decimal($field->colname, 15, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Dropdown':
+                if($field->popup_vals == "") {
+                    if(is_int($field->defaultvalue)) {
+                        $var = $table->integer($field->colname)->unsigned();
+                        $var->default($field->defaultvalue);
+                        break;
+                    } else if(is_string($field->defaultvalue)) {
+                        $var = $table->string($field->colname);
+                        $var->default($field->defaultvalue);
+                        break;
+                    }
+                }
+                $popup_vals = json_decode($field->popup_vals);
+                if(is_array($popup_vals)) {
+                    $var = $table->string($field->colname);
+                    if($field->defaultvalue != "") {
+                        $var->default($field->defaultvalue);
+                    }
+                } else if(is_object($popup_vals)) {
+                    // ############### Remaining
+                    $var = $table->integer($field->colname)->unsigned();
+                    // if(is_int($field->defaultvalue)) {
+                    //     $var->default($field->defaultvalue);
+                    //     break;
+                    // }
+                }
+                break;
+            case 'Email':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname, 100);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Float':
+                $var = $table->float($field->colname);
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'HTML':
+                $var = $table->longText($field->colname);
+                break;
+            case 'Image':
+                $var = $table->string($field->colname);
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Integer':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname, 11);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Mobile':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Multiselect':
+                $var = $table->string($field->colname, 256);
+                if(is_string($field->defaultvalue)) {
+                    $field->defaultvalue = json_encode([$field->defaultvalue]);
+                    //echo "string: ".$field->defaultvalue;
+                    $var->default($field->defaultvalue);
+                } else if(is_array($field->defaultvalue)) {
+                    $field->defaultvalue = json_encode($field->defaultvalue);
+                    //echo "array: ".$field->defaultvalue;
+                    $var->default($field->defaultvalue);
+                } else if(is_int($field->defaultvalue)) {
+                    $field->defaultvalue = json_encode([$field->defaultvalue]);
+                    //echo "int: ".$field->defaultvalue;
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Name':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Password':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Radio':
+                $var = null;
+                if($field->popup_vals == "") {
+                    if(is_int($field->defaultvalue)) {
+                        $var = $table->integer($field->colname)->unsigned();
+                        $var->default($field->defaultvalue);
+                        break;
+                    } else if(is_string($field->defaultvalue)) {
+                        $var = $table->string($field->colname);
+                        $var->default($field->defaultvalue);
+                        break;
+                    }
+                }
+                $popup_vals = json_decode($field->popup_vals);
+                if(is_array($popup_vals)) {
+                    $var = $table->string($field->colname);
+                    if($field->defaultvalue != "") {
+                        $var->default($field->defaultvalue);
+                    }
+                } else if(is_object($popup_vals)) {
+                    // ############### Remaining
+                    $var = $table->integer($field->colname)->unsigned();
+                    // if(is_int($field->defaultvalue)) {
+                    //     $var->default($field->defaultvalue);
+                    //     break;
+                    // }
+                }
+                break;
+            case 'String':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Taginput':
+                $var = null;
+                $var = $table->string($field->colname, 1000);
+                if(is_string($field->defaultvalue)) {
+                    $field->defaultvalue = json_encode([$field->defaultvalue]);
+                    //echo "string: ".$field->defaultvalue;
+                    $var->default($field->defaultvalue);
+                } else if(is_array($field->defaultvalue)) {
+                    $field->defaultvalue = json_encode($field->defaultvalue);
+                    //echo "array: ".$field->defaultvalue;
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'Textarea':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->text($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                    if($field->defaultvalue != "") {
+                        $var->default($field->defaultvalue);
+                    }
+                }
+                break;
+            case 'TextField':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+            case 'URL':
+                $var = null;
+                if($field->maxlength == 0) {
+                    $var = $table->string($field->colname);
+                } else {
+                    $var = $table->string($field->colname, $field->maxlength);
+                }
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
+        }
     }
     
     public static function format_fields($fields) {
