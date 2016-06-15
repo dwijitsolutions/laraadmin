@@ -3,6 +3,7 @@
 @section("contentheader_title", "Edit __singular_var__: ")
 @section("contentheader_description", $__singular_var__->$view_col)
 @section("section", "__module_name__")
+@section("section_url", url('/__db_table_name__'))
 @section("sub_section", "Edit")
 
 @section("htmlheader_title", "__singular_cap_var__ Edit : ".$__singular_var__->$view_col)
