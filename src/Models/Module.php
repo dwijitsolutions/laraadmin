@@ -93,7 +93,7 @@ class Module extends Model
                     ]);
                 }
                 
-                Schema::dropIfExists($module_name_db);
+                // Schema::dropIfExists($module_name_db);
                 
                 Module::create_field_schema($table, $field);
             }
@@ -154,11 +154,8 @@ class Module extends Model
                 break;
             case 'Decimal':
                 $var = null;
-                if($field->maxlength == 0) {
-                    $var = $table->decimal($field->colname, 15, 5);
-                } else {
-                    $var = $table->decimal($field->colname, 15, $field->maxlength);
-                }
+                $var = $table->decimal($field->colname, 15, 3);
+                
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
@@ -218,11 +215,7 @@ class Module extends Model
                 break;
             case 'Integer':
                 $var = null;
-                if($field->maxlength == 0) {
-                    $var = $table->string($field->colname, 11);
-                } else {
-                    $var = $table->string($field->colname, $field->maxlength);
-                }
+                $var = $table->integer($field->colname, false)->unsigned();
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
