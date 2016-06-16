@@ -146,6 +146,7 @@ class LAFormMaker
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
 				unset($params['data-rule-maxlength']);
+				$params['data-placeholder'] = $params['placeholder'];
 				unset($params['placeholder']);
 				$params['rel'] = "select2";
 				
@@ -253,6 +254,7 @@ class LAFormMaker
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
 				unset($params['data-rule-maxlength']);
+				$params['data-placeholder'] = "Select multiple ".str_plural($label);
 				unset($params['placeholder']);
 				$params['multiple'] = "true";
 				$params['rel'] = "select2";
@@ -352,6 +354,7 @@ class LAFormMaker
 				}
 				$params['multiple'] = "true";
 				$params['rel'] = "taginput";
+				$params['data-placeholder'] = "Add multiple ".str_plural($label);
 				unset($params['placeholder']);
 				
 				// Override the edit value
