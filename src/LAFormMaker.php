@@ -113,10 +113,18 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
+				$dval = $default_val;
+				if($default_val != "") {
+					$dval = date("d/m/Y", strtotime($default_val));
+				}
 				
 				unset($params['data-rule-maxlength']);
-				$params['data-rule-date'] = "true";
-				$out .= Form::date($field_name, $default_val, $params);
+				// $params['data-rule-date'] = "true";
+				
+				$out .= "<div class='input-group date'>";
+				$out .= Form::text($field_name, $dval, $params);
+				$out .= "<span class='input-group-addon'><span class='fa fa-calendar'></span></span></div>";
+				// $out .= Form::date($field_name, $default_val, $params);
 				break;
 			case 'Datetime':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -130,7 +138,13 @@ class LAFormMaker
 				}
 				
 				// ############### Remaining
-				$out .= Form::text($field_name, $default_val, $params);
+				$dval = $default_val;
+				if($default_val != "") {
+					$dval = date("d/m/Y h:i A", strtotime($default_val));
+				}
+				$out .= "<div class='input-group datetime'>";
+				$out .= Form::text($field_name, $dval, $params);
+				$out .= "<span class='input-group-addon'><span class='fa fa-calendar'></span></span></div>";
 				break;
 			case 'Decimal':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
