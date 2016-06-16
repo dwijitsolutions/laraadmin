@@ -43,7 +43,11 @@
 			{!! Form::open(['action' => '__controller_class_name__@store', 'id' => '__singular_var__-add-form']) !!}
 			<div class="modal-body">
 				<div class="box-body">
-                    __input_fields__
+                    @la_form($module)
+					
+					{{--
+					__input_fields__
+					--}}
 				</div>
 			</div>
 			<div class="modal-footer">

@@ -17,7 +17,11 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				{!! Form::model($__singular_var__, ['route' => ['__db_table_name__.update', $__singular_var__->id ], 'method'=>'PUT', 'id' => '__singular_var__-edit-form']) !!}
+					@la_form($module)
+					
+					{{--
 					__input_fields__
+					--}}
                     <br>
 					<div class="form-group">
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url('/__db_table_name__') }}">Cancel</a></button>

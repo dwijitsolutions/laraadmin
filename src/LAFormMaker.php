@@ -6,6 +6,10 @@ use Dwij\Laraadmin\Models\ModuleFieldTypes;
 
 class LAFormMaker
 {
+	
+	/**
+	* Print input field enclosed within form-group
+	**/
 	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
 	{
 		$row = null;
@@ -427,6 +431,9 @@ class LAFormMaker
 		return $out;
 	}
 	
+	/**
+	* Processes the populated values for Multiselect / Taginput / Dropdown
+	**/
 	private static function process_values($json) {
 		$out = array();
 		if(is_string($json)) {
@@ -440,6 +447,9 @@ class LAFormMaker
 		return $out;
 	}
 	
+	/**
+	* Display field using blade directive @la_display
+	**/
 	public static function display($module, $field_name, $class = 'form-control')
 	{
 		$label = $module->fields[$field_name]['label'];
@@ -565,12 +575,14 @@ class LAFormMaker
 		return $out;
 	}
 	
+	/**
+	* Print form using blade directive @la_form
+	**/
 	public static function form($module, $fields = [])
 	{
 		if(count($fields) == 0) {
 			$fields = array_keys($module->fields);
 		}
-		print_r($fields);
 		$out = "";
 		foreach ($fields as $field) {
 			$out .= LAFormMaker::input($module, $field);
