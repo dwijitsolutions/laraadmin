@@ -564,4 +564,17 @@ class LAFormMaker
 		$out .= '</div>';
 		return $out;
 	}
+	
+	public static function form($module, $fields = [])
+	{
+		if(count($fields) == 0) {
+			$fields = array_keys($module->fields);
+		}
+		print_r($fields);
+		$out = "";
+		foreach ($fields as $field) {
+			$out .= LAFormMaker::input($module, $field);
+		}
+		return $out;
+	}
 }
