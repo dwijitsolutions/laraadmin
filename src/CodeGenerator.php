@@ -270,4 +270,33 @@ class CodeGenerator
         LAHelper::log("info", "Migration done: ".$migrationFileName."\n", $comm);
 	}
 	
+    // $config = CodeGenerator::generateConfig($module_name);
+    public static function generateConfig($module)
+    {
+        $config = array();
+        $config = (object) $config;
+        
+        if(starts_with($module, "create_")) {
+            $tname = str_replace("create_", "",$module);
+            $module = str_replace("_table", "",$tname);
+        }
+        
+        $config->modelName = ucfirst(str_singular($module));
+        $tableP = str_plural(strtolower($module));
+        $tableS = str_singular(strtolower($module));
+        $config->dbTableName = $tableP;
+        $config->moduleName = ucfirst(str_plural($module));
+        $config->controllerName = ucfirst(str_plural($module))."Controller";
+        $config->singularVar = strtolower(str_singular($module));
+        $config->singularCapitalVar = ucfirst(str_singular($module));
+        
+        $module = Module::get($config->moduleName);
+        if(!isset($module->id)) {
+            throw new Exception("Please run 'php artisan migrate' for 'create_".$config->dbTableName."_table' in order to create CRUD.\nOr check if any problem in Module Name '".$config->moduleName."'.", 1);
+            return;
+        }
+        $config->module = $module;
+        
+        return $config;
+    }
 }
