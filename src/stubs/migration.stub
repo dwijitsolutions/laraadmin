@@ -19,7 +19,7 @@ class __migration_class_name__ extends Migration
     public function up()
     {
         Module::generate("__module_name__", '__db_table_name__', '__view_column__', [
-            
+            __generated__
         ]);
 		
 		/*

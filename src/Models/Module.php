@@ -60,6 +60,11 @@ class Module extends Model
                 $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
                 if(!isset($mod->id)) {
                     if($field->field_type == "Multiselect" || $field->field_type == "Taginput") {
+                        
+                        if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+                            $field->defaultvalue = json_decode($field->defaultvalue);
+                        }
+                        
                         if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
                             $dvalue = json_encode([$field->defaultvalue]);
                         } else {
@@ -233,9 +238,13 @@ class Module extends Model
                 break;
             case 'Multiselect':
                 $var = $table->string($field->colname, 256);
+                
+                if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+                    $field->defaultvalue = json_decode($field->defaultvalue);
+                }
+                
                 if(is_string($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
-                    //echo "string: ".$field->defaultvalue;
                     $var->default($field->defaultvalue);
                 } else if(is_array($field->defaultvalue)) {
                     $field->defaultvalue = json_encode($field->defaultvalue);
@@ -311,6 +320,11 @@ class Module extends Model
             case 'Taginput':
                 $var = null;
                 $var = $table->string($field->colname, 1000);
+                
+                if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+                    $field->defaultvalue = json_decode($field->defaultvalue);
+                }
+                
                 if(is_string($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
                     //echo "string: ".$field->defaultvalue;
@@ -404,6 +418,7 @@ class Module extends Model
         return $out;
     }
     
+    // $module = Module::get($module_name);
     public static function get($module_name) {
         $module = Module::where('name', $module_name)->first();
         if(isset($module)) {
