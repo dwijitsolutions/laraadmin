@@ -9,8 +9,155 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 
 class CodeGenerator
 {
+    /**
+	* Generate Controller file
+    * if $generate is true then create file from module info from DB
+    * $comm is command Object from Migration command
+	* CodeGenerator::generateMigration($table, $generateFromTable);
+	**/
+	public static function createController($config, $comm = null) {
+        
+        $templateDirectory = __DIR__.'/stubs';
+        
+        LAHelper::log("info", "Creating controller...", $comm);
+        $md = file_get_contents($templateDirectory."/controller.stub");
+        
+        $md = str_replace("__controller_class_name__", $config->controllerName, $md);
+        $md = str_replace("__model_name__", $config->modelName, $md);
+        $md = str_replace("__module_name__", $config->moduleName, $md);
+        $md = str_replace("__view_column__", $config->module->view_col, $md);
+        
+        // Listing columns
+        $listing_cols = "";
+        foreach ($config->module->fields as $field) {
+            $listing_cols .= "'".$field['colname']."', ";
+        }
+        $listing_cols = trim($listing_cols, ", ");
+        
+        $md = str_replace("__listing_cols__", $listing_cols, $md);
+        $md = str_replace("__view_folder__", $config->dbTableName, $md);
+        $md = str_replace("__route_resource__", $config->dbTableName, $md);
+        $md = str_replace("__db_table_name__", $config->dbTableName, $md);
+        $md = str_replace("__singular_var__", $config->singularVar, $md);
+        
+        file_put_contents(base_path('app/Http/Controllers/'.$config->controllerName.".php"), $md);
+    }
+    
+    public static function createModel($config, $comm = null) {
+        
+        $templateDirectory = __DIR__.'/stubs';
+        
+        LAHelper::log("info", "Creating model...", $comm);
+        $md = file_get_contents($templateDirectory."/model.stub");
+        
+        $md = str_replace("__model_class_name__", $config->modelName, $md);
+        $md = str_replace("__db_table_name__", $config->dbTableName, $md);
+        
+        file_put_contents(base_path('app/'.$config->modelName.".php"), $md);
+    }
+    
+    public static function createViews($config, $comm = null) {
+        
+        $templateDirectory = __DIR__.'/stubs';
+        
+        LAHelper::log("info", "Creating views...", $comm);
+        // Create Folder
+        @mkdir("resources/views/".$config->dbTableName, 0777, true);
+        
+        // ============================ Listing / Index ============================
+        $md = file_get_contents($templateDirectory."/views/index.blade.stub");
+        
+        $md = str_replace("__module_name__", $config->moduleName, $md);
+        $md = str_replace("__db_table_name__", $config->dbTableName, $md);
+        $md = str_replace("__controller_class_name__", $config->controllerName, $md);
+        $md = str_replace("__singular_var__", $config->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        
+        // Listing columns
+        $inputFields = "";
+        foreach ($config->module->fields as $field) {
+            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
+        }
+        $inputFields = trim($inputFields);
+        $md = str_replace("__input_fields__", $inputFields, $md);
+        
+        file_put_contents(base_path('resources/views/'.$config->dbTableName.'/index.blade.php'), $md);
+        
+        // ============================ Edit ============================
+        $md = file_get_contents($templateDirectory."/views/edit.blade.stub");
+        
+        $md = str_replace("__module_name__", $config->moduleName, $md);
+        $md = str_replace("__db_table_name__", $config->dbTableName, $md);
+        $md = str_replace("__controller_class_name__", $config->controllerName, $md);
+        $md = str_replace("__singular_var__", $config->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        
+        // Listing columns
+        $inputFields = "";
+        foreach ($config->module->fields as $field) {
+            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
+        }
+        $inputFields = trim($inputFields);
+        $md = str_replace("__input_fields__", $inputFields, $md);
+        
+        file_put_contents(base_path('resources/views/'.$config->dbTableName.'/edit.blade.php'), $md);
+        
+        // ============================ Show ============================
+        $md = file_get_contents($templateDirectory."/views/show.blade.stub");
+        
+        $md = str_replace("__module_name__", $config->moduleName, $md);
+        $md = str_replace("__db_table_name__", $config->dbTableName, $md);
+        $md = str_replace("__singular_var__", $config->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        
+        // Listing columns
+        $displayFields = "";
+        foreach ($config->module->fields as $field) {
+            $displayFields .= "\t\t\t\t\t\t@la_display($"."module, '".$field['colname']."')\n";
+        }
+        $displayFields = trim($displayFields);
+        $md = str_replace("__display_fields__", $displayFields, $md);
+        
+        file_put_contents(base_path('resources/views/'.$config->dbTableName.'/show.blade.php'), $md);
+    }
+    
+    public static function appendRoutes($config, $comm = null) {
+        
+        $templateDirectory = __DIR__.'/stubs';
+        
+        LAHelper::log("info", "Appending routes...", $comm);
+        $routesFile = app_path('Http/routes.php');
+        
+        $md = file_get_contents($templateDirectory."/routes.stub");
+        
+        $md = str_replace("__module_name__", $config->moduleName, $md);
+        $md = str_replace("__controller_class_name__", $config->controllerName, $md);
+        $md = str_replace("__db_table_name__", $config->dbTableName, $md);
+        $md = str_replace("__singular_var__", $config->singularVar, $md);
+        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        
+        file_put_contents($routesFile, $md, FILE_APPEND);
+    }
+    
+    public static function addMenu($config, $comm = null) {
+        
+        $templateDirectory = __DIR__.'/stubs';
+        
+        LAHelper::log("info", "Appending Menu...", $comm);
+        
+        $menu = '<li><a href="{{ url("'.$config->dbTableName.'") }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
+        
+        $md = file_get_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'));
+        
+        $md = str_replace("<!-- LAMenus -->", $menu, $md);
+        
+        file_put_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'), $md);
+    }
+    
 	/**
-	* Print input field enclosed within form-group
+	* Generate migration file
+    * if $generate is true then create file from module info from DB
+    * $comm is command Object from Migration command
 	* CodeGenerator::generateMigration($table, $generateFromTable);
 	**/
 	public static function generateMigration($table, $generate = false, $comm = null)

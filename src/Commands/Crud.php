@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\CodeGenerator;
 
 class Crud extends Command
 {
@@ -27,8 +28,6 @@ class Crud extends Command
     
     /* ================ Config ================ */
     var $module = null;
-    var $templateDirectory = "";
-    
     var $controllerName = "";
     var $modelName = "";
     var $moduleName = "";
@@ -43,9 +42,6 @@ class Crud extends Command
      */
     public function handle()
     {
-        $filesystem = new Filesystem();
-        $this->templateDirectory = __DIR__.'/../stubs';
-        
         $module = $this->argument('module');
         
         if(starts_with($module, "create_")) {
@@ -75,143 +71,29 @@ class Crud extends Command
         }
         $this->module = $module;
         
+        $config = array();
+        $config = (object) $config;
+        $config->module = $this->module;
+        $config->modelName = $this->modelName;
+        $config->moduleName = $this->moduleName;
+        $config->dbTableName = $this->dbTableName;
+        $config->controllerName = $this->controllerName;
+        $config->singularVar = $this->singularVar;
+        $config->singularCapitalVar = $this->singularCapitalVar;
+        
         try {
             
-            $this->createController();
-            $this->createModel();
-            $this->createViews();
-            $this->appendRoutes();
-            $this->addMenu();
-                        
+            CodeGenerator::createController($config, $this);
+            CodeGenerator::createModel($config, $this);
+            CodeGenerator::createViews($config, $this);
+            CodeGenerator::appendRoutes($config, $this);
+            CodeGenerator::addMenu($config, $this);
+            
         } catch (Exception $e) {
+            $this->error("Crud::handle exception: ".$e);
             throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
         }
         
         $this->info("\nCRUD successfully generated for ".$this->moduleName."\n");
-    }
-    
-    protected function createController() {
-        $this->line('Creating controller...');
-        $md = file_get_contents($this->templateDirectory."/controller.stub");
-        
-        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
-        $md = str_replace("__model_name__", $this->modelName, $md);
-        $md = str_replace("__module_name__", $this->moduleName, $md);
-        $md = str_replace("__view_column__", $this->module->view_col, $md);
-        
-        // Listing columns
-        $listing_cols = "";
-        foreach ($this->module->fields as $field) {
-            $listing_cols .= "'".$field['colname']."', ";
-        }
-        $listing_cols = trim($listing_cols, ", ");
-        
-        $md = str_replace("__listing_cols__", $listing_cols, $md);
-        $md = str_replace("__view_folder__", $this->dbTableName, $md);
-        $md = str_replace("__route_resource__", $this->dbTableName, $md);
-        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
-        $md = str_replace("__singular_var__", $this->singularVar, $md);
-        
-        file_put_contents(base_path('app/Http/Controllers/'.$this->controllerName.".php"), $md);
-    }
-    
-    protected function createModel() {
-        $this->line('Creating model...');
-        $md = file_get_contents($this->templateDirectory."/model.stub");
-        
-        $md = str_replace("__model_class_name__", $this->modelName, $md);
-        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
-        
-        file_put_contents(base_path('app/'.$this->modelName.".php"), $md);
-    }
-    
-    protected function createViews() {
-        $this->line('Creating views...');
-        
-        // Create Folder
-        @mkdir("resources/views/".$this->dbTableName, 0777, true);
-        
-        // ============================ Listing / Index ============================
-        $md = file_get_contents($this->templateDirectory."/views/index.blade.stub");
-        
-        $md = str_replace("__module_name__", $this->moduleName, $md);
-        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
-        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
-        $md = str_replace("__singular_var__", $this->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
-        
-        // Listing columns
-        $inputFields = "";
-        foreach ($this->module->fields as $field) {
-            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
-        }
-        $inputFields = trim($inputFields);
-        $md = str_replace("__input_fields__", $inputFields, $md);
-        
-        file_put_contents(base_path('resources/views/'.$this->dbTableName.'/index.blade.php'), $md);
-        
-        // ============================ Edit ============================
-        $md = file_get_contents($this->templateDirectory."/views/edit.blade.stub");
-        
-        $md = str_replace("__module_name__", $this->moduleName, $md);
-        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
-        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
-        $md = str_replace("__singular_var__", $this->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
-        
-        // Listing columns
-        $inputFields = "";
-        foreach ($this->module->fields as $field) {
-            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
-        }
-        $inputFields = trim($inputFields);
-        $md = str_replace("__input_fields__", $inputFields, $md);
-        
-        file_put_contents(base_path('resources/views/'.$this->dbTableName.'/edit.blade.php'), $md);
-        
-        // ============================ Show ============================
-        $md = file_get_contents($this->templateDirectory."/views/show.blade.stub");
-        
-        $md = str_replace("__module_name__", $this->moduleName, $md);
-        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
-        $md = str_replace("__singular_var__", $this->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
-        
-        // Listing columns
-        $displayFields = "";
-        foreach ($this->module->fields as $field) {
-            $displayFields .= "\t\t\t\t\t\t@la_display($"."module, '".$field['colname']."')\n";
-        }
-        $displayFields = trim($displayFields);
-        $md = str_replace("__display_fields__", $displayFields, $md);
-        
-        file_put_contents(base_path('resources/views/'.$this->dbTableName.'/show.blade.php'), $md);
-    }
-    
-    protected function appendRoutes() {
-        $this->line('Appending routes...');
-        $routesFile = app_path('Http/routes.php');
-        
-        $md = file_get_contents($this->templateDirectory."/routes.stub");
-        
-        $md = str_replace("__module_name__", $this->moduleName, $md);
-        $md = str_replace("__controller_class_name__", $this->controllerName, $md);
-        $md = str_replace("__db_table_name__", $this->dbTableName, $md);
-        $md = str_replace("__singular_var__", $this->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $this->singularCapitalVar, $md);
-        
-        file_put_contents($routesFile, $md, FILE_APPEND);
-    }
-    
-    protected function addMenu() {
-        $this->line('Add Menu...');
-        
-        $menu = '<li><a href="{{ url("'.$this->dbTableName.'") }}"><i class="fa fa-cube"></i> <span>'.$this->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
-        
-        $md = file_get_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'));
-        
-        $md = str_replace("<!-- LAMenus -->", $menu, $md);
-        
-        file_put_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'), $md);
     }
 }
