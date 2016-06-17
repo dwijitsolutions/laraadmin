@@ -62,6 +62,7 @@ class LAProvider extends ServiceProvider
         // $loader->alias('FormMaker', \Yab\Laracogs\Facades\FormMaker::class);
         $loader->alias('Form', \Collective\Html\FormFacade::class);
         $loader->alias('HTML', \Collective\Html\HtmlFacade::class);
+        $loader->alias('CodeGenerator', \Dwij\Laraadmin\CodeGenerator::class);
         
         //$this->app->make('Dwij\Laraadmin\CrudController');
         

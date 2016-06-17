@@ -2,6 +2,7 @@
 
 namespace Dwij\Laraadmin\Helpers;
 use DB;
+use Log;
 
 class LAHelper
 {
@@ -49,5 +50,17 @@ class LAHelper
 			$valueOut = "<div class='label label-primary'>".$value."</div> ";
 		}
 		return $valueOut;
+	}
+	
+	// LAHelper::log("info", "", $commandObject);
+	public static function log($type, $text, $commandObject) {
+		if($commandObject) {
+			$commandObject->$type($text);
+		} else {
+			if($type == "line") {
+				$type = "info";
+			}
+			Log::$type($text);
+		}
 	}
 }

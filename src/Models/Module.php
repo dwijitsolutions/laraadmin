@@ -147,13 +147,15 @@ class Module extends Model
                 break;
             case 'Date':
                 $var = $table->date($field->colname);
-                if($field->defaultvalue != "") {
+                if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'Datetime':
                 $var = $table->timestamp($field->colname);
-                if($field->defaultvalue != "") {
+                
+                // $table->timestamp('created_at')->useCurrent();
+                if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
                     $var->default($field->defaultvalue);
                 }
                 break;
