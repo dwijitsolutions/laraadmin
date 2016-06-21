@@ -1,9 +1,9 @@
-@extends("layouts.app")
+@extends("la.layouts.app")
 
 @section("contentheader_title", "Edit __singular_var__: ")
 @section("contentheader_description", $__singular_var__->$view_col)
 @section("section", "__module_name__")
-@section("section_url", url('/__db_table_name__'))
+@section("section_url", url('/la/__db_table_name__'))
 @section("sub_section", "Edit")
 
 @section("htmlheader_title", "__singular_cap_var__ Edit : ".$__singular_var__->$view_col)
@@ -16,7 +16,7 @@
 	<div class="box-body">
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
-				{!! Form::model($__singular_var__, ['route' => ['__db_table_name__.update', $__singular_var__->id ], 'method'=>'PUT', 'id' => '__singular_var__-edit-form']) !!}
+				{!! Form::model($__singular_var__, ['route' => ['la.__db_table_name__.update', $__singular_var__->id ], 'method'=>'PUT', 'id' => '__singular_var__-edit-form']) !!}
 					@la_form($module)
 					
 					{{--

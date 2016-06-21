@@ -40,7 +40,7 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
         
-        file_put_contents(base_path('app/Http/Controllers/'.$config->controllerName.".php"), $md);
+        file_put_contents(base_path('app/Http/Controllers/LA/'.$config->controllerName.".php"), $md);
     }
     
     public static function createModel($config, $comm = null) {
@@ -81,7 +81,7 @@ class CodeGenerator
         $inputFields = trim($inputFields);
         $md = str_replace("__input_fields__", $inputFields, $md);
         
-        file_put_contents(base_path('resources/views/'.$config->dbTableName.'/index.blade.php'), $md);
+        file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/index.blade.php'), $md);
         
         // ============================ Edit ============================
         $md = file_get_contents($templateDirectory."/views/edit.blade.stub");
@@ -100,7 +100,7 @@ class CodeGenerator
         $inputFields = trim($inputFields);
         $md = str_replace("__input_fields__", $inputFields, $md);
         
-        file_put_contents(base_path('resources/views/'.$config->dbTableName.'/edit.blade.php'), $md);
+        file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/edit.blade.php'), $md);
         
         // ============================ Show ============================
         $md = file_get_contents($templateDirectory."/views/show.blade.stub");
@@ -118,7 +118,7 @@ class CodeGenerator
         $displayFields = trim($displayFields);
         $md = str_replace("__display_fields__", $displayFields, $md);
         
-        file_put_contents(base_path('resources/views/'.$config->dbTableName.'/show.blade.php'), $md);
+        file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/show.blade.php'), $md);
     }
     
     public static function appendRoutes($config, $comm = null) {
@@ -147,11 +147,11 @@ class CodeGenerator
         
         $menu = '<li><a href="{{ url("'.$config->dbTableName.'") }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
         
-        $md = file_get_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'));
+        $md = file_get_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'));
         
         $md = str_replace("<!-- LAMenus -->", $menu, $md);
         
-        file_put_contents(base_path('resources/views/layouts/partials/sidebar.blade.php'), $md);
+        file_put_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'), $md);
     }
     
 	/**
