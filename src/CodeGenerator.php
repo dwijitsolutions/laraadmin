@@ -259,6 +259,7 @@ class CodeGenerator
             $migrationData = str_replace("__migration_class_name__", $migrationClassName, $migrationData);
             $migrationData = str_replace("__db_table_name__", $dbTableName, $migrationData);
             $migrationData = str_replace("__module_name__", $moduleName, $migrationData);
+            $migrationData = str_replace("__model_name__", $modelName, $migrationData);
             $migrationData = str_replace("__view_column__", $viewColumnName, $migrationData);
             $migrationData = str_replace("__generated__", $generateData, $migrationData);
             
