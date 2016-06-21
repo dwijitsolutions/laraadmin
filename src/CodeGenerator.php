@@ -145,7 +145,7 @@ class CodeGenerator
         
         LAHelper::log("info", "Appending Menu...", $comm);
         
-        $menu = '<li><a href="{{ url("la/'.$config->dbTableName.'") }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
+        $menu = '<li><a href="{{ url('."'".'la/'.$config->dbTableName."'".') }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
         
         $md = file_get_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'));
         
