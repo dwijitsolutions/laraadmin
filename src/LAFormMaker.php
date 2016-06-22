@@ -238,8 +238,9 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				
+				$out .= "<div class='input-group file'>";
 				$out .= Form::text($field_name, $default_val, $params);
+				$out .= "<span class='input-group-addon file' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
