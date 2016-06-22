@@ -226,7 +226,6 @@ class LAFormMaker
 				
 				// ############### Remaining
 				$out .= '<div class="htmlbox" id="htmlbox_'.$field_name.'" contenteditable>'.$default_val.'</div>';
-				$out .= '<input type="hidden" name="'.$field_name.'" value="'.$default_val.'">';
 				$out .= Form::hidden($field_name, $default_val, $params);
 				break;
 			case 'Image':
