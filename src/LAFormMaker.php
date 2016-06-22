@@ -519,7 +519,7 @@ class LAFormMaker
 			case 'HTML':
 				break;
 			case 'Image':
-				$value = '<a class="preview" target="_blank" href="'.$value.'"><img src="'.$value.'"></a>';
+				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><img src="'.asset($value).'"></a>';
 				break;
 			case 'Integer':
 				
