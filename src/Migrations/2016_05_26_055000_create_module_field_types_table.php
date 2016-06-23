@@ -27,6 +27,7 @@ class CreateModuleFieldTypesTable extends Migration
         ModuleFieldTypes::create(["name" => "Decimal"]);
         ModuleFieldTypes::create(["name" => "Dropdown"]);
         ModuleFieldTypes::create(["name" => "Email"]);
+        ModuleFieldTypes::create(["name" => "File"]);
         ModuleFieldTypes::create(["name" => "Float"]);
         ModuleFieldTypes::create(["name" => "HTML"]);
         ModuleFieldTypes::create(["name" => "Image"]);

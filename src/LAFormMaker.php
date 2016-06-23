@@ -199,6 +199,20 @@ class LAFormMaker
 				$params['data-rule-email'] = "true";
 				$out .= Form::email($field_name, $default_val, $params);
 				break;
+			case 'File':
+				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				$out .= "<div class='input-group file'>";
+				$out .= Form::text($field_name, $default_val, $params);
+				$out .= "<span class='input-group-addon file' file_type='file' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
+				break;
 			case 'Float':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
@@ -240,7 +254,8 @@ class LAFormMaker
 				}
 				$out .= "<div class='input-group file'>";
 				$out .= Form::text($field_name, $default_val, $params);
-				$out .= "<span class='input-group-addon file' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
+				$out .= "<span class='input-group-addon preview'></span>";
+				$out .= "<span class='input-group-addon file' file_type='image' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -513,6 +528,9 @@ class LAFormMaker
 				break;
 			case 'Email':
 				$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
+				break;
+			case 'File':
+				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><i class="fa fa-file-o"</i></a>';
 				break;
 			case 'Float':
 				

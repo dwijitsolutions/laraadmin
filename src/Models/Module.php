@@ -205,6 +205,12 @@ class Module extends Model
                     $var->default($field->defaultvalue);
                 }
                 break;
+            case 'File':
+                $var = $table->string($field->colname);
+                if($field->defaultvalue != "") {
+                    $var->default($field->defaultvalue);
+                }
+                break;
             case 'Float':
                 $var = $table->float($field->colname);
                 if($field->defaultvalue != "") {
