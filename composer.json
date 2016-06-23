@@ -1,7 +1,13 @@
  {
     "name": "dwij/laraadmin",
-    "description": "This is main package for LaraAdmin for Migrations, CRUD generation and Form Maker.",
+    "description": "LaraAdmin is a Open source CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and Workflows.",
+    "keywords": ["laraadmin", "laravel", "crm", "admin"],
     "license": "MIT",
+    "homepage": "http://laraadmin.com",
+    "support": {
+        "issues": "https://github.com/dwijitsolutions/laraadmin/issues",
+        "source": "https://github.com/dwijitsolutions/laraadmin"
+    },
     "require": {
         "php": ">=5.5.9",
         "illuminate/support": "5.*",
@@ -12,7 +18,7 @@
     "authors": [
         {
             "name": "Ganesh Bhosale",
-            "email": "gdb.sci123@gmail.com"
+            "email": "ganesh@dwij.in"
         }
     ],
     "autoload": {
