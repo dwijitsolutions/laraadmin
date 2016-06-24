@@ -1,0 +1,142 @@
+/*
+ * Skin: Blue
+ * ----------
+ */
+.skin-white .main-header .navbar {
+  background-color: #FFFFFF;
+}
+.skin-white .main-header .navbar .nav > li > a {
+  color: #777777;
+}
+.skin-white .main-header .navbar .nav > li > a:hover,
+.skin-white .main-header .navbar .nav > li > a:active,
+.skin-white .main-header .navbar .nav > li > a:focus,
+.skin-white .main-header .navbar .nav .open > a,
+.skin-white .main-header .navbar .nav .open > a:hover,
+.skin-white .main-header .navbar .nav .open > a:focus,
+.skin-white .main-header .navbar .nav > .active > a {
+  color: #777777;
+}
+.skin-white .main-header .navbar .sidebar-toggle {
+  color: #ffffff;
+}
+.skin-white .main-header .navbar .sidebar-toggle:hover {
+  color: #888;
+  background: rgba(0, 0, 0, 0.1);
+}
+.skin-white .main-header .navbar .sidebar-toggle {
+  color: #777777;
+}
+@media (max-width: 767px) {
+  .skin-white .main-header .navbar .dropdown-menu li.divider {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .skin-white .main-header .navbar .dropdown-menu li a {
+    color: #fff;
+  }
+  .skin-white .main-header .navbar .dropdown-menu li a:hover {
+    background: #367fa9;
+  }
+}
+.skin-white .main-header .logo {
+  background-color: #FFFFFF;
+  color: #357ca5;
+  border-bottom: 0 solid transparent;
+}
+.skin-white .main-header .logo b {
+  color: #2196F3;
+}
+.skin-white .main-header li.user-header {
+  background-color: #3c8dbc;
+}
+.skin-white .content-header {
+  background: transparent;
+}
+.skin-white .wrapper,
+.skin-white .main-sidebar,
+.skin-white .left-side {
+  background-color: #222d32;
+}
+.skin-white .user-panel > .info,
+.skin-white .user-panel > .info > a {
+  color: #fff;
+}
+.skin-white .sidebar-menu > li.header {
+  color: #4b646f;
+  background: #1a2226;
+}
+.skin-white .sidebar-menu > li > a {
+  border-left: 3px solid transparent;
+}
+.skin-white .sidebar-menu > li:hover > a,
+.skin-white .sidebar-menu > li.active > a {
+  color: #ffffff;
+  background: #1e282c;
+  border-left-color: #3c8dbc;
+}
+.skin-white .sidebar-menu > li > .treeview-menu {
+  margin: 0 1px;
+  background: #2c3b41;
+}
+.skin-white .sidebar a {
+  color: #b8c7ce;
+}
+.skin-white .sidebar a:hover {
+  text-decoration: none;
+}
+.skin-white .treeview-menu > li > a {
+  color: #8aa4af;
+}
+.skin-white .treeview-menu > li.active > a,
+.skin-white .treeview-menu > li > a:hover {
+  color: #ffffff;
+}
+.skin-white .sidebar-form {
+  border-radius: 3px;
+  border: 1px solid #374850;
+  margin: 10px 10px;
+}
+.skin-white .sidebar-form input[type="text"],
+.skin-white .sidebar-form .btn {
+  box-shadow: none;
+  background-color: #374850;
+  border: 1px solid transparent;
+  height: 35px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.skin-white .sidebar-form input[type="text"] {
+  color: #666;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 2px;
+}
+.skin-white .sidebar-form input[type="text"]:focus,
+.skin-white .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  background-color: #fff;
+  color: #666;
+}
+.skin-white .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  border-left-color: #fff;
+}
+.skin-white .sidebar-form .btn {
+  color: #999;
+  border-top-left-radius: 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 0;
+}
+.skin-white.layout-top-nav .main-header > .logo {
+  background-color: #3c8dbc;
+  color: #ffffff;
+  border-bottom: 0 solid transparent;
+}
+.skin-white.layout-top-nav .main-header > .logo:hover {
+  background-color: #3b8ab8;
+}
+
+body {
+  background-color: #222D32;
+}
