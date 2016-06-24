@@ -71,7 +71,7 @@ class LAHelper
 		while(false !== ( $file = readdir($dir)) ) { 
 			if (( $file != '.' ) && ( $file != '..' )) { 
 				if ( is_dir($src . '/' . $file) ) { 
-					recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+					LAHelper::recurse_copy($src . '/' . $file,$dst . '/' . $file); 
 				} 
 				else { 
 					// ignore files
@@ -91,7 +91,7 @@ class LAHelper
 			foreach ($objects as $object) {
 				if ($object != "." && $object != "..") { 
 					if (is_dir($dir."/".$object))
-						recurse_delete($dir."/".$object);
+						LAHelper::recurse_delete($dir."/".$object);
 					else
 						unlink($dir."/".$object); 
 				}

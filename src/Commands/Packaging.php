@@ -68,6 +68,14 @@ class Packaging extends Command
         // Config
         $this->line('Exporting Config...');
         $this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
+        
+        // la-assets
+        $this->replaceFolder($from."/public/la-assets", $to."/la-assets");
+        // Use "git config core.fileMode false" for ignoring file permissions
+        
+        // Utilities 
+        $this->line('Exporting Utilities...');
+        $this->copyFile($from."/gulpfile.js", $to."/gulpfile.js");
     }
     
     private function replaceFolder($from, $to) {
