@@ -26,7 +26,7 @@ class LAProvider extends ServiceProvider
         ]);
         */
         //echo "Laraadmin Migrations started...";
-        Artisan::call('migrate', ['--path' => "vendor/dwij/laraadmin/src/Migrations/"]);
+        // Artisan::call('migrate', ['--path' => "vendor/dwij/laraadmin/src/Migrations/"]);
         //echo "Migrations completed !!!.";
         // Execute by php artisan vendor:publish --provider="Dwij\Laraadmin\LAProvider"
     }
