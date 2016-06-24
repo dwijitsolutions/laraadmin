@@ -115,7 +115,8 @@ class LAProvider extends ServiceProvider
         $this->commands([
             \Dwij\Laraadmin\Commands\Migration::class,
             \Dwij\Laraadmin\Commands\Crud::class,
-            \App\Console\Commands\Packaging::class
+            \App\Console\Commands\Packaging::class,
+            \Dwij\Laraadmin\Commands\LAInstall::class
         ]);
     }
 }
