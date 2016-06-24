@@ -8,8 +8,8 @@
         "issues": "https://github.com/dwijitsolutions/laraadmin/issues",
         "source": "https://github.com/dwijitsolutions/laraadmin"
     },
+    "version": "1.0.0-dev",
     "require": {
-        "php": ">=5.5.9",
         "illuminate/support": "5.*",
         "laravelcollective/html": "^5.2|^5.1",
         "illuminate/container": "^5.2|^5.1",
@@ -32,10 +32,5 @@
         },
         "files": [
         ]
-    },
-    "version": "0.1.0",
-    "minimum-stability": "dev",
-    "require": {
-        "dwij/laraadmin": "dev-master"
     }
 }
