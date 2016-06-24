@@ -64,6 +64,10 @@ class Packaging extends Command
         // Routes
         $this->line('Exporting Routes...');
         $this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
+        
+        // Config
+        $this->line('Exporting Config...');
+        $this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
     }
     
     private function replaceFolder($from, $to) {
