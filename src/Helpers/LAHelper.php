@@ -67,14 +67,17 @@ class LAHelper
 	// LAHelper::recurse_copy("", "");
 	public static function recurse_copy($src,$dst) { 
 		$dir = opendir($src); 
-		@mkdir($dst); 
+		@mkdir($dst, 0777, true);
 		while(false !== ( $file = readdir($dir)) ) { 
 			if (( $file != '.' ) && ( $file != '..' )) { 
 				if ( is_dir($src . '/' . $file) ) { 
 					recurse_copy($src . '/' . $file,$dst . '/' . $file); 
 				} 
 				else { 
-					copy($src . '/' . $file,$dst . '/' . $file); 
+					// ignore files
+					if(!in_array($file, [".DS_Store"])) {
+						copy($src . '/' . $file, $dst . '/' . $file);
+					}
 				} 
 			} 
 		} 
@@ -82,7 +85,7 @@ class LAHelper
 	}
 	
 	// LAHelper::recurse_delete("");
-	public static function recurse_delete($dir) { 
+	public static function recurse_delete($dir) {
 		if (is_dir($dir)) {
 			$objects = scandir($dir); 
 			foreach ($objects as $object) {
