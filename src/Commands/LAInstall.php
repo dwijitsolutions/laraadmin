@@ -67,6 +67,7 @@ class LAInstall extends Command
                 
                 // Routes
                 $this->line('Appending routes...');
+                //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
                 $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
                 
                 // Config
@@ -89,6 +90,7 @@ class LAInstall extends Command
                 
                 // Utilities 
                 $this->line('Generating Utilities...');
+                // if(!$this->fileContains($to."/gulpfile.js", "admin-lte/AdminLTE.less")) {
                 $this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
                 
                 // Running migrations...
@@ -174,5 +176,15 @@ class LAInstall extends Command
         $md = file_get_contents($from);
         
         file_put_contents($to, $md, FILE_APPEND);
+    }
+    
+    // TODO:Method not working properly
+    private function fileContains($filePath, $text) {
+        $fileData = file_get_contents($filePath);
+        if (strpos($fileData, $text) === false ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
