@@ -45,20 +45,29 @@ class LAInstall extends Command
             
             $this->info('from: '.$from." to: ".$to);
             
-            if ($this->confirm("This process may replace some of your existing project files.\nPlease take backup / use git. Do you wish to continue? [yes|no]")) {
+            if ($this->confirm("This process may replace some of your existing project files.\n Please take backup or use git. Do you wish to continue ?", true)) {
                 // Controllers
                 $this->line('Generating Controllers...');
                 $this->replaceFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
                 $this->replaceFolder($from."/app/Controllers/LA", $to."/app/Http/Controllers/LA");
                 $this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
                 $this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
+                
+                // Models
+                $this->line('Generating Models...');
+                $models = ["User", "Role", "Employee", "Department", "Book"];
+                foreach ($models as $model) {
+                    $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
+                }
+                
+                $this->info("\nLaraAdmin successfully installed. You can now login.\n");
+            } else {
+                $this->error("Installation aborted. Please try again after backup. Thank you...");
             }
         } catch (Exception $e) {
             $this->error("LAInstall::handle exception: ".$e);
             throw new Exception("LAInstall::handle Unable to install : ".$e->getMessage(), 1);
         }
-        
-        $this->info("\nLaraAdmin successfully installed. You can now login.\n");
     }
     
     private function replaceFolder($from, $to) {
