@@ -70,8 +70,18 @@ class Packaging extends Command
         $this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
         
         // la-assets
+        $this->line('Exporting LaraAdmin Assets...');
         $this->replaceFolder($from."/public/la-assets", $to."/la-assets");
         // Use "git config core.fileMode false" for ignoring file permissions
+        
+        // migrations
+        $this->line('Exporting migrations...');
+        $this->replaceFolder($from."/database/migrations", $to."/migrations");
+        
+        // resources
+        $this->line('Exporting resources: assets + views...');
+        $this->replaceFolder($from."/resources/assets", $to."/resources/assets");
+        $this->replaceFolder($from."/resources/views", $to."/resources/views");
         
         // Utilities 
         $this->line('Exporting Utilities...');
