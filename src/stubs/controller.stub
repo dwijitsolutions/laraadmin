@@ -73,7 +73,7 @@ class __controller_class_name__ extends Controller
             
         $insert_id = Module::insert("__module_name__", $request);
         
-        return redirect()->route('la.__route_resource__.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
     }
 
     /**
@@ -134,7 +134,7 @@ class __controller_class_name__ extends Controller
         
         $insert_id = Module::updateRow("__module_name__", $request, $id);
         
-        return redirect()->route('la.__route_resource__.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
     }
 
     /**
@@ -147,7 +147,7 @@ class __controller_class_name__ extends Controller
     {
         __model_name__::find($id)->delete();
         // Redirecting to index() method
-        return redirect()->route('la.__route_resource__.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
     }
     
     /**
@@ -165,15 +165,15 @@ class __controller_class_name__ extends Controller
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
                 if($col == $this->view_col) {
-                    $data->data[$i][$j] = '<a href="'.url('la/__route_resource__/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
+                    $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/__route_resource__/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
                 // else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
             }
             if($this->show_action) {
-                $output = '<a href="'.url('la/__route_resource__/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
-                $output .= Form::open(['route' => ['la.__route_resource__.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
+                $output = '<a href="'.url(config('laraadmin.adminRoute') . '/__route_resource__/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+                $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.__route_resource__.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
                 $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
                 $output .= Form::close();
                 $data->data[$i][] = (string)$output;

@@ -21,6 +21,10 @@
             "email": "ganesh@dwij.in"
         }
     ],
+    "classmap": [
+        "src/Controllers",
+        "src/Models"
+    ],
     "autoload": {
         "psr-4": {
             "Dwij\\Laraadmin\\": "src/"
@@ -28,5 +32,6 @@
         "files": [
         ]
     },
+    "version": "0.1.0",
     "minimum-stability": "stable"
 }
