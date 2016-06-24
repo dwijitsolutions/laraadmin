@@ -48,7 +48,7 @@ class LAInstall extends Command
             if ($this->confirm("This process may replace some of your existing project files.\n Please take backup or use git. Do you wish to continue ?", true)) {
                 // Controllers
                 $this->line('Generating Controllers...');
-                $this->replaceFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
+                $this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
                 $this->replaceFolder($from."/app/Controllers/LA", $to."/app/Http/Controllers/LA");
                 $this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
                 $this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
@@ -60,6 +60,46 @@ class LAInstall extends Command
                     $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
                 }
                 
+                // Routes
+                $this->line('Appending routes...');
+                $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+                
+                
+                // Config
+                $this->line('Generating Config...');
+                $this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
+                
+                
+                // la-assets
+                $this->line('Generating LaraAdmin Assets...');
+                // $this->replaceFolder($from."/la-assets", $to."/public/la-assets");
+                // Use "git config core.fileMode false" for ignoring file permissions
+                
+                // migrations
+                $this->line('Generating migrations...');
+                $this->copyFolder($from."/migrations", $to."/database/migrations");
+                
+                
+                // resources
+                $this->line('Generating resources: assets + views...');
+                $this->copyFolder($from."/resources/assets", $to."/resources/assets");
+                $this->copyFolder($from."/resources/views", $to."/resources/views");
+                
+                // Utilities 
+                $this->line('Generating Utilities...');
+                $this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
+                
+                
+                /*
+                User::create([
+                    'name' => "Super Admin",
+                    'email' => "laraadmin@gmail.com",
+                    'password' => bcrypt("12345678"),
+                    'context_id' => "1",
+                    'type' => "employee",
+                ]);
+                */
+                
                 $this->info("\nLaraAdmin successfully installed. You can now login.\n");
             } else {
                 $this->error("Installation aborted. Please try again after backup. Thank you...");
@@ -68,6 +108,11 @@ class LAInstall extends Command
             $this->error("LAInstall::handle exception: ".$e);
             throw new Exception("LAInstall::handle Unable to install : ".$e->getMessage(), 1);
         }
+    }
+    
+    private function copyFolder($from, $to) {
+        $this->info("copyFolder: ($from, $to)");
+        LAHelper::recurse_copy($from, $to);
     }
     
     private function replaceFolder($from, $to) {
@@ -80,11 +125,18 @@ class LAInstall extends Command
     
     private function copyFile($from, $to) {
         $this->info("copyFile: ($from, $to)");
-        //LAHelper::recurse_copy($from, $to);
         if(!file_exists(dirname($to))) {
             $this->info("mkdir: (".dirname($to).")");
             mkdir(dirname($to));
         }
         copy($from, $to);
+    }
+    
+    private function appendFile($from, $to) {
+        $this->info("appendFile: ($from, $to)");
+        
+        $md = file_get_contents($from);
+        
+        file_put_contents($to, $md, FILE_APPEND);
     }
 }
