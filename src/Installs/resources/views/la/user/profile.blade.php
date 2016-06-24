@@ -384,7 +384,6 @@
 					</div>
 				</form>
 			</div>
-			
 		</div>
 		<div role="tabpanel" class="tab-pane fade" id="tab-account-settings">
 			<div class="tab-content">
@@ -397,7 +396,7 @@
 							<div class="form-group">
 								<label for="email" class=" col-md-2">Email</label>
 								<div class=" col-md-10">
-									<input type="text" name="email" value="laraadmin@gmail.com" id="email" class="form-control" placeholder="Email" autocomplete="off" data-rule-email="1" data-msg-email="Please enter a valid email address." data-rule-required="1" data-msg-required="This field is required." aria-required="true">
+									<input type="text" name="email" value="user@laraadmin.com" id="email" class="form-control" placeholder="Email" autocomplete="off" data-rule-email="1" data-msg-email="Please enter a valid email address." data-rule-required="1" data-msg-required="This field is required." aria-required="true">
 								</div>
 							</div>
 							<div class="form-group">

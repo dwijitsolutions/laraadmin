@@ -22,13 +22,6 @@ class CreateRolesTable extends Migration
             $table->timestamps();
         });
         
-        Role::create([
-            'name' => "Super Admin",
-            'name_short' => "SUPER",
-            'prent' => 0,
-            'dept' => 0
-        ]);
-        
         // if (Schema::hasTable('employees')) {
             // Schema::table('employees', function ($table) {
             //     $table->foreign('role')->references('id')->on('roles');

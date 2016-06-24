@@ -93,15 +93,48 @@ class LAInstall extends Command
                 $this->line('Generating Utilities...');
                 $this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
                 
-                /*
-                User::create([
+                // Running migrations...
+                $this->line('Running migrations...');
+                $this->call('migrate');
+                
+                // Creating Super Admin Role
+                $this->line('Creating Super Admin Role...');
+                \App\Role::create([
                     'name' => "Super Admin",
-                    'email' => "laraadmin@gmail.com",
-                    'password' => bcrypt("12345678"),
-                    'context_id' => "1",
-                    'type' => "employee",
+                    'name_short' => "SUPER_ADMIN",
+                    'prent' => 0,
+                    'dept' => 0
                 ]);
-                */
+                
+                // Creating Super Admin User
+                $this->line('Creating Super Admin User...');
+                $data = array();
+                $data['name']     = $this->ask('Super Admin name');
+                $data['email']    = $this->ask('Super Admin email');
+                $data['password'] = bcrypt($this->secret('Super Admin password'));
+                $data['role_id']  = 1;
+                $data['context_id']  = "1";
+                $data['type']  = "employee";
+                \App\User::create($data);
+                
+                //Employee::create([ Not working - [Illuminate\Database\Eloquent\MassAssignmentException] name
+                \DB::table('employees')->insert([
+                    'name' => $data['name'],
+                    'designation' => $data['name'],
+                    'mobile' => "8888888888",
+                    'mobile2' => "",
+                    'email' => $data['email'],
+                    'gender' => 'Male',
+                    'dept' => "0",
+                    'role' => "1",
+                    'city' => "Pune",
+                    'address' => "Karve nagar, Pune 411030",
+                    'about' => "About user / biography",
+                    'date_birth' => date("Y-m-d"),
+                    'date_hire' => date("Y-m-d"),
+                    'date_left' => date("Y-m-d"),
+                    'salary_cur' => 0,
+                ]);
                 
                 $this->info("\nLaraAdmin successfully installed. You can now login.\n");
             } else {

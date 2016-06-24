@@ -70,24 +70,6 @@ class CreateEmployeesTable extends Migration
         ]);
 		*/
         
-        //Employee::create([ Not working - [Illuminate\Database\Eloquent\MassAssignmentException] name
-        DB::table('employees')->insert([
-            'name' => "Super Admin",
-            'designation' => "Super Admin",
-            'mobile' => "8888888888",
-            'mobile2' => "",
-            'email' => "laraadmin@gmail.com",
-            'gender' => 'Male',
-            'dept' => "0",
-            'role' => "1",
-            'city' => "Pune",
-            'address' => "Karve nagar, Pune 411030",
-            'about' => "About user / biography",
-            'date_birth' => date("Y-m-d"),
-            'date_hire' => date("Y-m-d"),
-            'date_left' => date("Y-m-d"),
-            'salary_cur' => 0,
-        ]);
         // if (Schema::hasTable('users')) {
             // Schema::table('users', function ($table) {
             //     $table->foreign('context_id')->references('id')->on('employees');

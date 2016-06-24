@@ -23,13 +23,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        User::create([
-            'name' => "Super Admin",
-            'email' => "laraadmin@gmail.com",
-            'password' => bcrypt("12345678"),
-            'context_id' => "1",
-            'type' => "employee",
-        ]);
     }
 
     /**
