@@ -69,11 +69,9 @@ class LAInstall extends Command
                 $this->line('Appending routes...');
                 $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
                 
-                
                 // Config
                 $this->line('Generating Config...');
                 $this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
-                
                 
                 // la-assets
                 $this->line('Generating LaraAdmin Public Assets...');
@@ -138,7 +136,7 @@ class LAInstall extends Command
                 
                 $this->info("User '".$data['name']."' successfully created. ");
                 
-                $this->info("\nLaraAdmin successfully installed. You can now login.\n");
+                $this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
             } else {
                 $this->error("Installation aborted. Please try again after backup. Thank you...");
             }

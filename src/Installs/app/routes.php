@@ -1,8 +1,12 @@
 
+/* ================== Homepage ================== */
+
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 
 Route::auth();
+
+/* ================== Dashboard ================== */
 
 Route::get(config('laraadmin.adminRoute'), 'LA\DashboardController@index');
 Route::get(config('laraadmin.adminRoute'). '/dashboard', 'LA\DashboardController@index');
