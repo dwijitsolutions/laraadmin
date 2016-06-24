@@ -31,6 +31,7 @@ class LAInstall extends Command
     public function handle()
     {
         try {
+            $this->info('LaraAdmin installation started...');
             
         } catch (Exception $e) {
             $this->error("LAInstall::handle exception: ".$e);
