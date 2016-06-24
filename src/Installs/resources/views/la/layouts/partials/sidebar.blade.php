@@ -33,7 +33,7 @@
         <ul class="sidebar-menu">
             <li class="header">MODULES</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ url('/la') }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
+            <li class="active"><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
             <li><a href="#"><i class='fa fa-folder-open'></i> <span>Projects</span> <small class="label pull-right bg-red">2 Bugs</small></a></li>
             <li><a href="#"><i class='fa fa-building'></i> <span>Organisations</span></a></li>
             <li><a href="#"><i class='fa fa-newspaper-o'></i> <span>Contacts</span> <small class="label pull-right bg-green">2 New</small></a></li>

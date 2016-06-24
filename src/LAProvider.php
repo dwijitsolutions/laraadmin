@@ -46,25 +46,44 @@ class LAProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         
+        // Collective HTML & Form Helper
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);
+        // For Datatables
+        $this->app->register(\Yajra\Datatables\DatatablesServiceProvider::class);
         
         /*
         |--------------------------------------------------------------------------
-        | Register the Utilities
+        | Register the Alias
         |--------------------------------------------------------------------------
         */
         
-        // $this->app->singleton('FormMaker', function ($app) {
-        //     return new FormMaker($app);
-        // });
-        
         $loader = AliasLoader::getInstance();
-        // $loader->alias('FormMaker', \Yab\Laracogs\Facades\FormMaker::class);
+        
+        // Collective HTML & Form Helper
         $loader->alias('Form', \Collective\Html\FormFacade::class);
         $loader->alias('HTML', \Collective\Html\HtmlFacade::class);
+        
+        // For Gravatar User Profile Pics
+        $loader->alias('Gravatar', \Creativeorange\Gravatar\Facades\Gravatar::class);
+        
+        // For Lara Admin Code Generation
         $loader->alias('CodeGenerator', \Dwij\Laraadmin\CodeGenerator::class);
         
-        //$this->app->make('Dwij\Laraadmin\CrudController');
+        // For Lara Admin Form Helper
+        $loader->alias('LAFormMaker', \Dwij\Laraadmin\LAFormMaker::class);
+        
+        // For Lara Admin Helper
+        $loader->alias('LAHelper', \Dwij\Laraadmin\Helpers\LAHelper::class);
+        
+        /*
+        |--------------------------------------------------------------------------
+        | Register the Controllers
+        |--------------------------------------------------------------------------
+        */
+        
+        $this->app->make('Dwij\Laraadmin\Controllers\ModuleController');
+        $this->app->make('Dwij\Laraadmin\Controllers\FileController');
+        $this->app->make('Dwij\Laraadmin\Controllers\FieldController');
         
         /*
         |--------------------------------------------------------------------------
