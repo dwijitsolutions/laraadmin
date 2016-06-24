@@ -45,9 +45,14 @@ class LAInstall extends Command
             
             $this->info('from: '.$from." to: ".$to);
             
-            if ($this->confirm("This process may replace some of your existing project files.\n Please take backup or use git. Do you wish to continue ?", true)) {
+            if ($this->confirm("This process may change/append to following of your existing project files:"
+                    ."\n\n\t app/Http/routes.php"
+                    ."\n\t app/User.php"
+                    ."\n\t database/migrations/2014_10_12_000000_create_users_table.php"
+                    ."\n\t gulpfile.js"
+                    ."\n\n Please take backup or use git. Do you wish to continue ?", true)) {
                 // Controllers
-                $this->line('Generating Controllers...');
+                $this->line('\nGenerating Controllers...');
                 $this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
                 $this->replaceFolder($from."/app/Controllers/LA", $to."/app/Http/Controllers/LA");
                 $this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
@@ -72,13 +77,12 @@ class LAInstall extends Command
                 
                 // la-assets
                 $this->line('Generating LaraAdmin Assets...');
-                // $this->replaceFolder($from."/la-assets", $to."/public/la-assets");
+                $this->replaceFolder($from."/la-assets", $to."/public/la-assets");
                 // Use "git config core.fileMode false" for ignoring file permissions
                 
                 // migrations
                 $this->line('Generating migrations...');
                 $this->copyFolder($from."/migrations", $to."/database/migrations");
-                
                 
                 // resources
                 $this->line('Generating resources: assets + views...');
@@ -88,7 +92,6 @@ class LAInstall extends Command
                 // Utilities 
                 $this->line('Generating Utilities...');
                 $this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
-                
                 
                 /*
                 User::create([
