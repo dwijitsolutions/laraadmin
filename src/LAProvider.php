@@ -50,6 +50,8 @@ class LAProvider extends ServiceProvider
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);
         // For Datatables
         $this->app->register(\Yajra\Datatables\DatatablesServiceProvider::class);
+        // For Gravatar
+        $this->app->register(\Creativeorange\Gravatar\GravatarServiceProvider::class);
         
         /*
         |--------------------------------------------------------------------------
