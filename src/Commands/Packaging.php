@@ -29,10 +29,6 @@ class Packaging extends Command
     protected $from;
     protected $to;
     
-    protected $exportConfig = [
-        
-    ];
-
     /**
      * Generate a CRUD files inclusing Controller, Model and Routes
      *
