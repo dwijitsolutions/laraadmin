@@ -52,7 +52,7 @@ class LAInstall extends Command
                     ."\n\t gulpfile.js"
                     ."\n\n Please take backup or use git. Do you wish to continue ?", true)) {
                 // Controllers
-                $this->line('\nGenerating Controllers...');
+                $this->line("\n".'Generating Controllers...');
                 $this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
                 $this->replaceFolder($from."/app/Controllers/LA", $to."/app/Http/Controllers/LA");
                 $this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
@@ -76,7 +76,7 @@ class LAInstall extends Command
                 
                 
                 // la-assets
-                $this->line('Generating LaraAdmin Assets...');
+                $this->line('Generating LaraAdmin Public Assets...');
                 $this->replaceFolder($from."/la-assets", $to."/public/la-assets");
                 // Use "git config core.fileMode false" for ignoring file permissions
                 
@@ -136,6 +136,8 @@ class LAInstall extends Command
                     'salary_cur' => 0,
                 ]);
                 
+                $this->info("User '".$data['name']."' successfully created. ");
+                
                 $this->info("\nLaraAdmin successfully installed. You can now login.\n");
             } else {
                 $this->error("Installation aborted. Please try again after backup. Thank you...");
@@ -147,12 +149,12 @@ class LAInstall extends Command
     }
     
     private function copyFolder($from, $to) {
-        $this->info("copyFolder: ($from, $to)");
+        // $this->info("copyFolder: ($from, $to)");
         LAHelper::recurse_copy($from, $to);
     }
     
     private function replaceFolder($from, $to) {
-        $this->info("replaceFolder: ($from, $to)");
+        // $this->info("replaceFolder: ($from, $to)");
         if(file_exists($to)) {
             LAHelper::recurse_delete($to);
         }
@@ -160,7 +162,7 @@ class LAInstall extends Command
     }
     
     private function copyFile($from, $to) {
-        $this->info("copyFile: ($from, $to)");
+        // $this->info("copyFile: ($from, $to)");
         if(!file_exists(dirname($to))) {
             $this->info("mkdir: (".dirname($to).")");
             mkdir(dirname($to));
@@ -169,7 +171,7 @@ class LAInstall extends Command
     }
     
     private function appendFile($from, $to) {
-        $this->info("appendFile: ($from, $to)");
+        // $this->info("appendFile: ($from, $to)");
         
         $md = file_get_contents($from);
         
