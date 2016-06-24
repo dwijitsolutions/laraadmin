@@ -1,5 +1,5 @@
 
 
 /* ================== __module_name__ ================== */
-Route::resource('/la/__db_table_name__', 'LA\__controller_class_name__');
-Route::get('/la/__singular_var___dt_ajax', 'LA\__controller_class_name__@dtajax');
+Route::resource(config('laraadmin.adminRoute') . '/__db_table_name__', 'LA\__controller_class_name__');
+Route::get(config('laraadmin.adminRoute') . '/__singular_var___dt_ajax', 'LA\__controller_class_name__@dtajax');
