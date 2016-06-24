@@ -63,4 +63,37 @@ class LAHelper
 			Log::$type($text);
 		}
 	}
+	
+	// LAHelper::recurse_copy("", "");
+	public static function recurse_copy($src,$dst) { 
+		$dir = opendir($src); 
+		@mkdir($dst); 
+		while(false !== ( $file = readdir($dir)) ) { 
+			if (( $file != '.' ) && ( $file != '..' )) { 
+				if ( is_dir($src . '/' . $file) ) { 
+					recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+				} 
+				else { 
+					copy($src . '/' . $file,$dst . '/' . $file); 
+				} 
+			} 
+		} 
+		closedir($dir); 
+	}
+	
+	// LAHelper::recurse_delete("");
+	public static function recurse_delete($dir) { 
+		if (is_dir($dir)) {
+			$objects = scandir($dir); 
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") { 
+					if (is_dir($dir."/".$object))
+						recurse_delete($dir."/".$object);
+					else
+						unlink($dir."/".$object); 
+				}
+			}
+			rmdir($dir); 
+		}
+	}
 }
