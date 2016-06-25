@@ -36,19 +36,23 @@ CRUD Model View:
 
 ![LaraAdmin CRUD Model View] (http://laraadmin.com/img/laraadmin-row-view.jpg)
 
-## Installation & Documentation
+### Installation & Documentation
 
 Documentation for the LaraAdmin can be found on the [LaraAdmin website](http://laraadmin.com/documentation).
 
-## Contributing
+### Contributing
 
 Thank you for considering contributing to the LaraAdmin !!!
 
-## Bugs, improvements & Security Vulnerabilities
+### Bugs, improvements & Security Vulnerabilities
 
 If you discover a bug or security vulnerability within LaraAdmin, please send an e-mail to Ganesh Bhosale at ganesh@dwij.in. All requests will beaddressed promptly.
 
-## License
+### Issues
+
+If you come across any issue/bug please [report them here](https://github.com/dwijitsolutions/laraadmin/issues).
+
+### License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
