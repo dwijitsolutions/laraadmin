@@ -5,6 +5,7 @@ namespace Dwij\Laraadmin\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Exception;
 
 class Module extends Model
 {
@@ -20,6 +21,8 @@ class Module extends Model
     
     public static function generate($module_name, $module_name_db, $view_col, $fields) {
         
+        $fields = Module::format_fields($fields);
+        
         $moduleLabel = $module_name;
         if (strpos($module_name, ' ') !== false) {
             $module_name = str_replace(" ", "", $module_name);
@@ -28,98 +31,114 @@ class Module extends Model
         $modelName = ucfirst(str_singular($module_name));
         $is_gen = false;
         
-        // Check is Generated
-        if(file_exists(base_path('app/Http/Controllers/'.$controllerName.".php")) && 
-            file_exists(base_path('app/'.$modelName.".php"))) {
-            $is_gen = true;
-        }
-        
-        $module = Module::where('name', $module_name)->first();
-        if(!isset($module->id)) {
-            $module = Module::create([
-                'name' => $module_name,
-                'label' => $moduleLabel,
-                'name_db' => $module_name_db,
-                'view_col' => $view_col,
-                'model' => $modelName,
-                'controller' => $controllerName,
-                'is_gen' => $is_gen,
-            ]);
-        }
-        
-        $fields = Module::format_fields($fields);
-        $ftypes = ModuleFieldTypes::getFTypes();
-        //print_r($ftypes);
-        //print_r($module);
-        //print_r($fields);
-        
-        Schema::create($module_name_db, function (Blueprint $table) use ($fields, $module, $ftypes) {
-            $table->increments('id');
-            foreach ($fields as $field) {
-                
-                $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
-                if(!isset($mod->id)) {
-                    if($field->field_type == "Multiselect" || $field->field_type == "Taginput") {
-                        
-                        if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
-                            $field->defaultvalue = json_decode($field->defaultvalue);
-                        }
-                        
-                        if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
-                            $dvalue = json_encode([$field->defaultvalue]);
-                        } else {
-                            $dvalue = json_encode($field->defaultvalue);
-                        }
-                    } else {
-                        $dvalue = $field->defaultvalue;
-                        if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
-                            $dvalue = $field->defaultvalue;
-                        } else if(is_array($field->defaultvalue) && is_object($field->defaultvalue)) {
-                            $dvalue = json_encode($field->defaultvalue);
-                        }
-                    }
-                    
-                    $pvalues = $field->popup_vals;
-                    if(is_array($field->popup_vals) || is_object($field->popup_vals)) {
-                        $pvalues = json_encode($field->popup_vals);
-                    }
-                    
-                    ModuleFields::create([
-                        'module' => $module->id,
-                        'colname' => $field->colname,
-                        'label' => $field->label,
-                        'field_type' => $ftypes[$field->field_type],
-                        'readonly' => $field->readonly,
-                        'defaultvalue' => $dvalue,
-                        'minlength' => $field->minlength,
-                        'maxlength' => $field->maxlength,
-                        'required' => $field->required,
-                        'popup_vals' => $pvalues
-                    ]);
-                }
-                
-                // Schema::dropIfExists($module_name_db);
-                
-                Module::create_field_schema($table, $field);
+        if(substr_count($view_col, " ") || substr_count($view_col, ".")) {
+            throw new Exception("Unable to generate migration for ".$module_name." : Invalid view_column_name. 'This should be database friendly lowercase name.'", 1);
+        } else if(!Module::validate_view_column($fields, $view_col)) {
+            throw new Exception("Unable to generate migration for ".$module_name." : view_column_name not found in field list.", 1);
+        } else {
+            // Check is Generated
+            if(file_exists(base_path('app/Http/Controllers/'.$controllerName.".php")) && 
+                file_exists(base_path('app/'.$modelName.".php"))) {
+                $is_gen = true;
             }
             
-            // $table->string('name');
-            // $table->string('designation', 100);
-            // $table->string('mobile', 20);
-            // $table->string('mobile2', 20);
-            // $table->string('email', 100)->unique();
-            // $table->string('gender')->default('male');
-            // $table->integer('dept')->unsigned();
-            // $table->integer('role')->unsigned();
-            // $table->string('city', 50);
-            // $table->string('address', 1000);
-            // $table->string('about', 1000);
-            // $table->date('date_birth');
-            // $table->date('date_hire');
-            // $table->date('date_left');
-            // $table->double('salary_cur');
-            $table->timestamps();
-        });
+            $module = Module::where('name', $module_name)->first();
+            if(!isset($module->id)) {
+                $module = Module::create([
+                    'name' => $module_name,
+                    'label' => $moduleLabel,
+                    'name_db' => $module_name_db,
+                    'view_col' => $view_col,
+                    'model' => $modelName,
+                    'controller' => $controllerName,
+                    'is_gen' => $is_gen,
+                ]);
+            }
+            
+            $ftypes = ModuleFieldTypes::getFTypes();
+            //print_r($ftypes);
+            //print_r($module);
+            //print_r($fields);
+            
+            Schema::create($module_name_db, function (Blueprint $table) use ($fields, $module, $ftypes) {
+                $table->increments('id');
+                foreach ($fields as $field) {
+                    
+                    $mod = ModuleFields::where('module', $module->id)->where('colname', $field->colname)->first();
+                    if(!isset($mod->id)) {
+                        if($field->field_type == "Multiselect" || $field->field_type == "Taginput") {
+                            
+                            if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+                                $field->defaultvalue = json_decode($field->defaultvalue);
+                            }
+                            
+                            if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
+                                $dvalue = json_encode([$field->defaultvalue]);
+                            } else {
+                                $dvalue = json_encode($field->defaultvalue);
+                            }
+                        } else {
+                            $dvalue = $field->defaultvalue;
+                            if(is_string($field->defaultvalue) || is_int($field->defaultvalue)) {
+                                $dvalue = $field->defaultvalue;
+                            } else if(is_array($field->defaultvalue) && is_object($field->defaultvalue)) {
+                                $dvalue = json_encode($field->defaultvalue);
+                            }
+                        }
+                        
+                        $pvalues = $field->popup_vals;
+                        if(is_array($field->popup_vals) || is_object($field->popup_vals)) {
+                            $pvalues = json_encode($field->popup_vals);
+                        }
+                        
+                        ModuleFields::create([
+                            'module' => $module->id,
+                            'colname' => $field->colname,
+                            'label' => $field->label,
+                            'field_type' => $ftypes[$field->field_type],
+                            'readonly' => $field->readonly,
+                            'defaultvalue' => $dvalue,
+                            'minlength' => $field->minlength,
+                            'maxlength' => $field->maxlength,
+                            'required' => $field->required,
+                            'popup_vals' => $pvalues
+                        ]);
+                    }
+                    
+                    // Schema::dropIfExists($module_name_db);
+                    
+                    Module::create_field_schema($table, $field);
+                }
+                
+                // $table->string('name');
+                // $table->string('designation', 100);
+                // $table->string('mobile', 20);
+                // $table->string('mobile2', 20);
+                // $table->string('email', 100)->unique();
+                // $table->string('gender')->default('male');
+                // $table->integer('dept')->unsigned();
+                // $table->integer('role')->unsigned();
+                // $table->string('city', 50);
+                // $table->string('address', 1000);
+                // $table->string('about', 1000);
+                // $table->date('date_birth');
+                // $table->date('date_hire');
+                // $table->date('date_left');
+                // $table->double('salary_cur');
+                $table->timestamps();
+            });
+        }
+    }
+    
+    public static function validate_view_column($fields, $view_col) {
+        $found = false;
+        foreach ($fields as $field) {
+            if($field->colname == $view_col) {
+                $found = true;
+                break;
+            }
+        }
+        return $found;
     }
     
     public static function create_field_schema($table, $field) {
