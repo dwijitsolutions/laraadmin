@@ -99,11 +99,17 @@ class LAInstall extends Command
                 
                 // Creating Super Admin Role
                 $this->line('Creating Super Admin Role...');
-                \App\Role::create([
+                \DB::table('roles')->insert([
                     'name' => "Super Admin",
                     'name_short' => "SUPER_ADMIN",
-                    'prent' => 0,
-                    'dept' => 0
+                    'parent' => 0,
+                    'dept' => 1
+                ]);
+                \DB::table('departments')->insert([
+                    'name' => "Administration",
+                    'tags' => "[]",
+                    'color' => "#000",
+                    'hod' => 1
                 ]);
                 
                 // Creating Super Admin User
