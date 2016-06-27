@@ -15,6 +15,14 @@ Route::get('/dashboard', 'LA\DashboardController@index');
 /* ================== Users ================== */
 Route::get(config('laraadmin.adminRoute') . '/user/{id}', 'LA\UserController@show');
 
+/* ================== Roles ================== */
+Route::resource(config('laraadmin.adminRoute') . '/roles', 'LA\RolesController');
+Route::get(config('laraadmin.adminRoute') . '/role_dt_ajax', 'LA\RolesController@dtajax');
+
+/* ================== Departments ================== */
+Route::resource(config('laraadmin.adminRoute') . '/departments', 'LA\DepartmentsController');
+Route::get(config('laraadmin.adminRoute') . '/department_dt_ajax', 'LA\DepartmentsController@dtajax');
+
 /* ================== Employees ================== */
 Route::resource(config('laraadmin.adminRoute') . '/employees', 'LA\EmployeesController');
 Route::get(config('laraadmin.adminRoute') . '/employee_dt_ajax', 'LA\EmployeesController@dtajax');
