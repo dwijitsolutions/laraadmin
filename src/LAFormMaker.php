@@ -1,7 +1,9 @@
 <?php
 namespace Dwij\Laraadmin;
 
+use Schema;
 use Collective\Html\FormFacade as Form;
+use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 
 class LAFormMaker
@@ -179,7 +181,6 @@ class LAFormMaker
 				
 				if($popup_vals != "") {
 					$popup_vals = LAFormMaker::process_values($popup_vals);
-					//print_r(json_encode($popup_vals));
 				} else {
 					$popup_vals = array();
 				}
@@ -466,13 +467,73 @@ class LAFormMaker
 	**/
 	private static function process_values($json) {
 		$out = array();
-		if(is_string($json)) {
+		// Check if populated values are from Module or Database Table
+		if(is_string($json) && starts_with($json, "@")) {
+			
+			// Get Module / Table Name
+			$json = str_ireplace("@", "", $json);
+			$table_name = strtolower(str_plural($json));
+			
+			// Search Module
+			$module = Module::getByTable($table_name);
+			if(isset($module)) {
+				$out = Module::getDDArray($module->name);
+			} else {
+				// Search Table if no module found
+				if (Schema::hasTable($table_name)) {
+					$model = "App\\".ucfirst(str_singular($table_name));
+					$result = $model::all();
+					// find view column name
+					$view_col = "";
+					// Check if atleast one record exists
+					if(isset($result[0])) {
+						$view_col_test_1 = "name";
+						$view_col_test_2 = "title";
+						if(isset($result[0]->$view_col_test_1)) {
+							// Check whether view column name == "name"
+							$view_col = $view_col_test_1;
+						} else if(isset($result[0]->$view_col_test_2)) {
+							// Check whether view column name == "title"
+							$view_col = $view_col_test_2;
+						} else {
+							// retrieve the second column name which comes after "id"
+							$arr2 = $result[0]->toArray();
+							$arr2 = array_keys($arr2);
+							$view_col = $arr2[1];
+							// if second column not exists
+							if(!isset($result[0]->$view_col)) {
+								$view_col = "";
+							}
+						}
+						// If view column name found successfully through all above efforts
+						if($view_col != "") {
+							// retrieve rows of table
+							foreach ($result as $row) {
+								$out[$row->id] = $row->$view_col;
+							}
+						} else {
+							// Failed to find view column name
+						}
+					} else {
+						// Skipped efforts to detect view column name
+					}
+				} else if(Schema::hasTable($json)) {
+					// $array = \DB::table($table_name)->get();
+				}
+			}
+		} else if(is_string($json)) {
 			$array = json_decode($json);
-		} else {
-			$array = $json;
-		}
-		foreach ($array as $value) {
-			$out[$value] = $value;
+			if(is_array($array)) {
+				foreach ($array as $value) {
+					$out[$value] = $value;
+				}
+			} else {
+				// TODO: Check posibility of comma based pop values.
+			}
+		} else if(is_array($json)) {
+			foreach ($json as $value) {
+				$out[$value] = $value;
+			}
 		}
 		return $out;
 	}
