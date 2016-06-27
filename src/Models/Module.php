@@ -199,7 +199,9 @@ class Module extends Model
                     }
                 }
                 $popup_vals = json_decode($field->popup_vals);
-                if(is_array($popup_vals)) {
+                if(starts_with($field->popup_vals, "@")) {
+                    $var = $table->integer($field->colname)->unsigned();
+                } else if(is_array($popup_vals)) {
                     $var = $table->string($field->colname);
                     if($field->defaultvalue != "") {
                         $var->default($field->defaultvalue);
@@ -270,7 +272,9 @@ class Module extends Model
                     $field->defaultvalue = json_decode($field->defaultvalue);
                 }
                 
-                if(is_string($field->defaultvalue)) {
+                if(is_string($field->defaultvalue) && starts_with($field->popup_vals, "@")) {
+                    $var = $table->integer($field->colname)->unsigned();
+                } else if(is_string($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
                     $var->default($field->defaultvalue);
                 } else if(is_array($field->defaultvalue)) {
