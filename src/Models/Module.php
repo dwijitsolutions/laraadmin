@@ -449,7 +449,10 @@ class Module extends Model
         return $out;
     }
     
-    // $module = Module::get($module_name);
+    /**
+    * Get Module by module name
+    * $module = Module::get($module_name);
+    **/
     public static function get($module_name) {
         $module = Module::where('name', $module_name)->first();
         if(isset($module)) {
@@ -463,6 +466,40 @@ class Module extends Model
             return (object)$module;
         } else {
             return null;
+        }
+    }
+    
+    /**
+    * Get Module by table name
+    * $module = Module::getByTable($table_name);
+    **/
+    public static function getByTable($table_name) {
+        $module = Module::where('name_db', $table_name)->first();
+        if(isset($module)) {
+            $module = $module->toArray();
+            return Module::get($module['name']);
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+    * Get Array for Dropdown, Multiselect, Taginput, Radio from Module getByTable
+    * $array = Module::getDDArray($module_name);
+    **/
+    public static function getDDArray($module_name) {
+        $module = Module::where('name', $module_name)->first();
+        if(isset($module)) {
+            $model = "App\\".ucfirst(str_singular($module_name));
+            $result = $model::all();
+            $out = array();
+            foreach ($result as $row) {
+                $view_col = $module->view_col;
+                $out[$row->id] = $row->$view_col;
+            }
+            return $out;
+        } else {
+            return array();
         }
     }
     
