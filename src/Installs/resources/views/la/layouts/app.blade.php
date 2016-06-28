@@ -29,7 +29,8 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="skin-white fixed" bsurl="{{ url('') }}">
+
+<body class="skin-white fixed {{ $sidebar_mini or '' }}" bsurl="{{ url('') }}">
 <div class="wrapper">
 
     @include('la.layouts.partials.mainheader')
