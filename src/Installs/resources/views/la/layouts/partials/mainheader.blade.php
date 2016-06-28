@@ -136,7 +136,7 @@
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="#">Followers</a>
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/laeditor') }}"><i class="fa fa-code"></i> <span>Edit</span></a>
                                 </div>
                                 <div class="col-xs-8 text-center">
                                     <a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}"><i class="fa fa-cubes"></i> <span>Module Manager</span></a>

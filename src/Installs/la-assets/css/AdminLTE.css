@@ -687,7 +687,7 @@ a:focus {
 .user-panel > .image > img {
   width: 100%;
   max-width: 45px;
-  height: 45px;
+  height: auto;
 }
 .user-panel > .info {
   padding: 5px 5px 5px 15px;
@@ -6931,6 +6931,89 @@ body > .pgn-wrapper {
     max-width: 100%;
     width: 100%;
   }
+}
+#laeditor {
+  padding: 0px;
+  margin: 0px;
+}
+#laeditor .la-header {
+  text-align: center;
+  padding: 5px;
+  background: #444;
+  color: #FFF;
+  border-bottom: solid 1px #333;
+  border-right: solid 1px #333;
+}
+#laeditor .col-md-2,
+#laeditor .col-md-10 {
+  padding: 0px;
+}
+#laeditor .la-file-tree {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 5px;
+  background: #222;
+  border-right: solid 1px #333;
+}
+#laeditor .la-file-tree a {
+  display: block;
+  width: 100%;
+  color: darkgrey;
+}
+#laeditor .la-file-tree a:hover {
+  background: rgba(255, 255, 255, 0.29);
+}
+#laeditor .laeditor-tabs {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  background: #232323;
+  display: block;
+  float: left;
+  width: 100%;
+  border-bottom: solid 1px;
+  height: 31px;
+}
+#laeditor .laeditor-tabs li {
+  display: inline-block;
+  padding: 4px 10px;
+  padding-right: 8px;
+  padding-bottom: 6px;
+  color: beige;
+  background: #222;
+  border-right: solid 1px #333;
+  margin: 0px;
+  float: left;
+  cursor: pointer;
+}
+#laeditor .laeditor-tabs li i.fa {
+  font-size: 10px;
+  margin-left: 3px;
+  color: #555;
+}
+#laeditor .laeditor-tabs li.active {
+  background: #444;
+}
+#laeditor .laeditor-tabs li.active i.fa {
+  color: #999;
+}
+#laeditor .laeditor-tabs li:hover {
+  background: #333;
+}
+#laeditor .laeditor-tabs li:hover i.fa {
+  color: #999;
+}
+#laeditor #la-ace-editor {
+  display: block;
+  border-radius: 0px;
+  border: 0px;
+  margin: 0px;
+}
+#laeditor #la-ace-editor .ace_gutter {
+  margin-top: 0px;
+}
+#laeditor #la-ace-editor .ace_scroller {
+  margin-top: 0px;
 }
 
 /*# sourceMappingURL=AdminLTE.css.map */
