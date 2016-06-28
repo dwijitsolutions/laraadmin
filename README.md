@@ -42,7 +42,7 @@ Documentation for the LaraAdmin can be found on the [LaraAdmin website](http://l
 
 ### Contributing
 
-Thank you for considering contributing to the LaraAdmin !!!
+Thank you for considering contributing to the LaraAdmin. Please read [features doc](http://laraadmin.com/devdoc-features)
 
 ### Bugs, improvements & Security Vulnerabilities
 
