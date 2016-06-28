@@ -82,7 +82,6 @@ class CodeEditorController extends Controller
     /**
      * Get file content
      *
-     * @param  string  $file_name
      * @return \Illuminate\Http\Response
      */
     public function get_file(Request $request)
@@ -90,5 +89,18 @@ class CodeEditorController extends Controller
         $filepath = $request->input('filepath');
         $data = file_get_contents(base_path($filepath));
         echo $data;
+    }
+    
+    /**
+     * Save file content
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function save_file(Request $request)
+    {
+        $filepath = $request->input('filepath');
+        $filedata = $request->input('filedata');
+        $data = file_put_contents(base_path($filepath), $filedata);
+        return response()->json(['success' => true]);
     }
 }
