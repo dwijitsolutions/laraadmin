@@ -125,6 +125,9 @@ class Module extends Model
                 // $table->date('date_hire');
                 // $table->date('date_left');
                 // $table->double('salary_cur');
+                if($module->name_db == "users") {
+                    $table->rememberToken();
+                }
                 $table->timestamps();
             });
         }
