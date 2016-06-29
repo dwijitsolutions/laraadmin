@@ -24,17 +24,16 @@ Easy user Management with features like Employees, Roles, Groups, Departments an
 
 ### Snapshots:
 
-CRUD Model Listing:
+CRUD Model Listing & Add:
 
-![LaraAdmin CRUD Model Listing] (http://laraadmin.com/img/laraadmin-row-listing.jpg)
-
-CRUD Model Add:
-
-![LaraAdmin CRUD Model Add] (http://laraadmin.com/img/laraadmin-row-listing-add.jpg)
+![LaraAdmin CRUD Model Add] (http://laraadmin.com/img/laraadmin/laraadmin-row-listing-add.jpg)
 
 CRUD Model View:
 
-![LaraAdmin CRUD Model View] (http://laraadmin.com/img/laraadmin-row-view.jpg)
+![LaraAdmin CRUD Model View] (http://laraadmin.com/img/laraadmin/laraadmin-row-view.jpg)
+
+Online Code Editor:
+![Online Code Editor] (http://laraadmin.com/img/laraadmin/laraadmin-online-code-editor.jpg)
 
 ### Installation & Documentation
 
