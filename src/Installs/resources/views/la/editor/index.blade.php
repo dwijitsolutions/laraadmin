@@ -55,7 +55,7 @@ $(function () {
 	laeditor = ace.edit("la-ace-editor");
     laeditor.setTheme("ace/theme/twilight");
     laeditor.session.setMode("ace/mode/javascript");
-	laeditor.$blockScrolling = Infinity
+	laeditor.$blockScrolling = Infinity;
 	laeditor.commands.addCommand({
 		name: 'save',
 		bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
@@ -63,7 +63,7 @@ $(function () {
 			// console.log("saving", editor.session.getValue());
 			saveFileCode(cntFile, editor.session.getValue());
 		}
-	})
+	});
 	
 	setEditorSize();
 	
@@ -118,6 +118,7 @@ function closeFile(filepath) {
 		laeditor.setValue("", -1);
 		laeditor.focus();
 		laeditor.session.setMode("ace/mode/text");
+		cntFile = "";
 	}
 }
 
@@ -164,20 +165,22 @@ function loadFileCode(filepath, reload = false) {
 
 function saveFileCode(filepath, filedata, reload = false) {
 	//console.log("saveFileCode: "+filepath);
-	$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-times").addClass("fa-spin").addClass("fa-refresh");
-	
-	$.ajax({
-		url: "{{ url(config('laraadmin.adminRoute') . '/laeditor_save_file?_token=' . csrf_token()) }}",
-		method: 'POST',
-		data: {
-			"filepath": filepath,
-			"filedata": filedata
-		},
-		success: function( data ) {
-			// console.log(data);
-			$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-spin").removeClass("fa-refresh").addClass("fa-times");
-		}
-	});
+	if(filepath != "") {
+		$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-times").addClass("fa-spin").addClass("fa-refresh");
+		
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/laeditor_save_file?_token=' . csrf_token()) }}",
+			method: 'POST',
+			data: {
+				"filepath": filepath,
+				"filedata": filedata
+			},
+			success: function( data ) {
+				// console.log(data);
+				$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-spin").removeClass("fa-refresh").addClass("fa-times");
+			}
+		});
+	}
 }
 
 function highlightFileTab(filepath) {
