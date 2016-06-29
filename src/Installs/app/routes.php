@@ -13,7 +13,9 @@ Route::get(config('laraadmin.adminRoute'). '/dashboard', 'LA\DashboardController
 Route::get('/dashboard', 'LA\DashboardController@index');
 
 /* ================== Users ================== */
-Route::get(config('laraadmin.adminRoute') . '/user/{id}', 'LA\UserController@show');
+Route::resource(config('laraadmin.adminRoute') . '/users', 'LA\UsersController');
+Route::get(config('laraadmin.adminRoute') . '/user_dt_ajax', 'LA\UsersController@dtajax');
+
 
 /* ================== Roles ================== */
 Route::resource(config('laraadmin.adminRoute') . '/roles', 'LA\RolesController');
