@@ -38,6 +38,7 @@ var $openFiles = [];
 var laeditor = null;
 var cntFile;
 var modelist = ace.require("ace/ext/modelist");
+var $laetabs = $(".laeditor-tabs");
 
 $(function () {
 	// Start Jquery File Tree
@@ -82,7 +83,6 @@ function setEditorSize() {
 	$("#la-ace-editor").css("height", editorHeight+"px");
 	$("#la-ace-editor").css("max-height", editorHeight+"px");
 }
-$laetabs = $(".laeditor-tabs");
 
 $(".laeditor-tabs").on("click", "li i.fa", function(e) {
 	filepath = $(this).parent().attr("filepath");
@@ -97,20 +97,20 @@ $(".laeditor-tabs").on("click", "li", function(e) {
 
 function openFile(filepath) {
 	var fileFound = fileContains(filepath);
-	console.log("openFile: "+filepath+" fileFound: "+fileFound);
+	// console.log("openFile: "+filepath+" fileFound: "+fileFound);
 	
 	loadFileCode(filepath);
-	console.log($openFiles);
+	// console.log($openFiles);
 }
 
 function closeFile(filepath) {
-	console.log("closeFile: "+filepath);
+	// console.log("closeFile: "+filepath);
 	// $openFiles[getFileIndex(filepath)] = null;
 	var index = getFileIndex(filepath);
-	console.log("index: "+index);
+	// console.log("index: "+index);
 	$openFiles.splice(index, 1);
 	$laetabs.children("li[filepath='"+filepath+"']").remove();
-	console.log($openFiles);
+	// console.log($openFiles);
 	
 	if(index != 0 && $openFiles.length != 0) {
 		openFile($openFiles[index-1].filepath);
@@ -122,7 +122,7 @@ function closeFile(filepath) {
 }
 
 function loadFileCode(filepath, reload = false) {
-	console.log("loadFileCode: "+filepath+" contains: "+fileContains(filepath));
+	// console.log("loadFileCode: "+filepath+" contains: "+fileContains(filepath));
 	if(!fileContains(filepath)) {
 		$.ajax({
 			url: "{{ url(config('laraadmin.adminRoute') . '/laeditor_get_file?_token=' . csrf_token()) }}",
@@ -152,7 +152,7 @@ function loadFileCode(filepath, reload = false) {
 			}
 		});
 	} else {
-		console.log("File found offline");
+		// console.log("File found offline");
 		var data = $openFiles[getFileIndex(filepath)].filedata;
 		laeditor.setValue(data, -1);
 		laeditor.focus();
@@ -163,6 +163,9 @@ function loadFileCode(filepath, reload = false) {
 }
 
 function saveFileCode(filepath, filedata, reload = false) {
+	//console.log("saveFileCode: "+filepath);
+	$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-times").addClass("fa-spin").addClass("fa-refresh");
+	
 	$.ajax({
 		url: "{{ url(config('laraadmin.adminRoute') . '/laeditor_save_file?_token=' . csrf_token()) }}",
 		method: 'POST',
@@ -170,9 +173,9 @@ function saveFileCode(filepath, filedata, reload = false) {
 			"filepath": filepath,
 			"filedata": filedata
 		},
-		async: false,
 		success: function( data ) {
-			console.log(data);
+			// console.log(data);
+			$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-spin").removeClass("fa-refresh").addClass("fa-times");
 		}
 	});
 }
