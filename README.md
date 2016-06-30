@@ -1,4 +1,7 @@
-# LaraAdmin 0.1
+<p align="center">
+  <img src="http://laraadmin.com/img/favicon/android-chrome-96x96.png">
+  <h1 align="center" style="margin-top:5px;">LaraAdmin 1.0</h1>
+</p>
 
 [![Total Downloads](https://poser.pugx.org/dwij/laraadmin/d/total.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![Latest Stable Version](https://poser.pugx.org/dwij/laraadmin/v/stable.svg)](https://packagist.org/packages/dwij/laraadmin)
