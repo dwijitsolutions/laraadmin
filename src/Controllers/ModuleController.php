@@ -54,9 +54,9 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
-        Module::generate($request->name, $request->name_db, '', []);
+        Module::generateBase($request->name, $request->name_db, '', []);
         
-        return redirect()->route('la.modules.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.modules.index');
     }
 
     /**

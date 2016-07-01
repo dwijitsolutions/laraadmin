@@ -19,6 +19,33 @@ class Module extends Model
         
     ];
     
+    public static function generateBase($module_name, $module_name_db) {
+        $moduleLabel = $module_name;
+        if (strpos($module_name, ' ') !== false) {
+            $module_name = str_replace(" ", "", $module_name);
+        }
+        $controllerName = $module_name."Controller";
+        $modelName = ucfirst(str_singular($module_name));
+        $is_gen = false;
+        // Check is Generated
+        if(file_exists(base_path('app/Http/Controllers/'.$controllerName.".php")) && 
+            file_exists(base_path('app/'.$modelName.".php"))) {
+            $is_gen = true;
+        }
+        $module = Module::where('name', $module_name)->first();
+        if(!isset($module->id)) {
+            $module = Module::create([
+                'name' => $module_name,
+                'label' => $moduleLabel,
+                'name_db' => $module_name_db,
+                'view_col' => "",
+                'model' => $modelName,
+                'controller' => $controllerName,
+                'is_gen' => $is_gen,
+            ]);
+        }
+    }
+    
     public static function generate($module_name, $module_name_db, $view_col, $fields) {
         
         $fields = Module::format_fields($fields);
