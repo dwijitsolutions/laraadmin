@@ -103,6 +103,7 @@ class LAFormMaker
 				
 				unset($params['data-rule-maxlength']);
 				$params['data-rule-currency'] = "true";
+				$params['min'] = "0";
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Date':
@@ -269,7 +270,7 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				
+				$params['min'] = "0";
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Mobile':
