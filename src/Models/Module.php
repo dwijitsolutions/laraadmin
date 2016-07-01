@@ -552,6 +552,7 @@ class Module extends Model
             $row = new $model;
             $row = Module::processDBRow($module, $request, $row);
             $row->save();
+            return $row->id;
         } else {
             return null;
         }
