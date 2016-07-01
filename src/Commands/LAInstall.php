@@ -105,7 +105,7 @@ class LAInstall extends Command
                 $data['password'] = bcrypt($this->secret('Super Admin password'));
                 $data['role_id']  = 1;
                 $data['context_id']  = "1";
-                $data['type']  = "employee";
+                $data['type']  = "Employee";
                 \App\User::create($data);
                 
                 //Employee::create([ Not working - [Illuminate\Database\Eloquent\MassAssignmentException] name

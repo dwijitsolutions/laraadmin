@@ -20,7 +20,7 @@ class CreateRolesTable extends Migration
     public function up()
     {
         Module::generate("Roles", 'roles', 'name', [
-            ["name", "Name", "Name", false, "", 5, 256, true],
+            ["name", "Name", "Name", false, "", 1, 256, true],
             ["name_short", "Short Name", "String", false, "", 0, 256, true],
             ["parent", "Parent Role", "Dropdown", false, 3, 0, 0, false, "@roles"],
             ["dept", "Department", "Dropdown", false, 3, 0, 0, false, "@department"],

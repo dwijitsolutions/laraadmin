@@ -20,7 +20,7 @@ class CreateDepartmentsTable extends Migration
     public function up()
     {
         Module::generate("Departments", 'departments', 'name', [
-            ["name", "Name", "Name", false, "", 5, 256, true],
+            ["name", "Name", "Name", false, "", 1, 256, true],
             ["tags", "Tags", "Taginput", false, [], 0, 0, false],
             ["color", "Color", "String", false, "", 0, 50, true],
             ["hod", "HOD", "Dropdown", false, 3, 0, 0, false, "@employees"],
