@@ -25,7 +25,14 @@ class CreateRolesTable extends Migration
             ["parent", "Parent Role", "Dropdown", false, 3, 0, 0, false, "@roles"],
             ["dept", "Department", "Dropdown", false, 3, 0, 0, false, "@department"],
         ]);
-		
+        
+        $row = new Role;
+        $row->name = "Super Admin";
+        $row->name_short = "SUPER_ADMIN";
+        $row->parent = 0;
+        $row->dept = 1;
+        $row->save();
+        
 		/*
 		Row Format:
 		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]

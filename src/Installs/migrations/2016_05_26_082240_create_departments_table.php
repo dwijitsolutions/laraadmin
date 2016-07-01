@@ -25,7 +25,14 @@ class CreateDepartmentsTable extends Migration
             ["color", "Color", "String", false, "", 0, 50, true],
             ["hod", "HOD", "Dropdown", false, 3, 0, 0, false, "@employees"],
         ]);
-		
+        
+        $row = new Department;
+        $row->name = "Administration";
+        $row->tags = "[]";
+        $row->color = "#000";
+        $row->hod = 1;
+        $row->save();
+        
 		/*
 		Row Format:
 		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]

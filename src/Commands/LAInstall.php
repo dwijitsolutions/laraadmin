@@ -97,21 +97,6 @@ class LAInstall extends Command
                 $this->line('Running migrations...');
                 $this->call('migrate');
                 
-                // Creating Super Admin Role
-                $this->line('Creating Super Admin Role...');
-                \DB::table('roles')->insert([
-                    'name' => "Super Admin",
-                    'name_short' => "SUPER_ADMIN",
-                    'parent' => 0,
-                    'dept' => 1
-                ]);
-                \DB::table('departments')->insert([
-                    'name' => "Administration",
-                    'tags' => "[]",
-                    'color' => "#000",
-                    'hod' => 1
-                ]);
-                
                 // Creating Super Admin User
                 $this->line('Creating Super Admin User...');
                 $data = array();
