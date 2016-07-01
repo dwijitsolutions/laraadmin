@@ -1,8 +1,11 @@
 <?php
 
 namespace Dwij\Laraadmin\Helpers;
+
 use DB;
 use Log;
+
+use Dwij\Laraadmin\Models\Module;
 
 class LAHelper
 {
@@ -42,7 +45,31 @@ class LAHelper
 		$remove_tables = array_merge($remove_tables, $remove_tables2);
 		$remove_tables = array_unique($remove_tables);
 		$tables_out = array_diff($tables_out, $remove_tables);
-		return $tables_out;
+		
+		$tables_out2 = array();
+		foreach ($tables_out as $table) {
+			$tables_out2[$table] = $table;
+		}
+		
+		return $tables_out2;
+    }
+	
+	// $modules = LAHelper::getModuleNames([]);
+    public static function getModuleNames($remove_modules = []) {
+        $modules = Module::all();
+		
+		$modules_out = array();
+		foreach ($modules as $module) {
+			$modules_out[] = $module->name;
+		}
+		$modules_out = array_diff($modules_out, $remove_modules);
+		
+		$modules_out2 = array();
+		foreach ($modules_out as $module) {
+			$modules_out2[$module] = $module;
+		}
+		
+		return $modules_out2;
     }
 	
 	// LAHelper::parseValues($field['popup_vals']);

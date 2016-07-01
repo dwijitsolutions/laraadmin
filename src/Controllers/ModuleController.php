@@ -9,7 +9,8 @@ namespace Dwij\Laraadmin\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-
+use DB;
+use Dwij\Laraadmin\Helpers\LAHelper;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\CodeGenerator;
@@ -70,10 +71,16 @@ class ModuleController extends Controller
         $ftypes = ModuleFieldTypes::getFTypes2();
         $module = Module::find($id);
         $module = Module::get($module->name);
+        
+        $tables = LAHelper::getDBTables([]);
+        $modules = LAHelper::getModuleNames([]);
+        
         return view('la.modules.show', [
             'no_header' => true,
             'no_padding' => "no-padding",
-            'ftypes' => $ftypes
+            'ftypes' => $ftypes,
+            'tables' => $tables,
+            'modules' => $modules
         ])->with('module', $module);
     }
 
