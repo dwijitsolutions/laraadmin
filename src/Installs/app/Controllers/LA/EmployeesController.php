@@ -73,15 +73,12 @@ class EmployeesController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
             
-        $insert_id = Module::insert("Employees", $request);
-        
-        $password = LAHelper::gen_password();
-        
-        $request->context_id = $insert_id;
-        $request->password = bcrypt($password);
+        // Create User
+        $employee_id = Module::insert("Employees", $request);
+        $request->context_id = $employee_id;
+        $request->password = bcrypt(LAHelper::gen_password());
         $request->type = "Employee";
-        
-        $insert_id = Module::insert("Users", $request);
+        $user_id = Module::insert("Users", $request);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }
@@ -147,7 +144,11 @@ class EmployeesController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();;
         }
         
-        $insert_id = Module::updateRow("Employees", $request, $id);
+        $employee_id = Module::updateRow("Employees", $request, $id);
+        
+        // Update User
+        $user = User::where('context_id', $employee_id)->first();
+        Module::updateRow("Users", $request, $user->id);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }

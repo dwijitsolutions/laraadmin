@@ -566,6 +566,7 @@ class Module extends Model
             $row = $model::find($id);
             $row = Module::processDBRow($module, $request, $row);
             $row->save();
+            return $row->id;
         } else {
             return null;
         }
