@@ -6,6 +6,23 @@ use Log;
 
 class LAHelper
 {
+	// $names = LAHelper::generateModuleNames($module_name);
+    public static function generateModuleNames($module_name) {
+		$array = array();
+		$module_name = trim($module_name);
+		$module_name = str_replace(" ", "", $module_name);
+		
+		$array['module'] = ucfirst(str_plural($module_name));
+		$array['label'] = ucfirst(str_plural($module_name));
+		$array['table'] = strtolower(str_plural($module_name));
+		$array['model'] = ucfirst(str_singular($module_name));
+		$array['controller'] = $array['module']."Controller";
+		$array['singular_l'] = strtolower(str_singular($module_name));
+		$array['singular_c'] = ucfirst(str_singular($module_name));
+		
+		return (object) $array;
+	}
+	
 	// $tables = LAHelper::getDBTables([]);
     public static function getDBTables($remove_tables = []) {
         $tables = DB::select('SHOW TABLES');

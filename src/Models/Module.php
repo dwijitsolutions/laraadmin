@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Exception;
+use Dwij\Laraadmin\Helpers\LAHelper;
 
 class Module extends Model
 {
@@ -19,69 +20,57 @@ class Module extends Model
         
     ];
     
-    public static function generateBase($module_name, $module_name_db) {
-        $moduleLabel = $module_name;
-        if (strpos($module_name, ' ') !== false) {
-            $module_name = str_replace(" ", "", $module_name);
-        }
-        $controllerName = $module_name."Controller";
-        $modelName = ucfirst(str_singular($module_name));
-        $is_gen = false;
+    public static function generateBase($module_name) {
+        
+        $names = LAHelper::generateModuleNames($module_name);
+        
         // Check is Generated
-        if(file_exists(base_path('app/Http/Controllers/'.$controllerName.".php")) && 
-            file_exists(base_path('app/'.$modelName.".php"))) {
+        $is_gen = false;
+        if(file_exists(base_path('app/Http/Controllers/'.($names->controller).".php")) && 
+            file_exists(base_path('app/'.($names->model).".php"))) {
             $is_gen = true;
         }
-        $module_name_db = strtolower(str_plural($module_name_db));
-        $module = Module::where('name', $module_name)->first();
+        $module = Module::where('name', $names->module)->first();
         if(!isset($module->id)) {
             $module = Module::create([
-                'name' => $module_name,
-                'label' => $moduleLabel,
-                'name_db' => $module_name_db,
+                'name' => $names->module,
+                'label' => $names->label,
+                'name_db' => $names->table,
                 'view_col' => "",
-                'model' => $modelName,
-                'controller' => $controllerName,
+                'model' => $names->model,
+                'controller' => $names->controller,
                 'is_gen' => $is_gen,
             ]);
         }
+        return $module->id;
     }
     
     public static function generate($module_name, $module_name_db, $view_col, $fields) {
         
+        $names = LAHelper::generateModuleNames($module_name);
         $fields = Module::format_fields($fields);
         
-        $module_name_db = ucfirst(str_plural($module_name_db));
-        
-        $moduleLabel = $module_name;
-        if (strpos($module_name, ' ') !== false) {
-            $module_name = str_replace(" ", "", $module_name);
-        }
-        $controllerName = $module_name."Controller";
-        $modelName = ucfirst(str_singular($module_name));
-        $is_gen = false;
-        
         if(substr_count($view_col, " ") || substr_count($view_col, ".")) {
-            throw new Exception("Unable to generate migration for ".$module_name." : Invalid view_column_name. 'This should be database friendly lowercase name.'", 1);
+            throw new Exception("Unable to generate migration for ".($names->module)." : Invalid view_column_name. 'This should be database friendly lowercase name.'", 1);
         } else if(!Module::validate_view_column($fields, $view_col)) {
-            throw new Exception("Unable to generate migration for ".$module_name." : view_column_name not found in field list.", 1);
+            throw new Exception("Unable to generate migration for ".($names->module)." : view_column_name not found in field list.", 1);
         } else {
             // Check is Generated
-            if(file_exists(base_path('app/Http/Controllers/'.$controllerName.".php")) && 
-                file_exists(base_path('app/'.$modelName.".php"))) {
+            $is_gen = false;
+            if(file_exists(base_path('app/Http/Controllers/'.($names->controller).".php")) && 
+                file_exists(base_path('app/'.($names->model).".php"))) {
                 $is_gen = true;
             }
             
-            $module_name_db = strtolower(str_plural($module_name_db));
-            $module = Module::where('name', $module_name)->first();
+            $module = Module::where('name', $names->module)->first();
             if(!isset($module->id)) {
                 $module = Module::create([
-                    'name' => $module_name,
-                    'label' => $moduleLabel,
-                    'name_db' => $module_name_db,
+                    'name' => $names->module,
+                    'label' => $names->label,
+                    'name_db' => $names->table,
                     'view_col' => $view_col,
-                    'model' => $modelName,
-                    'controller' => $controllerName,
+                    'model' => $names->model,
+                    'controller' => $names->controller,
                     'is_gen' => $is_gen,
                 ]);
             }
@@ -91,7 +80,7 @@ class Module extends Model
             //print_r($module);
             //print_r($fields);
             
-            Schema::create($module_name_db, function (Blueprint $table) use ($fields, $module, $ftypes) {
+            Schema::create($names->table, function (Blueprint $table) use ($fields, $module, $ftypes) {
                 $table->increments('id');
                 foreach ($fields as $field) {
                     
@@ -136,7 +125,7 @@ class Module extends Model
                         ]);
                     }
                     
-                    // Schema::dropIfExists($module_name_db);
+                    // Schema::dropIfExists($names->table);
                     
                     Module::create_field_schema($table, $field);
                 }
