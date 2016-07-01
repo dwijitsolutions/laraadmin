@@ -61,11 +61,6 @@ use Dwij\Laraadmin\Models\Module;
 						<label for="name">Module Name :</label>
 						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
 					</div>
-					
-					<div class="form-group">
-						<label for="name">Table Name (lowercase only) :</label>
-						{{ Form::text("name_db", null, ['class'=>'form-control', 'placeholder'=>'Table Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
-					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
