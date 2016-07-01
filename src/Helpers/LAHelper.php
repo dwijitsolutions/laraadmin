@@ -99,4 +99,23 @@ class LAHelper
 			rmdir($dir); 
 		}
 	}
+	
+	// Generate Random Password
+	// $password = LAHelper::gen_password();
+	public static function gen_password($chars_min=6, $chars_max=8, $use_upper_case=false, $include_numbers=false, $include_special_chars=false) {
+		$length = rand($chars_min, $chars_max);
+		$selection = 'aeuoyibcdfghjklmnpqrstvwxz';
+		if($include_numbers) {
+			$selection .= "1234567890";
+		}
+		if($include_special_chars) {
+			$selection .= "!@\"#$%&[]{}?|";
+		}
+		$password = "";
+		for($i=0; $i<$length; $i++) {
+			$current_letter = $use_upper_case ? (rand(0,1) ? strtoupper($selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))];            
+			$password .=  $current_letter;
+		}
+		return $password;
+	}
 }
