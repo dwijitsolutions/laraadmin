@@ -65,7 +65,7 @@ class CodeGenerator
         @mkdir("resources/views/la/".$config->dbTableName, 0777, true);
         
         // ============================ Listing / Index ============================
-        $md = file_get_contents($templateDirectory."/views/index.blade.stub");
+        $md = file_get_contents($templateDirectory."/Views/index.blade.stub");
         
         $md = str_replace("__module_name__", $config->moduleName, $md);
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
