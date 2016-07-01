@@ -15,6 +15,7 @@ use Validator;
 use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Helpers\LAHelper;
 
 use App\User;
 use App\Employee;
@@ -73,6 +74,14 @@ class EmployeesController extends Controller
         }
             
         $insert_id = Module::insert("Employees", $request);
+        
+        $password = LAHelper::gen_password();
+        
+        $request->context_id = $insert_id;
+        $request->password = bcrypt($password);
+        $request->type = "Employee";
+        
+        $insert_id = Module::insert("Users", $request);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }
