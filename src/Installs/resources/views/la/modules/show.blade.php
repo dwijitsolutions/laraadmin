@@ -33,9 +33,12 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 		
 		<div class="col-md-4">
-			@if(isset($module->is_gen) && $module->is_gen)
-			@else
-			<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_crud" href="#"><i class="fa fa-cube"></i> Generate CRUD + M</a></div>
+			@if($module->view_col != "")
+				@if(isset($module->is_gen) && $module->is_gen)
+					
+				@else
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_crud" href="#"><i class="fa fa-cube"></i> Generate CRUD + M</a></div>
+				@endif
 			@endif
 			<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr" href="#"><i class="fa fa-database"></i> Generate Migration</a></div>
 		</div>
@@ -147,17 +150,23 @@ use Dwij\Laraadmin\Models\Module;
 					
 					<div class="form-group">
 						<label for="minlength">Minimum :</label>
-						{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Minimum Value']) }}
 					</div>
 					
 					<div class="form-group">
 						<label for="maxlength">Maximum :</label>
-						{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Maximum Value']) }}
 					</div>
 					
 					<div class="form-group">
 						<label for="required">Required:</label>
 						{{ Form::checkbox("required", "required", false, []) }}
+						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
+					</div>
+					
+					<div class="form-group">
+						<label for="required">Unique:</label>
+						{{ Form::checkbox("unique", "unique", false, []) }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					

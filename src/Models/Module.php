@@ -32,6 +32,7 @@ class Module extends Model
             file_exists(base_path('app/'.$modelName.".php"))) {
             $is_gen = true;
         }
+        $module_name_db = strtolower(str_plural($module_name_db));
         $module = Module::where('name', $module_name)->first();
         if(!isset($module->id)) {
             $module = Module::create([
@@ -49,6 +50,8 @@ class Module extends Model
     public static function generate($module_name, $module_name_db, $view_col, $fields) {
         
         $fields = Module::format_fields($fields);
+        
+        $module_name_db = ucfirst(str_plural($module_name_db));
         
         $moduleLabel = $module_name;
         if (strpos($module_name, ' ') !== false) {
@@ -69,6 +72,7 @@ class Module extends Model
                 $is_gen = true;
             }
             
+            $module_name_db = strtolower(str_plural($module_name_db));
             $module = Module::where('name', $module_name)->first();
             if(!isset($module->id)) {
                 $module = Module::create([

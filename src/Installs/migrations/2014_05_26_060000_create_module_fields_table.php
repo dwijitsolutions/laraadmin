@@ -23,7 +23,6 @@ class CreateModuleFieldsTable extends Migration
             $table->integer('minlength')->unsigned();
             $table->integer('maxlength')->unsigned();
             $table->boolean('required')->default(false);
-            $table->boolean('unique')->default(false);
             $table->text('popup_vals');
             $table->timestamps();
         });
