@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Helpers\LAHelper;
 use Eloquent;
+use DB;
 
 class LAInstall extends Command
 {
@@ -66,11 +67,6 @@ class LAInstall extends Command
                     $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
                 }
                 
-                // Routes
-                $this->line('Appending routes...');
-                //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
-                $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
-                
                 // Config
                 $this->line('Generating Config...');
                 $this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
@@ -89,14 +85,25 @@ class LAInstall extends Command
                 $this->copyFolder($from."/resources/assets", $to."/resources/assets");
                 $this->copyFolder($from."/resources/views", $to."/resources/views");
                 
+                // Checking database
+                $this->line('Checking database...');
+                DB::select('SHOW TABLES');
+                
+                // Running migrations...
+                $this->line('Running migrations...');
+                $this->call('clear-compiled');
+                $this->call('cache:clear');
+                $this->call('migrate');
+                
+                // Routes
+                $this->line('Appending routes...');
+                //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
+                $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+                
                 // Utilities 
                 $this->line('Generating Utilities...');
                 // if(!$this->fileContains($to."/gulpfile.js", "admin-lte/AdminLTE.less")) {
                 $this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
-                
-                // Running migrations...
-                $this->line('Running migrations...');
-                $this->call('migrate');
                 
                 // Creating Super Admin User
                 $this->line('Creating Super Admin User...');
@@ -141,8 +148,13 @@ class LAInstall extends Command
                 $this->error("Installation aborted. Please try again after backup. Thank you...");
             }
         } catch (Exception $e) {
-            $this->error("LAInstall::handle exception: ".$e);
-            throw new Exception("LAInstall::handle Unable to install : ".$e->getMessage(), 1);
+            $msg = $e->getMessage();
+            if (strpos($msg, 'SQLSTATE') !== false) {
+                throw new Exception("LAInstall: Database is not connected. Connect database (.env) and run 'la:install' again.\n".$msg, 1);
+            } else {
+                $this->error("LAInstall::handle exception: ".$e);
+                throw new Exception("LAInstall::handle Unable to install : ".$msg, 1);
+            }
         }
     }
     
