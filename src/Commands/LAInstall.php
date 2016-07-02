@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Helpers\LAHelper;
+use Eloquent;
 
 class LAInstall extends Command
 {
@@ -99,36 +100,42 @@ class LAInstall extends Command
                 
                 // Creating Super Admin User
                 $this->line('Creating Super Admin User...');
-                $data = array();
-                $data['name']     = $this->ask('Super Admin name');
-                $data['email']    = $this->ask('Super Admin email');
-                $data['password'] = bcrypt($this->secret('Super Admin password'));
-                $data['role_id']  = 1;
-                $data['context_id']  = "1";
-                $data['type']  = "Employee";
-                \App\User::create($data);
                 
-                //Employee::create([ Not working - [Illuminate\Database\Eloquent\MassAssignmentException] name
-                \DB::table('employees')->insert([
-                    'name' => $data['name'],
-                    'designation' => $data['name'],
-                    'mobile' => "8888888888",
-                    'mobile2' => "",
-                    'email' => $data['email'],
-                    'gender' => 'Male',
-                    'dept' => "0",
-                    'role' => "1",
-                    'city' => "Pune",
-                    'address' => "Karve nagar, Pune 411030",
-                    'about' => "About user / biography",
-                    'date_birth' => date("Y-m-d"),
-                    'date_hire' => date("Y-m-d"),
-                    'date_left' => date("Y-m-d"),
-                    'salary_cur' => 0,
-                ]);
-                
-                $this->info("User '".$data['name']."' successfully created. ");
-                
+                $user = \App\User::where('context_id', "1")->first();
+                if(!isset($user['id'])) {
+                    $data = array();
+                    $data['name']     = $this->ask('Super Admin name');
+                    $data['email']    = $this->ask('Super Admin email');
+                    $data['password'] = bcrypt($this->secret('Super Admin password'));
+                    $data['context_id']  = "1";
+                    $data['type']  = "Employee";
+                    \App\User::create($data);
+                    
+                    // TODO: This is Not Standard. Need to find alternative
+                    Eloquent::unguard();
+                    
+                    \App\Employee::create([
+                        'name' => $data['name'],
+                        'designation' => "Super Admin",
+                        'mobile' => "8888888888",
+                        'mobile2' => "",
+                        'email' => $data['email'],
+                        'gender' => 'Male',
+                        'dept' => "1",
+                        'role' => "1",
+                        'city' => "Pune",
+                        'address' => "Karve nagar, Pune 411030",
+                        'about' => "About user / biography",
+                        'date_birth' => date("Y-m-d"),
+                        'date_hire' => date("Y-m-d"),
+                        'date_left' => date("Y-m-d"),
+                        'salary_cur' => 0,
+                    ]);
+                    
+                    $this->info("Super Admin User '".$data['name']."' successfully created. ");
+                } else {
+                    $this->info("Super Admin User '".$user['name']."' exists. ");
+                }
                 $this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
             } else {
                 $this->error("Installation aborted. Please try again after backup. Thank you...");
