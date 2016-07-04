@@ -34,15 +34,7 @@
             <li class="header">MODULES</li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
-            <!--
-            <li><a href="#"><i class='fa fa-folder-open'></i> <span>Projects</span> <small class="label pull-right bg-red">2 Bugs</small></a></li>
-            <li><a href="#"><i class='fa fa-building'></i> <span>Organisations</span></a></li>
-            <li><a href="#"><i class='fa fa-newspaper-o'></i> <span>Contacts</span> <small class="label pull-right bg-green">2 New</small></a></li>
-            <li><a href="#"><i class='fa fa-calendar'></i> <span>Calendar</span></a></li>
-            -->
-            <li><a href="{{ url(config('laraadmin.adminRoute') . '/books') }}"><i class='fa fa-book'></i> <span>Books</span></a></li>
             <!-- LAMenus -->
-            
             
             <li class="treeview">
                 <a href="#"><i class='fa fa-group'></i> <span>Team</span> <i class="fa fa-angle-left pull-right"></i></a>
