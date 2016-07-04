@@ -62,7 +62,7 @@ class CodeGenerator
         
         LAHelper::log("info", "Creating views...", $comm);
         // Create Folder
-        @mkdir("resources/views/la/".$config->dbTableName, 0777, true);
+        @mkdir(base_path("resources/views/la/".$config->dbTableName), 0777, true);
         
         // ============================ Listing / Index ============================
         $md = file_get_contents($templateDirectory."/Views/index.blade.stub");
