@@ -329,7 +329,6 @@ class LAFormMaker
 			case 'Password':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
-				$out .= json_encode($params);
 				$out .= Form::password($field_name, $params);
 				break;
 			case 'Radio':
