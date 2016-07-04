@@ -122,9 +122,9 @@ class LAHelper
 					if(!in_array($file, [".DS_Store"])) {
 						copy($src . '/' . $file, $dst . '/' . $file);
 					}
-				} 
-			} 
-		} 
+				}
+			}
+		}
 		closedir($dir); 
 	}
 	

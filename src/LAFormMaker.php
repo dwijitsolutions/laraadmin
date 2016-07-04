@@ -457,7 +457,9 @@ class LAFormMaker
 	
 	/**
 	* Processes the populated values for Multiselect / Taginput / Dropdown
+	* get data from module / table whichever is found if starts with '@'
 	**/
+	// $values = LAFormMaker::process_values($data);
 	private static function process_values($json) {
 		$out = array();
 		// Check if populated values are from Module or Database Table
@@ -469,7 +471,7 @@ class LAFormMaker
 			
 			// Search Module
 			$module = Module::getByTable($table_name);
-			if(isset($module)) {
+			if(isset($module->id)) {
 				$out = Module::getDDArray($module->name);
 			} else {
 				// Search Table if no module found
@@ -536,6 +538,7 @@ class LAFormMaker
 	**/
 	public static function display($module, $field_name, $class = 'form-control')
 	{
+		$fieldObj = $module->fields[$field_name];
 		$label = $module->fields[$field_name]['label'];
 		$field_type = $module->fields[$field_name]['field_type'];
 		$field_type = ModuleFieldTypes::find($field_type);
@@ -578,7 +581,15 @@ class LAFormMaker
 				
 				break;
 			case 'Dropdown':
-				
+				$values = LAFormMaker::process_values($fieldObj['popup_vals']);
+				if(starts_with($fieldObj['popup_vals'], "@")) {
+					if($value != 0) {
+						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+						$value = "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$value)."' class='label label-primary'>".$values[$value]."</a> ";
+					} else {
+						$value = "None";
+					}
+				}
 				break;
 			case 'Email':
 				$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
@@ -602,18 +613,21 @@ class LAFormMaker
 				break;
 			case 'Multiselect':
 				$valueOut = "";
-				if (strpos($value, '[') !== false) {
-					$arr = json_decode($value);
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+				$values = LAFormMaker::process_values($fieldObj['popup_vals']);
+				if(count($values)) {
+					if(starts_with($fieldObj['popup_vals'], "@")) {
+						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+						$valueSel = json_decode($value);
+						foreach ($values as $key => $val) {
+							if(in_array($key, $valueSel)) {
+								$valueOut .= "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$key)."' class='label label-primary'>".$val."</a> ";
+							}
+						}
+					} else {
+						foreach ($values as $key => $val) {
+							$valueOut .= "<span class='label label-primary'>".$val."</span> ";
+						}
 					}
-				} else if (strpos($value, ',') !== false) {
-					$arr = array_map('trim', explode(",", $value));
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
-					}
-				} else {
-					$valueOut = "<div class='label label-primary'>".$value."</div> ";
 				}
 				$value = $valueOut;
 				break;
@@ -631,18 +645,21 @@ class LAFormMaker
 				break;
 			case 'Taginput':
 				$valueOut = "";
-				if (strpos($value, '[') !== false) {
-					$arr = json_decode($value);
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+				$values = LAFormMaker::process_values($fieldObj['popup_vals']);
+				if(count($values)) {
+					if(starts_with($fieldObj['popup_vals'], "@")) {
+						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+						$valueSel = json_decode($value);
+						foreach ($values as $key => $val) {
+							if(in_array($key, $valueSel)) {
+								$valueOut .= "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$key)."' class='label label-primary'>".$val."</a> ";
+							}
+						}
+					} else {
+						foreach ($values as $key => $val) {
+							$valueOut .= "<span class='label label-primary'>".$val."</span> ";
+						}
 					}
-				} else if (strpos($value, ',') !== false) {
-					$arr = array_map('trim', explode(",", $value));
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
-					}
-				} else {
-					$valueOut = "<div class='label label-primary'>".$value."</div> ";
 				}
 				$value = $valueOut;
 				break;

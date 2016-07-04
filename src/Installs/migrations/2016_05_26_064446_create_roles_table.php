@@ -23,7 +23,7 @@ class CreateRolesTable extends Migration
             ["name", "Name", "Name", false, "", 1, 256, true],
             ["name_short", "Short Name", "String", false, "", 0, 256, true],
             ["parent", "Parent Role", "Dropdown", false, 3, 0, 0, false, "@roles"],
-            ["dept", "Department", "Dropdown", false, 3, 0, 0, false, "@department"],
+            ["dept", "Department", "Dropdown", false, 3, 0, 0, false, "@departments"],
         ]);
         
         $row = new Role;

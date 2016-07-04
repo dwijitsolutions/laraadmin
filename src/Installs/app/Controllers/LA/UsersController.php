@@ -45,36 +45,6 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created user in database.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $rules = Module::validateRules("Users", $request);
-        
-        $validator = Validator::make($request->all(), $rules);
-        
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-            
-        $insert_id = Module::insert("Users", $request);
-        
-        return redirect()->route(config('laraadmin.adminRoute') . '.users.index');
-    }
 
     /**
      * Display the specified user.
@@ -84,72 +54,15 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        $module = Module::get('Users');
-        $module->row = $user;
-        return view('la.users.show', [
-            'module' => $module,
-            'view_col' => $this->view_col,
-            'no_header' => true,
-            'no_padding' => "no-padding"
-        ])->with('user', $user);
-    }
-
-    /**
-     * Show the form for editing the specified user.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         
-        $module = Module::get('Users');
-        
-        $module->row = $user;
-        
-        return view('la.users.edit', [
-            'module' => $module,
-            'view_col' => $this->view_col,
-        ])->with('user', $user);
-    }
-
-    /**
-     * Update the specified user in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $rules = Module::validateRules("Users", $request);
-        
-        $validator = Validator::make($request->all(), $rules);
-        
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();;
+        if($user['type'] == "Employee") {
+            return redirect(config('laraadmin.adminRoute') . '/employees/'.$user->id);
+        } else if($user['type'] == "Client") {
+            return redirect(config('laraadmin.adminRoute') . '/clients/'.$user->id);
         }
-        
-        $insert_id = Module::updateRow("Users", $request, $id);
-        
-        return redirect()->route(config('laraadmin.adminRoute') . '.users.index');
     }
 
-    /**
-     * Remove the specified user from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        User::find($id)->delete();
-        // Redirecting to index() method
-        return redirect()->route(config('laraadmin.adminRoute') . '.users.index');
-    }
-    
     /**
      * Datatable Ajax fetch
      *
