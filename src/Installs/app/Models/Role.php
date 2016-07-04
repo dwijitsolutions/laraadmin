@@ -7,9 +7,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
+	use SoftDeletes;
+
     protected $table = 'roles';
 	
 	// By default making all fields fillable
@@ -18,4 +21,6 @@ class Role extends Model
 	protected $hidden = [
         
     ];
+
+	protected $dates = ['deleted_at'];
 }
