@@ -32,7 +32,7 @@ class LAInstall extends Command
     protected $from;
     protected $to;
 
-    var $modelsInstalled = ["User", "Role", "Employee", "Department"];
+    var $modelsInstalled = ["User", "Role", "Employee", "Department", "Upload"];
     
     /**
      * Generate Whole structure for /admin

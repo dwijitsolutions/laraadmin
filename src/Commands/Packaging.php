@@ -29,7 +29,7 @@ class Packaging extends Command
     protected $from;
     protected $to;
 
-    var $modelsInstalled = ["User", "Role", "Employee", "Department"];
+    var $modelsInstalled = ["User", "Role", "Employee", "Department", "Upload"];
     
     /**
      * Generate a CRUD files inclusing Controller, Model and Routes
