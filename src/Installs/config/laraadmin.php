@@ -12,4 +12,15 @@ return [
     
     'adminRoute' => 'admin',
     
+    /*
+    |--------------------------------------------------------------------------
+    | Uploads Configuration
+    |--------------------------------------------------------------------------
+    |
+    | private_uploads: Show that uploaded file remains private and can be seen by respective owners only
+    | 
+    */
+    'uploads' => [
+        'private_uploads' => true
+    ],
 ];

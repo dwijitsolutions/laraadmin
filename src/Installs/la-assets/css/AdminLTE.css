@@ -2005,6 +2005,76 @@ body.IE7 .Switch.Round {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+/* =================== Uploads =================== */
+#fm_dropzone_main {
+  border: 1px dashed #0087F7;
+  border-radius: 5px;
+  background: white;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  min-height: 100px;
+  padding: 8px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+#fm_dropzone_main div.dz-message {
+  display: block;
+  padding: 20px 0px;
+  color: #999;
+}
+#fm_dropzone_main div.dz-message i.fa {
+  font-size: 40px;
+}
+#fm_dropzone_main #closeDZ1 {
+  display: block;
+  position: relative;
+  width: 10px;
+  float: right;
+  margin-top: -2px;
+  margin-right: 2px;
+}
+ul.files_container {
+  list-style: none;
+  padding: 10px;
+  margin: 0px;
+  display: inline-block;
+  height: 100%;
+  min-height: 300px;
+  overflow: scroll;
+}
+ul.files_container li {
+  display: inline-block;
+  max-width: 104px;
+  height: 104px;
+  width: 104px;
+  float: left;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  overflow: hidden;
+  border: solid 1px #EEE;
+}
+ul.files_container li a {
+  display: block;
+  height: 100%;
+  cursor: pointer;
+}
+ul.files_container li a img {
+  height: 102px;
+  display: block;
+  transform: translateX(-50%);
+  margin-left: 50%;
+}
+ul.files_container li a i.fa {
+  height: 102px;
+  width: 102px;
+  font-size: 96px;
+  text-align: center;
+  padding-top: 3px;
+}
+ul.files_container li:hover {
+  border-color: #48B0F7;
+}
 /* =================== File Browser + Uploader =================== */
 .input-group.file .input-group-addon {
   cursor: pointer;
