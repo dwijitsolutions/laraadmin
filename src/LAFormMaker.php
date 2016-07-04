@@ -329,15 +329,8 @@ class LAFormMaker
 			case 'Password':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
-				if($default_val == null) {
-					$default_val = $defaultvalue;
-				}
-				// Override the edit value
-				if(isset($row) && isset($row->$field_name)) {
-					$default_val = $row->$field_name;
-				}
-				
-				$out .= Form::password($field_name, $default_val, $params);
+				$out .= json_encode($params);
+				$out .= Form::password($field_name, $params);
 				break;
 			case 'Radio':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' : </label><br>';
