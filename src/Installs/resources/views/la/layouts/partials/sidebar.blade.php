@@ -47,9 +47,10 @@
             <li class="treeview">
                 <a href="#"><i class='fa fa-group'></i> <span>Team</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}"><i class="fa fa-circle-o text-green"></i> <span>Employees</span></a></li>
+                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/employees') }}"><i class="fa fa-circle-o text-green"></i> <span>Employees</span></a></li>
                     <li><a href="{{ url(config("laraadmin.adminRoute") . '/roles') }}"><i class="fa fa-circle-o"></i> <span>Roles</span></a></li>
                     <li><a href="{{ url(config("laraadmin.adminRoute") . '/departments') }}"><i class="fa fa-circle-o"></i> <span>Departments</span></a></li>
+                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/users') }}"><i class="fa fa-circle-o"></i> <span>Users</span></a></li>
                     <!--
                     <li><a href="#"><i class="fa fa-circle-o text-red"></i> Access Control</a></li>
                     -->

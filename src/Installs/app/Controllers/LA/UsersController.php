@@ -20,9 +20,9 @@ use App\User;
 
 class UsersController extends Controller
 {
-    public $show_action = true;
+    public $show_action = false;
     public $view_col = 'name';
-    public $listing_cols = ['id', 'name', 'context_id', 'email', 'type'];
+    public $listing_cols = ['id', 'name', 'email', 'type'];
     
     public function __construct() {
         // for authentication (optional)
@@ -83,13 +83,6 @@ class UsersController extends Controller
                 // else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
-            }
-            if($this->show_action) {
-                $output = '<a href="'.url(config('laraadmin.adminRoute') . '/users/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
-                $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.users.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
-                $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
-                $output .= Form::close();
-                $data->data[$i][] = (string)$output;
             }
         }
         $out->setData($data);
