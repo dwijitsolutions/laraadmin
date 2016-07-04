@@ -621,7 +621,7 @@ class LAFormMaker
 				
 				break;
 			case 'Password':
-				$value = '<a href="#" data-toggle="tooltip" data-placement="top" title="Cannot be declassified !!!">********</a>';
+				$value = '<a href="#" data-toggle="tooltip" data-placement="top" data-container="body" title="Cannot be declassified !!!">********</a>';
 				break;
 			case 'Radio':
 				
