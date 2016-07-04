@@ -624,6 +624,9 @@ class Module extends Model
                         #TODO: Bug fix
                         $row->$field['colname'] = json_encode($request->$field['colname']);
                         break;
+                    case 'Password':
+                        $row->$field['colname'] = bcrypt($request->$field['colname']);
+                        break;
                     case 'Taginput':
                         #TODO: Bug fix
                         $row->$field['colname'] = json_encode($request->$field['colname']);
