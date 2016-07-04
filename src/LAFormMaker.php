@@ -584,7 +584,7 @@ class LAFormMaker
 				$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
 				break;
 			case 'File':
-				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><i class="fa fa-file-o"</i></a>';
+				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><i class="fa fa-file-o"></i></a>';
 				break;
 			case 'Float':
 				
