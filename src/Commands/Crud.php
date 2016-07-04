@@ -56,9 +56,8 @@ class Crud extends Command
             
         } catch (Exception $e) {
             $this->error("Crud::handle exception: ".$e);
-            throw new Exception("Unable to generate migration for ".($module->name)." : ".$e->getMessage(), 1);
+            throw new Exception("Unable to generate migration for ".($module)." : ".$e->getMessage(), 1);
         }
-        
-        $this->info("\nCRUD successfully generated for ".($module->name)."\n");
+        $this->info("\nCRUD successfully generated for ".($module)."\n");
     }
 }
