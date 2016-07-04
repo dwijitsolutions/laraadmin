@@ -9,6 +9,17 @@
 @section("htmlheader_title", "__singular_cap_var__ Edit : ".$__singular_var__->$view_col)
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="box">
 	<div class="box-header">
 		
