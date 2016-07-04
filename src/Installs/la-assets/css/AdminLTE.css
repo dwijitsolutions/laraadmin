@@ -3851,6 +3851,7 @@ table.text-center th {
  */
 .modal {
   background: rgba(0, 0, 0, 0.3);
+  overflow-y: scroll;
 }
 .modal-content {
   border-radius: 0;
