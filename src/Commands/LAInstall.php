@@ -31,6 +31,8 @@ class LAInstall extends Command
     
     protected $from;
     protected $to;
+
+    var $modelsInstalled = ["User", "Role", "Employee", "Department"];
     
     /**
      * Generate Whole structure for /admin
@@ -62,8 +64,7 @@ class LAInstall extends Command
                 
                 // Models
                 $this->line('Generating Models...');
-                $models = ["User", "Role", "Employee", "Department", "Book"];
-                foreach ($models as $model) {
+                foreach ($this->modelsInstalled as $model) {
                     $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
                 }
                 
