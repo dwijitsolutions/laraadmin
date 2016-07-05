@@ -117,7 +117,7 @@ class LAInstall extends Command
                     $data['password'] = bcrypt($this->secret('Super Admin password'));
                     $data['context_id']  = "1";
                     $data['type']  = "Employee";
-                    \App\User::create($data);
+                    $user = \App\User::create($data);
                     
                     // TODO: This is Not Standard. Need to find alternative
                     Eloquent::unguard();
@@ -130,7 +130,6 @@ class LAInstall extends Command
                         'email' => $data['email'],
                         'gender' => 'Male',
                         'dept' => "1",
-                        'role' => "1",
                         'city' => "Pune",
                         'address' => "Karve nagar, Pune 411030",
                         'about' => "About user / biography",
@@ -144,6 +143,9 @@ class LAInstall extends Command
                 } else {
                     $this->info("Super Admin User '".$user['name']."' exists. ");
                 }
+                $role = \App\Role::whereName('Super Admin')->first();
+                // TODO: Not working
+                // $user->assignRole($role);
                 $this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
             } else {
                 $this->error("Installation aborted. Please try again after backup. Thank you...");

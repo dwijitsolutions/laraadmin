@@ -19,6 +19,7 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 
 use App\User;
 use App\Employee;
+use App\Role;
 
 class EmployeesController extends Controller
 {
@@ -79,6 +80,11 @@ class EmployeesController extends Controller
         $request->password = bcrypt(LAHelper::gen_password());
         $request->type = "Employee";
         $user_id = Module::insert("Users", $request);
+
+        $user = User::find($user_id);
+        $role = Role::whereName('Super Admin')->first();
+        $user->assignRole($role);
+        // $user->removeRole($role_id);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }

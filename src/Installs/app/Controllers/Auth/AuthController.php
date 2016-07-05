@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Employee;
+use App\Role;
 use Validator;
 use Eloquent;
 use App\Http\Controllers\Controller;
@@ -96,7 +97,6 @@ class AuthController extends Controller
             'email' => $data['email'],
             'gender' => 'Male',
             'dept' => "1",
-            'role' => "1",
             'city' => "Pune",
             'address' => "Karve nagar, Pune 411030",
             'about' => "About user / biography",
@@ -106,12 +106,17 @@ class AuthController extends Controller
             'salary_cur' => 0,
         ]);
         
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'context_id' => $employee->id,
             'type' => "Employee",
         ]);
+        $role = Role::where('name', 'Super Admin')->first();
+        // TODO: Not working
+        // $user->assignRole($role);
+    
+        return $user;
     }
 }
