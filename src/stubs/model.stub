@@ -15,12 +15,11 @@ class __model_class_name__ extends Model
 	
 	protected $table = '__db_table_name__';
 	
-	// By default making all fields fillable
-	// protected $fillable = [];
-	
 	protected $hidden = [
         
     ];
+
+	protected $guarded = [];
 
 	protected $dates = ['deleted_at'];
 }

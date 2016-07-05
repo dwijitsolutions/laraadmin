@@ -616,7 +616,7 @@ body.IE7 .Switch.Round { width: 1px; }
   text-align: center;
   margin-top: 15px;
   margin-bottom: 15px;
-  min-height: 100px;
+  /*min-height: 100px;*/
   padding: 8px;
   vertical-align: middle;
   cursor: pointer;
@@ -638,19 +638,21 @@ body.IE7 .Switch.Round { width: 1px; }
   }
 }
 
+@preview_size: 130px;
 ul.files_container {
   list-style: none;
   padding: 10px;
   margin: 0px;
   display: inline-block;
   height: 100%;
+  width: 100%;
   min-height: 300px;
   overflow: scroll;
   li {
     display: inline-block;
-    max-width: 104px;
-    height: 104px;
-    width: 104px;
+    max-width: @preview_size;
+    height: @preview_size;
+    width: @preview_size;
     float: left;
     margin-bottom: 5px;
     margin-right: 5px;
@@ -661,14 +663,14 @@ ul.files_container {
       height: 100%;
       cursor: pointer;
       img {
-        height: 102px;
+        height: @preview_size - 2;
         display: block;
         transform: translateX(-50%);
         margin-left: 50%;
       }
       i.fa{
-        height: 102px;
-        width: 102px;
+        height: @preview_size - 2;
+        width: @preview_size - 2;
         font-size: 96px;
         text-align: center;
         padding-top: 3px;

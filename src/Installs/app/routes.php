@@ -18,6 +18,9 @@ Route::get(config('laraadmin.adminRoute') . '/user_dt_ajax', 'LA\UsersController
 
 /* ================== Uploads ================== */
 Route::resource(config('laraadmin.adminRoute') . '/uploads', 'LA\UploadsController');
+Route::post(config('laraadmin.adminRoute') . '/upload_files', 'LA\UploadsController@upload_files');
+Route::get(config('laraadmin.adminRoute') . '/uploaded_files', 'LA\UploadsController@uploaded_files');
+Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
 
 /* ================== Roles ================== */
 Route::resource(config('laraadmin.adminRoute') . '/roles', 'LA\RolesController');

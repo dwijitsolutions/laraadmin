@@ -24,7 +24,9 @@ class CreateUploadsTable extends Migration
             ["path",        "Path",         "String",   false, "",  0,  256,    false],
             ["extension",   "Extension",    "String",   false, "",  0,  20,     false],
             ["caption",     "Caption",      "String",   false, "",  0,  256,    false],
-            ["user",        "Owner",        "Dropdown", false, 1,   0,  0,      false,   "@users"],
+            ["user_id",     "Owner",        "Dropdown", false, 1,   0,  0,      false,   "@users"],
+            ["hash",        "Hash",         "String",   false, "",  0,  256,    false],
+            ["public",      "Is Public",    "Checkbox", false, false,0, 0,      false],
         ]);
 		
 		/*

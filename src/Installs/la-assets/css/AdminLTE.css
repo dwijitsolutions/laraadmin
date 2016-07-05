@@ -2013,7 +2013,7 @@ body.IE7 .Switch.Round {
   text-align: center;
   margin-top: 15px;
   margin-bottom: 15px;
-  min-height: 100px;
+  /*min-height: 100px;*/
   padding: 8px;
   vertical-align: middle;
   cursor: pointer;
@@ -2040,14 +2040,15 @@ ul.files_container {
   margin: 0px;
   display: inline-block;
   height: 100%;
+  width: 100%;
   min-height: 300px;
   overflow: scroll;
 }
 ul.files_container li {
   display: inline-block;
-  max-width: 104px;
-  height: 104px;
-  width: 104px;
+  max-width: 130px;
+  height: 130px;
+  width: 130px;
   float: left;
   margin-bottom: 5px;
   margin-right: 5px;
@@ -2060,14 +2061,14 @@ ul.files_container li a {
   cursor: pointer;
 }
 ul.files_container li a img {
-  height: 102px;
+  height: 128px;
   display: block;
   transform: translateX(-50%);
   margin-left: 50%;
 }
 ul.files_container li a i.fa {
-  height: 102px;
-  width: 102px;
+  height: 128px;
+  width: 128px;
   font-size: 96px;
   text-align: center;
   padding-top: 3px;

@@ -62,12 +62,12 @@ $(function () {
             });
         }
     });
-    $("#fm_dropzone_main").hide();
+    $("#fm_dropzone_main").slideUp();
     $("#AddNewUploads").on("click", function() {
-        $("#fm_dropzone_main").show();
+        $("#fm_dropzone_main").slideDown();
     });
     $("#closeDZ1").on("click", function() {
-        $("#fm_dropzone_main").hide();
+        $("#fm_dropzone_main").slideUp();
     });
     loadUploadedFiles();
 });
@@ -75,30 +75,29 @@ function loadUploadedFiles() {
     // load folder files
     $.ajax({
         dataType: 'json',
-        url: $('body').attr("bsurl")+"/admin/folder_files/uploads",
+        url: $('body').attr("bsurl")+"/admin/uploaded_files",
         success: function ( json ) {
             console.log(json);
-            cntFiles = json.files;
+            cntFiles = json.uploads;
             $("ul.files_container").empty();
-            for (var index = 0; index < json.files.length; index++) {
-                var element = json.files[index];
-                var li = formatFile(json.folder_name, element);
-                $("ul.files_container").append(li);
+            if(cntFiles.length) {
+                for (var index = 0; index < cntFiles.length; index++) {
+                    var element = cntFiles[index];
+                    var li = formatFile(element);
+                    $("ul.files_container").append(li);
+                }
+            } else {
+                $("ul.files_container").html("<div class='text-center text-danger' style='margin-top:40px;'>No Files</div>");
             }
         }
     });
 }
-function formatFile(folder_name, filename) {
-    ext = filename.split('.').pop();
+function formatFile(upload) {
     var image = '';
-    // if(.contains(ext)) {
-    if($.inArray(ext, ["jpg", "jpeg", "png", "gif", "bmp"]) > -1) {
-        image = '<img src="'+bsurl+'/'+folder_name+'/'+filename+'">';
+    if($.inArray(upload.extension, ["jpg", "jpeg", "png", "gif", "bmp"]) > -1) {
+        image = '<img src="'+bsurl+'/files/'+upload.hash+'/'+upload.name+'?s=130">';
     } else {
-        switch (ext) {
-            case "pdf":
-                image = '<i class="fa fa-file-pdf-o"></i>';
-                break;
+        switch (upload.extension) {
             case "pdf":
                 image = '<i class="fa fa-file-pdf-o"></i>';
                 break;
@@ -107,7 +106,7 @@ function formatFile(folder_name, filename) {
                 break;
         }
     }
-    return '<li><a class="fm_file_sel" data-toggle="tooltip" data-placement="top" title="'+folder_name+'/'+filename+'" fpath="'+folder_name+'/'+filename+'">'+image+'</a></li>';
+    return '<li><a class="fm_file_sel" data-toggle="tooltip" data-placement="top" title="'+upload.name+'" fpath="'+bsurl+'/files/'+upload.hash+'/'+upload.name+'">'+image+'</a></li>';
 }
 </script>
 @endpush

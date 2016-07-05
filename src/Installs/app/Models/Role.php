@@ -15,12 +15,11 @@ class Role extends Model
 
     protected $table = 'roles';
 	
-	// By default making all fields fillable
-	// protected $fillable = [];
-	
 	protected $hidden = [
         
     ];
+
+	protected $guarded = [];
 
 	protected $dates = ['deleted_at'];
 }

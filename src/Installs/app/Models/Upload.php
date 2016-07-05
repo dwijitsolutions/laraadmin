@@ -15,12 +15,11 @@ class Upload extends Model
 	
 	protected $table = 'uploads';
 	
-	// By default making all fields fillable
-	// protected $fillable = [];
-	
 	protected $hidden = [
         
     ];
+
+	protected $guarded = [];
 
 	protected $dates = ['deleted_at'];
 }

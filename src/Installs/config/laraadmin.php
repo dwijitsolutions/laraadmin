@@ -18,9 +18,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | private_uploads: Show that uploaded file remains private and can be seen by respective owners only
+    | default_uploads_security: public / private
     | 
     */
     'uploads' => [
-        'private_uploads' => true
+        'private_uploads' => true,
+        'default_public' => false
     ],
 ];
