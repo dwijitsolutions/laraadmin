@@ -23,6 +23,7 @@ return [
     */
     'uploads' => [
         'private_uploads' => true,
-        'default_public' => false
+        'default_public' => false,
+        'allow_filename_change' => false
     ],
 ];

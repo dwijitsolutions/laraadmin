@@ -50,19 +50,6 @@ class UploadsController extends Controller
     }
 
     /**
-     * Remove the specified upload from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        Upload::find($id)->delete();
-        // Redirecting to index() method
-        return redirect()->route(config('laraadmin.adminRoute') . '.uploads.index');
-    }
-
-    /**
      * Get file
      *
      * @return \Illuminate\Http\Response
@@ -197,6 +184,7 @@ class UploadsController extends Controller
             $u->extension = $upload->extension;
             $u->hash = $upload->hash;
             $u->public = $upload->public;
+            $u->caption = $upload->caption;
             
             $uploads2[] = $u;
         }
@@ -211,5 +199,111 @@ class UploadsController extends Controller
         // }
         // return response()->json(['files' => $files]);
         return response()->json(['uploads' => $uploads2]);
+    }
+
+    /**
+     * Update Uploads Caption
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update_caption()
+    {
+        $file_id = Input::get('file_id');
+        $caption = Input::get('caption');
+        
+        $upload = Upload::find($file_id)->first();
+        if(isset($upload->id)) {
+            if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
+
+                // Update Caption
+                $upload->caption = $caption;
+                $upload->save();
+
+                return response()->json([
+                    'status' => "success"
+                ]);
+
+            } else {
+                return response()->json([
+                    'status' => "failure",
+                    'message' => "Upload not found"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => "failure",
+                'message' => "Upload not found"
+            ]);
+        }
+    }
+
+    /**
+     * Update Uploads Filename
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update_filename()
+    {
+        $file_id = Input::get('file_id');
+        $filename = Input::get('filename');
+        
+        $upload = Upload::find($file_id)->first();
+        if(isset($upload->id)) {
+            if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
+
+                // Update Caption
+                $upload->name = $filename;
+                $upload->save();
+
+                return response()->json([
+                    'status' => "success"
+                ]);
+
+            } else {
+                return response()->json([
+                    'status' => "failure",
+                    'message' => "Upload not found"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => "failure",
+                'message' => "Upload not found"
+            ]);
+        }
+    }
+
+    /**
+     * Remove the specified upload from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delete_file()
+    {
+        $file_id = Input::get('file_id');
+        
+        $upload = Upload::find($file_id)->first();
+        if(isset($upload->id)) {
+            if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
+
+                // Update Caption
+                $upload->delete();
+
+                return response()->json([
+                    'status' => "success"
+                ]);
+
+            } else {
+                return response()->json([
+                    'status' => "failure",
+                    'message' => "Upload not found"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => "failure",
+                'message' => "Upload not found"
+            ]);
+        }
     }
 }

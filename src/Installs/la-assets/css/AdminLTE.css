@@ -2076,6 +2076,56 @@ ul.files_container li a i.fa {
 ul.files_container li:hover {
   border-color: #48B0F7;
 }
+#EditFileModal .modal-header {
+  padding: 0px;
+  border-bottom-color: #ddd;
+}
+#EditFileModal .modal-header h4.modal-title {
+  padding: 13px 15px;
+}
+#EditFileModal .modal-header button {
+  float: right;
+  padding: 15px;
+  background: #FFF;
+  border: 0px;
+  border-left: solid 1px #ddd;
+  text-align: center;
+  width: 50px;
+  height: 51px;
+  margin-top: 0px;
+  font-size: 17px;
+  color: #d6d6d6;
+  opacity: 1;
+}
+#EditFileModal .modal-header button:hover {
+  color: #bbb;
+  background: #EEE;
+}
+#EditFileModal .modal-footer {
+  border-top-color: #ddd;
+}
+#EditFileModal .file-info-form {
+  padding: 10px;
+  height: 330px;
+  background: #f3f3f3;
+  border-left: solid 1px #ddd;
+}
+#EditFileModal .file-info-form label {
+  color: #666;
+  font-weight: normal;
+}
+#EditFileModal .col-xs-8,
+#EditFileModal .col-xs-4 {
+  padding: 0px;
+}
+#EditFileModal .fileObject {
+  text-align: center;
+  padding: 15px 0px;
+}
+#EditFileModal .fileObject img {
+  max-width: 100%;
+  max-height: 300px;
+}
 /* =================== File Browser + Uploader =================== */
 .input-group.file .input-group-addon {
   cursor: pointer;
