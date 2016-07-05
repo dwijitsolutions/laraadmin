@@ -164,7 +164,7 @@ class LAHelper
 	}
 	
 	// LAHelper::createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height);
-	function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background=false) {
+	public static function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background=false) {
 	    list($original_width, $original_height, $original_type) = getimagesize($filepath);
 	    if ($original_width > $original_height) {
 	        $new_width = $thumbnail_width;
