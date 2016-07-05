@@ -114,8 +114,7 @@ class AuthController extends Controller
             'type' => "Employee",
         ]);
         $role = Role::where('name', 'Super Admin')->first();
-        // TODO: Not working
-        // $user->assignRole($role);
+        $user->assignRole($role);
     
         return $user;
     }

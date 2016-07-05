@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
-	use SoftDeletes;
-
-    protected $table = 'employees';
+    use SoftDeletes;
+	
+	protected $table = 'employees';
 	
 	// By default making all fields fillable
 	// protected $fillable = [];

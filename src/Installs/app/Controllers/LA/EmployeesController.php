@@ -25,7 +25,7 @@ class EmployeesController extends Controller
 {
     public $show_action = true;
     public $view_col = 'name';
-    public $listing_cols = ['id', 'name', 'designation', 'mobile', 'email', 'dept', 'role'];
+    public $listing_cols = ['id', 'name', 'designation', 'mobile', 'email', 'dept'];
     
     public function __construct() {
         // for authentication (optional)
@@ -73,7 +73,7 @@ class EmployeesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-            
+
         // Create User
         $employee_id = Module::insert("Employees", $request);
         $request->context_id = $employee_id;
@@ -85,7 +85,7 @@ class EmployeesController extends Controller
         $role = Role::whereName('Super Admin')->first();
         $user->assignRole($role);
         // $user->removeRole($role_id);
-        
+
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }
 

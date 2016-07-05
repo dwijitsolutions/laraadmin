@@ -38,7 +38,6 @@
 					@la_input($module, 'mobile2')
 					@la_input($module, 'email')
 					@la_input($module, 'dept')
-					@la_input($module, 'role')
 					@la_input($module, 'city')
 					@la_input($module, 'address')
 					@la_input($module, 'about')
