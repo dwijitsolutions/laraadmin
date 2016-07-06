@@ -20,6 +20,9 @@ Route::group([
 	Route::any(config('laraadmin.adminRoute') . '/laeditor_get_dir', 'CodeEditorController@get_dir');
 	Route::post(config('laraadmin.adminRoute') . '/laeditor_get_file', 'CodeEditorController@get_file');
 	Route::post(config('laraadmin.adminRoute') . '/laeditor_save_file', 'CodeEditorController@save_file');
+
+	/* ================== Menu Editor ================== */
+	Route::get(config('laraadmin.adminRoute') . '/la-menus', 'MenuController@index');
 	
     Route::group([
         'middleware' => 'role'

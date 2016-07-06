@@ -86,6 +86,7 @@ class LAProvider extends ServiceProvider
         $this->app->make('Dwij\Laraadmin\Controllers\ModuleController');
         $this->app->make('Dwij\Laraadmin\Controllers\FieldController');
         $this->app->make('Dwij\Laraadmin\Controllers\CodeEditorController');
+        $this->app->make('Dwij\Laraadmin\Controllers\MenuController');
         
         /*
         |--------------------------------------------------------------------------
