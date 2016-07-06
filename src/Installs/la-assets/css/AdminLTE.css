@@ -197,9 +197,156 @@ a:focus {
   max-width: 100px;
   max-height: 100px;
 }
-/*margin and padding*/
-.m0 {
-  margin: 0;
+/* margin and padding */
+.m30 {
+  margin: 30px;
+}
+.mt30 {
+  margin-top: 30px;
+}
+.mr30 {
+  margin-right: 30px;
+}
+.mb30 {
+  margin-bottom: 30px;
+}
+.ml30 {
+  margin-left: 30px;
+}
+.p30 {
+  padding: 30px;
+}
+.pt30 {
+  padding-top: 30px;
+}
+.pr30 {
+  padding-right: 30px;
+}
+.pb30 {
+  padding-bottom: 30px;
+}
+.pl30 {
+  padding-left: 30px;
+}
+.m25 {
+  margin: 25px;
+}
+.mt25 {
+  margin-top: 25px;
+}
+.mr25 {
+  margin-right: 25px;
+}
+.mb25 {
+  margin-bottom: 25px;
+}
+.ml25 {
+  margin-left: 25px;
+}
+.p25 {
+  padding: 25px;
+}
+.pt25 {
+  padding-top: 25px;
+}
+.pr25 {
+  padding-right: 25px;
+}
+.pb25 {
+  padding-bottom: 25px;
+}
+.pl25 {
+  padding-left: 25px;
+}
+.m20 {
+  margin: 20px;
+}
+.mt20 {
+  margin-top: 20px;
+}
+.mr20 {
+  margin-right: 20px;
+}
+.mb20 {
+  margin-bottom: 20px;
+}
+.ml20 {
+  margin-left: 20px;
+}
+.p20 {
+  padding: 20px;
+}
+.pt20 {
+  padding-top: 20px;
+}
+.pr20 {
+  padding-right: 20px;
+}
+.pb20 {
+  padding-bottom: 20px;
+}
+.pl20 {
+  padding-left: 20px;
+}
+.m15 {
+  margin: 15px;
+}
+.mt15 {
+  margin-top: 15px;
+}
+.mr15 {
+  margin-right: 15px;
+}
+.mb15 {
+  margin-bottom: 15px;
+}
+.ml15 {
+  margin-left: 15px;
+}
+.p15 {
+  padding: 15px;
+}
+.pt15 {
+  padding-top: 15px;
+}
+.pr15 {
+  padding-right: 15px;
+}
+.pb15 {
+  padding-bottom: 15px;
+}
+.pl15 {
+  padding-left: 15px;
+}
+.m10 {
+  margin: 10px;
+}
+.mt10 {
+  margin-top: 10px;
+}
+.mr10 {
+  margin-right: 10px;
+}
+.mb10 {
+  margin-bottom: 10px;
+}
+.ml10 {
+  margin-left: 10px;
+}
+.p10 {
+  padding: 10px;
+}
+.pt10 {
+  padding-top: 10px;
+}
+.pr10 {
+  padding-right: 10px;
+}
+.pb10 {
+  padding-bottom: 10px;
+}
+.pl10 {
+  padding-left: 10px;
 }
 .m5 {
   margin: 5px;
@@ -207,171 +354,61 @@ a:focus {
 .mt5 {
   margin-top: 5px;
 }
-.m10 {
-  margin: 10px;
+.mr5 {
+  margin-right: 5px;
 }
-.m15 {
-  margin: 15px;
+.mb5 {
+  margin-bottom: 5px;
 }
-.m20 {
-  margin: 20px;
-}
-.ml15 {
-  margin-left: 15px !important;
-}
-.mt15 {
-  margin-top: 15px;
-}
-.mt20 {
-  margin-top: 20px;
-}
-.mr15 {
-  margin-right: 15px !important;
-}
-.mb15 {
-  margin-bottom: 15px;
-}
-.mb20 {
-  margin-bottom: 20px;
-}
-.ml10 {
-  margin-left: 10px;
-}
-.mr10 {
-  margin-right: 10px;
-}
-.mr-1 {
-  margin-right: -1px !important;
-}
-.ml-1 {
-  margin-left: -1px !important;
-}
-.mb0 {
-  margin-bottom: 0 !important;
-}
-.mt50 {
-  margin-top: 50px !important;
-}
-.mt0 {
-  margin-top: 0 !important;
-}
-.mt-5 {
-  margin-top: -5px;
-}
-.mt-50 {
-  margin-top: -50px;
-}
-.p0 {
-  padding: 0 !important;
+.ml5 {
+  margin-left: 5px;
 }
 .p5 {
   padding: 5px;
 }
-.p10 {
-  padding: 10px;
+.pt5 {
+  padding-top: 5px;
 }
-.p15 {
-  padding: 15px;
-}
-.p20 {
-  padding: 20px !important;
-}
-.p30 {
-  padding: 30px;
-}
-.pb10 {
-  padding-bottom: 10px;
+.pr5 {
+  padding-right: 5px;
 }
 .pb5 {
   padding-bottom: 5px;
 }
+.pl5 {
+  padding-left: 5px;
+}
+.m0 {
+  margin: 0px;
+}
+.mt0 {
+  margin-top: 0px;
+}
+.mr0 {
+  margin-right: 0px;
+}
+.mb0 {
+  margin-bottom: 0px;
+}
+.ml0 {
+  margin-left: 0px;
+}
+.p0 {
+  padding: 0px;
+}
+.pt0 {
+  padding-top: 0px;
+}
+.pr0 {
+  padding-right: 0px;
+}
+.pb0 {
+  padding-bottom: 0px;
+}
 .pl0 {
   padding-left: 0px;
 }
-.pl10 {
-  padding-left: 10px;
-}
-.pl15 {
-  padding-left: 15px;
-}
-.pr10 {
-  padding-right: 10px;
-}
-.pr15 {
-  padding-right: 15px;
-}
-.pt10 {
-  padding-top: 10px;
-}
-.pt5 {
-  padding-top: 5px !important;
-}
-.pt0 {
-  padding-top: 0px !important;
-}
-.w50 {
-  width: 50px;
-}
-.w80 {
-  width: 80px;
-}
-.w100 {
-  width: 100px;
-}
-.w150 {
-  width: 150px;
-}
-.w200 {
-  width: 200px;
-}
-.w250 {
-  width: 250px;
-}
-.w300 {
-  width: 300px;
-}
-.min-w150 {
-  min-width: 150px;
-}
-.w5p {
-  width: 5%;
-}
-.w10p {
-  width: 10%;
-}
-.w15p {
-  width: 15%;
-}
-.w20p {
-  width: 20%;
-}
-.w25p {
-  width: 25%;
-}
-.w30p {
-  width: 30%;
-}
-.w50p {
-  width: 50%;
-}
-.w60p {
-  width: 60%;
-}
-.w70p {
-  width: 70%;
-}
-.w80p {
-  width: 80%;
-}
-.w90p {
-  width: 90%;
-}
-.w100p {
-  width: 100%;
-}
-.h100p {
-  height: 100%;
-}
+/* margin and padding ends */
 /*bg*/
 .bg-danger {
   background-color: #f05050;
