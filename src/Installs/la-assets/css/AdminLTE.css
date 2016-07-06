@@ -2211,6 +2211,7 @@ ul.files_container li:hover {
   margin: 0px;
   display: inline-block;
   height: 100%;
+  width: 100%;
   min-height: 300px;
   overflow: scroll;
 }
