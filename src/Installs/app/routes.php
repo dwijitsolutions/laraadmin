@@ -23,6 +23,7 @@ Route::get(config('laraadmin.adminRoute') . '/uploaded_files', 'LA\UploadsContro
 Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
 Route::post(config('laraadmin.adminRoute') . '/uploads_update_caption', 'LA\UploadsController@update_caption');
 Route::post(config('laraadmin.adminRoute') . '/uploads_update_filename', 'LA\UploadsController@update_filename');
+Route::post(config('laraadmin.adminRoute') . '/uploads_update_public', 'LA\UploadsController@update_public');
 Route::post(config('laraadmin.adminRoute') . '/uploads_delete_file', 'LA\UploadsController@delete_file');
 
 /* ================== Roles ================== */

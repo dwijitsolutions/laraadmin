@@ -30,7 +30,8 @@ class UploadsController extends Controller
     
     public function __construct() {
         // for authentication (optional)
-        $this->middleware('auth');
+        // $this->middleware('auth');
+        $this->middleware('auth', ['except' => 'get_file']);
     }
     
     /**
@@ -58,7 +59,23 @@ class UploadsController extends Controller
     {
         $upload = Upload::where("hash", $hash)->first();
 
-        if(isset($upload->id) && $upload->name == $name) {
+        // Validate Upload Hash & Filename
+        if(!isset($upload->id) || $upload->name != $name) {
+            return response()->json([
+                'status' => "failure",
+                'message' => "Unauthorized Access 1"
+            ]);
+        }
+
+        // Validate if Image is Public
+        if(!isset($upload->public) || !isset(Auth::user()->id)) {
+            return response()->json([
+                'status' => "failure",
+                'message' => "Unauthorized Access 2"
+            ]);
+        }
+
+        if($upload->public || Auth::user()->hasRole("Super Admin") || Auth::user()->id == $upload->user_id) {
             
             $path = $upload->path;
 
@@ -90,7 +107,10 @@ class UploadsController extends Controller
 
             return $response;
         } else {
-            echo "Unauthorized Access";
+            return response()->json([
+                'status' => "failure",
+                'message' => "Unauthorized Access 3"
+            ]);
         }
     }
 
@@ -185,6 +205,7 @@ class UploadsController extends Controller
             $u->hash = $upload->hash;
             $u->public = $upload->public;
             $u->caption = $upload->caption;
+            $u->user = $upload->user->name;
             
             $uploads2[] = $u;
         }
@@ -262,7 +283,48 @@ class UploadsController extends Controller
             } else {
                 return response()->json([
                     'status' => "failure",
-                    'message' => "Upload not found"
+                    'message' => "Unauthorized Access 1"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => "failure",
+                'message' => "Upload not found"
+            ]);
+        }
+    }
+
+    /**
+     * Update Uploads Public Visibility
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update_public()
+    {
+        $file_id = Input::get('file_id');
+        $public = Input::get('public');
+        if(isset($public)) {
+            $public = true;
+        } else {
+            $public = false;
+        }
+        
+        $upload = Upload::find($file_id)->first();
+        if(isset($upload->id)) {
+            if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
+
+                // Update Caption
+                $upload->public = $public;
+                $upload->save();
+
+                return response()->json([
+                    'status' => "success"
+                ]);
+
+            } else {
+                return response()->json([
+                    'status' => "failure",
+                    'message' => "Unauthorized Access 1"
                 ]);
             }
         } else {
@@ -296,7 +358,7 @@ class UploadsController extends Controller
             } else {
                 return response()->json([
                     'status' => "failure",
-                    'message' => "Upload not found"
+                    'message' => "Unauthorized Access 1"
                 ]);
             }
         } else {

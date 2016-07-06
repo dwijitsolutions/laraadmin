@@ -22,4 +22,12 @@ class Upload extends Model
 	protected $guarded = [];
 
 	protected $dates = ['deleted_at'];
+
+	/**
+     * Get the user that owns upload.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }
