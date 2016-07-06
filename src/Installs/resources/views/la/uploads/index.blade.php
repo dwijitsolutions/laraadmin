@@ -22,7 +22,7 @@
     </div>
 @endif
 
-<form action="{{ url(config('laraadmin.adminRoute') . '/upload_files')}}" id="fm_dropzone_main" enctype="multipart/form-data" method="POST">
+<form action="{{ url(config('laraadmin.adminRoute') . '/upload_files') }}" id="fm_dropzone_main" enctype="multipart/form-data" method="POST">
     {{ csrf_field() }}
     <a id="closeDZ1"><i class="fa fa-times"></i></a>
     <div class="dz-message"><i class="fa fa-cloud-upload"></i><br>Drop files here to upload</div>
@@ -39,7 +39,7 @@
 
 
 <div class="modal fade" id="EditFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog" role="document" style="width:70%;">
+	<div class="modal-dialog" role="document" style="width:90%;">
 		<div class="modal-content">
 			<div class="modal-header">
 				
@@ -72,7 +72,7 @@
                                 </div>
                                 @if(!config('laraadmin.uploads.private_uploads'))
                                     <div class="form-group">
-                                        <label for="public">Is Public</label>
+                                        <label for="public">Is Public ?</label>
                                         {{ Form::checkbox("public", "public", false, []) }}
                                         <div class="Switch Ajax Round On" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
                                     </div>
@@ -133,6 +133,7 @@ $(function () {
         $(".file-info-form input[name=url]").val(bsurl+'/files/'+upload.hash+'/'+upload.name);
         $(".file-info-form input[name=caption]").val(upload.caption);
         $("#EditFileModal #downFileBtn").attr("href", bsurl+'/files/'+upload.hash+'/'+upload.name+"?download");
+        
 
         @if(!config('laraadmin.uploads.private_uploads'))
         if(upload.public == "1") {
@@ -147,14 +148,17 @@ $(function () {
         $("#EditFileModal .fileObject").empty();
         if($.inArray(upload.extension, ["jpg", "jpeg", "png", "gif", "bmp"]) > -1) {
             $("#EditFileModal .fileObject").append('<img src="'+bsurl+'/files/'+upload.hash+'/'+upload.name+'">');
+            $("#EditFileModal .fileObject").css("padding", "15px 0px");
         } else {
             switch (upload.extension) {
                 case "pdf":
                     // TODO: Object PDF
-                    $("#EditFileModal .fileObject").append('<object width="100%" height="290" data="'+bsurl+'/files/'+upload.hash+'/'+upload.name+'"></object>');
+                    $("#EditFileModal .fileObject").append('<object width="100%" height="325" data="'+bsurl+'/files/'+upload.hash+'/'+upload.name+'"></object>');
+                    $("#EditFileModal .fileObject").css("padding", "0px");
                     break;
                 default:
                     $("#EditFileModal .fileObject").append('<i class="fa fa-file-text-o"></i>');
+                    $("#EditFileModal .fileObject").css("padding", "15px 0px");
                     break;
             }
         }
@@ -171,6 +175,7 @@ $(function () {
                 loadUploadedFiles();
             }
         });
+        
     });
     @endif
     $(".file-info-form input[name=caption]").on("blur", function() {

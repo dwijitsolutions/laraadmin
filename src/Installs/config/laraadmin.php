@@ -22,8 +22,8 @@ return [
     | 
     */
     'uploads' => [
-        'private_uploads' => false,     // Does Uploads are Private or Public
-        'default_public' => false,      // Default Upload Visibility
-        'allow_filename_change' => false// Necessory for SEO
+        'private_uploads' => false,
+        'default_public' => false,
+        'allow_filename_change' => true
     ],
 ];

@@ -58,7 +58,7 @@ class UploadsController extends Controller
     public function get_file($hash, $name)
     {
         $upload = Upload::where("hash", $hash)->first();
-
+        
         // Validate Upload Hash & Filename
         if(!isset($upload->id) || $upload->name != $name) {
             return response()->json([
@@ -67,11 +67,17 @@ class UploadsController extends Controller
             ]);
         }
 
+        if($upload->public == 1) {
+            $upload->public = true;
+        } else {
+            $upload->public = false;
+        }
+
         // Validate if Image is Public
-        if(!isset($upload->public) || !isset(Auth::user()->id)) {
+        if(!$upload->public && !isset(Auth::user()->id)) {
             return response()->json([
                 'status' => "failure",
-                'message' => "Unauthorized Access 2"
+                'message' => "Unauthorized Access 2",
             ]);
         }
 
@@ -149,12 +155,22 @@ class UploadsController extends Controller
             $upload_success = Input::file('file')->move($folder, $date_append.$filename);
             
             if( $upload_success ) {
+
+                // Get public preferences
+                // config("laraadmin.uploads.default_public")
+                $public = Input::get('public');
+                if(isset($public)) {
+                    $public = true;
+                } else {
+                    $public = false;
+                }
+
                 $upload = Upload::create([
                     "name" => $filename,
                     "path" => $folder.DIRECTORY_SEPARATOR.$date_append.$filename,
                     "extension" => pathinfo($filename, PATHINFO_EXTENSION),
                     "caption" => "",
-                    "public" => config("laraadmin.uploads.default_public"),
+                    "public" => $public,
                     "user_id" => Auth::user()->id
                 ]);
                 // apply unique random hash to file
