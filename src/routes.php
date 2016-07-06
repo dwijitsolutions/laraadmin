@@ -9,10 +9,6 @@ Route::group([
     'middleware' => ['web', 'auth']
 ], function () {
     
-	/* ================== Files ================== */
-	Route::get(config('laraadmin.adminRoute') . '/folder_files/{folder_name}', 'FileController@get_folder_files');
-	Route::post(config('laraadmin.adminRoute') . '/upload_files', 'FileController@upload_files');
-
 	/* ================== Modules ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/modules', 'ModuleController');
 	Route::resource(config('laraadmin.adminRoute') . '/module_fields', 'FieldController');
