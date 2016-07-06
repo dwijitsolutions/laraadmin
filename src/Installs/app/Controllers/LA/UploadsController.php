@@ -102,9 +102,14 @@ class UploadsController extends Controller
             $file = File::get($path);
             $type = File::mimeType($path);
 
-            $response = FacadeResponse::make($file, 200);
-            $response->header("Content-Type", $type);
-
+            $download = Input::get('download');
+            if(isset($download)) {
+                return response()->download($path, $upload->name);
+            } else {
+                $response = FacadeResponse::make($file, 200);
+                $response->header("Content-Type", $type);
+            }
+            
             return $response;
         } else {
             return response()->json([

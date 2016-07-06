@@ -82,7 +82,8 @@
                     </div><!--.row-->
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" id="delFileBtn">Delete</button>
+				<a class="btn btn-success" id="downFileBtn" href="">Download</a>
+                <button type="button" class="btn btn-danger" id="delFileBtn">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
@@ -131,6 +132,7 @@ $(function () {
         $(".file-info-form input[name=filename]").val(upload.name);
         $(".file-info-form input[name=url]").val(bsurl+'/files/'+upload.hash+'/'+upload.name);
         $(".file-info-form input[name=caption]").val(upload.caption);
+        $("#EditFileModal #downFileBtn").attr("href", bsurl+'/files/'+upload.hash+'/'+upload.name+"?download");
 
         @if(!config('laraadmin.uploads.private_uploads'))
         if(upload.public == "1") {
@@ -149,6 +151,7 @@ $(function () {
             switch (upload.extension) {
                 case "pdf":
                     // TODO: Object PDF
+                    $("#EditFileModal .fileObject").append('<object width="100%" height="290" data="'+bsurl+'/files/'+upload.hash+'/'+upload.name+'"></object>');
                     break;
                 default:
                     $("#EditFileModal .fileObject").append('<i class="fa fa-file-text-o"></i>');
