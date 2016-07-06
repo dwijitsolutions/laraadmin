@@ -211,7 +211,7 @@ class UploadsController extends Controller
             $uploads = Upload::all();
         } else {
             if(config('laraadmin.uploads.private_uploads')) {
-                // Upload::where('user_id', 0)->get();
+                // Upload::where('user_id', 0)->first();
                 $uploads = Auth::user()->uploads;
             } else {
                 $uploads = Upload::all();
@@ -253,7 +253,7 @@ class UploadsController extends Controller
         $file_id = Input::get('file_id');
         $caption = Input::get('caption');
         
-        $upload = Upload::find($file_id)->first();
+        $upload = Upload::find($file_id);
         if(isset($upload->id)) {
             if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
 
@@ -289,7 +289,7 @@ class UploadsController extends Controller
         $file_id = Input::get('file_id');
         $filename = Input::get('filename');
         
-        $upload = Upload::find($file_id)->first();
+        $upload = Upload::find($file_id);
         if(isset($upload->id)) {
             if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
 
@@ -330,7 +330,7 @@ class UploadsController extends Controller
             $public = false;
         }
         
-        $upload = Upload::find($file_id)->first();
+        $upload = Upload::find($file_id);
         if(isset($upload->id)) {
             if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
 
@@ -365,7 +365,7 @@ class UploadsController extends Controller
     {
         $file_id = Input::get('file_id');
         
-        $upload = Upload::find($file_id)->first();
+        $upload = Upload::find($file_id);
         if(isset($upload->id)) {
             if($upload->user_id == Auth::user()->id || Auth::user()->hasRole("Super Admin")) {
 
