@@ -2284,6 +2284,557 @@ ul.files_container li:hover {
 #fm .fm_file_selector ul li:hover {
   border-color: #48B0F7;
 }
+/* =================== Menu Editor =================== */
+#tab-modules ul {
+  padding: 0px;
+}
+#tab-modules ul li {
+  list-style: none;
+  padding: 3px 7px;
+  border: solid 1px #cccccc;
+  border-radius: 3px;
+  background: #f5f5f5;
+  margin-bottom: 4px;
+}
+#tab-modules ul li i.fa {
+  width: 18px;
+  text-align: center;
+}
+#tab-modules ul li a {
+  cursor: pointer;
+}
+#tab-custom-link {
+  min-height: 150px;
+}
+#menu-custom-form label {
+  width: 20%;
+  display: inline-block;
+}
+#menu-custom-form label.error {
+  margin-left: 22%;
+  width: 76%;
+}
+#menu-custom-form input {
+  width: 75%;
+  display: inline-block;
+  padding: 0px 8px;
+  height: 30px;
+}
+#menu-custom-form input[name=icon] {
+  width: 160px;
+}
+#menu-custom-form .input-group.iconpicker-container {
+  width: 75%;
+  display: inline-block;
+  vertical-align: bottom;
+}
+#menu-custom-form .input-group.iconpicker-container .input-group-addon {
+  height: 30px;
+  padding: 0px;
+  font-size: 20px;
+}
+.box.menus .tab-content {
+  padding: 20px;
+}
+/* =================== Menu Nestable =================== */
+/**
+ * Nestable Core
+ */
+.dd {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  max-width: 600px;
+  list-style: none;
+  font-size: 13px;
+  line-height: 20px;
+}
+.dd-list {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dd-list .dd-list {
+  padding-left: 30px;
+}
+.dd-collapsed .dd-list {
+  display: none;
+}
+.dd-item,
+.dd-empty,
+.dd-placeholder {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-height: 20px;
+  font-size: 13px;
+  line-height: 20px;
+}
+.dd-handle {
+  display: block;
+  height: 30px;
+  max-width: 200px;
+  margin: 5px 0;
+  padding: 5px 10px;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  background: linear-gradient(top, #fafafa 0%, #eee 100%);
+  border-radius: 3px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.dd-handle:hover {
+  color: #2ea8e5;
+  background: #fff;
+}
+.dd-item > button {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  float: left;
+  width: 25px;
+  height: 20px;
+  margin: 5px 0;
+  padding: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  font-weight: bold;
+}
+.dd-item > button:before {
+  content: '+';
+  display: block;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  text-indent: 0;
+}
+.dd-item > button[data-action="collapse"]:before {
+  content: '-';
+}
+.dd-placeholder,
+.dd-empty {
+  margin: 5px 0;
+  padding: 0;
+  min-height: 30px;
+  background: #f2fbff;
+  border: 1px dashed #b6bcbf;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.dd-empty {
+  border: 1px dashed #bbb;
+  min-height: 100px;
+  background-color: #e5e5e5;
+  background-image: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+}
+.dd-dragel {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9999;
+}
+.dd-dragel > .dd-item .dd-handle {
+  margin-top: 0;
+}
+.dd-dragel .dd-handle {
+  box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, 0.1);
+}
+/**
+ * Nestable Draggable Handles
+ */
+.dd3-content {
+  display: block;
+  max-width: 250px;
+  height: 30px;
+  margin: 5px 0;
+  padding: 5px 5px 5px 40px;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  background: linear-gradient(top, #fafafa 0%, #eee 100%);
+  border-radius: 3px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.dd3-content i.fa {
+  width: 15px;
+  text-align: center;
+  margin-right: 3px;
+}
+.dd3-content .btn {
+  display: none;
+  padding: 0px 4px;
+  padding-right: 0px;
+  margin-left: 3px;
+  margin-top: -1px;
+}
+.dd3-content:hover {
+  color: #2ea8e5;
+  background: #fff;
+}
+.dd3-content:hover .btn {
+  display: inline-block;
+}
+.dd-dragel > .dd3-item > .dd3-content {
+  margin: 0;
+}
+.dd3-item > button {
+  margin-left: 30px;
+}
+.dd3-handle {
+  position: absolute;
+  margin: 0;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+  width: 30px;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  border: 1px solid #aaa;
+  background: #ddd;
+  background: linear-gradient(top, #ddd 0%, #bbb 100%);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.dd3-handle:before {
+  content: '≡';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 100%;
+  text-align: center;
+  text-indent: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: normal;
+}
+.dd3-handle:hover {
+  background: #ddd;
+}
+/**
+ * DWIJ Customizations
+ */
+#menu-nestable button[data-action=collapse] {
+  display: none;
+}
+/*!
+ * Font Awesome Icon Picker
+ * http://mjolnic.github.io/fontawesome-iconpicker/
+ *
+ * Originally written by (c) 2014 Javier Aguilar @mjolnic
+ * Licensed under the MIT License
+ * https://github.com/mjolnic/fontawesome-iconpicker/blob/master/LICENSE
+ *
+ */
+.iconpicker-popover.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  max-width: none;
+  padding: 1px;
+  text-align: left;
+  width: 216px;
+  background: #f7f7f7;
+}
+.iconpicker-popover.popover.top,
+.iconpicker-popover.popover.topLeftCorner,
+.iconpicker-popover.popover.topLeft,
+.iconpicker-popover.popover.topRight,
+.iconpicker-popover.popover.topRightCorner {
+  margin-top: -10px;
+}
+.iconpicker-popover.popover.right,
+.iconpicker-popover.popover.rightTop,
+.iconpicker-popover.popover.rightBottom {
+  margin-left: 10px;
+}
+.iconpicker-popover.popover.bottom,
+.iconpicker-popover.popover.bottomRightCorner,
+.iconpicker-popover.popover.bottomRight,
+.iconpicker-popover.popover.bottomLeft,
+.iconpicker-popover.popover.bottomLeftCorner {
+  margin-top: 10px;
+}
+.iconpicker-popover.popover.left,
+.iconpicker-popover.popover.leftBottom,
+.iconpicker-popover.popover.leftTop {
+  margin-left: -10px;
+}
+.iconpicker-popover.popover.inline {
+  margin: 0 0 12px 0;
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+  top: auto;
+  left: auto;
+  bottom: auto;
+  right: auto;
+  max-width: 100%;
+  box-shadow: none;
+  z-index: auto;
+  vertical-align: top;
+}
+.iconpicker-popover.popover.inline > .arrow {
+  display: none;
+}
+.dropdown-menu .iconpicker-popover.inline {
+  margin: 0;
+  border: none;
+}
+.dropdown-menu.iconpicker-container {
+  padding: 0;
+}
+.iconpicker-popover.popover .popover-title {
+  padding: 12px;
+  font-size: 13px;
+  line-height: 15px;
+  border-bottom: 1px solid #ebebeb;
+  background-color: #f7f7f7;
+}
+.iconpicker-popover.popover .popover-title input[type=search].iconpicker-search {
+  margin: 0 0 2px 0;
+}
+.iconpicker-popover.popover .popover-title-text ~ input[type=search].iconpicker-search {
+  margin-top: 12px;
+}
+.iconpicker-popover.popover .popover-content {
+  padding: 0px;
+  text-align: center;
+}
+.iconpicker-popover .popover-footer {
+  float: none;
+  clear: both;
+  padding: 12px;
+  text-align: right;
+  margin: 0;
+  border-top: 1px solid #ebebeb;
+  background-color: #f7f7f7;
+}
+.iconpicker-popover .popover-footer:before,
+.iconpicker-popover .popover-footer:after {
+  content: " ";
+  display: table;
+}
+.iconpicker-popover .popover-footer:after {
+  clear: both;
+}
+.iconpicker-popover .popover-footer .iconpicker-btn {
+  margin-left: 10px;
+}
+.iconpicker-popover .popover-footer input[type=search].iconpicker-search {
+  margin-bottom: 12px;
+}
+.iconpicker-popover.popover > .arrow,
+.iconpicker-popover.popover > .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.iconpicker-popover.popover > .arrow {
+  border-width: 11px;
+}
+.iconpicker-popover.popover > .arrow:after {
+  border-width: 10px;
+  content: "";
+}
+.iconpicker-popover.popover.top > .arrow,
+.iconpicker-popover.popover.topLeft > .arrow,
+.iconpicker-popover.popover.topRight > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-width: 0;
+  border-top-color: #999;
+  border-top-color: rgba(0, 0, 0, 0.25);
+  bottom: -11px;
+}
+.iconpicker-popover.popover.top > .arrow:after,
+.iconpicker-popover.popover.topLeft > .arrow:after,
+.iconpicker-popover.popover.topRight > .arrow:after {
+  content: " ";
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #fff;
+}
+.iconpicker-popover.popover.topLeft > .arrow {
+  left: 8px;
+  margin-left: 0;
+}
+.iconpicker-popover.popover.topRight > .arrow {
+  left: auto;
+  right: 8px;
+  margin-left: 0;
+}
+.iconpicker-popover.popover.right > .arrow,
+.iconpicker-popover.popover.rightTop > .arrow,
+.iconpicker-popover.popover.rightBottom > .arrow {
+  top: 50%;
+  left: -11px;
+  margin-top: -11px;
+  border-left-width: 0;
+  border-right-color: #999;
+  border-right-color: rgba(0, 0, 0, 0.25);
+}
+.iconpicker-popover.popover.right > .arrow:after,
+.iconpicker-popover.popover.rightTop > .arrow:after,
+.iconpicker-popover.popover.rightBottom > .arrow:after {
+  content: " ";
+  left: 1px;
+  bottom: -10px;
+  border-left-width: 0;
+  border-right-color: #fff;
+}
+.iconpicker-popover.popover.rightTop > .arrow {
+  top: auto;
+  bottom: 8px;
+  margin-top: 0;
+}
+.iconpicker-popover.popover.rightBottom > .arrow {
+  top: 8px;
+  margin-top: 0;
+}
+.iconpicker-popover.popover.bottom > .arrow,
+.iconpicker-popover.popover.bottomRight > .arrow,
+.iconpicker-popover.popover.bottomLeft > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999;
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+  top: -11px;
+}
+.iconpicker-popover.popover.bottom > .arrow:after,
+.iconpicker-popover.popover.bottomRight > .arrow:after,
+.iconpicker-popover.popover.bottomLeft > .arrow:after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #fff;
+}
+.iconpicker-popover.popover.bottomLeft > .arrow {
+  left: 8px;
+  margin-left: 0;
+}
+.iconpicker-popover.popover.bottomRight > .arrow {
+  left: auto;
+  right: 8px;
+  margin-left: 0;
+}
+.iconpicker-popover.popover.left > .arrow,
+.iconpicker-popover.popover.leftBottom > .arrow,
+.iconpicker-popover.popover.leftTop > .arrow {
+  top: 50%;
+  right: -11px;
+  margin-top: -11px;
+  border-right-width: 0;
+  border-left-color: #999;
+  border-left-color: rgba(0, 0, 0, 0.25);
+}
+.iconpicker-popover.popover.left > .arrow:after,
+.iconpicker-popover.popover.leftBottom > .arrow:after,
+.iconpicker-popover.popover.leftTop > .arrow:after {
+  content: " ";
+  right: 1px;
+  border-right-width: 0;
+  border-left-color: #fff;
+  bottom: -10px;
+}
+.iconpicker-popover.popover.leftBottom > .arrow {
+  top: 8px;
+  margin-top: 0;
+}
+.iconpicker-popover.popover.leftTop > .arrow {
+  top: auto;
+  bottom: 8px;
+  margin-top: 0;
+}
+.iconpicker {
+  position: relative;
+  text-align: left;
+  text-shadow: none;
+  line-height: 0;
+  display: block;
+  margin: 0;
+  overflow: hidden;
+}
+.iconpicker * {
+  box-sizing: content-box;
+  position: relative;
+}
+.iconpicker:before,
+.iconpicker:after {
+  content: " ";
+  display: table;
+}
+.iconpicker:after {
+  clear: both;
+}
+.iconpicker .iconpicker-items {
+  position: relative;
+  clear: both;
+  float: none;
+  padding: 12px 0 0 12px;
+  background: #fff;
+  margin: 0;
+  overflow: hidden;
+  overflow-y: auto;
+  min-height: 49px;
+  max-height: 246px;
+}
+.iconpicker .iconpicker-items:before,
+.iconpicker .iconpicker-items:after {
+  content: " ";
+  display: table;
+}
+.iconpicker .iconpicker-items:after {
+  clear: both;
+}
+.iconpicker .iconpicker-item {
+  float: left;
+  width: 14px;
+  height: 14px;
+  padding: 12px;
+  margin: 0 12px 12px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  box-shadow: 0 0 0 1px #ddd;
+  color: inherit;
+}
+.iconpicker .iconpicker-item:hover:not(.iconpicker-selected) {
+  background-color: #eee;
+}
+.iconpicker .iconpicker-item.iconpicker-selected {
+  box-shadow: none;
+  color: #fff;
+}
+.iconpicker-component {
+  cursor: pointer;
+}
 /*
  * Component: Progress Bar
  * -----------------------
