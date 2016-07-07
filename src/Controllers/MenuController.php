@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
 
+use Dwij\Laraadmin\Models\Menu;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
@@ -32,10 +33,10 @@ class MenuController extends Controller
     public function index()
     {
         $modules = Module::all();
-        $menuItems = Module::get('Roles');
+        $menuItems = Menu::all();
         
         return View('la.menus.index', [
-            'menuItems' => $menuItems,
+            'menus' => $menuItems,
             'modules' => $modules
         ]);
     }
