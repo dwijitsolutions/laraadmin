@@ -31,10 +31,12 @@ class MenuController extends Controller
      */
     public function index()
     {
+        $modules = Module::all();
         $menuItems = Module::get('Roles');
         
         return View('la.menus.index', [
-            'menuItems' => $menuItems
+            'menuItems' => $menuItems,
+            'modules' => $modules
         ]);
     }
 
