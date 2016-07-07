@@ -205,8 +205,30 @@ class LAHelper
 	    return file_exists($thumbpath);
 	}
 
-	// LAHelper::print_menu_editor($menus)
-	function print_menu_editor($role) {
+	// LAHelper::print_menu_editor($menu)
+	public static function print_menu_editor($menu) {
+
+		$editing = '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>
+			<button class="btn btn-xs btn-success pull-right"><i class="fa fa-edit"></i></button>';
+
+		$str = '<li class="dd-item dd3-item" data-id="'.$menu->id.'">
+			<div class="dd-handle dd3-handle"></div>
+			<div class="dd3-content"><i class="fa '.$menu->icon.'"></i> '.$menu->name.' '.$editing.'</div>';
+		
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->get();
+		// $childrens = $ci->team_model->get_role_childrens($role['id']);
+		if(count($childrens) > 0) {
+			$str .= '<ol class="dd-list">';
+			foreach($childrens as $children) {
+				$str .= LAHelper::print_menu_editor($children);
+				//$str .= json_encode($children);
+			}
+			$str .= '</ol>';
+		}
+		$str .= '</li>';
+		return $str;
+
+		/*
 		$base_url = $ci->config->item("base_url");
 		$dept = "";
 		$color = "FFFFFF";
@@ -232,6 +254,7 @@ class LAHelper
 			$str .= '</ol>';
 		}
 		$str .= '</li>';
-		return $str;	
+		return $str;
+		*/
 	}
 }

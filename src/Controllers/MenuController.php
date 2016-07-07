@@ -33,7 +33,7 @@ class MenuController extends Controller
     public function index()
     {
         $modules = Module::all();
-        $menuItems = Menu::all();
+        $menuItems = Menu::where("parent", 0)->get();
         
         return View('la.menus.index', [
             'menus' => $menuItems,
