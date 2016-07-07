@@ -204,4 +204,34 @@ class LAHelper
 	    $imgt($new_image, $thumbpath);
 	    return file_exists($thumbpath);
 	}
+
+	// LAHelper::print_menu_editor($menus)
+	function print_menu_editor($role) {
+		$base_url = $ci->config->item("base_url");
+		$dept = "";
+		$color = "FFFFFF";
+		if($role['dept'] != 0) {
+			$dept = $ci->team_model->get_department($role['dept']);
+			$color = $dept['color'];
+			$dept = " -- ".$dept['title'];
+		}
+		$str = '<li class="dd-item" data-id="'.$role['id'].'">
+			<div class="options">
+				<a href="#" class="del btn btn-xs btn-danger pull-right nomargin margin-left-5" rel="tooltip" data-placement="right" title="Cannot Delete"><i class="fa fa-times"></i></a>
+				<a href="'.$base_url."/team/role_edit/".$role['id'].'" class="add btn btn-xs btn-success pull-right nomargin" rel="tooltip" title="Edit Role"><i class="fa fa-pencil"></i></a>
+			</div>
+			<div class="dd-handle" role_id="'.$role['id'].'" style="background:#'.$color.'">'.$role['name'].' ('.$role['name_short'].')'.$dept.'</div>';
+		
+		$childrens = $ci->team_model->get_role_childrens($role['id']);
+		if(count($childrens) > 0) {
+			$str .= '<ol class="dd-list">';
+			foreach($childrens as $children) {
+				$str .= LAHelper::print_menu_editor($children);
+				//$str .= json_encode($children);
+			}
+			$str .= '</ol>';
+		}
+		$str .= '</li>';
+		return $str;	
+	}
 }
