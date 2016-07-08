@@ -145,14 +145,15 @@ class CodeGenerator
         // $templateDirectory = __DIR__.'/stubs';
         
         LAHelper::log("info", "Appending Menu...", $comm);
-
-        Menu::create([
-            "name" => $config->moduleName,
-            "url" => $config->dbTableName,
-            "icon" => "fa fa-cube",
-            "type" => 'module',
-            "parent" => 0
-        ]);
+        if(Menu::where("url", $config->dbTableName)->count() == 0) {
+            Menu::create([
+                "name" => $config->moduleName,
+                "url" => $config->dbTableName,
+                "icon" => "fa fa-cube",
+                "type" => 'module',
+                "parent" => 0
+            ]);
+        }
         
         // Old Method to add Menu
         // $menu = '<li><a href="{{ url(config("laraadmin.adminRoute") . '."'".'/'.$config->dbTableName."'".') }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
