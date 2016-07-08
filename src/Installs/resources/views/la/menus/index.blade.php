@@ -72,6 +72,44 @@ use Dwij\Laraadmin\Models\Module;
 	</div>
 </div>
 
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Employee</h4>
+			</div>
+			{!! Form::open(['action' => ['\Dwij\Laraadmin\Controllers\MenuController@update', 1], 'id' => 'menu-edit-form']) !!}
+			<input name="_method" type="hidden" value="PUT">
+			<div class="modal-body">
+				<div class="box-body">
+                    <input type="hidden" name="type" value="custom">
+					<div class="form-group">
+						<label for="url" style="font-weight:normal;">URL</label>
+						<input class="form-control" placeholder="URL" name="url" type="text" value="http://" data-rule-minlength="1" required>
+					</div>
+					<div class="form-group">
+						<label for="name" style="font-weight:normal;">Label</label>
+						<input class="form-control" placeholder="Label" name="name" type="text" value=""  data-rule-minlength="1" required>
+					</div>
+					<div class="form-group">
+						<label for="icon" style="font-weight:normal;">Icon</label>
+						<div class="input-group">
+							<input class="form-control" placeholder="FontAwesome Icon" name="icon" type="text" value="fa-cube"  data-rule-minlength="1" required>
+							<span class="input-group-addon"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				{!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
+			</div>
+			{!! Form::close() !!}
+		</div>
+	</div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -102,6 +140,25 @@ $(function () {
 	$("#menu-custom-form").validate({
 		
 	});
+
+	$("#menu-nestable .editMenuBtn").on("click", function() {
+		var info = JSON.parse($(this).attr("info"));
+		
+		var url = $("#menu-edit-form").attr("action");
+		index = url.lastIndexOf("/");
+		url2 = url.substring(0, index+1)+info.id;
+		console.log(url2);
+		$("#menu-edit-form").attr("action", url2)
+		$("#EditModal input[name=url]").val(info.url);
+		$("#EditModal input[name=name]").val(info.name);
+		$("#EditModal input[name=icon]").val(info.icon);
+		$("#EditModal").modal("show");
+	});
+
+	$("#menu-edit-form").validate({
+		
+	});
+	
 	$("#tab-modules .addModuleMenu").on("click", function() {
 		var module_id = $(this).attr("module_id");
 		$.ajax({
