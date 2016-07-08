@@ -114,29 +114,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $field = ModuleFields::find($id);
-        
-        $module = Module::find($field->module);
-        $ftypes = ModuleFieldTypes::getFTypes2();
-        
-        $tables = LAHelper::getDBTables([]);
-        
-        return view('la.modules.field_edit', [
-            'module' => $module,
-            'ftypes' => $ftypes,
-            'tables' => $tables
-        ])->with('field', $field);
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update Custom Menu
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -144,30 +122,18 @@ class MenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $module_id = $request->module_id;
-        // $module = Module::find($field->module);
-        
-        $field = ModuleFields::find($id);
-        $field->colname = $request->colname;
-        $field->label = $request->label;
-        $field->module = $request->module_id;
-        $field->field_type = $request->field_type;
-        if($request->readonly) {
-            $field->readonly = true;
-        } else {
-            $field->readonly = false;
-        }
-        $field->defaultvalue = $request->defaultvalue;
-        $field->minlength = $request->minlength;
-        $field->maxlength = $request->maxlength;
-        if($request->required) {
-            $field->required = true;
-        } else {
-            $field->required = false;
-        }
-        $field->popup_vals = $request->popup_vals;
-        $field->save();
-        return redirect()->action('LA\ModuleController@show', [$module_id]);
+        $name = Input::get('name');
+        $url = Input::get('url');
+        $icon = Input::get('icon');
+        $type = Input::get('type');
+
+        $menu = Menu::find($id);
+        $menu->name = $name;
+        $menu->url = $url;
+        $menu->icon = $icon;
+        $menu->save();
+
+        return redirect(config('laraadmin.adminRoute').'/la_menus');
     }
 
     /**

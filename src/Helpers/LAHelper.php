@@ -210,8 +210,16 @@ class LAHelper
 		$editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute').'.la_menus.destroy', $menu->id], 'method' => 'delete', 'style'=>'display:inline']);
 		$editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
 		$editing .= \Collective\Html\FormFacade::close();
-		$editing .= '<a type="submit" class="btn btn-xs btn-success pull-right"><i class="fa fa-edit"></i></a>';
-		
+		if($menu->type != "module") {
+			$info = (object) array();
+			$info->id = $menu->id;
+			$info->name = $menu->name;
+			$info->url = $menu->url;
+			$info->type = $menu->type;
+			$info->icon = $menu->icon;
+
+			$editing .= '<a class="editMenuBtn btn btn-xs btn-success pull-right" info=\''.json_encode($info).'\'><i class="fa fa-edit"></i></a>';
+		}
 		$str = '<li class="dd-item dd3-item" data-id="'.$menu->id.'">
 			<div class="dd-handle dd3-handle"></div>
 			<div class="dd3-content"><i class="fa '.$menu->icon.'"></i> '.$menu->name.' '.$editing.'</div>';
