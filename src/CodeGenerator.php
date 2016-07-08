@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Helpers\LAHelper;
+use Dwij\Laraadmin\Models\Menu;
 
 class CodeGenerator
 {
@@ -141,17 +142,23 @@ class CodeGenerator
     
     public static function addMenu($config, $comm = null) {
         
-        $templateDirectory = __DIR__.'/stubs';
+        // $templateDirectory = __DIR__.'/stubs';
         
         LAHelper::log("info", "Appending Menu...", $comm);
+
+        Menu::create([
+            "name" => $config->moduleName,
+            "url" => $config->dbTableName,
+            "icon" => "fa fa-cube",
+            "type" => 'module',
+            "parent" => 0
+        ]);
         
-        $menu = '<li><a href="{{ url(config("laraadmin.adminRoute") . '."'".'/'.$config->dbTableName."'".') }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
-        
-        $md = file_get_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'));
-        
-        $md = str_replace("<!-- LAMenus -->", $menu, $md);
-        
-        file_put_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'), $md);
+        // Old Method to add Menu
+        // $menu = '<li><a href="{{ url(config("laraadmin.adminRoute") . '."'".'/'.$config->dbTableName."'".') }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
+        // $md = file_get_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'));
+        // $md = str_replace("<!-- LAMenus -->", $menu, $md);
+        // file_put_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'), $md);
     }
     
 	/**
