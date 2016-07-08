@@ -257,4 +257,27 @@ class LAHelper
 		return $str;
 		*/
 	}
+
+	// LAHelper::print_menu($menu)
+	public static function print_menu($menu) {
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->get();
+
+		$treeview = "";
+		$subviewSign = "";
+		if(count($childrens)) {
+			$treeview = " class=\"treeview\"";
+			$subviewSign = '<i class="fa fa-angle-left pull-right"></i>';
+		}
+		$str = '<li'.$treeview.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
+		
+		if(count($childrens)) {
+			$str .= '<ul class="treeview-menu">';
+			foreach($childrens as $children) {
+				$str .= LAHelper::print_menu($children);
+			}
+			$str .= '</ul>';
+		}
+		$str .= '</li>';
+		return $str;
+	}
 }
