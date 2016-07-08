@@ -142,7 +142,7 @@
                                     <a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}"><i class="fa fa-cubes"></i> <span>Modules</span></a>
                                 </div>
                                 <div class="col-xs-6 text-center">
-                                    <a href="{{ url(config('laraadmin.adminRoute') . '/la-menus') }}"><i class="fa fa-bars"></i> <span>Menus</span></a>
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/la_menus') }}"><i class="fa fa-bars"></i> <span>Menus</span></a>
                                 </div>
                             </li>
                             <!-- Menu Footer-->

@@ -34,39 +34,14 @@
             <li class="header">MODULES</li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
-            <li><a href="{{ url(config("laraadmin.adminRoute") . '/organizations') }}"><i class="fa fa-cube"></i> <span>Organizations</span></a></li>
-            <li><a href="{{ url(config("laraadmin.adminRoute") . '/uploads') }}"><i class="fa fa-files-o"></i> <span>Uploads</span></a></li>
+            <?php
+            $menuItems = Dwij\Laraadmin\Models\Menu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
+            ?>
+            @foreach ($menuItems as $menu)
+                <?php echo LAHelper::print_menu($menu); ?>
+            @endforeach
             <!-- LAMenus -->
             
-            <li class="treeview">
-                <a href="#"><i class='fa fa-group'></i> <span>Team</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/employees') }}"><i class="fa fa-circle-o text-green"></i> <span>Employees</span></a></li>
-                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/roles') }}"><i class="fa fa-circle-o"></i> <span>Roles</span></a></li>
-                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/departments') }}"><i class="fa fa-circle-o"></i> <span>Departments</span></a></li>
-                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/users') }}"><i class="fa fa-circle-o"></i> <span>Users</span></a></li>
-                    <!--
-                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Access Control</a></li>
-                    -->
-                </ul>
-            </li>
-            <!--
-            <li class="treeview">
-                <a href="#"><i class='fa fa-paint-brush'></i> <span>My Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Edit Profile</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Change Password</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class='fa fa-cogs'></i> <span>Company Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Company Profile</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Work Types</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Task Modeling</a></li>
-                </ul>
-            </li>
-            -->
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

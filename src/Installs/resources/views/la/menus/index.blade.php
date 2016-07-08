@@ -30,19 +30,21 @@ use Dwij\Laraadmin\Models\Module;
 						<div class="tab-pane active" id="tab-modules">
 							<ul>
 							@foreach ($modules as $module)
-								<li><i class="fa {{ $module->fa_icon }}"></i> {{ $module->name }} <a class="pull-right"><i class="fa fa-plus"></i></a></li>
+								<li><i class="fa {{ $module->fa_icon }}"></i> {{ $module->name }} <a module_id="{{ $module->id }}" class="addModuleMenu pull-right"><i class="fa fa-plus"></i></a></li>
 							@endforeach
 							</ul>
 						</div>
 						<div class="tab-pane" id="tab-custom-link">
-							{!! Form::open(['id' => 'menu-custom-form']) !!}
+							
+							{!! Form::open(['action' => '\Dwij\Laraadmin\Controllers\MenuController@store', 'id' => 'menu-custom-form']) !!}
+								<input type="hidden" name="type" value="custom">
 								<div class="form-group">
 									<label for="url" style="font-weight:normal;">URL</label>
 									<input class="form-control" placeholder="URL" name="url" type="text" value="http://" data-rule-minlength="1" required>
 								</div>
 								<div class="form-group">
-									<label for="label" style="font-weight:normal;">Label</label>
-									<input class="form-control" placeholder="Label" name="label" type="text" value=""  data-rule-minlength="1" required>
+									<label for="name" style="font-weight:normal;">Label</label>
+									<input class="form-control" placeholder="Label" name="name" type="text" value=""  data-rule-minlength="1" required>
 								</div>
 								<div class="form-group">
 									<label for="icon" style="font-weight:normal;">Icon</label>
@@ -63,29 +65,6 @@ use Dwij\Laraadmin\Models\Module;
 						@foreach ($menus as $menu)
 							<?php echo LAHelper::print_menu_editor($menu); ?>
 						@endforeach
-						
-						<!--
-						<li class="dd-item dd3-item" data-id="13">
-							<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 13 <button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button> <button class="btn btn-xs btn-success pull-right"><i class="fa fa-edit"></i></button></div>
-						</li>
-						<li class="dd-item dd3-item" data-id="14">
-							<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 14</div>
-						</li>
-						<li class="dd-item dd3-item" data-id="15">
-							<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 15</div>
-							<ol class="dd-list">
-								<li class="dd-item dd3-item" data-id="16">
-									<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 16</div>
-								</li>
-								<li class="dd-item dd3-item" data-id="17">
-									<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 17</div>
-								</li>
-								<li class="dd-item dd3-item" data-id="18">
-									<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 18</div>
-								</li>
-							</ol>
-						</li>
-						-->
 					</ol>
 				</div>
 			</div>
@@ -105,8 +84,39 @@ $(function () {
 	$('#menu-nestable').nestable({
         group: 1
     });
+	$('#menu-nestable').on('change', function() {
+		var jsonData = $('#menu-nestable').nestable('serialize');
+		console.log(jsonData);
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/la_menus/update_hierarchy') }}",
+			method: 'POST',
+			data: {
+				jsonData: jsonData,
+				"_token": '{{ csrf_token() }}'
+			},
+			success: function( data ) {
+				console.log(data);
+			}
+		});
+	});
 	$("#menu-custom-form").validate({
 		
+	});
+	$("#tab-modules .addModuleMenu").on("click", function() {
+		var module_id = $(this).attr("module_id");
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/la_menus') }}",
+			method: 'POST',
+			data: {
+				type: 'module',
+				module_id: module_id,
+				"_token": '{{ csrf_token() }}'
+			},
+			success: function( data ) {
+				console.log(data);
+				window.location.reload();
+			}
+		});
 	});
 });
 </script>
