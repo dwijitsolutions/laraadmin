@@ -169,7 +169,7 @@ class MenuController extends Controller
 
     function apply_hierarchy($menuItem, $num, $parent_id)
     {
-        echo "apply_hierarchy: ".json_encode($menuItem)." - ".$num." - ".$parent_id."  <br><br>\n\n";
+        // echo "apply_hierarchy: ".json_encode($menuItem)." - ".$num." - ".$parent_id."  <br><br>\n\n";
         $menu = Menu::find($menuItem['id']);
         $menu->parent = $parent_id;
         $menu->hierarchy = $num;

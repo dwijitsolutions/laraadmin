@@ -133,7 +133,7 @@ $(function () {
 				"_token": '{{ csrf_token() }}'
 			},
 			success: function( data ) {
-				console.log(data);
+				// console.log(data);
 			}
 		});
 	});
@@ -170,7 +170,7 @@ $(function () {
 				"_token": '{{ csrf_token() }}'
 			},
 			success: function( data ) {
-				console.log(data);
+				// console.log(data);
 				window.location.reload();
 			}
 		});
