@@ -7,6 +7,7 @@
 namespace Dwij\Laraadmin\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
@@ -59,12 +60,39 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        $module = Module::find($request->module_id);
-        $module_id = $request->module_id;
-        
-        $field_id = ModuleFields::createField($request);
-        
-        return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
+        $name = Input::get('name');
+        $url = Input::get('url');
+        $icon = Input::get('icon');
+        $type = Input::get('type');
+
+        if($type == "module") {
+            $module_id = Input::get('module_id');
+            $module = Module::find($module_id);
+            if(isset($module->id)) {
+                $name = $module->name;
+                $url = $module->name_db;
+                $icon = $module->fa_icon;
+            } else {
+                return response()->json([
+                    "status" => "failure",
+                    "message" => "Module does not exists"
+                ], 200);
+            }
+        }
+        Menu::create([
+            "name" => $name,
+            "url" => $url,
+            "icon" => $icon,
+            "type" => $type,
+            "parent" => 0
+        ]);
+        if($type == "module") {
+            return response()->json([
+                "status" => "success"
+            ], 200);
+        } else {
+            return redirect(config('laraadmin.adminRoute').'/la_menus');
+        }
     }
 
     /**
