@@ -34,7 +34,7 @@ class MenuController extends Controller
     public function index()
     {
         $modules = Module::all();
-        $menuItems = Menu::where("parent", 0)->get();
+        $menuItems = Menu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
         
         return View('la.menus.index', [
             'menus' => $menuItems,
@@ -178,6 +178,41 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Menu::find($id)->delete();
+
+        // Redirecting to index() method for Listing
+        return redirect()->route(config('laraadmin.adminRoute').'.la_menus.index');
+    }
+
+    /**
+     * Update Menu Hierarchy
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update_hierarchy()
+    {
+        $parents = Input::get('jsonData');
+        $parent_id = 0;
+
+        for ($i=0; $i < count($parents); $i++) {
+            $this->apply_hierarchy($parents[$i], $i+1, $parent_id);
+        }
+
+        return $parents;
+    }
+
+    function apply_hierarchy($menuItem, $num, $parent_id)
+    {
+        echo "apply_hierarchy: ".json_encode($menuItem)." - ".$num." - ".$parent_id."  <br><br>\n\n";
+        $menu = Menu::find($menuItem['id']);
+        $menu->parent = $parent_id;
+        $menu->hierarchy = $num;
+        $menu->save();
+
+        if(isset($menuItem['children'])) {
+            for ($i=0; $i < count($menuItem['children']); $i++) {
+                $this->apply_hierarchy($menuItem['children'][$i], $i+1, $menuItem['id']);
+            }
+        }
     }
 }

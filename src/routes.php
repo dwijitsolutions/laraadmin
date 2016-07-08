@@ -23,6 +23,7 @@ Route::group([
 
 	/* ================== Menu Editor ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/la_menus', 'MenuController');
+	Route::post(config('laraadmin.adminRoute') . '/la_menus/update_hierarchy', 'MenuController@update_hierarchy');
 	
     Route::group([
         'middleware' => 'role'

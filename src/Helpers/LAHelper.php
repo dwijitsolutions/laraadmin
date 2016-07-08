@@ -207,15 +207,16 @@ class LAHelper
 
 	// LAHelper::print_menu_editor($menu)
 	public static function print_menu_editor($menu) {
-
-		$editing = '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>
-			<button class="btn btn-xs btn-success pull-right"><i class="fa fa-edit"></i></button>';
-
+		$editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute').'.la_menus.destroy', $menu->id], 'method' => 'delete', 'style'=>'display:inline']);
+		$editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
+		$editing .= \Collective\Html\FormFacade::close();
+		$editing .= '<a type="submit" class="btn btn-xs btn-success pull-right"><i class="fa fa-edit"></i></a>';
+		
 		$str = '<li class="dd-item dd3-item" data-id="'.$menu->id.'">
 			<div class="dd-handle dd3-handle"></div>
 			<div class="dd3-content"><i class="fa '.$menu->icon.'"></i> '.$menu->name.' '.$editing.'</div>';
 		
-		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->get();
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
 		// $childrens = $ci->team_model->get_role_childrens($role['id']);
 		if(count($childrens) > 0) {
 			$str .= '<ol class="dd-list">';
@@ -260,7 +261,7 @@ class LAHelper
 
 	// LAHelper::print_menu($menu)
 	public static function print_menu($menu) {
-		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->get();
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
 
 		$treeview = "";
 		$subviewSign = "";
