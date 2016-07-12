@@ -519,7 +519,7 @@ class Module extends Model
             $out = array();
             foreach ($result as $row) {
                 $view_col = $module->view_col;
-                $out[$row->id] = $row->$view_col;
+                $out[$row->id] = $row->{$view_col};
             }
             return $out;
         } else {
@@ -534,7 +534,7 @@ class Module extends Model
             $module_path = "App\\".$module_name;
             $ftypes = ModuleFieldTypes::getFTypes2();
             foreach ($module->fields as $field) {
-                if(isset($request->$field['colname'])) {
+                if(isset($request->{$field['colname']})) {
                     $col = "";
                     if($field['required']) {
                         $col .= "required|";
@@ -597,43 +597,43 @@ class Module extends Model
         $ftypes = ModuleFieldTypes::getFTypes2();
         
         foreach ($module->fields as $field) {
-            if(isset($request->$field['colname'])) {
+            if(isset($request->{$field['colname']})) {
                 
                 switch ($ftypes[$field['field_type']]) {
                     case 'Checkbox':
                         #TODO: Bug fix
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Date':
-                        if($request->$field['colname'] != "") {
-                            $date = $request->$field['colname'];
+                        if($request->{$field['colname']} != "") {
+                            $date = $request->{$field['colname']};
                             $d2 = date_parse_from_format("d/m/Y",$date);
-                            $request->$field['colname'] = date("Y-m-d", strtotime($d2['year']."-".$d2['month']."-".$d2['day']));
+                            $request->{$field['colname']} = date("Y-m-d", strtotime($d2['year']."-".$d2['month']."-".$d2['day']));
                         }
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Datetime':
                         #TODO: Bug fix
-                        if($request->$field['colname'] != "") {
-                            $date = $request->$field['colname'];
+                        if($request->{$field['colname']} != "") {
+                            $date = $request->{$field['colname']};
                             $d2 = date_parse_from_format("d/m/Y h:i A",$date);
-                            $request->$field['colname'] = date("Y-m-d H:i:s", strtotime($d2['year']."-".$d2['month']."-".$d2['day']." ".substr($date, 11)));
+                            $request->{$field['colname']} = date("Y-m-d H:i:s", strtotime($d2['year']."-".$d2['month']."-".$d2['day']." ".substr($date, 11)));
                         }
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Multiselect':
                         #TODO: Bug fix
-                        $row->$field['colname'] = json_encode($request->$field['colname']);
+                        $row->{$field['colname']} = json_encode($request->{$field['colname']});
                         break;
                     case 'Password':
-                        $row->$field['colname'] = bcrypt($request->$field['colname']);
+                        $row->{$field['colname']} = bcrypt($request->{$field['colname']});
                         break;
                     case 'Taginput':
                         #TODO: Bug fix
-                        $row->$field['colname'] = json_encode($request->$field['colname']);
+                        $row->{$field['colname']} = json_encode($request->{$field['colname']});
                         break;
                     default:
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                 }
             }
