@@ -202,7 +202,7 @@ class LAFormMaker
 				$out .= Form::email($field_name, $default_val, $params);
 				break;
 			case 'File':
-				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<label for="'.$field_name.'" style="display:block;">'.$label.$required_ast.' :</label>';
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
@@ -211,10 +211,23 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				$out .= "<div class='input-group file'>";
-				$out .= Form::text($field_name, $default_val, $params);
-				$out .= "<span class='input-group-addon file' file_type='file' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
+				if(!is_numeric($default_val)) {
+					$default_val = 0;
+				}
+				$out .= Form::hidden($field_name, $default_val, $params);
+
+				if($default_val != 0) {
+					$upload = \App\Upload::find($default_val);
+				}
+				if(isset($upload->id)) {
+					$out .= "<a class='btn btn-default btn_upload_file hide' file_type='file' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<a class='uploaded_file' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
+				} else {
+					$out .= "<a class='btn btn-default btn_upload_file' file_type='file' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<a class='uploaded_file hide' target='_blank'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
+				}
 				break;
+
 			case 'Float':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				

@@ -7763,5 +7763,28 @@ div.uploaded_image i.fa {
   font-size: 11px;
   cursor: pointer;
 }
+a.uploaded_file {
+  display: inline-block;
+  position: relative;
+  margin-top: 7px;
+}
+a.uploaded_file i.fa.fa-file-o {
+  font-size: 90px;
+}
+a.uploaded_file i.fa.fa-times {
+  background: rgba(0, 0, 0, 0.65);
+  display: block;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  color: #FFF;
+  padding: 2px 2px;
+  border-radius: 50%;
+  text-align: center;
+  width: 15px;
+  height: 15px;
+  font-size: 11px;
+  cursor: pointer;
+}
 
 /*# sourceMappingURL=AdminLTE.css.map */
