@@ -7727,15 +7727,18 @@ ul.files_container li:hover {
   border-color: #48B0F7;
 }
 /* =================== Upload in Form =================== */
-button.btn_upload_image {
+a.btn_upload_file,
+a.btn_upload_image {
   margin-top: 10px;
   border-radius: 3px;
   border: solid 1px #ccc;
   background: #FFF;
 }
-button.btn_upload_image i.fa {
+a.btn_upload_file i.fa,
+a.btn_upload_image i.fa {
   margin-left: 3px;
 }
+a.btn_upload_file:hover,
 a.btn_upload_image:hover {
   background: #EEE;
 }
