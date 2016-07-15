@@ -251,8 +251,8 @@ class Module extends Model
                 }
                 break;
             case 'File':
-                $var = $table->string($field->colname);
-                if($field->defaultvalue != "") {
+                $var = $table->integer($field->colname);
+                if($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 }
                 break;
@@ -266,8 +266,8 @@ class Module extends Model
                 $var = $table->longText($field->colname);
                 break;
             case 'Image':
-                $var = $table->string($field->colname);
-                if($field->defaultvalue != "") {
+                $var = $table->integer($field->colname);
+                if($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 }
                 break;

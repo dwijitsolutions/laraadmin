@@ -245,7 +245,7 @@ class LAFormMaker
 				$out .= Form::hidden($field_name, $default_val, $params);
 				break;
 			case 'Image':
-				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<label for="'.$field_name.'" style="display:block;">'.$label.$required_ast.' :</label>';
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
@@ -254,10 +254,13 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				$out .= "<div class='input-group file'>";
-				$out .= Form::text($field_name, $default_val, $params);
-				$out .= "<span class='input-group-addon preview'></span>";
-				$out .= "<span class='input-group-addon file' file_type='image' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
+				if(!is_numeric($default_val)) {
+					$default_val = 0;
+				}
+				$out .= Form::hidden($field_name, $default_val, $params);
+				$out .= "<a class='btn btn-default btn_upload_image' file_type='image' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+					<div class='uploaded_image hide'><img src='http://www.gravatar.com/avatar/b77d26180661c54e9aa85fec9e687aa0.jpg?s=80&d=mm&r=g'><i title='Remove Image' class='fa fa-times'></i></div>
+					";
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
