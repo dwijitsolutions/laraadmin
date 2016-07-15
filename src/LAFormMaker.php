@@ -258,9 +258,18 @@ class LAFormMaker
 					$default_val = 0;
 				}
 				$out .= Form::hidden($field_name, $default_val, $params);
-				$out .= "<a class='btn btn-default btn_upload_image' file_type='image' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
-					<div class='uploaded_image hide'><img src='http://www.gravatar.com/avatar/b77d26180661c54e9aa85fec9e687aa0.jpg?s=80&d=mm&r=g'><i title='Remove Image' class='fa fa-times'></i></div>
-					";
+
+				if($default_val != 0) {
+					$upload = \App\Upload::find($default_val);
+				}
+				if(isset($upload->id)) {
+					$out .= "<a class='btn btn-default btn_upload_image hide' file_type='image' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<div class='uploaded_image'><img src='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=150")."'><i title='Remove Image' class='fa fa-times'></i></div>";
+				} else {
+					$out .= "<a class='btn btn-default btn_upload_image' file_type='image' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<div class='uploaded_image hide'><img src=''><i title='Remove Image' class='fa fa-times'></i></div>";
+				}
+				
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -606,7 +615,14 @@ class LAFormMaker
 			case 'HTML':
 				break;
 			case 'Image':
-				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><img src="'.asset($value).'"></a>';
+				if($value != 0) {
+					$upload = \App\Upload::find($value);
+				}
+				if(isset($upload->id)) {
+					$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'"><img src="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=150").'"></a>';
+				} else {
+					$value = 'Uplaoded image not found.';
+				}
 				break;
 			case 'Integer':
 				
