@@ -620,7 +620,15 @@ class LAFormMaker
 				$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
 				break;
 			case 'File':
-				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><i class="fa fa-file-o"></i></a>';
+				if($value != 0) {
+					$upload = \App\Upload::find($value);
+				}
+				if(isset($upload->id)) {
+					$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'">
+					<span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> '.$upload->name.'</a>';
+				} else {
+					$value = 'Uplaoded image not found.';
+				}
 				break;
 			case 'Float':
 				
