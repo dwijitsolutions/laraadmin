@@ -2042,248 +2042,6 @@ body.IE7 .Switch.Round {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
-/* =================== Uploads =================== */
-#fm_dropzone_main {
-  border: 1px dashed #0087F7;
-  border-radius: 5px;
-  background: white;
-  text-align: center;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  /*min-height: 100px;*/
-  padding: 8px;
-  vertical-align: middle;
-  cursor: pointer;
-}
-#fm_dropzone_main div.dz-message {
-  display: block;
-  padding: 20px 0px;
-  color: #999;
-}
-#fm_dropzone_main div.dz-message i.fa {
-  font-size: 40px;
-}
-#fm_dropzone_main #closeDZ1 {
-  display: block;
-  position: relative;
-  width: 10px;
-  float: right;
-  margin-top: -2px;
-  margin-right: 2px;
-}
-ul.files_container {
-  list-style: none;
-  padding: 10px;
-  margin: 0px;
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  min-height: 300px;
-  overflow: scroll;
-}
-ul.files_container li {
-  display: inline-block;
-  max-width: 130px;
-  height: 130px;
-  width: 130px;
-  float: left;
-  margin-bottom: 5px;
-  margin-right: 5px;
-  overflow: hidden;
-  border: solid 1px #EEE;
-}
-ul.files_container li a {
-  display: block;
-  height: 100%;
-  cursor: pointer;
-}
-ul.files_container li a img {
-  height: 128px;
-  display: block;
-  transform: translateX(-50%);
-  margin-left: 50%;
-}
-ul.files_container li a i.fa {
-  height: 128px;
-  width: 128px;
-  font-size: 96px;
-  text-align: center;
-  padding-top: 13px;
-}
-ul.files_container li:hover {
-  border-color: #48B0F7;
-}
-#EditFileModal .modal-header {
-  padding: 0px;
-  border-bottom-color: #ddd;
-}
-#EditFileModal .modal-header h4.modal-title {
-  padding: 13px 15px;
-}
-#EditFileModal .modal-header button {
-  float: right;
-  padding: 15px;
-  background: #FFF;
-  border: 0px;
-  border-left: solid 1px #ddd;
-  text-align: center;
-  width: 50px;
-  height: 51px;
-  margin-top: 0px;
-  font-size: 17px;
-  color: #d6d6d6;
-  opacity: 1;
-}
-#EditFileModal .modal-header button:hover {
-  color: #bbb;
-  background: #EEE;
-}
-#EditFileModal .modal-footer {
-  border-top-color: #ddd;
-}
-#EditFileModal .file-info-form {
-  padding: 10px;
-  height: 330px;
-  background: #f3f3f3;
-  border-left: solid 1px #ddd;
-}
-#EditFileModal .file-info-form label {
-  color: #666;
-  font-weight: normal;
-}
-#EditFileModal .col-xs-8,
-#EditFileModal .col-xs-4 {
-  padding: 0px;
-}
-#EditFileModal .fileObject {
-  text-align: center;
-  padding: 15px 0px;
-}
-#EditFileModal .fileObject img {
-  max-width: 100%;
-  max-height: 300px;
-}
-/* =================== File Browser + Uploader =================== */
-.input-group.file .input-group-addon {
-  cursor: pointer;
-}
-.input-group-addon.preview {
-  display: none;
-  cursor: pointer;
-  padding: 0px;
-  width: 34px;
-  height: 34px;
-  border-left: 0px;
-  background-size: cover;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  position: absolute;
-  right: 40px;
-  z-index: 10;
-}
-#fm .col-md-3 {
-  border-right: solid 1px #F4F4F4;
-}
-#fm .fm_folder_selector {
-  padding: 15px 0px;
-  min-height: 341px;
-}
-#fm .fm_folder_selector .fm_folder_title {
-  display: block;
-  padding: 4px 15px;
-  color: #777;
-  font-weight: 100;
-}
-#fm .fm_folder_selector .fm_folder_sel {
-  display: block;
-  padding: 4px 15px;
-  color: #666;
-  max-width: 120px;
-  cursor: pointer;
-}
-#fm .fm_folder_selector .fm_folder_sel:hover {
-  color: #48B0F7;
-}
-#fm .fm_folder_selector .fm_folder_sel.selected {
-  border: solid 1px #EEE;
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
-  background: #EEE;
-}
-#fm .fm_folder_selector form#fm_dropzone {
-  border: 1px dashed #0087F7;
-  border-radius: 5px;
-  background: white;
-  text-align: center;
-  margin-left: 15px;
-  margin-top: 15px;
-  min-height: 200px;
-  padding: 8px;
-  vertical-align: middle;
-  cursor: pointer;
-}
-#fm .fm_folder_selector form#fm_dropzone div.dz-message {
-  display: block;
-  padding: 51px 0px;
-  color: #999;
-}
-#fm .fm_folder_selector form#fm_dropzone div.dz-message i.fa {
-  font-size: 40px;
-}
-#fm .nav {
-  background: #EEE;
-}
-#fm .nav input[type=search] {
-  padding: 5px;
-  line-height: 12px;
-  height: 28px;
-  margin: 4px 5px;
-  border-color: #EEE;
-  border-radius: 3px;
-  font-weight: 400;
-}
-#fm .fm_file_selector ul {
-  list-style: none;
-  padding: 10px;
-  margin: 0px;
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  min-height: 300px;
-  overflow: scroll;
-}
-#fm .fm_file_selector ul li {
-  display: inline-block;
-  max-width: 104px;
-  max-height: 104px;
-  min-height: 104px;
-  float: left;
-  margin-bottom: 5px;
-  margin-right: 5px;
-  overflow: hidden;
-  border: solid 1px #EEE;
-}
-#fm .fm_file_selector ul li a {
-  display: block;
-  height: 100%;
-  cursor: pointer;
-}
-#fm .fm_file_selector ul li a img {
-  height: 102px;
-  display: block;
-  transform: translateX(-50%);
-  margin-left: 50%;
-}
-#fm .fm_file_selector ul li a i.fa {
-  height: 102px;
-  width: 102px;
-  font-size: 96px;
-  text-align: center;
-  padding-top: 3px;
-}
-#fm .fm_file_selector ul li:hover {
-  border-color: #48B0F7;
-}
 /* =================== Menu Editor =================== */
 #tab-modules ul {
   padding: 0px;
@@ -7725,6 +7483,285 @@ body > .pgn-wrapper {
 }
 #laeditor #la-ace-editor .ace_scroller {
   margin-top: 0px;
+}
+/* =================== Uploads =================== */
+#fm_dropzone_main {
+  border: 1px dashed #0087F7;
+  border-radius: 5px;
+  background: white;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  /*min-height: 100px;*/
+  padding: 8px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+#fm_dropzone_main div.dz-message {
+  display: block;
+  padding: 20px 0px;
+  color: #999;
+}
+#fm_dropzone_main div.dz-message i.fa {
+  font-size: 40px;
+}
+#fm_dropzone_main #closeDZ1 {
+  display: block;
+  position: relative;
+  width: 10px;
+  float: right;
+  margin-top: -2px;
+  margin-right: 2px;
+}
+ul.files_container {
+  list-style: none;
+  padding: 10px;
+  margin: 0px;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  min-height: 300px;
+  overflow: scroll;
+}
+ul.files_container li {
+  display: inline-block;
+  max-width: 130px;
+  height: 130px;
+  width: 130px;
+  float: left;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  overflow: hidden;
+  border: solid 1px #EEE;
+}
+ul.files_container li a {
+  display: block;
+  height: 100%;
+  cursor: pointer;
+}
+ul.files_container li a img {
+  height: 128px;
+  display: block;
+  transform: translateX(-50%);
+  margin-left: 50%;
+}
+ul.files_container li a i.fa {
+  height: 128px;
+  width: 128px;
+  font-size: 96px;
+  text-align: center;
+  padding-top: 13px;
+}
+ul.files_container li:hover {
+  border-color: #48B0F7;
+}
+#EditFileModal .modal-header {
+  padding: 0px;
+  border-bottom-color: #ddd;
+}
+#EditFileModal .modal-header h4.modal-title {
+  padding: 13px 15px;
+}
+#EditFileModal .modal-header button {
+  float: right;
+  padding: 15px;
+  background: #FFF;
+  border: 0px;
+  border-left: solid 1px #ddd;
+  text-align: center;
+  width: 50px;
+  height: 51px;
+  margin-top: 0px;
+  font-size: 17px;
+  color: #d6d6d6;
+  opacity: 1;
+}
+#EditFileModal .modal-header button:hover {
+  color: #bbb;
+  background: #EEE;
+}
+#EditFileModal .modal-footer {
+  border-top-color: #ddd;
+}
+#EditFileModal .file-info-form {
+  padding: 10px;
+  height: 330px;
+  background: #f3f3f3;
+  border-left: solid 1px #ddd;
+}
+#EditFileModal .file-info-form label {
+  color: #666;
+  font-weight: normal;
+}
+#EditFileModal .col-xs-8,
+#EditFileModal .col-xs-4 {
+  padding: 0px;
+}
+#EditFileModal .fileObject {
+  text-align: center;
+  padding: 15px 0px;
+}
+#EditFileModal .fileObject img {
+  max-width: 100%;
+  max-height: 300px;
+}
+/* =================== File Browser + Uploader =================== */
+.input-group.file .input-group-addon {
+  cursor: pointer;
+}
+.input-group-addon.preview {
+  display: none;
+  cursor: pointer;
+  padding: 0px;
+  width: 34px;
+  height: 34px;
+  border-left: 0px;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  position: absolute;
+  right: 40px;
+  z-index: 10;
+}
+#fm .col-md-3 {
+  border-right: solid 1px #F4F4F4;
+}
+#fm .fm_folder_selector {
+  padding: 15px 0px;
+  min-height: 341px;
+}
+#fm .fm_folder_selector .fm_folder_title {
+  display: block;
+  padding: 4px 15px;
+  color: #777;
+  font-weight: 100;
+}
+#fm .fm_folder_selector .fm_folder_sel {
+  display: block;
+  padding: 4px 15px;
+  color: #666;
+  max-width: 120px;
+  cursor: pointer;
+}
+#fm .fm_folder_selector .fm_folder_sel:hover {
+  color: #48B0F7;
+}
+#fm .fm_folder_selector .fm_folder_sel.selected {
+  border: solid 1px #EEE;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background: #EEE;
+}
+#fm .fm_folder_selector form#fm_dropzone {
+  border: 1px dashed #0087F7;
+  border-radius: 5px;
+  background: white;
+  text-align: center;
+  margin-left: 15px;
+  margin-top: 15px;
+  min-height: 200px;
+  padding: 8px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+#fm .fm_folder_selector form#fm_dropzone div.dz-message {
+  display: block;
+  padding: 51px 0px;
+  color: #999;
+}
+#fm .fm_folder_selector form#fm_dropzone div.dz-message i.fa {
+  font-size: 40px;
+}
+#fm .nav {
+  background: #EEE;
+}
+#fm .nav input[type=search] {
+  padding: 5px;
+  line-height: 12px;
+  height: 28px;
+  margin: 4px 5px;
+  border-color: #EEE;
+  border-radius: 3px;
+  font-weight: 400;
+}
+#fm .fm_file_selector ul {
+  list-style: none;
+  padding: 10px;
+  margin: 0px;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  min-height: 300px;
+  overflow: scroll;
+}
+#fm .fm_file_selector ul li {
+  display: inline-block;
+  max-width: 104px;
+  max-height: 104px;
+  min-height: 104px;
+  float: left;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  overflow: hidden;
+  border: solid 1px #EEE;
+}
+#fm .fm_file_selector ul li a {
+  display: block;
+  height: 100%;
+  cursor: pointer;
+}
+#fm .fm_file_selector ul li a img {
+  height: 102px;
+  display: block;
+  transform: translateX(-50%);
+  margin-left: 50%;
+}
+#fm .fm_file_selector ul li a i.fa {
+  height: 102px;
+  width: 102px;
+  font-size: 96px;
+  text-align: center;
+  padding-top: 3px;
+}
+#fm .fm_file_selector ul li:hover {
+  border-color: #48B0F7;
+}
+/* =================== Upload in Form =================== */
+button.btn_upload_image {
+  margin-top: 10px;
+  border-radius: 3px;
+  border: solid 1px #ccc;
+  background: #FFF;
+}
+button.btn_upload_image i.fa {
+  margin-left: 3px;
+}
+a.btn_upload_image:hover {
+  background: #EEE;
+}
+div.uploaded_image {
+  display: inline-block;
+  position: relative;
+  margin-top: 7px;
+}
+div.uploaded_image img {
+  max-width: 120px;
+  border-radius: 3px;
+}
+div.uploaded_image i.fa {
+  background: rgba(0, 0, 0, 0.65);
+  display: block;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  color: #FFF;
+  padding: 2px 2px;
+  border-radius: 50%;
+  text-align: center;
+  width: 15px;
+  height: 15px;
+  font-size: 11px;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=AdminLTE.css.map */
