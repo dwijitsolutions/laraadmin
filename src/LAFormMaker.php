@@ -485,7 +485,7 @@ class LAFormMaker
 	* get data from module / table whichever is found if starts with '@'
 	**/
 	// $values = LAFormMaker::process_values($data);
-	private static function process_values($json) {
+	public static function process_values($json) {
 		$out = array();
 		// Check if populated values are from Module or Database Table
 		if(is_string($json) && starts_with($json, "@")) {
