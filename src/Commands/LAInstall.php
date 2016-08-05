@@ -27,7 +27,7 @@ class LAInstall extends Command
      *
      * @var string
      */
-    protected $description = 'Install LaraAdmin Package. Generate Whole structure for /admin.';
+    protected $description = 'Install LaraAdmin Package. Generate whole structure for /admin.';
     
     protected $from;
     protected $to;
@@ -49,7 +49,7 @@ class LAInstall extends Command
             
             $this->info('from: '.$from." to: ".$to);
             
-            if ($this->confirm("This process may change/append to following of your existing project files:"
+            if ($this->confirm("This process may change/append to the following of your existing project files:"
                     ."\n\n\t app/Http/routes.php"
                     ."\n\t app/User.php"
                     ."\n\t database/migrations/2014_10_12_000000_create_users_table.php"
