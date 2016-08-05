@@ -88,7 +88,7 @@ class LAInstall extends Command
                 
                 // Checking database
                 $this->line('Checking database...');
-                DB::select('SHOW TABLES');
+                DB::connection()->getDatabaseName();
                 
                 // Running migrations...
                 $this->line('Running migrations...');
