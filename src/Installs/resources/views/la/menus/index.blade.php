@@ -77,7 +77,7 @@ use Dwij\Laraadmin\Models\Module;
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add Employee</h4>
+				<h4 class="modal-title" id="myModalLabel">Edit Menu Item</h4>
 			</div>
 			{!! Form::open(['action' => ['\Dwij\Laraadmin\Controllers\MenuController@update', 1], 'id' => 'menu-edit-form']) !!}
 			<input name="_method" type="hidden" value="PUT">
