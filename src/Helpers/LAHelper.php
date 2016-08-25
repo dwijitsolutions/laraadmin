@@ -162,6 +162,16 @@ class LAHelper
 		}
 		return $password;
 	}
+
+	// LAHelper::img($upload_id);
+    public static function img($upload_id) {
+        $upload = \App\Upload::find($upload_id);
+        if(isset($upload->id)) {
+            return url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name);
+        } else {
+			return "";
+		}
+    }
 	
 	// LAHelper::createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height);
 	public static function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background=false) {
