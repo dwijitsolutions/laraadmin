@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
+use Schema;
 
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
@@ -111,8 +112,12 @@ class FieldController extends Controller
     {
         $module_id = $request->module_id;
         // $module = Module::find($field->module);
-        
         $field = ModuleFields::find($id);
+
+        // Update the Schema
+        $this->updateFieldSchema($module_id, $field, $request);
+
+        // Update Context in ModuleFields
         $field->colname = $request->colname;
         $field->label = $request->label;
         $field->module = $request->module_id;
@@ -152,5 +157,20 @@ class FieldController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function updateFieldSchema($module_id, $data_old, $data_new)
+    {
+        $module = Module::find($module_id);
+
+        // Change Column Name if Different
+        if($data_old->colname != $data_new->colname) {
+            Schema::table($module->name_db, function ($table) use ($data_old, $data_new) {
+                $table->renameColumn($data_old->colname, $data_new->colname);
+            });
+        }
+
+        // Change Column Type if Different
+        
     }
 }
