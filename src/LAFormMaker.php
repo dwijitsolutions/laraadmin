@@ -610,7 +610,11 @@ class LAFormMaker
 				if(starts_with($fieldObj['popup_vals'], "@")) {
 					if($value != 0) {
 						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
-						$value = "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$value)."' class='label label-primary'>".$values[$value]."</a> ";
+						if(isset($moduleVal->id)) {
+							$value = "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$value)."' class='label label-primary'>".$values[$value]."</a> ";
+						} else {
+							$value = "<a class='label label-primary'>".$values[$value]."</a> ";
+						}
 					} else {
 						$value = "None";
 					}
