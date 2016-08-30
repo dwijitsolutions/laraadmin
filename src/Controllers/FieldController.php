@@ -111,40 +111,9 @@ class FieldController extends Controller
     public function update(Request $request, $id)
     {
         $module_id = $request->module_id;
-        // $module = Module::find($field->module);
-        $field = ModuleFields::find($id);
-
-        // Update the Schema
-        $this->updateFieldSchema($module_id, $field, $request);
-
-        // Update Context in ModuleFields
-        $field->colname = $request->colname;
-        $field->label = $request->label;
-        $field->module = $request->module_id;
-        $field->field_type = $request->field_type;
-        if($request->readonly) {
-            $field->readonly = true;
-        } else {
-            $field->readonly = false;
-        }
-        $field->defaultvalue = $request->defaultvalue;
-        $field->minlength = $request->minlength;
-        $field->maxlength = $request->maxlength;
-        if($request->required) {
-            $field->required = true;
-        } else {
-            $field->required = false;
-        }
-        if($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {
-            if($request->popup_value_type == "table") {
-                $field->popup_vals = "@".$request->popup_vals_table;
-            } else if($request->popup_value_type == "list") {
-                $request->popup_vals_list = json_encode($request->popup_vals_list);
-                $field->popup_vals = $request->popup_vals_list;
-            }
-        }
-        $field->save();
-
+        
+        ModuleFields::updateField($id, $request);
+        
         return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
     }
 
@@ -156,21 +125,16 @@ class FieldController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
-
-    private function updateFieldSchema($module_id, $data_old, $data_new)
-    {
-        $module = Module::find($module_id);
-
-        // Change Column Name if Different
-        if($data_old->colname != $data_new->colname) {
-            Schema::table($module->name_db, function ($table) use ($data_old, $data_new) {
-                $table->renameColumn($data_old->colname, $data_new->colname);
-            });
-        }
-
-        // Change Column Type if Different
+        // Get Context
+        $field = ModuleFields::find($id);
+        $module = Module::find($field->module);
         
+        // Delete from Table
+        Schema::table($module->name_db, function ($table) use ($field) {
+            $table->dropColumn($field->colname);
+        });
+
+        // Delete Context
+        $field->delete();
     }
 }
