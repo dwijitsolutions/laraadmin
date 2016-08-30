@@ -130,9 +130,17 @@ class FieldController extends Controller
         } else {
             $field->required = false;
         }
-        $field->popup_vals = $request->popup_vals;
+        if($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {
+            if($request->popup_value_type == "table") {
+                $field->popup_vals = "@".$request->popup_vals_table;
+            } else if($request->popup_value_type == "list") {
+                $request->popup_vals_list = json_encode($request->popup_vals_list);
+                $field->popup_vals = $request->popup_vals_list;
+            }
+        }
         $field->save();
-        return redirect()->action('LA\ModuleController@show', [$module_id]);
+
+        return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
     }
 
     /**
