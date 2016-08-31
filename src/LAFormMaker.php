@@ -259,7 +259,7 @@ class LAFormMaker
 							} else {
 								$fileImage = "<i class='fa fa-file-o'></i>";
 							}
-							$uploadImages .= "<a class='uploaded_file' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
+							$uploadImages .= "<a class='uploaded_file2' upload_id='".$upload->id."' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
 						}
 					}
 					
