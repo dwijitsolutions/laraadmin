@@ -17,137 +17,187 @@ use Dwij\Laraadmin\CodeGenerator;
 
 class ModuleController extends Controller
 {
-    
-    public function __construct() {
-        // for authentication (optional)
-        $this->middleware('auth');
-    }
-    
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $modules = Module::all();
-        
-        return View('la.modules.index', [
-            'modules' => $modules
-        ]);
-    }
+	
+	public function __construct() {
+		// for authentication (optional)
+		$this->middleware('auth');
+	}
+	
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		$modules = Module::all();
+		
+		return View('la.modules.index', [
+			'modules' => $modules
+		]);
+	}
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		//
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $module_id = Module::generateBase($request->name);
-        
-        return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
-    }
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		$module_id = Module::generateBase($request->name);
+		
+		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $ftypes = ModuleFieldTypes::getFTypes2();
-        $module = Module::find($id);
-        $module = Module::get($module->name);
-        
-        $tables = LAHelper::getDBTables([]);
-        $modules = LAHelper::getModuleNames([]);
-        
-        return view('la.modules.show', [
-            'no_header' => true,
-            'no_padding' => "no-padding",
-            'ftypes' => $ftypes,
-            'tables' => $tables,
-            'modules' => $modules
-        ])->with('module', $module);
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$ftypes = ModuleFieldTypes::getFTypes2();
+		$module = Module::find($id);
+		$module = Module::get($module->name);
+		
+		$tables = LAHelper::getDBTables([]);
+		$modules = LAHelper::getModuleNames([]);
+		
+		return view('la.modules.show', [
+			'no_header' => true,
+			'no_padding' => "no-padding",
+			'ftypes' => $ftypes,
+			'tables' => $tables,
+			'modules' => $modules
+		])->with('module', $module);
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+		//
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		//
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-    
-    /**
-     * Generate Modules CRUD + Model
-     *
-     * @param  int  $module_id
-     * @return \Illuminate\Http\Response
-     */
-    public function generate_crud($module_id)
-    {
-        $module = Module::find($module_id);
-        $module = Module::get($module->name);
-        
-        $config = CodeGenerator::generateConfig($module->name);
-        
-        CodeGenerator::createController($config);
-        CodeGenerator::createModel($config);
-        CodeGenerator::createViews($config);
-        CodeGenerator::appendRoutes($config);
-        CodeGenerator::addMenu($config);
-    }
-    
-    /**
-     * Generate Modules Migrations
-     *
-     * @param  int  $module_id
-     * @return \Illuminate\Http\Response
-     */
-    public function generate_migr($module_id)
-    {
-        $module = Module::find($module_id);
-        $module = Module::get($module->name);
-        CodeGenerator::generateMigration($module->name_db, true);
-    }
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		//
+	}
+	
+	/**
+	 * Generate Modules CRUD + Model
+	 *
+	 * @param  int  $module_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function generate_crud($module_id)
+	{
+		$module = Module::find($module_id);
+		$module = Module::get($module->name);
+		
+		$config = CodeGenerator::generateConfig($module->name);
+		
+		CodeGenerator::createController($config);
+		CodeGenerator::createModel($config);
+		CodeGenerator::createViews($config);
+		CodeGenerator::appendRoutes($config);
+		CodeGenerator::addMenu($config);
+
+		// Set Module Generated = True
+		$module = Module::find($module_id);
+		$module->is_gen='1';
+		$module->save();
+	}
+	
+	/**
+	 * Generate Modules Migrations
+	 *
+	 * @param  int  $module_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function generate_migr($module_id)
+	{
+		$module = Module::find($module_id);
+		$module = Module::get($module->name);
+		CodeGenerator::generateMigration($module->name_db, true);
+	}
+
+	/**
+	 * Generate Modules Migrations and CRUD Model
+	 *
+	 * @param  int  $module_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function generate_migr_crud($module_id)
+	{
+		$module = Module::find($module_id);
+		$module = Module::get($module->name);
+		
+		// Generate Migration
+		CodeGenerator::generateMigration($module->name_db, true);
+		
+		// Create Config for Code Generation
+		$config = CodeGenerator::generateConfig($module->name);
+		
+		// Generate CRUD
+		CodeGenerator::createController($config);
+		CodeGenerator::createModel($config);
+		CodeGenerator::createViews($config);
+		CodeGenerator::appendRoutes($config);
+		CodeGenerator::addMenu($config);
+		
+		// Set Module Generated = True
+		$module = Module::find($module_id);
+		$module->is_gen='1';
+		$module->save();
+	}
+
+	/**
+	 * Set the model view_column
+	 *
+	 * @param  int  $module_id
+	 * @param string $column_name
+	 * @return \Illuminate\Http\Response
+	 */
+	public function set_view_col($module_id, $column_name){
+		$module = Module::find($module_id);
+		$module->view_col=$column_name;
+		$module->save();
+
+		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
+	}
 }

@@ -10,7 +10,11 @@ use Dwij\Laraadmin\Models\Module;
 
 @section('main-content')
 <div id="page-content" class="profile2">
+	@if(isset($module->is_gen) && $module->is_gen)
+	<div class="bg-success clearfix">
+	@else
 	<div class="bg-danger clearfix">
+	@endif
 		<div class="col-md-4">
 			<div class="row">
 				<div class="col-md-3">
@@ -29,7 +33,13 @@ use Dwij\Laraadmin\Models\Module;
 		<div class="col-md-3">
 			<div class="dats1" data-toggle="tooltip" data-placement="left" title="Controller"><i class="fa fa-anchor"></i> {{ $module->controller }}</div>
 			<div class="dats1" data-toggle="tooltip" data-placement="left" title="Model"><i class="fa fa-database"></i> {{ $module->model }}</div>
-			<div class="dats1" data-toggle="tooltip" data-placement="left" title="View Column Name"><i class="fa fa-eye"></i> {{ $module->view_col or "<span class='text-danger'>Not Set</span>" }}</div>
+			<div class="dats1" data-toggle="tooltip" data-placement="left" title="View Column Name"><i class="fa fa-eye"></i>
+				@if($module->view_col!="")
+					{{$module->view_col}}
+				@else
+					Not Set
+				@endif
+			</div>
 		</div>
 		
 		<div class="col-md-4">
@@ -37,10 +47,13 @@ use Dwij\Laraadmin\Models\Module;
 				@if(isset($module->is_gen) && $module->is_gen)
 					
 				@else
-					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_crud" href="#"><i class="fa fa-cube"></i> Generate CRUD + M</a></div>
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration + CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD</a></div>
+					
+ 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr" href="#"><i class="fa fa-database"></i> Generate Migration</a></div>
 				@endif
+			@else
+				<div class="dats1 text-center">To generate Migration or CRUD, set the view column using the <i class='fa fa-eye'></i> icon next to a column</div>
 			@endif
-			<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr" href="#"><i class="fa fa-database"></i> Generate Migration</a></div>
 		</div>
 		
 		<div class="col-md-1 actions">
@@ -96,6 +109,9 @@ use Dwij\Laraadmin\Models\Module;
 									<td><?php echo LAHelper::parseValues($field['popup_vals']) ?></td>
 									<td>
 										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/edit') }}" class="btn btn-edit-field btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+										@if($field['colname'] != $module->view_col)
+											<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/set_view_col/'.$field['colname']) }}" class="btn btn-edit-field btn-success btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" data-placement="left" title="Set View Column"><i class="fa fa-eye"></i></a>
+										@endif
 									</td>
 								</tr>
 							@endforeach
@@ -194,13 +210,13 @@ use Dwij\Laraadmin\Models\Module;
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
 <script>
 $(function () {
-	$("#generate_crud").on("click", function() {
+	$("#generate_migr").on("click", function() {
 		var $fa = $(this).find("i");
-		$fa.removeClass("fa-cube");
+		$fa.removeClass("fa-database");
 		$fa.addClass("fa-refresh");
 		$fa.addClass("fa-spin");
 		$.ajax({
-			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_crud') }}/"+{{ $module->id }},
+			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr') }}/"+{{ $module->id }},
 			method: 'GET',
 			success: function( data ) {
 				$fa.removeClass("fa-refresh");
@@ -211,13 +227,13 @@ $(function () {
 		});
 	});
 	
-	$("#generate_migr").on("click", function() {
+	$("#generate_migr_crud").on("click", function() {
 		var $fa = $(this).find("i");
-		$fa.removeClass("fa-database");
+		$fa.removeClass("fa-cube");
 		$fa.addClass("fa-refresh");
 		$fa.addClass("fa-spin");
 		$.ajax({
-			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr') }}/"+{{ $module->id }},
+			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr_crud') }}/"+{{ $module->id }},
 			method: 'GET',
 			success: function( data ) {
 				$fa.removeClass("fa-refresh");
