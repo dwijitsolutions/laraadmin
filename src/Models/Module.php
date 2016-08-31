@@ -167,9 +167,10 @@ class Module extends Model
     }
     
     public static function create_field_schema($table, $field, $update = false) {
-        $ftypes = ModuleFieldTypes::getFTypes();
-        $field->field_type = array_search($field->field_type, $ftypes);
-        
+        if(is_numeric($field->field_type)) {
+            $ftypes = ModuleFieldTypes::getFTypes();
+            $field->field_type = array_search($field->field_type, $ftypes);
+        }
         Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
                 ." - ".$field->defaultvalue." - ".$field->maxlength);
         
