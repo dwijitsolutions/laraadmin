@@ -136,6 +136,8 @@ class ModuleController extends Controller
         CodeGenerator::createViews($config);
         CodeGenerator::appendRoutes($config);
         CodeGenerator::addMenu($config);
+        $module->is_gen=1;
+        $module->save();
     }
     
     /**
