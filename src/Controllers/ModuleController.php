@@ -136,7 +136,9 @@ class ModuleController extends Controller
         CodeGenerator::createViews($config);
         CodeGenerator::appendRoutes($config);
         CodeGenerator::addMenu($config);
-        $module->is_gen=1;
+        
+        $module = Module::find($module_id);
+        $module->is_gen='1';
         $module->save();
     }
     
@@ -152,7 +154,29 @@ class ModuleController extends Controller
         $module = Module::get($module->name);
         CodeGenerator::generateMigration($module->name_db, true);
     }
-    
+    /**
+     * Generate Modules Migrations and CRUD + Model
+     *
+     * @param  int  $module_id
+     * @return \Illuminate\Http\Response
+     */
+    public function generate_migr_crud($module_id)
+    {
+        $module = Module::find($module_id);
+        $module = Module::get($module->name);
+        CodeGenerator::generateMigration($module->name_db, true);
+        $config = CodeGenerator::generateConfig($module->name);
+        
+        CodeGenerator::createController($config);
+        CodeGenerator::createModel($config);
+        CodeGenerator::createViews($config);
+        CodeGenerator::appendRoutes($config);
+        CodeGenerator::addMenu($config);
+        
+        $module = Module::find($module_id);
+        $module->is_gen='1';
+        $module->save();
+    }
      /**
      * Set the model view_column
      *
