@@ -210,6 +210,7 @@ use Dwij\Laraadmin\Models\Module;
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
 <script>
 $(function () {
+	
 	$("#generate_migr").on("click", function() {
 		var $fa = $(this).find("i");
 		$fa.removeClass("fa-database");
