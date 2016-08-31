@@ -243,13 +243,11 @@ class LAFormMaker
 				}
 				
 				$default_val_arr = json_decode($default_val);
-				print_r($default_val_arr);
+				
 				if(is_array($default_val_arr) && count($default_val_arr) > 0) {
-					echo "Has DV";
 					$uploadIds = array();
 					$uploadImages = "";
 					foreach ($default_val_arr as $uploadId) {
-						echo "-img-".$uploadId;
 						$upload = \App\Upload::find($uploadId);
 						if(isset($upload->id)) {
 							$uploadIds[] = $upload->id;
