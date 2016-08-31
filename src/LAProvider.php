@@ -96,17 +96,17 @@ class LAProvider extends ServiceProvider
         
         // LAForm Input Maker
         Blade::directive('la_input', function($expression) {
-            return "<?php echo LAFormMaker::input($expression); ?>";
+            return "<?php echo LAFormMaker::input$expression; ?>";
         });
         
         // LAForm Form Maker
         Blade::directive('la_form', function($expression) {
-            return "<?php echo LAFormMaker::form($expression); ?>";
+            return "<?php echo LAFormMaker::form$expression; ?>";
         });
         
         // LAForm Maker - Display Values
         Blade::directive('la_display', function($expression) {
-            return "<?php echo LAFormMaker::display($expression); ?>";
+            return "<?php echo LAFormMaker::display$expression; ?>";
         });
         
         /*
