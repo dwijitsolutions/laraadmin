@@ -327,6 +327,20 @@ class Module extends Model
                     $var->default($field->defaultvalue);
                 }
                 break;
+            case 'Files':
+                if($update) {
+                    $var = $table->string($field->colname, 256)->change();
+                } else {
+                    $var = $table->string($field->colname, 256);
+                }
+                if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+                    $var->default($field->defaultvalue);
+                } else if(is_array($field->defaultvalue)) {
+                    $var->default(json_encode($field->defaultvalue));
+                } else {
+                    $var->default("[]");
+                }
+                break;
             case 'Float':
                 if($update) {
                     $var = $table->float($field->colname)->change();

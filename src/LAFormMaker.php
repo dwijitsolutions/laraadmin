@@ -228,6 +228,52 @@ class LAFormMaker
 				}
 				break;
 
+			case 'Files':
+				$out .= '<label for="'.$field_name.'" style="display:block;">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				if(is_array($default_val)) {
+					$default_val = json_encode($default_val);
+				}
+				
+				$default_val_arr = json_decode($default_val);
+				print_r($default_val_arr);
+				if(is_array($default_val_arr) && count($default_val_arr) > 0) {
+					echo "Has DV";
+					$uploadIds = array();
+					$uploadImages = "";
+					foreach ($default_val_arr as $uploadId) {
+						echo "-img-".$uploadId;
+						$upload = \App\Upload::find($uploadId);
+						if(isset($upload->id)) {
+							$uploadIds[] = $upload->id;
+							$fileImage = "";
+							if(in_array($upload->extension, ["jpg", "png", "gif", "jpeg"])) {
+								$fileImage = "<img src='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=90")."'>";
+							} else {
+								$fileImage = "<i class='fa fa-file-o'></i>";
+							}
+							$uploadImages .= "<a class='uploaded_file' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
+						}
+					}
+					
+					$out .= Form::hidden($field_name, json_encode($uploadIds), $params);
+					if(count($uploadIds) > 0) {
+						$out .= "<div class='uploaded_files'>".$uploadImages."</div>";
+					}
+				} else {
+					$out .= Form::hidden($field_name, "[]", $params);
+					$out .= "<div class='uploaded_files'></div>";
+				}
+				$out .= "<a class='btn btn-default btn_upload_file' file_type='file' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>";
+				break;
+
 			case 'Float':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
