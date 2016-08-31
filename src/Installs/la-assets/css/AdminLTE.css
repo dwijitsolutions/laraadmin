@@ -7771,12 +7771,14 @@ a.uploaded_file {
   display: inline-block;
   position: relative;
   margin-top: 7px;
+  vertical-align: top;
+  margin-right: 10px;
 }
 a.uploaded_file i.fa.fa-file-o {
   font-size: 90px;
 }
 a.uploaded_file i.fa.fa-times {
-  background: rgba(0, 0, 0, 0.65);
+  background: #f10000;
   display: block;
   position: absolute;
   top: -6px;
