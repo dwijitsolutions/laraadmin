@@ -809,6 +809,14 @@ class Module extends Model
                         #TODO: Bug fix
                         $row->{$field['colname']} = json_encode($request->{$field['colname']});
                         break;
+                    case 'Files':
+                        $files = json_decode($request->{$field['colname']});
+                        $files2 = array();
+                        foreach ($files as $file) {
+                            $files2[] = "".$file;
+                        }
+                        $row->{$field['colname']} = json_encode($files2);
+                        break;
                     default:
                         $row->{$field['colname']} = $request->{$field['colname']};
                         break;
