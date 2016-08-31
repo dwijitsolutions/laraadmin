@@ -271,7 +271,7 @@ class LAFormMaker
 					$out .= Form::hidden($field_name, "[]", $params);
 					$out .= "<div class='uploaded_files'></div>";
 				}
-				$out .= "<a class='btn btn-default btn_upload_file' file_type='file' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>";
+				$out .= "<a class='btn btn-default btn_upload_files' file_type='files' selecter='".$field_name."' style='margin-top:5px;'>Upload <i class='fa fa-cloud-upload'></i></a>";
 				break;
 
 			case 'Float':
