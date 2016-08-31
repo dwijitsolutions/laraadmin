@@ -150,4 +150,17 @@ class ModuleController extends Controller
         $module = Module::get($module->name);
         CodeGenerator::generateMigration($module->name_db, true);
     }
+    
+     /**
+     * Set the model view_column
+     *
+     * @param  int  $module_id
+     * @param string $column_name
+     * @return \Illuminate\Http\Response
+     */
+    public function set_view_col($module_id,$column_name){
+	    $module = Module::find($module_id);
+	    $module->view_col=$column_name;
+	    $module->save();
+    }
 }
