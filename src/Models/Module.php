@@ -171,8 +171,13 @@ class Module extends Model
             $ftypes = ModuleFieldTypes::getFTypes();
             $field->field_type = array_search($field->field_type, $ftypes);
         }
+        if(!is_string($field->defaultvalue)) {
+            $defval = json_encode($field->defaultvalue);
+        } else {
+            $defval = $field->defaultvalue;
+        }
         Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
-                ." - ".$field->defaultvalue." - ".$field->maxlength);
+                ." - ".$defval." - ".$field->maxlength);
         
         switch ($field->field_type) {
             case 'Address':
