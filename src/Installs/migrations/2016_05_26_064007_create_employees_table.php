@@ -32,7 +32,7 @@ class CreateEmployeesTable extends Migration
             ["about", "About", "String", false, "", 0, 0, false],
             ["date_birth", "Date of Birth", "Date", false, "1990-01-01", 0, 0, false],
             ["date_hire", "Hiring Date", "Date", false, "date('Y-m-d')", 0, 0, false],
-            ["date_left", "Resignation Date", "Date", false, "0000-00-00", 0, 0, false],
+            ["date_left", "Resignation Date", "Date", false, "1990-01-01", 0, 0, false],
             ["salary_cur", "Current Salary", "Decimal", false, "0.0", 0, 2, false],
         ]);
 		

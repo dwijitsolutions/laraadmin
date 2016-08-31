@@ -10,7 +10,11 @@ use Dwij\Laraadmin\Models\Module;
 
 @section('main-content')
 <div id="page-content" class="profile2">
+	@if(isset($module->is_gen) && $module->is_gen)
+	<div class="bg-success clearfix">
+	@else
 	<div class="bg-danger clearfix">
+	@endif
 		<div class="col-md-4">
 			<div class="row">
 				<div class="col-md-3">
@@ -29,7 +33,13 @@ use Dwij\Laraadmin\Models\Module;
 		<div class="col-md-3">
 			<div class="dats1" data-toggle="tooltip" data-placement="left" title="Controller"><i class="fa fa-anchor"></i> {{ $module->controller }}</div>
 			<div class="dats1" data-toggle="tooltip" data-placement="left" title="Model"><i class="fa fa-database"></i> {{ $module->model }}</div>
-			<div class="dats1" data-toggle="tooltip" data-placement="left" title="View Column Name"><i class="fa fa-eye"></i> {{ $module->view_col or "<span class='text-danger'>Not Set</span>" }}</div>
+			<div class="dats1" data-toggle="tooltip" data-placement="left" title="View Column Name"><i class="fa fa-eye"></i>
+				@if($module->view_col!="")
+					{{$module->view_col}}
+				@else
+					Not Set
+				@endif
+			</div>
 		</div>
 		
 		<div class="col-md-4">
@@ -37,10 +47,13 @@ use Dwij\Laraadmin\Models\Module;
 				@if(isset($module->is_gen) && $module->is_gen)
 					
 				@else
-					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_crud" href="#"><i class="fa fa-cube"></i> Generate CRUD + M</a></div>
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Start Craft" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD + Module</a></div>
+					
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Start Craft" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr" href="#"><i class="fa fa-cube"></i> Generate Migration</a></div>
 				@endif
+			@else
+				To generate Migration or CRUD, set the view column using the wrench icon next to a column
 			@endif
-			<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr" href="#"><i class="fa fa-database"></i> Generate Migration</a></div>
 		</div>
 		
 		<div class="col-md-1 actions">
@@ -96,6 +109,7 @@ use Dwij\Laraadmin\Models\Module;
 									<td><?php echo LAHelper::parseValues($field['popup_vals']) ?></td>
 									<td>
 										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/edit') }}" class="btn btn-edit-field btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+										<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/set_view_col/'.$field['colname']) }}" class="btn btn-edit-field btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-wrench"></i></a>
 									</td>
 								</tr>
 							@endforeach
@@ -218,6 +232,22 @@ $(function () {
 		$fa.addClass("fa-spin");
 		$.ajax({
 			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr') }}/"+{{ $module->id }},
+			method: 'GET',
+			success: function( data ) {
+				$fa.removeClass("fa-refresh");
+				$fa.removeClass("fa-spin");
+				$fa.addClass("fa-check");
+				console.log(data);
+			}
+		});
+	});
+	$("#generate_migr_crud").on("click", function() {
+		var $fa = $(this).find("i");
+		$fa.removeClass("fa-database");
+		$fa.addClass("fa-refresh");
+		$fa.addClass("fa-spin");
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr_crud') }}/"+{{ $module->id }},
 			method: 'GET',
 			success: function( data ) {
 				$fa.removeClass("fa-refresh");

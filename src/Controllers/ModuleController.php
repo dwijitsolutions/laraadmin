@@ -136,6 +136,10 @@ class ModuleController extends Controller
         CodeGenerator::createViews($config);
         CodeGenerator::appendRoutes($config);
         CodeGenerator::addMenu($config);
+        
+        $module = Module::find($module_id);
+        $module->is_gen='1';
+        $module->save();
     }
     
     /**
@@ -149,5 +153,40 @@ class ModuleController extends Controller
         $module = Module::find($module_id);
         $module = Module::get($module->name);
         CodeGenerator::generateMigration($module->name_db, true);
+    }
+    /**
+     * Generate Modules Migrations and CRUD + Model
+     *
+     * @param  int  $module_id
+     * @return \Illuminate\Http\Response
+     */
+    public function generate_migr_crud($module_id)
+    {
+        $module = Module::find($module_id);
+        $module = Module::get($module->name);
+        CodeGenerator::generateMigration($module->name_db, true);
+        $config = CodeGenerator::generateConfig($module->name);
+        
+        CodeGenerator::createController($config);
+        CodeGenerator::createModel($config);
+        CodeGenerator::createViews($config);
+        CodeGenerator::appendRoutes($config);
+        CodeGenerator::addMenu($config);
+        
+        $module = Module::find($module_id);
+        $module->is_gen='1';
+        $module->save();
+    }
+     /**
+     * Set the model view_column
+     *
+     * @param  int  $module_id
+     * @param string $column_name
+     * @return \Illuminate\Http\Response
+     */
+    public function set_view_col($module_id,$column_name){
+	    $module = Module::find($module_id);
+	    $module->view_col=$column_name;
+	    $module->save();
     }
 }
