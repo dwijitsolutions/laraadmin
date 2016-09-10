@@ -6,14 +6,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Zizaco\Entrust\EntrustRole;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Role extends Model
+class Role extends EntrustRole
 {
-	use SoftDeletes;
-
-    protected $table = 'roles';
+    use SoftDeletes;
+	
+	protected $table = 'roles';
 	
 	protected $hidden = [
         

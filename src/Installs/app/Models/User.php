@@ -8,10 +8,12 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
     use SoftDeletes;
+    use EntrustUserTrait;
 
     protected $table = 'users';
 	

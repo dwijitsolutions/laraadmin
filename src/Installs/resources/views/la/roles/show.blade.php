@@ -103,7 +103,8 @@
 					</div>
 					<div class="panel-body">
 						@la_display($module, 'name')
-						@la_display($module, 'name_short')
+						@la_display($module, 'display_name')
+						@la_display($module, 'description')
 						@la_display($module, 'parent')
 						@la_display($module, 'dept')
 					</div>

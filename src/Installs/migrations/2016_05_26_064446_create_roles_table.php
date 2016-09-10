@@ -21,14 +21,16 @@ class CreateRolesTable extends Migration
     {
         Module::generate("Roles", 'roles', 'name', [
             ["name", "Name", "Name", false, "", 1, 256, true],
-            ["name_short", "Short Name", "String", false, "", 0, 256, true],
+            ["display_name", "Display Name", "String", false, "", 0, 256, true],
+            ["description", "Description", "Textarea", false, "", 0, 1000, false],
             ["parent", "Parent Role", "Dropdown", false, 3, 0, 0, false, "@roles"],
             ["dept", "Department", "Dropdown", false, 3, 0, 0, false, "@departments"],
         ]);
-        
+
         $row = new Role;
-        $row->name = "Super Admin";
-        $row->name_short = "SUPER_ADMIN";
+        $row->name = "SUPER_ADMIN";
+        $row->display_name = "Super Admin";
+        $row->description = "FUll Access Role";
         $row->parent = 0;
         $row->dept = 1;
         $row->save();

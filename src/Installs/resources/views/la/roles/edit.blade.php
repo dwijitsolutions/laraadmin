@@ -9,6 +9,17 @@
 @section("htmlheader_title", "Role Edit : ".$role->$view_col)
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="box">
 	<div class="box-header">
 		
@@ -21,7 +32,8 @@
 					
 					{{--
 					@la_input($module, 'name')
-					@la_input($module, 'name_short')
+					@la_input($module, 'display_name')
+					@la_input($module, 'description')
 					@la_input($module, 'parent')
 					@la_input($module, 'dept')
 					--}}
