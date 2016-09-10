@@ -30,6 +30,10 @@ Route::post(config('laraadmin.adminRoute') . '/uploads_delete_file', 'LA\Uploads
 Route::resource(config('laraadmin.adminRoute') . '/roles', 'LA\RolesController');
 Route::get(config('laraadmin.adminRoute') . '/role_dt_ajax', 'LA\RolesController@dtajax');
 
+/* ================== Permissions ================== */
+Route::resource(config('laraadmin.adminRoute') . '/permissions', 'LA\PermissionsController');
+Route::get(config('laraadmin.adminRoute') . '/permission_dt_ajax', 'LA\PermissionsController@dtajax');
+
 /* ================== Departments ================== */
 Route::resource(config('laraadmin.adminRoute') . '/departments', 'LA\DepartmentsController');
 Route::get(config('laraadmin.adminRoute') . '/department_dt_ajax', 'LA\DepartmentsController@dtajax');

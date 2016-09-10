@@ -16,13 +16,13 @@ use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 
-use App\Role;
+use App\Permission;
 
-class RolesController extends Controller
+class PermissionsController extends Controller
 {
     public $show_action = true;
     public $view_col = 'name';
-    public $listing_cols = ['id', 'name', 'display_name', 'parent', 'dept'];
+    public $listing_cols = ['id', 'name', 'display_name'];
     
     public function __construct() {
         // for authentication (optional)
@@ -30,15 +30,15 @@ class RolesController extends Controller
     }
     
     /**
-     * Display a listing of the Roles.
+     * Display a listing of the Permissions.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $module = Module::get('Roles');
+        $module = Module::get('Permissions');
         
-        return View('la.roles.index', [
+        return View('la.permissions.index', [
             'show_actions' => $this->show_action,
             'listing_cols' => $this->listing_cols,
             'module' => $module
@@ -46,7 +46,7 @@ class RolesController extends Controller
     }
 
     /**
-     * Show the form for creating a new role.
+     * Show the form for creating a new permission.
      *
      * @return \Illuminate\Http\Response
      */
@@ -56,14 +56,14 @@ class RolesController extends Controller
     }
 
     /**
-     * Store a newly created role in database.
+     * Store a newly created permission in database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $rules = Module::validateRules("Roles", $request);
+        $rules = Module::validateRules("Permissions", $request);
         
         $validator = Validator::make($request->all(), $rules);
         
@@ -71,52 +71,52 @@ class RolesController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
             
-        $insert_id = Module::insert("Roles", $request);
+        $insert_id = Module::insert("Permissions", $request);
         
-        return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.permissions.index');
     }
 
     /**
-     * Display the specified role.
+     * Display the specified permission.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $role = Role::find($id);
-        $module = Module::get('Roles');
-        $module->row = $role;
-        return view('la.roles.show', [
+        $permission = Permission::find($id);
+        $module = Module::get('Permissions');
+        $module->row = $permission;
+        return view('la.permissions.show', [
             'module' => $module,
             'view_col' => $this->view_col,
             'no_header' => true,
             'no_padding' => "no-padding"
-        ])->with('role', $role);
+        ])->with('permission', $permission);
     }
 
     /**
-     * Show the form for editing the specified role.
+     * Show the form for editing the specified permission.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $role = Role::find($id);
+        $permission = Permission::find($id);
         
-        $module = Module::get('Roles');
+        $module = Module::get('Permissions');
         
-        $module->row = $role;
+        $module->row = $permission;
         
-        return view('la.roles.edit', [
+        return view('la.permissions.edit', [
             'module' => $module,
             'view_col' => $this->view_col,
-        ])->with('role', $role);
+        ])->with('permission', $permission);
     }
 
     /**
-     * Update the specified role in storage.
+     * Update the specified permission in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -124,7 +124,7 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = Module::validateRules("Roles", $request);
+        $rules = Module::validateRules("Permissions", $request);
         
         $validator = Validator::make($request->all(), $rules);
         
@@ -132,22 +132,22 @@ class RolesController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();;
         }
         
-        $insert_id = Module::updateRow("Roles", $request, $id);
+        $insert_id = Module::updateRow("Permissions", $request, $id);
         
-        return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.permissions.index');
     }
 
     /**
-     * Remove the specified role from storage.
+     * Remove the specified permission from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        Role::find($id)->delete();
+        Permission::find($id)->delete();
         // Redirecting to index() method
-        return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.permissions.index');
     }
     
     /**
@@ -157,7 +157,7 @@ class RolesController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('roles')->select($this->listing_cols)->whereNull('deleted_at');
+        $users = DB::table('permissions')->select($this->listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         
@@ -165,15 +165,15 @@ class RolesController extends Controller
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
                 if($col == $this->view_col) {
-                    $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/roles/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
+                    $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/permissions/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
                 // else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
             }
             if($this->show_action) {
-                $output = '<a href="'.url(config('laraadmin.adminRoute') . '/roles/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
-                $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.roles.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
+                $output = '<a href="'.url(config('laraadmin.adminRoute') . '/permissions/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+                $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.permissions.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
                 $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
                 $output .= Form::close();
                 $data->data[$i][] = (string)$output;
