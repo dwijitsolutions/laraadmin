@@ -15,7 +15,8 @@
         "illuminate/container": "^5.2|^5.1",
         "yajra/laravel-datatables-oracle": "~6.0",
         "creativeorange/gravatar": "^1.0",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "zizaco/entrust": "5.2.x-dev"
     },
     "authors": [
         {
