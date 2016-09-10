@@ -76,6 +76,16 @@ class LAInstall extends Command
                 $this->line('Generating LaraAdmin Public Assets...');
                 $this->replaceFolder($from."/la-assets", $to."/public/la-assets");
                 // Use "git config core.fileMode false" for ignoring file permissions
+
+                // check CACHE_DRIVER to be array or else
+                // It is required for Zizaco/Entrust
+                // https://github.com/Zizaco/entrust/issues/468
+                $driver_type = env('CACHE_DRIVER');
+                if($driver_type == "file") {
+                    throw new Exception("Please set Cache Driver to array in .env (Required for Zizaco\Entrust) and run la:install again:"
+                            ."\n\n\tCACHE_DRIVER=array\n\n", 1);
+                }
+
                 
                 // migrations
                 $this->line('Generating migrations...');
