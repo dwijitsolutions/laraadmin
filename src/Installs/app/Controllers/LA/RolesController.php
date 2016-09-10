@@ -157,7 +157,7 @@ class RolesController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('roles')->select($this->listing_cols);
+        $users = DB::table('roles')->select($this->listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         

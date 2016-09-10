@@ -70,7 +70,7 @@ class UsersController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('users')->select($this->listing_cols);
+        $users = DB::table('users')->select($this->listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         

@@ -157,7 +157,7 @@ class OrganizationsController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('organizations')->select($this->listing_cols);
+        $users = DB::table('organizations')->select($this->listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         

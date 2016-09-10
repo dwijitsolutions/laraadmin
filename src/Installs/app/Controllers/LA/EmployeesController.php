@@ -179,7 +179,7 @@ class EmployeesController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('employees')->select($this->listing_cols);
+        $users = DB::table('employees')->select($this->listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         
