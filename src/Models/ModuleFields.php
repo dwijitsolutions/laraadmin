@@ -51,6 +51,7 @@ class ModuleFields extends Model
             if (!Schema::hasTable($module->name_db)) {
                 Schema::create($module->name_db, function($table) {
                     $table->increments('id');
+                    $table->softDeletes();
                     $table->timestamps();
                 });
             }
