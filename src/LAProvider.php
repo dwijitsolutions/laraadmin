@@ -52,6 +52,8 @@ class LAProvider extends ServiceProvider
         $this->app->register(\Yajra\Datatables\DatatablesServiceProvider::class);
         // For Gravatar
         $this->app->register(\Creativeorange\Gravatar\GravatarServiceProvider::class);
+        // For Entrust
+        $this->app->register(\Zizaco\Entrust\EntrustServiceProvider::class);
         
         /*
         |--------------------------------------------------------------------------
@@ -76,6 +78,11 @@ class LAProvider extends ServiceProvider
         
         // For Lara Admin Helper
         $loader->alias('LAHelper', \Dwij\Laraadmin\Helpers\LAHelper::class);
+
+        // For Entrust
+        $loader->alias('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
+        $loader->alias('permission', \Zizaco\Entrust\Middleware\EntrustPermission::class);
+        $loader->alias('ability', \Zizaco\Entrust\Middleware\EntrustAbility::class);
         
         /*
         |--------------------------------------------------------------------------
