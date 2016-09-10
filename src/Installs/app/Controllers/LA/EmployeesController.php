@@ -82,8 +82,8 @@ class EmployeesController extends Controller
         $user_id = Module::insert("Users", $request);
 
         $user = User::find($user_id);
-        $role = Role::whereName('Super Admin')->first();
-        $user->assignRole($role);
+        $role = Role::whereName('SUPER_ADMIN')->first();
+        $user->attachRole($role);
         // $user->removeRole($role_id);
 
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');

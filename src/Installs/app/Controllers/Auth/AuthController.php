@@ -113,8 +113,8 @@ class AuthController extends Controller
             'context_id' => $employee->id,
             'type' => "Employee",
         ]);
-        $role = Role::where('name', 'Super Admin')->first();
-        $user->assignRole($role);
+        $role = Role::where('name', 'SUPER_ADMIN')->first();
+        $user->attachRole($role);
     
         return $user;
     }
