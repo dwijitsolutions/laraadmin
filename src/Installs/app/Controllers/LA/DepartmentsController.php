@@ -157,7 +157,7 @@ class DepartmentsController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('departments')->select($this->listing_cols);
+        $users = DB::table('departments')->select($this->listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($users)->make();
         $data = $out->getData();
         
