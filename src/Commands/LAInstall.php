@@ -143,8 +143,8 @@ class LAInstall extends Command
                 } else {
                     $this->info("Super Admin User '".$user['name']."' exists. ");
                 }
-                $role = \App\Role::whereName('Super Admin')->first();
-                $user->assignRole($role);
+                $role = \App\Role::whereName('SUPER_ADMIN')->first();
+                $user->attachRole($role);
                 
                 $this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
             } else {
