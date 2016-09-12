@@ -80,6 +80,7 @@ class LAProvider extends ServiceProvider
         $loader->alias('LAHelper', \Dwij\Laraadmin\Helpers\LAHelper::class);
 
         // For Entrust
+		$loader->alias('Entrust', \Zizaco\Entrust\EntrustFacade::class);
         $loader->alias('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
         $loader->alias('permission', \Zizaco\Entrust\Middleware\EntrustPermission::class);
         $loader->alias('ability', \Zizaco\Entrust\Middleware\EntrustAbility::class);
