@@ -55,7 +55,7 @@ class ModuleController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$module_id = Module::generateBase($request->name);
+		$module_id = Module::generateBase($request->name,$request->icon);
 		
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
