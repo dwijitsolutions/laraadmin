@@ -149,7 +149,7 @@ class CodeGenerator
             Menu::create([
                 "name" => $config->moduleName,
                 "url" => $config->dbTableName,
-                "icon" => "fa fa-cube",
+                "icon" => "fa ".$config->fa_icon,
                 "type" => 'module',
                 "parent" => 0
             ]);
