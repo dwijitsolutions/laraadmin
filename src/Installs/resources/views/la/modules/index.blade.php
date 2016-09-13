@@ -87,8 +87,10 @@ use Dwij\Laraadmin\Models\Module;
 
 @push('scripts')
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('la-assets/plugins/iconpicker/fontawesome-iconpicker.js') }}"></script>
 <script>
 $(function () {
+	$('input[name=icon]').iconpicker();
 	$("#dt_modules").DataTable({
 		
 	});
