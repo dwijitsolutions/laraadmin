@@ -14,16 +14,16 @@ class Module extends Model
     protected $table = 'modules';
     
     protected $fillable = [
-        "name", "name_db", "label", "view_col", "model", "controller", "is_gen"
+        "name", "name_db", "label", "view_col", "model", "controller", "is_gen","fa_icon"
     ];
     
     protected $hidden = [
         
     ];
     
-    public static function generateBase($module_name) {
+    public static function generateBase($module_name,$icon) {
         
-        $names = LAHelper::generateModuleNames($module_name);
+        $names = LAHelper::generateModuleNames($module_name,$icon);
         
         // Check is Generated
         $is_gen = false;
@@ -40,7 +40,9 @@ class Module extends Model
                 'view_col' => "",
                 'model' => $names->model,
                 'controller' => $names->controller,
+                'fa_icon' => $names->fa_icon,
                 'is_gen' => $is_gen,
+                             
             ]);
         }
         return $module->id;
