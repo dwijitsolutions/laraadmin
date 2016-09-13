@@ -129,7 +129,7 @@ class ModuleController extends Controller
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
 		
-		$config = CodeGenerator::generateConfig($module->name);
+		$config = CodeGenerator::generateConfig($module->name,$module->fa_icon);
 		
 		CodeGenerator::createController($config);
 		CodeGenerator::createModel($config);
@@ -171,7 +171,7 @@ class ModuleController extends Controller
 		CodeGenerator::generateMigration($module->name_db, true);
 		
 		// Create Config for Code Generation
-		$config = CodeGenerator::generateConfig($module->name);
+		$config = CodeGenerator::generateConfig($module->name,$module->fa_icon);
 		
 		// Generate CRUD
 		CodeGenerator::createController($config);
