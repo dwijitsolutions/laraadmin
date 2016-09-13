@@ -19,7 +19,7 @@ use Dwij\Laraadmin\Models\Module;
 			<div class="row">
 				<div class="col-md-3">
 					<!--<img class="profile-image" src="{{ asset('/img/avatar5.png') }}" alt="">-->
-					<div class="profile-icon text-primary"><i class="fa fa-cube"></i></div>
+					<div class="profile-icon text-primary"><i class="fa {{$module->fa_icon}}"></i></div>
 				</div>
 				<div class="col-md-9">
 					<a class="text-white" href="{{ url(config('laraadmin.adminRoute') . '/'.$module->name_db) }}"><h4 data-toggle="tooltip" data-placement="left" title="Open {{ $module->model }} Module" class="name">{{ $module->label }}</h4></a>
@@ -224,6 +224,7 @@ $(function () {
 				$fa.removeClass("fa-spin");
 				$fa.addClass("fa-check");
 				console.log(data);
+				location.reload();
 			}
 		});
 	});
@@ -241,6 +242,7 @@ $(function () {
 				$fa.removeClass("fa-spin");
 				$fa.addClass("fa-check");
 				console.log(data);
+				location.reload();
 			}
 		});
 	});
