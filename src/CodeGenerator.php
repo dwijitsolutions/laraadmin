@@ -195,6 +195,9 @@ class CodeGenerator
         $generateData = "";
         $viewColumnName = "view_column_name e.g. name";
 
+		// fa_icon
+		$faIcon = "fa-cube";
+
         if($generate) {
             // check if table, module and module fields exists
             $module = Module::get($moduleName);
@@ -202,6 +205,7 @@ class CodeGenerator
 				LAHelper::log("info", "Module exists :\t   ".$moduleName, $comm);
 
                 $viewColumnName = $module->view_col;
+				$faIcon = $module->fa_icon;
 
                 $ftypes = ModuleFieldTypes::getFTypes2();
                 foreach ($module->fields as $field) {
@@ -269,6 +273,7 @@ class CodeGenerator
             $migrationData = str_replace("__module_name__", $moduleName, $migrationData);
             $migrationData = str_replace("__model_name__", $modelName, $migrationData);
             $migrationData = str_replace("__view_column__", $viewColumnName, $migrationData);
+			$migrationData = str_replace("__fa_icon__", $faIcon, $migrationData);
             $migrationData = str_replace("__generated__", $generateData, $migrationData);
 
             file_put_contents(base_path('database/migrations/'.$migrationFileName), $migrationData);
