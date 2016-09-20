@@ -157,19 +157,35 @@ class __controller_class_name__ extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('__db_table_name__')->select($this->listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($users)->make();
+        $module = Module::get('__module_name__');
+        $module_id = $module->id;
+        
+        $fields = DB::table('module_fields')->where('module',$module_id)->get();
+        
+        $values = DB::table('__db_table_name__')->select($this->listing_cols)->whereNull('deleted_at');
+        $out = Datatables::of($values)->make();
         $data = $out->getData();
+        
+         
+        $fields_popup = array();
+        $fields_popup['id']='';
+        foreach($fields as $f){
+            $fields_popup[$f->colname]=$f->popup_vals;
+        }
         
         for($i=0; $i<count($data->data); $i++) {
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
+                if($fields_popup[$col] != ""){
+                    $external_module_name = substr($fields_popup[$col], 1);
+                    $external_value = DB::table($external_module_name)->where('id',$data->data[$i][$j])->get();
+                    $external_value_viewcol = DB::table('modules')->where('name_db',$external_module_name)->get();
+                    $external_value_viewcol_name = $external_value_viewcol[0]->view_col;
+                    $data->data[$i][$j] = $external_value[0]->$external_value_viewcol_name;
+                }
                 if($col == $this->view_col) {
                     $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/__route_resource__/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
-                // else if($col == "author") {
-                //    $data->data[$i][$j];
-                // }
             }
             if($this->show_action) {
                 $output = '<a href="'.url(config('laraadmin.adminRoute') . '/__route_resource__/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';

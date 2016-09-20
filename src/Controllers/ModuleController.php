@@ -55,7 +55,7 @@ class ModuleController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$module_id = Module::generateBase($request->name);
+		$module_id = Module::generateBase($request->name,$request->icon);
 		
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
@@ -129,7 +129,7 @@ class ModuleController extends Controller
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
 		
-		$config = CodeGenerator::generateConfig($module->name);
+		$config = CodeGenerator::generateConfig($module->name,$module->fa_icon);
 		
 		CodeGenerator::createController($config);
 		CodeGenerator::createModel($config);
@@ -171,7 +171,7 @@ class ModuleController extends Controller
 		CodeGenerator::generateMigration($module->name_db, true);
 		
 		// Create Config for Code Generation
-		$config = CodeGenerator::generateConfig($module->name);
+		$config = CodeGenerator::generateConfig($module->name,$module->fa_icon);
 		
 		// Generate CRUD
 		CodeGenerator::createController($config);

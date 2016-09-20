@@ -149,7 +149,7 @@ class CodeGenerator
             Menu::create([
                 "name" => $config->moduleName,
                 "url" => $config->dbTableName,
-                "icon" => "fa fa-cube",
+                "icon" => "fa ".$config->fa_icon,
                 "type" => 'module',
                 "parent" => 0
             ]);
@@ -280,7 +280,7 @@ class CodeGenerator
 	}
 
     // $config = CodeGenerator::generateConfig($module_name);
-    public static function generateConfig($module)
+    public static function generateConfig($module,$icon)
     {
         $config = array();
         $config = (object) $config;
@@ -294,6 +294,7 @@ class CodeGenerator
         $tableP = str_plural(strtolower($module));
         $tableS = str_singular(strtolower($module));
         $config->dbTableName = $tableP;
+        $config->fa_icon = $icon;
         $config->moduleName = ucfirst(str_plural($module));
         $config->controllerName = ucfirst(str_plural($module))."Controller";
         $config->singularVar = strtolower(str_singular($module));
