@@ -65,3 +65,11 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - https://github.com/acacha/adminlte-laravel
 - https://github.com/yajra/laravel-datatables
 - https://github.com/creativeorange/gravatar
+
+<p align="center">
+  <br>
+  Brought to you by<br>
+  <a href="http://dwijitsolutions.com">
+  <img src="http://dwijitsolutions.com/wp-content/uploads/2016/01/dwij-it-solutions.png">
+  </a>
+</p>
