@@ -38,7 +38,7 @@ use Dwij\Laraadmin\Models\Module;
 					<td>{{ $module->name_db }}</td>
 					<td>{{ Module::itemCount($module->name) }}</td>
 					<td>
-						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/edit') }}" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id) }}" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
 					</td>
 				</tr>
 			@endforeach
