@@ -339,7 +339,7 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				$params['min'] = "0";
+				// $params['min'] = "0"; // Required for Non-negative numbers
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Mobile':
