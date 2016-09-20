@@ -20,6 +20,7 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 use App\User;
 use App\Employee;
 use App\Role;
+use Mail;
 
 class EmployeesController extends Controller
 {
@@ -73,19 +74,33 @@ class EmployeesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
-        // Create User
+            
+        // generate password
+		$password = LAHelper::gen_password();
+		
+        // Create Employee
         $employee_id = Module::insert("Employees", $request);
-        $request->context_id = $employee_id;
-        $request->password = bcrypt(LAHelper::gen_password());
-        $request->type = "Employee";
-        $user_id = Module::insert("Users", $request);
+        // Create User
+        $user = User::create([
+			'name' => $request->name,
+			'email' => $request->email,
+			'password' => bcrypt($password),
+			'context_id' => $employee_id,
+			'type' => "Employee",
+		]);
 
-        $user = User::find($user_id);
-        $role = Role::whereName('SUPER_ADMIN')->first();
-        $user->attachRole($role);
-        // $user->removeRole($role_id);
+		// $user->detachRoles();
+		// $role = Role::find($request->role);
+		// $user->attachRole($role);
 
+		if(env('MAIL_USERNAME') != "null") {
+			// Send mail to User his Password
+			Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {
+				$m->from('hello@laraadmin.com', 'LaraAdmin');
+				$m->to($user->email, $user->name)->subject('LaraAdmin - Your Login Credentials');
+			});
+		}
+        
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }
 
@@ -100,8 +115,8 @@ class EmployeesController extends Controller
         $employee = Employee::find($id);
         $module = Module::get('Employees');
         $module->row = $employee;
-        
-        // Get User Table Information
+		
+		// Get User Table Information
         $user = User::where('context_id', '=', $id)->firstOrFail();
         
         return view('la.employees.show', [
@@ -149,7 +164,7 @@ class EmployeesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();;
         }
-        
+		
         $employee_id = Module::updateRow("Employees", $request, $id);
         
         // Update User
@@ -193,7 +208,7 @@ class EmployeesController extends Controller
                 //    $data->data[$i][$j];
                 // }
             }
-            if($this->show_action) {
+			if($this->show_action) {
                 $output = '<a href="'.url(config('laraadmin.adminRoute') . '/employees/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
                 $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
                 $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
