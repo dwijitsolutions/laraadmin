@@ -19,14 +19,14 @@ class CreateUploadsTable extends Migration
      */
     public function up()
     {
-        Module::generate("Uploads", 'uploads', 'name', [
-            ["name",        "Name",         "Name",     false, "",  5,  256,    true],
-            ["path",        "Path",         "String",   false, "",  0,  256,    false],
-            ["extension",   "Extension",    "String",   false, "",  0,  20,     false],
-            ["caption",     "Caption",      "String",   false, "",  0,  256,    false],
-            ["user_id",     "Owner",        "Dropdown", false, 1,   0,  0,      false,   "@users"],
-            ["hash",        "Hash",         "String",   false, "",  0,  256,    false],
-            ["public",      "Is Public",    "Checkbox", false, false,0, 0,      false],
+        Module::generate("Uploads", 'uploads', 'name', 'fa-files-o', [
+            ["name", "Name", "Name", false, "", 5, 256, true],
+            ["path", "Path", "String", false, "", 0, 256, false],
+            ["extension", "Extension", "String", false, "", 0, 20, false],
+            ["caption", "Caption", "String", false, "", 0, 256, false],
+            ["user_id", "Owner", "Dropdown", false, "1", 0, 0, false, "@users"],
+            ["hash", "Hash", "String", false, "", 0, 256, false],
+            ["public", "Is Public", "Checkbox", false, "0", 0, 0, false],
         ]);
 		
 		/*
@@ -44,7 +44,8 @@ class CreateUploadsTable extends Migration
             ["publisher",   "Publisher",    "Dropdown", false, "Marvel",    0,  0,      false, ["Bloomsbury","Marvel","Universal"]],
             ["publisher",   "Publisher",    "Dropdown", false, 3,           0,  0,      false, "@publishers"],
             ["email",       "Email",        "Email",    false, "",          0,  0,      false],
-            ["file",        "File",         "File",     false, "",          0,  256,    false],
+            ["file",        "File",         "File",     false, "",          0,  1,      false],
+            ["files",       "Files",        "Files",    false, "",          0,  10,     false],
             ["weight",      "Weight",       "Float",    false, 0.0,         0,  20.00,  true],
             ["biography",   "Biography",    "HTML",     false, "<p>This is description</p>", 0, 0, true],
             ["profile_image", "Profile Image", "Image", false, "img_path.jpg", 0, 256,  false],
