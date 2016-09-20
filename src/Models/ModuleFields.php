@@ -56,8 +56,9 @@ class ModuleFields extends Model
                 });
             }
             Schema::table($module->name_db, function($table) use ($field) {
-                $table->string($field->colname);
+                // $table->string($field->colname);
                 // createUpdateFieldSchema()
+				Module::create_field_schema($table, $field, false);
             });
         }
         return $field->id;
