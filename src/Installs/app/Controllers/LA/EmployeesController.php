@@ -15,6 +15,8 @@ use Validator;
 use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Models\ModuleFields;
+
 use Dwij\Laraadmin\Helpers\LAHelper;
 
 use App\User;
@@ -194,21 +196,26 @@ class EmployeesController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('employees')->select($this->listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($users)->make();
+        $values = DB::table('employees')->select($this->listing_cols)->whereNull('deleted_at');
+        $out = Datatables::of($values)->make();
         $data = $out->getData();
-        
-        for($i=0; $i<count($data->data); $i++) {
+
+		$fields_popup = ModuleFields::getModuleFields('Employees');
+		
+		for($i=0; $i < count($data->data); $i++) {
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
+                if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
+					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                }
                 if($col == $this->view_col) {
                     $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/employees/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
-                // else if($col == "author") {
+				// else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
             }
-			if($this->show_action) {
+            if($this->show_action) {
                 $output = '<a href="'.url(config('laraadmin.adminRoute') . '/employees/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
                 $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
                 $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';

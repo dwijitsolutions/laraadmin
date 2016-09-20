@@ -15,6 +15,7 @@ use Validator;
 use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Models\ModuleFields;
 
 use App\Organization;
 
@@ -157,17 +158,22 @@ class OrganizationsController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('organizations')->select($this->listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($users)->make();
+        $values = DB::table('organizations')->select($this->listing_cols)->whereNull('deleted_at');
+        $out = Datatables::of($values)->make();
         $data = $out->getData();
-        
-        for($i=0; $i<count($data->data); $i++) {
+
+		$fields_popup = ModuleFields::getModuleFields('Organizations');
+		
+		for($i=0; $i < count($data->data); $i++) {
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
+                if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
+					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                }
                 if($col == $this->view_col) {
                     $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/organizations/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
-                // else if($col == "author") {
+				// else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
             }
