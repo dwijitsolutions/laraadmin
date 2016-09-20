@@ -10,7 +10,7 @@ use Dwij\Laraadmin\Models\Module;
 class LAHelper
 {
 	// $names = LAHelper::generateModuleNames($module_name);
-    public static function generateModuleNames($module_name,$icon) {
+    public static function generateModuleNames($module_name, $icon) {
 		$array = array();
 		$module_name = trim($module_name);
 		$module_name = str_replace(" ", "", $module_name);

@@ -21,7 +21,7 @@ class Module extends Model
         
     ];
     
-    public static function generateBase($module_name,$icon) {
+    public static function generateBase($module_name, $icon) {
         
         $names = LAHelper::generateModuleNames($module_name,$icon);
         
@@ -48,9 +48,9 @@ class Module extends Model
         return $module->id;
     }
     
-    public static function generate($module_name, $module_name_db, $view_col, $fields) {
+    public static function generate($module_name, $module_name_db, $view_col, $faIcon = "fa-cube", $fields) {
         
-        $names = LAHelper::generateModuleNames($module_name);
+        $names = LAHelper::generateModuleNames($module_name, $faIcon);
         $fields = Module::format_fields($fields);
         
         if(substr_count($view_col, " ") || substr_count($view_col, ".")) {
@@ -75,6 +75,7 @@ class Module extends Model
                     'model' => $names->model,
                     'controller' => $names->controller,
                     'is_gen' => $is_gen,
+					'fa_icon' => $faIcon
                 ]);
             }
             
