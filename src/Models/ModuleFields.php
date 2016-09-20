@@ -5,6 +5,7 @@ namespace Dwij\Laraadmin\Models;
 use Illuminate\Database\Eloquent\Model;
 use Schema;
 use Log;
+use DB;
 
 use Dwij\Laraadmin\Models\Module;
 
@@ -109,5 +110,26 @@ class ModuleFields extends Model
         Schema::table($module->name_db, function ($table) use ($field) {
             Module::create_field_schema($table, $field, true);
         });
+    }
+
+	public static function getModuleFields($moduleName) {
+        $module = Module::where('name', $moduleName)->first();
+        $fields = DB::table('module_fields')->where('module', $module->id)->get();
+        
+        $fields_popup = array();
+        $fields_popup['id'] = null;
+        
+		foreach($fields as $f) {
+            $fields_popup [ $f->colname ] = $f;
+        }
+		return $fields_popup;
+    }
+
+	public static function getFieldValue($field, $value) {
+        $external_table_name = substr($field->popup_vals, 1);
+		$external_value = DB::table($external_table_name)->where('id', $value)->get();
+		$external_module = DB::table('modules')->where('name_db', $external_table_name)->first();
+		$external_value_viewcol_name = $external_module->view_col;
+		return $external_value[0]->$external_value_viewcol_name;
     }
 }
