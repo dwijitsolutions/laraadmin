@@ -670,12 +670,39 @@ class LAFormMaker
 			case 'File':
 				if($value != 0) {
 					$upload = \App\Upload::find($value);
-				}
-				if(isset($upload->id)) {
-					$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'">
-					<span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> '.$upload->name.'</a>';
+					if(isset($upload->id)) {
+						$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'">
+						<span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> '.$upload->name.'</a>';
+					} else {
+						$value = 'Uplaoded file not found.';
+					}
 				} else {
-					$value = 'Uplaoded image not found.';
+					$value = 'No file.';
+				}
+				break;
+			case 'Files':
+				if($value != "" && $value != "[]" && $value != "null" && starts_with($value, "[")) {
+					$uploads = json_decode($value);
+					$uploads_html = "";
+
+					foreach ($uploads as $uploadId) {
+						$upload = \App\Upload::find($uploadId);
+						if(isset($upload->id)) {
+							$uploadIds[] = $upload->id;
+							$fileImage = "";
+							if(in_array($upload->extension, ["jpg", "png", "gif", "jpeg"])) {
+								$fileImage = "<img src='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=90")."'>";
+							} else {
+								$fileImage = "<i class='fa fa-file-o'></i>";
+							}
+							// $uploadImages .= "<a class='uploaded_file2' upload_id='".$upload->id."' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
+							$uploads_html .= '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'" data-toggle="tooltip" data-placement="top" data-container="body" style="display:inline-block;margin-right:5px;" title="'.$upload->name.'">
+									'.$fileImage.'</a>';
+						}
+					}
+					$value = $uploads_html;
+				} else {
+					$value = 'No files found.';
 				}
 				break;
 			case 'Float':
