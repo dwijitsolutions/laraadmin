@@ -208,7 +208,16 @@ class Module extends Model
                 } else {
                     $var = $table->boolean($field->colname);
                 }
-                $var->default($field->defaultvalue);
+				if($field->defaultvalue == "true" || $field->defaultvalue == "false" || $field->defaultvalue == true || $field->defaultvalue == false) {
+                	if(is_string($field->defaultvalue)) {
+						if($field->defaultvalue == "true") {
+							$field->defaultvalue = true;
+						} else {
+							$field->defaultvalue = false;
+						}
+					}
+					$var->default($field->defaultvalue);
+				}
                 break;
             case 'Currency':
                 if($update) {
@@ -775,14 +784,18 @@ class Module extends Model
     
     public static function processDBRow($module, $request, $row) {
         $ftypes = ModuleFieldTypes::getFTypes2();
-        
-        foreach ($module->fields as $field) {
-            if(isset($request->{$field['colname']})) {
+
+		foreach ($module->fields as $field) {
+			if(isset($request->{$field['colname']}) || isset($request->{$field['colname']."_hidden"})) {
                 
                 switch ($ftypes[$field['field_type']]) {
                     case 'Checkbox':
                         #TODO: Bug fix
-                        $row->{$field['colname']} = $request->{$field['colname']};
+						if(isset($request->{$field['colname']})) {
+							$row->{$field['colname']} = true;
+						} else if(isset($request->{$field['colname']."_hidden"})) {
+							$row->{$field['colname']} = false;
+						}
                         break;
                     case 'Date':
                         if($request->{$field['colname']} != "") {

@@ -74,6 +74,7 @@ class LAFormMaker
 				break;
 			case 'Checkbox':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<input type="hidden" value="false" name="'.$field_name.'_hidden">';
 				
 				// ############### Remaining
 				unset($params['placeholder']);
