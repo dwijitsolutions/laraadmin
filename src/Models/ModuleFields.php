@@ -127,9 +127,17 @@ class ModuleFields extends Model
 
 	public static function getFieldValue($field, $value) {
         $external_table_name = substr($field->popup_vals, 1);
-		$external_value = DB::table($external_table_name)->where('id', $value)->get();
-		$external_module = DB::table('modules')->where('name_db', $external_table_name)->first();
-		$external_value_viewcol_name = $external_module->view_col;
-		return $external_value[0]->$external_value_viewcol_name;
+		if(Schema::hasTable($external_table_name)) {
+			$external_value = DB::table($external_table_name)->where('id', $value)->get();
+			if(isset($external_value[0])) {
+				$external_module = DB::table('modules')->where('name_db', $external_table_name)->first();
+				$external_value_viewcol_name = $external_module->view_col;
+				return $external_value[0]->$external_value_viewcol_name;
+			} else {
+				return $value;
+			}
+		} else {
+			return $value;
+		}
     }
 }
