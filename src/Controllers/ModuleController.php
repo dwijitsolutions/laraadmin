@@ -14,6 +14,8 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\CodeGenerator;
+use App\Role;
+use DateTime;
 
 class ModuleController extends Controller
 {
@@ -75,12 +77,41 @@ class ModuleController extends Controller
 		$tables = LAHelper::getDBTables([]);
 		$modules = LAHelper::getModuleNames([]);
 		
+		
+		$roles_arr = DB::table('roles')->get();
+		$roles = array();
+		foreach ($roles_arr as $role) {
+			// get Current Module permissions for this role
+			
+			$role->view = true;
+			$role->create = true;
+			$role->edit = true;
+			$role->delete = true;
+			
+			// get Current Module Fields permissions for this role
+			
+			$role->fields = array();
+			foreach ($module->fields as $field) {
+				// find role field permission
+				$role->fields[$field['id']] = 'visible';
+			}
+			
+			$roles[] = $role;
+		}
+		// $role_module_permissions = DB::table('role_module')->where('module_id', $id)->get();
+        // $data = array();
+        // foreach ($role_module_permissions as $row) {
+        //     print_r($row);
+        //     $data[$row['id']] =  $row['role_id'];
+        // }
+		
 		return view('la.modules.show', [
 			'no_header' => true,
 			'no_padding' => "no-padding",
 			'ftypes' => $ftypes,
 			'tables' => $tables,
-			'modules' => $modules
+			'modules' => $modules,
+			'roles' => $roles
 		])->with('module', $module);
 	}
 
@@ -199,5 +230,78 @@ class ModuleController extends Controller
 		$module->save();
 
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
+	}
+	
+	public function save_role_module_permissions(Request $request, $id)
+	{
+		$module = Module::find($id);
+		$module = Module::get($module->name);
+		
+		$tables = LAHelper::getDBTables([]);
+		$modules = LAHelper::getModuleNames([]);
+		$roles = Role::all();
+		$now = new DateTime();        
+        
+		foreach($roles as $role) {
+			
+			/* =============== role_module_fields =============== */
+
+			foreach ($module->fields as $field) {
+				$field_name = $field['colname'].'_'.$role->id;
+				$field_value = $request->$field_name;
+				if($field_value == 0) {
+					$access = 'invisible';
+				} else if($field_value == 1) {
+					$access = 'readonly';
+				} else if($field_value == 2) {
+					$access = 'write';
+				} 
+
+				$query = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id']);                    
+				if($query->count() == 0) {
+					DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], $access, $now, $now]);    
+				} else {
+					DB:: table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->update(['access' => $access]);
+				}
+			}
+			
+			/* =============== role_module =============== */
+
+			$module_name = 'module_'.$role->id;
+			if(isset($request->$module_name)) {
+				$view = 'module_view_'.$role->id;
+				$create = 'module_create_'.$role->id;
+				$edit = 'module_edit_'.$role->id;
+				$delete = 'module_delete_'.$role->id;
+				if(isset($request->$view)) {
+					$view = 1;
+				} else {
+					$view = 0;
+				}
+				if(isset($request->$create)) {
+					$create = 1;
+				} else {
+					$create = 0;
+				}
+				if(isset($request->$edit)) {
+					$edit = 1;
+				} else {
+					$edit = 0;
+				}
+				if(isset($request->$delete)) {
+					$delete = 1;
+				} else {
+					$delete = 0;
+				}
+				
+				$query = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $id);                    
+				if($query->count() == 0) {
+					DB::insert('insert into role_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$role->id, $id, $view, $create, $edit, $delete, $now, $now]);    
+				} else {
+					DB:: table('role_module')->where('role_id', $role->id)->where('module_id', $id)->update(['acc_view' => $view, 'acc_create' => $create, 'acc_edit' => $edit, 'acc_delete' => $delete]);
+				}
+			}
+		}
+        return redirect(config('laraadmin.adminRoute') . '/modules/'.$id);
 	}
 }
