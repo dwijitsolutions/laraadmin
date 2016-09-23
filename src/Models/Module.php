@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Exception;
 use Log;
+use DB;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
 class Module extends Model
-{
+{   
     protected $table = 'modules';
     
     protected $fillable = [
@@ -855,5 +856,57 @@ class Module extends Model
         } else {
             return 0;
         }
+    }
+    
+    /**
+    * Get Module Access for all roles
+    * $roles = Module::getRoles($id);
+    **/
+    public static function getRoles($module_id) {
+        $module = Module::find($module_id);
+		$module = Module::get($module->name);
+        
+        $roles_arr = DB::table('roles')->get();
+		$roles = array();
+        
+        $arr_field_access = array(
+            'invisible' => 0,
+            'readonly' => 1,
+            'write' => 2
+        );
+        
+		foreach ($roles_arr as $role) {
+			// get Current Module permissions for this role
+			
+			$module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->first();
+			if(isset($module_perm->id)) {
+				// set db values
+				$role->view = $module_perm->acc_view;
+				$role->create = $module_perm->acc_create;
+				$role->edit = $module_perm->acc_edit;
+				$role->delete = $module_perm->acc_delete;
+			} else {
+				$role->view = false;
+				$role->create = false;
+				$role->edit = false;
+				$role->delete = false;
+			}
+			
+			// get Current Module Fields permissions for this role
+			
+			$role->fields = array();
+			foreach ($module->fields as $field) {
+				// find role field permission
+				$field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
+				if(isset($field_perm->id)) {
+                    $role->fields[$field['id']] = $arr_field_access[$field_perm->access];
+				} else {
+					$role->fields[$field['id']] = 0;
+				}
+				//$role->fields[$field['id']] = $field_perm->access;
+			}
+			$roles[] = $role;
+		}
+        return $roles;
     }
 }

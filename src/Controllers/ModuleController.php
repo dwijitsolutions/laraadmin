@@ -75,35 +75,10 @@ class ModuleController extends Controller
 		$module = Module::get($module->name);
 		
 		$tables = LAHelper::getDBTables([]);
-		$modules = LAHelper::getModuleNames([]);
+		$modules = LAHelper::getModuleNames([]);		
 		
-		
-		$roles_arr = DB::table('roles')->get();
-		$roles = array();
-		foreach ($roles_arr as $role) {
-			// get Current Module permissions for this role
-			
-			$role->view = true;
-			$role->create = true;
-			$role->edit = true;
-			$role->delete = true;
-			
-			// get Current Module Fields permissions for this role
-			
-			$role->fields = array();
-			foreach ($module->fields as $field) {
-				// find role field permission
-				$role->fields[$field['id']] = 'visible';
-			}
-			
-			$roles[] = $role;
-		}
-		// $role_module_permissions = DB::table('role_module')->where('module_id', $id)->get();
-        // $data = array();
-        // foreach ($role_module_permissions as $row) {
-        //     print_r($row);
-        //     $data[$row['id']] =  $row['role_id'];
-        // }
+		// Get Module Access for all role
+		$roles = Module::getRoles($id);
 		
 		return view('la.modules.show', [
 			'no_header' => true,
@@ -305,3 +280,4 @@ class ModuleController extends Controller
         return redirect(config('laraadmin.adminRoute') . '/modules/'.$id);
 	}
 }
+
