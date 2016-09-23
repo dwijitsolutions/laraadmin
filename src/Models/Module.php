@@ -902,11 +902,13 @@ class Module extends Model
 			foreach ($module->fields as $field) {
 				// find role field permission
 				$field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
+                
 				if(isset($field_perm->id)) {
-                    $role->fields[$field['id']] = $arr_field_access[$field_perm->access];
+                    $field['access'] = $arr_field_access[$field_perm->access];
 				} else {
-					$role->fields[$field['id']] = 0;
+					$field['access'] = 0;
 				}
+                $role->fields[$field['id']] = $field;
 				//$role->fields[$field['id']] = $field_perm->access;
 			}
 			$roles[] = $role;
