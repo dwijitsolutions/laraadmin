@@ -860,13 +860,17 @@ class Module extends Model
     
     /**
     * Get Module Access for all roles
-    * $roles = Module::getRoles($id);
+    * $roles = Module::getRoleAccess($id);
     **/
-    public static function getRoles($module_id) {
+    public static function getRoleAccess($module_id, $specific_role = 0) {
         $module = Module::find($module_id);
 		$module = Module::get($module->name);
         
-        $roles_arr = DB::table('roles')->get();
+        if($specific_role) {
+            $roles_arr = DB::table('roles')->where('id', $specific_role)->get();
+        } else {
+            $roles_arr = DB::table('roles')->get();
+        }
 		$roles = array();
         
         $arr_field_access = array(

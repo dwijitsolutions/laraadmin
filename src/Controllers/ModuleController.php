@@ -77,8 +77,8 @@ class ModuleController extends Controller
 		$tables = LAHelper::getDBTables([]);
 		$modules = LAHelper::getModuleNames([]);		
 		
-		// Get Module Access for all role
-		$roles = Module::getRoles($id);
+		// Get Module Access for all roles
+		$roles = Module::getRoleAccess($id);
 		
 		return view('la.modules.show', [
 			'no_header' => true,
@@ -280,4 +280,3 @@ class ModuleController extends Controller
         return redirect(config('laraadmin.adminRoute') . '/modules/'.$id);
 	}
 }
-
