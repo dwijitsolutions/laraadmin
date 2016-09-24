@@ -112,9 +112,12 @@
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-access">
+			<div class="guide1">
+				<i class="fa fa-circle gray"></i> Invisible <i class="fa fa-circle orange"></i> Read-Only <i class="fa fa-circle green"></i> Write
+			</div>
 			<form action="{{ url(config('laraadmin.adminRoute') . '/save_module_role_permissions/'.$role->id) }}" method="post">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-				<table class="table table-bordered dataTable no-footer">
+				<table class="table table-bordered dataTable no-footer table-access">
 					<thead>
 						<tr class="blockHeader">
 							<th width="30%">
@@ -132,7 +135,7 @@
 							<th width="14%">
 							<input class="alignTop" id="delete_all" type="checkbox"  checked="checked">&nbsp; Delete
 							</th>
-							<th width="14%"></th>
+							<th width="14%">Field Privileges</th>
 						</tr>
 					</thead>
 					@foreach($modules_access as $module)
@@ -178,11 +181,28 @@
 <style>
 .btn-default{border-color:#D6D3D3}
 .slider .tooltip{display:none !important;}
-.tr-access-adv {background:#b9b9b9;}
-.tr-access-adv .table{margin:0px;}
 .slider.gray .slider-handle{background-color:#888;}
 .slider.orange .slider-handle{background-color:#FF9800;}
 .slider.green .slider-handle{background-color:#8BC34A;}
+
+.guide1{text-align: right;margin: 0px 15px 15px 0px;font-size:16px;}
+.guide1 .fa{font-size:22px;vertical-align:bottom;margin-left:17px;}
+.guide1 .fa.gray{color:#888;}
+.guide1 .fa.orange{color:#FF9800;}
+.guide1 .fa.green{color:#8BC34A;}
+
+.table-access{border:1px solid #CCC;}
+.table-access thead tr{background-color: #DDD;}
+.table-access thead tr th{border-bottom:1px solid #CCC;padding:10px 10px;text-align:center;}
+.table-access thead tr th:first-child{text-align:left;}
+.table-access input[type="checkbox"]{margin-right:5px;vertical-align:text-top;}
+.table-access > tbody > tr > td{border-bottom:1px solid #EEE !important;padding:10px 10px;text-align:center;}
+.table-access > tbody > tr > td:first-child {text-align:left;}
+
+.table-access .tr-access-adv {background:#b9b9b9;}
+.table-access .tr-access-adv .table{margin:0px;}
+.table-access .tr-access-adv > td{padding: 7px 6px;}
+.table-access .tr-access-adv .table-bordered td{padding:10px;}
 </style>
 @endpush
 
