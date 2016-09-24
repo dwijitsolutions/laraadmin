@@ -7,6 +7,7 @@
 [![Latest Stable Version](https://poser.pugx.org/dwij/laraadmin/v/stable.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![Latest Unstable Version](https://poser.pugx.org/dwij/laraadmin/v/unstable.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![License](https://poser.pugx.org/dwij/laraadmin/license.svg)](https://packagist.org/packages/dwij/laraadmin)
+[![Code Triagers Badge](https://www.codetriage.com/dwijitsolutions/laraadmin/badges/users.svg)](https://www.codetriage.com/dwijitsolutions/laraadmin)
 
 LaraAdmin is a Open source CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and Workflows.
 ##### Website: [laraadmin.com](http://laraadmin.com)
