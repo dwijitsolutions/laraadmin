@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit role: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/roles') }}">Roles</a> :
+@endsection
 @section("contentheader_description", $role->$view_col)
 @section("section", "Roles")
 @section("section_url", url(config('laraadmin.adminRoute') . '/roles'))
