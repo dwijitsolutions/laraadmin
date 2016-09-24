@@ -71,7 +71,9 @@ class RolesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-            
+        
+        $request->name = str_replace(" ", "_", strtoupper(trim($request->name)));
+        
         $insert_id = Module::insert("Roles", $request);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
@@ -140,6 +142,8 @@ class RolesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();;
         }
+        
+        $request->name = str_replace(" ", "_", strtoupper(trim($request->name)));
         
         $insert_id = Module::updateRow("Roles", $request, $id);
         

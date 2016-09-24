@@ -128,7 +128,7 @@ use Dwij\Laraadmin\Models\Module;
 			</div>
 			<form action="{{ url(config('laraadmin.adminRoute') . '/save_role_module_permissions/'.$module->id) }}" method="post">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-				<table class="table table-bordered no-footer table-access">
+				<table class="table table-bordered dataTable no-footer table-access">
 					<thead>
 						<tr class="blockHeader">
 							<th width="14%">
