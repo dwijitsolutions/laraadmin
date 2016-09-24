@@ -923,6 +923,11 @@ class Module extends Model
     public static function hasAccess($module_id, $access_type = "view", $user_id = 0) {
         $roles = array();
         
+        if(is_string($module_id)) {
+            $module = Module::get($module_id);
+            $module_id = $module->id;
+        }
+        
         if($access_type == null || $access_type == "" || $access_type == 0) {
             $access_type = "view";
         }
