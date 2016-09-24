@@ -12,7 +12,7 @@ class LAFormMaker
 	/**
 	* Print input field enclosed within form-group
 	**/
-	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
+	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control', $params = [])
 	{
 		$row = null;
 		if(isset($module->row)) {
@@ -37,21 +37,24 @@ class LAFormMaker
 		
 		$out = '<div class="form-group">';
 		$required_ast = "";
-		$params = [
-			'class' => $class,
-			'placeholder' => 'Enter '.$label
-		];
+		
+		if(!isset($params['class'])) {
+			$params['class'] = $class;
+		}
+		if(!isset($params['placeholder'])) {
+			$params['placeholder'] = 'Enter '.$label;
+		}
 		if($minlength) {
 			$params['data-rule-minlength'] = $minlength;
 		}
 		if($maxlength) {
 			$params['data-rule-maxlength'] = $maxlength;
 		}
-		if($readonly) {
+		if($readonly && !isset($params['readonly'])) {
 			$params['readonly'] = "readonly";
 		}
 		
-		if($required) {
+		if($required && !isset($params['required'])) {
 			$params['required'] = $required;
 			$required_ast = "*";
 		}
