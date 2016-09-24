@@ -38,8 +38,8 @@ class LAFormMaker
 		$out = '<div class="form-group">';
 		$required_ast = "";
 		$params = [
-			'class'=>'form-control',
-			'placeholder'=>'Enter '.$label
+			'class' => $class,
+			'placeholder' => 'Enter '.$label
 		];
 		if($minlength) {
 			$params['data-rule-minlength'] = $minlength;
