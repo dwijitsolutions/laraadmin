@@ -812,4 +812,12 @@ class LAFormMaker
 		}
 		return $out;
 	}
+	
+	/**
+	* 
+	**/
+	public static function la_access($module_id, $access_type = "view", $user_id = 0)
+	{
+		return Module::hasAccess($module_id, $access_type, $user_id);
+	}
 }

@@ -78,6 +78,9 @@ class LAProvider extends ServiceProvider
         
         // For Lara Admin Helper
         $loader->alias('LAHelper', \Dwij\Laraadmin\Helpers\LAHelper::class);
+        
+        // For Lara Admin Helper
+        $loader->alias('Module', \Dwij\Laraadmin\Models\Module::class);
 
         // For Entrust
 		$loader->alias('Entrust', \Zizaco\Entrust\EntrustFacade::class);
@@ -115,6 +118,14 @@ class LAProvider extends ServiceProvider
         // LAForm Maker - Display Values
         Blade::directive('la_display', function($expression) {
             return "<?php echo LAFormMaker::display$expression; ?>";
+        });
+        
+        // LAForm Maker - Check Whether User has Module Access
+        Blade::directive('la_access', function($expression) {
+            return "<?php if(LAFormMaker::la_access($expression)) { ?>";
+        });
+        Blade::directive('endla_access', function($expression) {
+            return "<?php } ?>";
         });
         
         /*
