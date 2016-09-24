@@ -122,7 +122,7 @@ class LAProvider extends ServiceProvider
         
         // LAForm Maker - Check Whether User has Module Access
         Blade::directive('la_access', function($expression) {
-            return "<?php if(LAFormMaker::la_access($expression)) { ?>";
+            return "<?php if(LAFormMaker::la_access$expression) { ?>";
         });
         Blade::directive('endla_access', function($expression) {
             return "<?php } ?>";

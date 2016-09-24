@@ -928,7 +928,7 @@ class Module extends Model
             $module_id = $module->id;
         }
         
-        if($access_type == null || $access_type == "" || $access_type == 0) {
+        if($access_type == null || $access_type == "") {
             $access_type = "view";
         }
         
