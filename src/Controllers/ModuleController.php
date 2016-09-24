@@ -15,7 +15,6 @@ use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\CodeGenerator;
 use App\Role;
-use DateTime;
 
 class ModuleController extends Controller
 {
@@ -215,7 +214,8 @@ class ModuleController extends Controller
 		$tables = LAHelper::getDBTables([]);
 		$modules = LAHelper::getModuleNames([]);
 		$roles = Role::all();
-		$now = new DateTime();        
+		
+		$now = "now()";        
         
 		foreach($roles as $role) {
 			
