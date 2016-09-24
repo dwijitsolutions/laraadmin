@@ -193,7 +193,7 @@ class PermissionsController extends Controller
 	 * Save the  permissions for role in permission view.
 	 *
 	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * @return Redirect to permisssions page
 	 */
 	public function save_permissions(Request $request, $id)
 	{
