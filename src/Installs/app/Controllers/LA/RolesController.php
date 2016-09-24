@@ -88,11 +88,19 @@ class RolesController extends Controller
         $role = Role::find($id);
         $module = Module::get('Roles');
         $module->row = $role;
+        
+        $modules_arr = DB::table('modules')->get();
+        $modules_access = array();
+        foreach ($modules_arr as $module_obj) {
+            $module_obj->accesses = Module::getRoleAccess($module_obj->id, $id)[0];
+            $modules_access[] = $module_obj;
+        }
         return view('la.roles.show', [
             'module' => $module,
             'view_col' => $this->view_col,
             'no_header' => true,
-            'no_padding' => "no-padding"
+            'no_padding' => "no-padding",
+            'modules_access' => $modules_access
         ])->with('role', $role);
     }
 
@@ -188,4 +196,82 @@ class RolesController extends Controller
         $out->setData($data);
         return $out;
     }
+    
+    public function save_module_role_permissions(Request $request, $id)
+	{
+		$role = Role::find($id);
+        $module = Module::get('Roles');
+        $module->row = $role;
+        
+        $modules_arr = DB::table('modules')->get();
+        $modules_access = array();
+        foreach ($modules_arr as $module_obj) {
+            $module_obj->accesses = Module::getRoleAccess($module_obj->id, $id)[0];
+            $modules_access[] = $module_obj;
+        }
+       
+        $now = 'now()';
+        
+		foreach($modules_access as $module) {
+			
+			/* =============== role_module_fields =============== */
+
+			foreach ($module->accesses->fields as $field) {
+				$field_name = $field['colname'].'_'.$module->id.'_'.$role->id;
+				$field_value = $request->$field_name;
+				if($field_value == 0) {
+					$access = 'invisible';
+				} else if($field_value == 1) {
+					$access = 'readonly';
+				} else if($field_value == 2) {
+					$access = 'write';
+				} 
+
+				$query = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id']);
+				if($query->count() == 0) {
+					DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], $access, $now, $now]);    
+				} else {
+					DB:: table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->update(['access' => $access]);
+				}
+			}
+			
+			/* =============== role_module =============== */
+
+			$module_name = 'module_'.$module->id;
+			if(isset($request->$module_name)) {
+				$view = 'module_view_'.$module->id;
+				$create = 'module_create_'.$module->id;
+				$edit = 'module_edit_'.$module->id;
+				$delete = 'module_delete_'.$module->id;
+				if(isset($request->$view)) {
+					$view = 1;
+				} else {
+					$view = 0;
+				}
+				if(isset($request->$create)) {
+					$create = 1;
+				} else {
+					$create = 0;
+				}
+				if(isset($request->$edit)) {
+					$edit = 1;
+				} else {
+					$edit = 0;
+				}
+				if(isset($request->$delete)) {
+					$delete = 1;
+				} else {
+					$delete = 0;
+				}
+				
+				$query = DB::table('role_module')->where('role_id', $id)->where('module_id', $module->id);
+				if($query->count() == 0) {
+					DB::insert('insert into role_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$id, $module->id, $view, $create, $edit, $delete, $now, $now]);
+				} else {
+					DB:: table('role_module')->where('role_id', $id)->where('module_id', $module->id)->update(['acc_view' => $view, 'acc_create' => $create, 'acc_edit' => $edit, 'acc_delete' => $delete]);
+				}
+			}
+		}
+        return redirect(config('laraadmin.adminRoute') . '/roles/'.$id);
+	}
 }
