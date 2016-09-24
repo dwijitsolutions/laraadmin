@@ -915,4 +915,38 @@ class Module extends Model
 		}
         return $roles;
     }
+    
+    /**
+    * Get Module Access for role and access type
+    * Module::hasAccess($module_id, $access_type, $user_id);
+    **/
+    public static function hasAccess($module_id, $access_type = "view", $user_id = 0) {
+        $roles = array();
+        
+        if($access_type == null || $access_type == "" || $access_type == 0) {
+            $access_type = "view";
+        }
+        
+        if($user_id) {
+            $user = \App\User::find($user_id);
+            if(isset($user->id)) {
+                $roles = $user->roles();
+            }
+        } else {
+            $roles = \Auth::user()->roles();
+        }
+        foreach ($roles->get() as $role) {
+            $module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module_id)->first();
+            if(isset($module_perm->id)) {
+                if(isset($module_perm->{"acc_".$access_type}) && $module_perm->{"acc_".$access_type} == 1) {
+                    return true;
+                } else {
+                    continue;
+                }
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
 }
