@@ -38,7 +38,16 @@
             $menuItems = Dwij\Laraadmin\Models\Menu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
             ?>
             @foreach ($menuItems as $menu)
-                <?php echo LAHelper::print_menu($menu); ?>
+                @if($menu->type == "module")
+                    <?php
+                    $temp_module_obj = Module::get($menu->name);
+                    ?>
+                    @la_access($temp_module_obj->id)
+                        <?php echo LAHelper::print_menu($menu); ?>
+                    @endla_access
+                @else
+                    <?php echo LAHelper::print_menu($menu); ?>
+                @endif
             @endforeach
             <!-- LAMenus -->
             
