@@ -9,6 +9,17 @@
 @section("htmlheader_title", "Employee Edit : ".$employee->$view_col)
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="box">
 	<div class="box-header">
 		
@@ -27,7 +38,6 @@
 					@la_input($module, 'mobile2')
 					@la_input($module, 'email')
 					@la_input($module, 'dept')
-					@la_input($module, 'role')
 					@la_input($module, 'city')
 					@la_input($module, 'address')
 					@la_input($module, 'about')

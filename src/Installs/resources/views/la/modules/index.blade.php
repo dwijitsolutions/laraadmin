@@ -38,7 +38,7 @@ use Dwij\Laraadmin\Models\Module;
 					<td>{{ $module->name_db }}</td>
 					<td>{{ Module::itemCount($module->name) }}</td>
 					<td>
-						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/edit') }}" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id) }}" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
 					</td>
 				</tr>
 			@endforeach
@@ -61,6 +61,13 @@ use Dwij\Laraadmin\Models\Module;
 						<label for="name">Module Name :</label>
 						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
 					</div>
+					<div class="form-group">
+						<label for="icon">Icon</label>
+						<div class="input-group">
+							<input class="form-control" placeholder="FontAwesome Icon" name="icon" type="text" value="fa-cube"  data-rule-minlength="1" required>
+							<span class="input-group-addon"></span>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -80,8 +87,10 @@ use Dwij\Laraadmin\Models\Module;
 
 @push('scripts')
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('la-assets/plugins/iconpicker/fontawesome-iconpicker.js') }}"></script>
 <script>
 $(function () {
+	$('input[name=icon]').iconpicker();
 	$("#dt_modules").DataTable({
 		
 	});

@@ -52,6 +52,8 @@ class LAProvider extends ServiceProvider
         $this->app->register(\Yajra\Datatables\DatatablesServiceProvider::class);
         // For Gravatar
         $this->app->register(\Creativeorange\Gravatar\GravatarServiceProvider::class);
+        // For Entrust
+        $this->app->register(\Zizaco\Entrust\EntrustServiceProvider::class);
         
         /*
         |--------------------------------------------------------------------------
@@ -77,6 +79,15 @@ class LAProvider extends ServiceProvider
         // For Lara Admin Helper
         $loader->alias('LAHelper', \Dwij\Laraadmin\Helpers\LAHelper::class);
         
+        // For Lara Admin Helper
+        $loader->alias('Module', \Dwij\Laraadmin\Models\Module::class);
+
+        // For Entrust
+		$loader->alias('Entrust', \Zizaco\Entrust\EntrustFacade::class);
+        $loader->alias('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
+        $loader->alias('permission', \Zizaco\Entrust\Middleware\EntrustPermission::class);
+        $loader->alias('ability', \Zizaco\Entrust\Middleware\EntrustAbility::class);
+        
         /*
         |--------------------------------------------------------------------------
         | Register the Controllers
@@ -84,9 +95,9 @@ class LAProvider extends ServiceProvider
         */
         
         $this->app->make('Dwij\Laraadmin\Controllers\ModuleController');
-        $this->app->make('Dwij\Laraadmin\Controllers\FileController');
         $this->app->make('Dwij\Laraadmin\Controllers\FieldController');
         $this->app->make('Dwij\Laraadmin\Controllers\CodeEditorController');
+        $this->app->make('Dwij\Laraadmin\Controllers\MenuController');
         
         /*
         |--------------------------------------------------------------------------
@@ -107,6 +118,14 @@ class LAProvider extends ServiceProvider
         // LAForm Maker - Display Values
         Blade::directive('la_display', function($expression) {
             return "<?php echo LAFormMaker::display$expression; ?>";
+        });
+        
+        // LAForm Maker - Check Whether User has Module Access
+        Blade::directive('la_access', function($expression) {
+            return "<?php if(LAFormMaker::la_access$expression) { ?>";
+        });
+        Blade::directive('endla_access', function($expression) {
+            return "<?php } ?>";
         });
         
         /*

@@ -27,10 +27,12 @@ class LAInstall extends Command
      *
      * @var string
      */
-    protected $description = 'Install LaraAdmin Package. Generate Whole structure for /admin.';
+    protected $description = 'Install LaraAdmin Package. Generate whole structure for /admin.';
     
     protected $from;
     protected $to;
+
+    var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization"];
     
     /**
      * Generate Whole structure for /admin
@@ -47,7 +49,7 @@ class LAInstall extends Command
             
             $this->info('from: '.$from." to: ".$to);
             
-            if ($this->confirm("This process may change/append to following of your existing project files:"
+            if ($this->confirm("This process may change/append to the following of your existing project files:"
                     ."\n\n\t app/Http/routes.php"
                     ."\n\t app/User.php"
                     ."\n\t database/migrations/2014_10_12_000000_create_users_table.php"
@@ -62,8 +64,7 @@ class LAInstall extends Command
                 
                 // Models
                 $this->line('Generating Models...');
-                $models = ["User", "Role", "Employee", "Department", "Book"];
-                foreach ($models as $model) {
+                foreach ($this->modelsInstalled as $model) {
                     $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
                 }
                 
@@ -75,6 +76,16 @@ class LAInstall extends Command
                 $this->line('Generating LaraAdmin Public Assets...');
                 $this->replaceFolder($from."/la-assets", $to."/public/la-assets");
                 // Use "git config core.fileMode false" for ignoring file permissions
+
+                // check CACHE_DRIVER to be array or else
+                // It is required for Zizaco/Entrust
+                // https://github.com/Zizaco/entrust/issues/468
+                $driver_type = env('CACHE_DRIVER');
+                if($driver_type == "file") {
+                    throw new Exception("Please set Cache Driver to array in .env (Required for Zizaco\Entrust) and run la:install again:"
+                            ."\n\n\tCACHE_DRIVER=array\n\n", 1);
+                }
+
                 
                 // migrations
                 $this->line('Generating migrations...');
@@ -87,7 +98,7 @@ class LAInstall extends Command
                 
                 // Checking database
                 $this->line('Checking database...');
-                DB::select('SHOW TABLES');
+                DB::connection()->reconnect();
                 
                 // Running migrations...
                 $this->line('Running migrations...');
@@ -116,7 +127,7 @@ class LAInstall extends Command
                     $data['password'] = bcrypt($this->secret('Super Admin password'));
                     $data['context_id']  = "1";
                     $data['type']  = "Employee";
-                    \App\User::create($data);
+                    $user = \App\User::create($data);
                     
                     // TODO: This is Not Standard. Need to find alternative
                     Eloquent::unguard();
@@ -129,7 +140,6 @@ class LAInstall extends Command
                         'email' => $data['email'],
                         'gender' => 'Male',
                         'dept' => "1",
-                        'role' => "1",
                         'city' => "Pune",
                         'address' => "Karve nagar, Pune 411030",
                         'about' => "About user / biography",
@@ -143,6 +153,9 @@ class LAInstall extends Command
                 } else {
                     $this->info("Super Admin User '".$user['name']."' exists. ");
                 }
+                $role = \App\Role::whereName('SUPER_ADMIN')->first();
+                $user->attachRole($role);
+                
                 $this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
             } else {
                 $this->error("Installation aborted. Please try again after backup. Thank you...");

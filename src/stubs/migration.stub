@@ -19,7 +19,7 @@ class __migration_class_name__ extends Migration
      */
     public function up()
     {
-        Module::generate("__module_name__", '__db_table_name__', '__view_column__', [
+        Module::generate("__module_name__", '__db_table_name__', '__view_column__', '__fa_icon__', [
             __generated__
         ]);
 		
@@ -38,14 +38,15 @@ class __migration_class_name__ extends Migration
             ["publisher",   "Publisher",    "Dropdown", false, "Marvel",    0,  0,      false, ["Bloomsbury","Marvel","Universal"]],
             ["publisher",   "Publisher",    "Dropdown", false, 3,           0,  0,      false, "@publishers"],
             ["email",       "Email",        "Email",    false, "",          0,  0,      false],
-            ["file",        "File",         "File",     false, "",          0,  256,    false],
+            ["file",        "File",         "File",     false, "",          0,  1,      false],
+            ["files",       "Files",        "Files",    false, "",          0,  10,     false],
             ["weight",      "Weight",       "Float",    false, 0.0,         0,  20.00,  true],
             ["biography",   "Biography",    "HTML",     false, "<p>This is description</p>", 0, 0, true],
             ["profile_image", "Profile Image", "Image", false, "img_path.jpg", 0, 256,  false],
             ["pages",       "Pages",        "Integer",  false, 0,           0,  5000,   false],
             ["mobile",      "Mobile",       "Mobile",   false, "+91  8888888888", 0, 20,false],
             ["media_type",  "Media Type",   "Multiselect", false, ["Audiobook"], 0, 0,  false, ["Print","Audiobook","E-book"]],
-            ["media_type",  "Media Type",   "Multiselect", false, [2,3],    0,  0,      false, @media_types],
+            ["media_type",  "Media Type",   "Multiselect", false, [2,3],    0,  0,      false, "@media_types"],
             ["name",        "Name",         "Name",     false, "John Doe",  5,  256,    true],
             ["password",    "Password",     "Password", false, "",          6,  256,    true],
             ["status",      "Status",       "Radio",    false, "Published", 0,  0,      false, ["Draft","Published","Unpublished"]],

@@ -6,23 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Exception;
+use Log;
+use DB;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
 class Module extends Model
-{
+{   
     protected $table = 'modules';
     
     protected $fillable = [
-        "name", "name_db", "label", "view_col", "model", "controller", "is_gen"
+        "name", "name_db", "label", "view_col", "model", "controller", "is_gen","fa_icon"
     ];
     
     protected $hidden = [
         
     ];
     
-    public static function generateBase($module_name) {
+    public static function generateBase($module_name, $icon) {
         
-        $names = LAHelper::generateModuleNames($module_name);
+        $names = LAHelper::generateModuleNames($module_name,$icon);
         
         // Check is Generated
         $is_gen = false;
@@ -39,15 +41,17 @@ class Module extends Model
                 'view_col' => "",
                 'model' => $names->model,
                 'controller' => $names->controller,
+                'fa_icon' => $names->fa_icon,
                 'is_gen' => $is_gen,
+                             
             ]);
         }
         return $module->id;
     }
     
-    public static function generate($module_name, $module_name_db, $view_col, $fields) {
+    public static function generate($module_name, $module_name_db, $view_col, $faIcon = "fa-cube", $fields) {
         
-        $names = LAHelper::generateModuleNames($module_name);
+        $names = LAHelper::generateModuleNames($module_name, $faIcon);
         $fields = Module::format_fields($fields);
         
         if(substr_count($view_col, " ") || substr_count($view_col, ".")) {
@@ -72,6 +76,7 @@ class Module extends Model
                     'model' => $names->model,
                     'controller' => $names->controller,
                     'is_gen' => $is_gen,
+					'fa_icon' => $faIcon
                 ]);
             }
             
@@ -148,6 +153,7 @@ class Module extends Model
                 if($module->name_db == "users") {
                     $table->rememberToken();
                 }
+                $table->softDeletes();
                 $table->timestamps();
             });
         }
@@ -164,38 +170,82 @@ class Module extends Model
         return $found;
     }
     
-    public static function create_field_schema($table, $field) {
+    public static function create_field_schema($table, $field, $update = false) {
+        if(is_numeric($field->field_type)) {
+            $ftypes = ModuleFieldTypes::getFTypes();
+            $field->field_type = array_search($field->field_type, $ftypes);
+        }
+        if(!is_string($field->defaultvalue)) {
+            $defval = json_encode($field->defaultvalue);
+        } else {
+            $defval = $field->defaultvalue;
+        }
+        Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
+                ." - ".$defval." - ".$field->maxlength);
+        
         switch ($field->field_type) {
             case 'Address':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->text($field->colname);
+                    if($update) {
+                        $var = $table->text($field->colname)->change();
+                    } else {
+                        $var = $table->text($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'Checkbox':
-                $var = $table->boolean($field->colname);
-                $var->default($field->defaultvalue);
+                if($update) {
+                    $var = $table->boolean($field->colname)->change();
+                } else {
+                    $var = $table->boolean($field->colname);
+                }
+				if($field->defaultvalue == "true" || $field->defaultvalue == "false" || $field->defaultvalue == true || $field->defaultvalue == false) {
+                	if(is_string($field->defaultvalue)) {
+						if($field->defaultvalue == "true") {
+							$field->defaultvalue = true;
+						} else {
+							$field->defaultvalue = false;
+						}
+					}
+					$var->default($field->defaultvalue);
+				}
                 break;
             case 'Currency':
-                $var = $table->double($field->colname, 15, 2);
+                if($update) {
+                    $var = $table->double($field->colname, 15, 2)->change();
+                } else {
+                    $var = $table->double($field->colname, 15, 2);
+                }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'Date':
-                $var = $table->date($field->colname);
+                if($update) {
+                    $var = $table->date($field->colname)->change();
+                } else {
+                    $var = $table->date($field->colname);
+                }
                 if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'Datetime':
-                $var = $table->timestamp($field->colname);
-                
+                if($update) {
+                    $var = $table->timestamp($field->colname)->change();
+                } else {
+                    $var = $table->timestamp($field->colname);
+                }
                 // $table->timestamp('created_at')->useCurrent();
                 if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
                     $var->default($field->defaultvalue);
@@ -203,8 +253,11 @@ class Module extends Model
                 break;
             case 'Decimal':
                 $var = null;
-                $var = $table->decimal($field->colname, 15, 3);
-                
+                if($update) {
+                    $var = $table->decimal($field->colname, 15, 3)->change();
+                } else {
+                    $var = $table->decimal($field->colname, 15, 3);
+                }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
@@ -212,26 +265,46 @@ class Module extends Model
             case 'Dropdown':
                 if($field->popup_vals == "") {
                     if(is_int($field->defaultvalue)) {
-                        $var = $table->integer($field->colname)->unsigned();
+                        if($update) {
+                            $var = $table->integer($field->colname)->unsigned()->change();
+                        } else {
+                            $var = $table->integer($field->colname)->unsigned();
+                        }
                         $var->default($field->defaultvalue);
                         break;
                     } else if(is_string($field->defaultvalue)) {
-                        $var = $table->string($field->colname);
+                        if($update) {
+                            $var = $table->string($field->colname)->change();
+                        } else {
+                            $var = $table->string($field->colname);
+                        }
                         $var->default($field->defaultvalue);
                         break;
                     }
                 }
                 $popup_vals = json_decode($field->popup_vals);
                 if(starts_with($field->popup_vals, "@")) {
-                    $var = $table->integer($field->colname)->unsigned();
+                    if($update) {
+                        $var = $table->integer($field->colname)->unsigned()->change();
+                    } else {
+                        $var = $table->integer($field->colname)->unsigned();
+                    }
                 } else if(is_array($popup_vals)) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                     if($field->defaultvalue != "") {
                         $var->default($field->defaultvalue);
                     }
                 } else if(is_object($popup_vals)) {
                     // ############### Remaining
-                    $var = $table->integer($field->colname)->unsigned();
+                    if($update) {
+                        $var = $table->integer($field->colname)->unsigned()->change();
+                    } else {
+                        $var = $table->integer($field->colname)->unsigned();
+                    }
                     // if(is_int($field->defaultvalue)) {
                     //     $var->default($field->defaultvalue);
                     //     break;
@@ -241,38 +314,80 @@ class Module extends Model
             case 'Email':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname, 100);
+                    if($update) {
+                        $var = $table->string($field->colname, 100)->change();
+                    } else {
+                        $var = $table->string($field->colname, 100);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'File':
-                $var = $table->string($field->colname);
-                if($field->defaultvalue != "") {
+                if($update) {
+                    $var = $table->integer($field->colname)->change();
+                } else {
+                    $var = $table->integer($field->colname);
+                }
+                if($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 }
                 break;
+            case 'Files':
+                if($update) {
+                    $var = $table->string($field->colname, 256)->change();
+                } else {
+                    $var = $table->string($field->colname, 256);
+                }
+                if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+                    $var->default($field->defaultvalue);
+                } else if(is_array($field->defaultvalue)) {
+                    $var->default(json_encode($field->defaultvalue));
+                } else {
+                    $var->default("[]");
+                }
+                break;
             case 'Float':
-                $var = $table->float($field->colname);
+                if($update) {
+                    $var = $table->float($field->colname)->change();
+                } else {
+                    $var = $table->float($field->colname);
+                }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'HTML':
-                $var = $table->longText($field->colname);
+                if($update) {
+                    $var = $table->longText($field->colname)->change();
+                } else {
+                    $var = $table->longText($field->colname);
+                }
                 break;
             case 'Image':
-                $var = $table->string($field->colname);
-                if($field->defaultvalue != "") {
+                if($update) {
+                    $var = $table->integer($field->colname)->change();
+                } else {
+                    $var = $table->integer($field->colname);
+                }
+                if($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'Integer':
                 $var = null;
-                $var = $table->integer($field->colname, false)->unsigned();
+                if($update) {
+                    $var = $table->integer($field->colname, false)->unsigned()->change();
+                } else {
+                    $var = $table->integer($field->colname, false)->unsigned();
+                }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
@@ -280,23 +395,32 @@ class Module extends Model
             case 'Mobile':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
                 }
                 break;
             case 'Multiselect':
-                $var = $table->string($field->colname, 256);
-                
+                if($update) {
+                    $var = $table->string($field->colname, 256)->change();
+                } else {
+                    $var = $table->string($field->colname, 256);
+                }
                 if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
                     $field->defaultvalue = json_decode($field->defaultvalue);
-                }
-                
-                if(is_string($field->defaultvalue) && starts_with($field->popup_vals, "@")) {
-                    $var = $table->integer($field->colname)->unsigned();
+                } else if(is_string($field->defaultvalue) && starts_with($field->popup_vals, "@")) {
+                    $field->defaultvalue = json_decode($field->defaultvalue);
                 } else if(is_string($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
                     $var->default($field->defaultvalue);
@@ -313,9 +437,17 @@ class Module extends Model
             case 'Name':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
@@ -324,9 +456,17 @@ class Module extends Model
             case 'Password':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
@@ -336,24 +476,40 @@ class Module extends Model
                 $var = null;
                 if($field->popup_vals == "") {
                     if(is_int($field->defaultvalue)) {
-                        $var = $table->integer($field->colname)->unsigned();
+                        if($update) {
+                            $var = $table->integer($field->colname)->unsigned()->change();
+                        } else {
+                            $var = $table->integer($field->colname)->unsigned();
+                        }
                         $var->default($field->defaultvalue);
                         break;
                     } else if(is_string($field->defaultvalue)) {
-                        $var = $table->string($field->colname);
+                        if($update) {
+                            $var = $table->string($field->colname)->change();
+                        } else {
+                            $var = $table->string($field->colname);
+                        }
                         $var->default($field->defaultvalue);
                         break;
                     }
                 }
                 $popup_vals = json_decode($field->popup_vals);
                 if(is_array($popup_vals)) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                     if($field->defaultvalue != "") {
                         $var->default($field->defaultvalue);
                     }
                 } else if(is_object($popup_vals)) {
                     // ############### Remaining
-                    $var = $table->integer($field->colname)->unsigned();
+                    if($update) {
+                        $var = $table->integer($field->colname)->unsigned()->change();
+                    } else {
+                        $var = $table->integer($field->colname)->unsigned();
+                    }
                     // if(is_int($field->defaultvalue)) {
                     //     $var->default($field->defaultvalue);
                     //     break;
@@ -363,9 +519,17 @@ class Module extends Model
             case 'String':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
@@ -373,8 +537,11 @@ class Module extends Model
                 break;
             case 'Taginput':
                 $var = null;
-                $var = $table->string($field->colname, 1000);
-                
+                if($update) {
+                    $var = $table->string($field->colname, 1000)->change();
+                } else {
+                    $var = $table->string($field->colname, 1000);
+                }
                 if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
                     $field->defaultvalue = json_decode($field->defaultvalue);
                 }
@@ -392,9 +559,17 @@ class Module extends Model
             case 'Textarea':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->text($field->colname);
+                    if($update) {
+                        $var = $table->text($field->colname)->change();
+                    } else {
+                        $var = $table->text($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                     if($field->defaultvalue != "") {
                         $var->default($field->defaultvalue);
                     }
@@ -403,9 +578,17 @@ class Module extends Model
             case 'TextField':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
@@ -414,9 +597,17 @@ class Module extends Model
             case 'URL':
                 $var = null;
                 if($field->maxlength == 0) {
-                    $var = $table->string($field->colname);
+                    if($update) {
+                        $var = $table->string($field->colname)->change();
+                    } else {
+                        $var = $table->string($field->colname);
+                    }
                 } else {
-                    $var = $table->string($field->colname, $field->maxlength);
+                    if($update) {
+                        $var = $table->string($field->colname, $field->maxlength)->change();
+                    } else {
+                        $var = $table->string($field->colname, $field->maxlength);
+                    }
                 }
                 if($field->defaultvalue != "") {
                     $var->default($field->defaultvalue);
@@ -518,7 +709,7 @@ class Module extends Model
             $out = array();
             foreach ($result as $row) {
                 $view_col = $module->view_col;
-                $out[$row->id] = $row->$view_col;
+                $out[$row->id] = $row->{$view_col};
             }
             return $out;
         } else {
@@ -533,7 +724,7 @@ class Module extends Model
             $module_path = "App\\".$module_name;
             $ftypes = ModuleFieldTypes::getFTypes2();
             foreach ($module->fields as $field) {
-                if(isset($request->$field['colname'])) {
+                if(isset($request->{$field['colname']})) {
                     $col = "";
                     if($field['required']) {
                         $col .= "required|";
@@ -594,42 +785,57 @@ class Module extends Model
     
     public static function processDBRow($module, $request, $row) {
         $ftypes = ModuleFieldTypes::getFTypes2();
-        
-        foreach ($module->fields as $field) {
-            if(isset($request->$field['colname'])) {
+
+		foreach ($module->fields as $field) {
+			if(isset($request->{$field['colname']}) || isset($request->{$field['colname']."_hidden"})) {
                 
                 switch ($ftypes[$field['field_type']]) {
                     case 'Checkbox':
                         #TODO: Bug fix
-                        $row->$field['colname'] = $request->$field['colname'];
+						if(isset($request->{$field['colname']})) {
+							$row->{$field['colname']} = true;
+						} else if(isset($request->{$field['colname']."_hidden"})) {
+							$row->{$field['colname']} = false;
+						}
                         break;
                     case 'Date':
-                        if($request->$field['colname'] != "") {
-                            $date = $request->$field['colname'];
+                        if($request->{$field['colname']} != "") {
+                            $date = $request->{$field['colname']};
                             $d2 = date_parse_from_format("d/m/Y",$date);
-                            $request->$field['colname'] = date("Y-m-d", strtotime($d2['year']."-".$d2['month']."-".$d2['day']));
+                            $request->{$field['colname']} = date("Y-m-d", strtotime($d2['year']."-".$d2['month']."-".$d2['day']));
                         }
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Datetime':
                         #TODO: Bug fix
-                        if($request->$field['colname'] != "") {
-                            $date = $request->$field['colname'];
+                        if($request->{$field['colname']} != "") {
+                            $date = $request->{$field['colname']};
                             $d2 = date_parse_from_format("d/m/Y h:i A",$date);
-                            $request->$field['colname'] = date("Y-m-d H:i:s", strtotime($d2['year']."-".$d2['month']."-".$d2['day']." ".substr($date, 11)));
+                            $request->{$field['colname']} = date("Y-m-d H:i:s", strtotime($d2['year']."-".$d2['month']."-".$d2['day']." ".substr($date, 11)));
                         }
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Multiselect':
                         #TODO: Bug fix
-                        $row->$field['colname'] = json_encode($request->$field['colname']);
+                        $row->{$field['colname']} = json_encode($request->{$field['colname']});
+                        break;
+                    case 'Password':
+                        $row->{$field['colname']} = bcrypt($request->{$field['colname']});
                         break;
                     case 'Taginput':
                         #TODO: Bug fix
-                        $row->$field['colname'] = json_encode($request->$field['colname']);
+                        $row->{$field['colname']} = json_encode($request->{$field['colname']});
+                        break;
+                    case 'Files':
+                        $files = json_decode($request->{$field['colname']});
+                        $files2 = array();
+                        foreach ($files as $file) {
+                            $files2[] = "".$file;
+                        }
+                        $row->{$field['colname']} = json_encode($files2);
                         break;
                     default:
-                        $row->$field['colname'] = $request->$field['colname'];
+                        $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                 }
             }
@@ -650,5 +856,102 @@ class Module extends Model
         } else {
             return 0;
         }
+    }
+    
+    /**
+    * Get Module Access for all roles
+    * $roles = Module::getRoleAccess($id);
+    **/
+    public static function getRoleAccess($module_id, $specific_role = 0) {
+        $module = Module::find($module_id);
+		$module = Module::get($module->name);
+        
+        if($specific_role) {
+            $roles_arr = DB::table('roles')->where('id', $specific_role)->get();
+        } else {
+            $roles_arr = DB::table('roles')->get();
+        }
+		$roles = array();
+        
+        $arr_field_access = array(
+            'invisible' => 0,
+            'readonly' => 1,
+            'write' => 2
+        );
+        
+		foreach ($roles_arr as $role) {
+			// get Current Module permissions for this role
+			
+			$module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->first();
+			if(isset($module_perm->id)) {
+				// set db values
+				$role->view = $module_perm->acc_view;
+				$role->create = $module_perm->acc_create;
+				$role->edit = $module_perm->acc_edit;
+				$role->delete = $module_perm->acc_delete;
+			} else {
+				$role->view = false;
+				$role->create = false;
+				$role->edit = false;
+				$role->delete = false;
+			}
+			
+			// get Current Module Fields permissions for this role
+			
+			$role->fields = array();
+			foreach ($module->fields as $field) {
+				// find role field permission
+				$field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
+                
+				if(isset($field_perm->id)) {
+                    $field['access'] = $arr_field_access[$field_perm->access];
+				} else {
+					$field['access'] = 0;
+				}
+                $role->fields[$field['id']] = $field;
+				//$role->fields[$field['id']] = $field_perm->access;
+			}
+			$roles[] = $role;
+		}
+        return $roles;
+    }
+    
+    /**
+    * Get Module Access for role and access type
+    * Module::hasAccess($module_id, $access_type, $user_id);
+    **/
+    public static function hasAccess($module_id, $access_type = "view", $user_id = 0) {
+        $roles = array();
+        
+        if(is_string($module_id)) {
+            $module = Module::get($module_id);
+            $module_id = $module->id;
+        }
+        
+        if($access_type == null || $access_type == "") {
+            $access_type = "view";
+        }
+        
+        if($user_id) {
+            $user = \App\User::find($user_id);
+            if(isset($user->id)) {
+                $roles = $user->roles();
+            }
+        } else {
+            $roles = \Auth::user()->roles();
+        }
+        foreach ($roles->get() as $role) {
+            $module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module_id)->first();
+            if(isset($module_perm->id)) {
+                if(isset($module_perm->{"acc_".$access_type}) && $module_perm->{"acc_".$access_type} == 1) {
+                    return true;
+                } else {
+                    continue;
+                }
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 }

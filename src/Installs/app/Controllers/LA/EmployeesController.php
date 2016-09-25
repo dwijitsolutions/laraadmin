@@ -15,16 +15,20 @@ use Validator;
 use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Models\ModuleFields;
+
 use Dwij\Laraadmin\Helpers\LAHelper;
 
 use App\User;
 use App\Employee;
+use App\Role;
+use Mail;
 
 class EmployeesController extends Controller
 {
     public $show_action = true;
     public $view_col = 'name';
-    public $listing_cols = ['id', 'name', 'designation', 'mobile', 'email', 'dept', 'role'];
+    public $listing_cols = ['id', 'name', 'designation', 'mobile', 'email', 'dept'];
     
     public function __construct() {
         // for authentication (optional)
@@ -73,12 +77,31 @@ class EmployeesController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
             
-        // Create User
+        // generate password
+		$password = LAHelper::gen_password();
+		
+        // Create Employee
         $employee_id = Module::insert("Employees", $request);
-        $request->context_id = $employee_id;
-        $request->password = bcrypt(LAHelper::gen_password());
-        $request->type = "Employee";
-        $user_id = Module::insert("Users", $request);
+        // Create User
+        $user = User::create([
+			'name' => $request->name,
+			'email' => $request->email,
+			'password' => bcrypt($password),
+			'context_id' => $employee_id,
+			'type' => "Employee",
+		]);
+
+		// $user->detachRoles();
+		// $role = Role::find($request->role);
+		// $user->attachRole($role);
+
+		if(env('MAIL_USERNAME') != "null") {
+			// Send mail to User his Password
+			Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {
+				$m->from('hello@laraadmin.com', 'LaraAdmin');
+				$m->to($user->email, $user->name)->subject('LaraAdmin - Your Login Credentials');
+			});
+		}
         
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }
@@ -94,8 +117,8 @@ class EmployeesController extends Controller
         $employee = Employee::find($id);
         $module = Module::get('Employees');
         $module->row = $employee;
-        
-        // Get User Table Information
+		
+		// Get User Table Information
         $user = User::where('context_id', '=', $id)->firstOrFail();
         
         return view('la.employees.show', [
@@ -143,7 +166,7 @@ class EmployeesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();;
         }
-        
+		
         $employee_id = Module::updateRow("Employees", $request, $id);
         
         // Update User
@@ -173,17 +196,22 @@ class EmployeesController extends Controller
      */
     public function dtajax()
     {
-        $users = DB::table('employees')->select($this->listing_cols);
-        $out = Datatables::of($users)->make();
+        $values = DB::table('employees')->select($this->listing_cols)->whereNull('deleted_at');
+        $out = Datatables::of($values)->make();
         $data = $out->getData();
-        
-        for($i=0; $i<count($data->data); $i++) {
+
+		$fields_popup = ModuleFields::getModuleFields('Employees');
+		
+		for($i=0; $i < count($data->data); $i++) {
             for ($j=0; $j < count($this->listing_cols); $j++) { 
                 $col = $this->listing_cols[$j];
+                if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
+					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                }
                 if($col == $this->view_col) {
                     $data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/employees/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
                 }
-                // else if($col == "author") {
+				// else if($col == "author") {
                 //    $data->data[$i][$j];
                 // }
             }

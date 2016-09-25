@@ -1,7 +1,7 @@
 @extends('la.layouts.app')
 
 @section('htmlheader_title')
-	Book View
+	Organization View
 @endsection
 
 
@@ -15,7 +15,7 @@
 					<div class="profile-icon text-primary"><i class="fa fa-cube"></i></div>
 				</div>
 				<div class="col-md-9">
-					<h4 class="name">{{ $book->$view_col }}</h4>
+					<h4 class="name">{{ $organization->$view_col }}</h4>
 					<div class="row stats">
 						<div class="col-md-4"><i class="fa fa-facebook"></i> 234</div>
 						<div class="col-md-4"><i class="fa fa-twitter"></i> 12</div>
@@ -81,15 +81,15 @@
 			</div>
 		</div>
 		<div class="col-md-1 actions">
-			<a href="{{ url(config('laraadmin.adminRoute') . '/books/'.$book->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
-			{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.books.destroy', $book->id], 'method' => 'delete', 'style'=>'display:inline']) }}
+			<a href="{{ url(config('laraadmin.adminRoute') . '/organizations/'.$organization->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
+			{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.organizations.destroy', $organization->id], 'method' => 'delete', 'style'=>'display:inline']) }}
 				<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
 			{{ Form::close() }}
 		</div>
 	</div>
 
 	<ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
-		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/books') }}" data-toggle="tooltip" data-placement="right" title="Back to Books"><i class="fa fa-chevron-left"></i></a></li>
+		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/organizations') }}" data-toggle="tooltip" data-placement="right" title="Back to Organizations"><i class="fa fa-chevron-left"></i></a></li>
 		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
 		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li>
 	</ul>
@@ -103,23 +103,16 @@
 					</div>
 					<div class="panel-body">
 						@la_display($module, 'name')
-						@la_display($module, 'author')
-						@la_display($module, 'author_address')
-						@la_display($module, 'price')
-						@la_display($module, 'weight')
-						@la_display($module, 'pages')
-						@la_display($module, 'genre')
-						@la_display($module, 'publisher')
-						@la_display($module, 'status')
-						@la_display($module, 'media_type')
-						@la_display($module, 'description')
 						@la_display($module, 'email')
-						@la_display($module, 'restricted')
-						@la_display($module, 'mobile')
-						@la_display($module, 'preview')
+						@la_display($module, 'phone')
 						@la_display($module, 'website')
-						@la_display($module, 'date_release')
-						@la_display($module, 'time_started')
+						@la_display($module, 'assigned_to')
+						@la_display($module, 'connect_since')
+						@la_display($module, 'address')
+						@la_display($module, 'city')
+						@la_display($module, 'description')
+						@la_display($module, 'profile_image')
+						@la_display($module, 'profile')
 					</div>
 				</div>
 			</div>

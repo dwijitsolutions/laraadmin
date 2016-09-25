@@ -135,17 +135,20 @@
                             </li>
                             <!-- Menu Body -->
                             <li class="user-body">
-                                <div class="col-xs-4 text-center">
-                                    <a href="{{ url(config('laraadmin.adminRoute') . '/laeditor') }}"><i class="fa fa-code"></i> <span>Edit</span></a>
+                                <div class="col-xs-6 text-center mb10">
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/laeditor') }}"><i class="fa fa-code"></i> <span>Editor</span></a>
                                 </div>
-                                <div class="col-xs-8 text-center">
-                                    <a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}"><i class="fa fa-cubes"></i> <span>Module Manager</span></a>
+                                <div class="col-xs-6 text-center mb10">
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}"><i class="fa fa-cubes"></i> <span>Modules</span></a>
+                                </div>
+                                <div class="col-xs-6 text-center">
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/la_menus') }}"><i class="fa fa-bars"></i> <span>Menus</span></a>
                                 </div>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{{ url(config('laraadmin.adminRoute') . '/user/') }}/{{ Auth::user()->id }}" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/users/') .'/'. Auth::user()->id }}" class="btn btn-default btn-flat">Profile</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">Sign out</a>

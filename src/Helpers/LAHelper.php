@@ -10,7 +10,7 @@ use Dwij\Laraadmin\Models\Module;
 class LAHelper
 {
 	// $names = LAHelper::generateModuleNames($module_name);
-    public static function generateModuleNames($module_name) {
+    public static function generateModuleNames($module_name, $icon) {
 		$array = array();
 		$module_name = trim($module_name);
 		$module_name = str_replace(" ", "", $module_name);
@@ -19,6 +19,7 @@ class LAHelper
 		$array['label'] = ucfirst(str_plural($module_name));
 		$array['table'] = strtolower(str_plural($module_name));
 		$array['model'] = ucfirst(str_singular($module_name));
+		$array['fa_icon'] = $icon;
 		$array['controller'] = $array['module']."Controller";
 		$array['singular_l'] = strtolower(str_singular($module_name));
 		$array['singular_c'] = ucfirst(str_singular($module_name));
@@ -122,9 +123,9 @@ class LAHelper
 					if(!in_array($file, [".DS_Store"])) {
 						copy($src . '/' . $file, $dst . '/' . $file);
 					}
-				} 
-			} 
-		} 
+				}
+			}
+		}
 		closedir($dir); 
 	}
 	
@@ -161,5 +162,112 @@ class LAHelper
 			$password .=  $current_letter;
 		}
 		return $password;
+	}
+
+	// LAHelper::img($upload_id);
+    public static function img($upload_id) {
+        $upload = \App\Upload::find($upload_id);
+        if(isset($upload->id)) {
+            return url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name);
+        } else {
+			return "";
+		}
+    }
+	
+	// LAHelper::createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height);
+	public static function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background=false) {
+	    list($original_width, $original_height, $original_type) = getimagesize($filepath);
+	    if ($original_width > $original_height) {
+	        $new_width = $thumbnail_width;
+	        $new_height = intval($original_height * $new_width / $original_width);
+	    } else {
+	        $new_height = $thumbnail_height;
+	        $new_width = intval($original_width * $new_height / $original_height);
+	    }
+	    $dest_x = intval(($thumbnail_width - $new_width) / 2);
+	    $dest_y = intval(($thumbnail_height - $new_height) / 2);
+	    if ($original_type === 1) {
+	        $imgt = "ImageGIF";
+	        $imgcreatefrom = "ImageCreateFromGIF";
+	    } else if ($original_type === 2) {
+	        $imgt = "ImageJPEG";
+	        $imgcreatefrom = "ImageCreateFromJPEG";
+	    } else if ($original_type === 3) {
+	        $imgt = "ImagePNG";
+	        $imgcreatefrom = "ImageCreateFromPNG";
+	    } else {
+	        return false;
+	    }
+	    $old_image = $imgcreatefrom($filepath);
+	    $new_image = imagecreatetruecolor($thumbnail_width, $thumbnail_height); // creates new image, but with a black background
+	    // figuring out the color for the background
+	    if(is_array($background) && count($background) === 3) {
+	      list($red, $green, $blue) = $background;
+	      $color = imagecolorallocate($new_image, $red, $green, $blue);
+	      imagefill($new_image, 0, 0, $color);
+	    // apply transparent background only if is a png image
+	    } else if($background === 'transparent' && $original_type === 3) {
+	      imagesavealpha($new_image, TRUE);
+	      $color = imagecolorallocatealpha($new_image, 0, 0, 0, 127);
+	      imagefill($new_image, 0, 0, $color);
+	    }
+	    imagecopyresampled($new_image, $old_image, $dest_x, $dest_y, 0, 0, $new_width, $new_height, $original_width, $original_height);
+	    $imgt($new_image, $thumbpath);
+	    return file_exists($thumbpath);
+	}
+
+	// LAHelper::print_menu_editor($menu)
+	public static function print_menu_editor($menu) {
+		$editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute').'.la_menus.destroy', $menu->id], 'method' => 'delete', 'style'=>'display:inline']);
+		$editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
+		$editing .= \Collective\Html\FormFacade::close();
+		if($menu->type != "module") {
+			$info = (object) array();
+			$info->id = $menu->id;
+			$info->name = $menu->name;
+			$info->url = $menu->url;
+			$info->type = $menu->type;
+			$info->icon = $menu->icon;
+
+			$editing .= '<a class="editMenuBtn btn btn-xs btn-success pull-right" info=\''.json_encode($info).'\'><i class="fa fa-edit"></i></a>';
+		}
+		$str = '<li class="dd-item dd3-item" data-id="'.$menu->id.'">
+			<div class="dd-handle dd3-handle"></div>
+			<div class="dd3-content"><i class="fa '.$menu->icon.'"></i> '.$menu->name.' '.$editing.'</div>';
+		
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+		
+		if(count($childrens) > 0) {
+			$str .= '<ol class="dd-list">';
+			foreach($childrens as $children) {
+				$str .= LAHelper::print_menu_editor($children);
+			}
+			$str .= '</ol>';
+		}
+		$str .= '</li>';
+		return $str;
+	}
+
+	// LAHelper::print_menu($menu)
+	public static function print_menu($menu) {
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+
+		$treeview = "";
+		$subviewSign = "";
+		if(count($childrens)) {
+			$treeview = " class=\"treeview\"";
+			$subviewSign = '<i class="fa fa-angle-left pull-right"></i>';
+		}
+		$str = '<li'.$treeview.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
+		
+		if(count($childrens)) {
+			$str .= '<ul class="treeview-menu">';
+			foreach($childrens as $children) {
+				$str .= LAHelper::print_menu($children);
+			}
+			$str .= '</ul>';
+		}
+		$str .= '</li>';
+		return $str;
 	}
 }

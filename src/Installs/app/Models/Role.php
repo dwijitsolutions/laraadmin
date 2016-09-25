@@ -6,16 +6,20 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Zizaco\Entrust\EntrustRole;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Role extends Model
+class Role extends EntrustRole
 {
-    protected $table = 'roles';
+    use SoftDeletes;
 	
-	// By default making all fields fillable
-	// protected $fillable = [];
+	protected $table = 'roles';
 	
 	protected $hidden = [
         
     ];
+
+	protected $guarded = [];
+
+	protected $dates = ['deleted_at'];
 }

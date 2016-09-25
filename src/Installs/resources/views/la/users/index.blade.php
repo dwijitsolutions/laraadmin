@@ -1,16 +1,26 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "__module_name__")
-@section("contentheader_description", "__db_table_name__ listing")
-@section("section", "__module_name__")
+@section("contentheader_title", "Users")
+@section("contentheader_description", "users listing")
+@section("section", "Users")
 @section("sub_section", "Listing")
-@section("htmlheader_title", "__module_name__ Listing")
+@section("htmlheader_title", "Users Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add __singular_cap_var__</button>
+<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add User</button>
 @endsection
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="box box-success">
 	<!--<div class="box-header"></div>-->
@@ -38,15 +48,19 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add __singular_cap_var__</h4>
+				<h4 class="modal-title" id="myModalLabel">Add User</h4>
 			</div>
-			{!! Form::open(['action' => 'LA\__controller_class_name__@store', 'id' => '__singular_var__-add-form']) !!}
+			{!! Form::open(['action' => 'LA\UsersController@store', 'id' => 'user-add-form']) !!}
 			<div class="modal-body">
 				<div class="box-body">
                     @la_form($module)
 					
 					{{--
-					__input_fields__
+					@la_input($module, 'name')
+					@la_input($module, 'context_id')
+					@la_input($module, 'email')
+					@la_input($module, 'password')
+					@la_input($module, 'type')
 					--}}
 				</div>
 			</div>
@@ -72,7 +86,7 @@ $(function () {
 	$("#example1").DataTable({
 		processing: true,
         serverSide: true,
-        ajax: "{{ url(config('laraadmin.adminRoute') . '/__singular_var___dt_ajax') }}",
+        ajax: "{{ url(config('laraadmin.adminRoute') . '/user_dt_ajax') }}",
 		language: {
 			lengthMenu: "_MENU_",
 			search: "_INPUT_",
@@ -82,7 +96,7 @@ $(function () {
 		columnDefs: [ { orderable: false, targets: [-1] }],
 		@endif
 	});
-	$("#__singular_var__-add-form").validate({
+	$("#user-add-form").validate({
 		
 	});
 });

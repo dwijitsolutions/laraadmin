@@ -30,7 +30,7 @@ desired effect
 |---------------------------------------------------------|
 -->
 
-<body class="skin-white fixed {{ $sidebar_mini or '' }}" bsurl="{{ url('') }}">
+<body class="skin-white fixed {{ $sidebar_mini or '' }}" bsurl="{{ url('') }}" adminRoute="{{ config('laraadmin.adminRoute') }}">
 <div class="wrapper">
 
     @include('la.layouts.partials.mainheader')

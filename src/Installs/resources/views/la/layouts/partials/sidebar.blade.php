@@ -34,44 +34,23 @@
             <li class="header">MODULES</li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
-            <!--
-            <li><a href="#"><i class='fa fa-folder-open'></i> <span>Projects</span> <small class="label pull-right bg-red">2 Bugs</small></a></li>
-            <li><a href="#"><i class='fa fa-building'></i> <span>Organisations</span></a></li>
-            <li><a href="#"><i class='fa fa-newspaper-o'></i> <span>Contacts</span> <small class="label pull-right bg-green">2 New</small></a></li>
-            <li><a href="#"><i class='fa fa-calendar'></i> <span>Calendar</span></a></li>
-            -->
-            <li><a href="{{ url(config('laraadmin.adminRoute') . '/books') }}"><i class='fa fa-book'></i> <span>Books</span></a></li>
+            <?php
+            $menuItems = Dwij\Laraadmin\Models\Menu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
+            ?>
+            @foreach ($menuItems as $menu)
+                @if($menu->type == "module")
+                    <?php
+                    $temp_module_obj = Module::get($menu->name);
+                    ?>
+                    @la_access($temp_module_obj->id)
+                        <?php echo LAHelper::print_menu($menu); ?>
+                    @endla_access
+                @else
+                    <?php echo LAHelper::print_menu($menu); ?>
+                @endif
+            @endforeach
             <!-- LAMenus -->
             
-            
-            <li class="treeview">
-                <a href="#"><i class='fa fa-group'></i> <span>Team</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}"><i class="fa fa-circle-o text-green"></i> <span>Employees</span></a></li>
-                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/roles') }}"><i class="fa fa-circle-o"></i> <span>Roles</span></a></li>
-                    <li><a href="{{ url(config("laraadmin.adminRoute") . '/departments') }}"><i class="fa fa-circle-o"></i> <span>Departments</span></a></li>
-                    <!--
-                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Access Control</a></li>
-                    -->
-                </ul>
-            </li>
-            <!--
-            <li class="treeview">
-                <a href="#"><i class='fa fa-paint-brush'></i> <span>My Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Edit Profile</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Change Password</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class='fa fa-cogs'></i> <span>Company Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Company Profile</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Work Types</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Task Modeling</a></li>
-                </ul>
-            </li>
-            -->
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

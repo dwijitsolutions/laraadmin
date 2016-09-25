@@ -28,6 +28,8 @@ class Packaging extends Command
     
     protected $from;
     protected $to;
+
+    var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization"];
     
     /**
      * Generate a CRUD files inclusing Controller, Model and Routes
@@ -52,8 +54,8 @@ class Packaging extends Command
         
         // Models
         $this->line('Exporting Models...');
-        $models = ["User", "Role", "Employee", "Department", "Book"];
-        foreach ($models as $model) {
+        
+        foreach ($this->modelsInstalled as $model) {
             $this->copyFile($from."/app/".$model.".php", $to."/app/Models/".$model.".php");
         }
         

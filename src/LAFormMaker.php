@@ -12,7 +12,7 @@ class LAFormMaker
 	/**
 	* Print input field enclosed within form-group
 	**/
-	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control')
+	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control', $params = [])
 	{
 		$row = null;
 		if(isset($module->row)) {
@@ -37,21 +37,24 @@ class LAFormMaker
 		
 		$out = '<div class="form-group">';
 		$required_ast = "";
-		$params = [
-			'class'=>'form-control',
-			'placeholder'=>'Enter '.$label
-		];
+		
+		if(!isset($params['class'])) {
+			$params['class'] = $class;
+		}
+		if(!isset($params['placeholder'])) {
+			$params['placeholder'] = 'Enter '.$label;
+		}
 		if($minlength) {
 			$params['data-rule-minlength'] = $minlength;
 		}
 		if($maxlength) {
 			$params['data-rule-maxlength'] = $maxlength;
 		}
-		if($readonly) {
+		if($readonly && !isset($params['readonly'])) {
 			$params['readonly'] = "readonly";
 		}
 		
-		if($required) {
+		if($required && !isset($params['required'])) {
 			$params['required'] = $required;
 			$required_ast = "*";
 		}
@@ -74,6 +77,7 @@ class LAFormMaker
 				break;
 			case 'Checkbox':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<input type="hidden" value="false" name="'.$field_name.'_hidden">';
 				
 				// ############### Remaining
 				unset($params['placeholder']);
@@ -202,7 +206,7 @@ class LAFormMaker
 				$out .= Form::email($field_name, $default_val, $params);
 				break;
 			case 'File':
-				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<label for="'.$field_name.'" style="display:block;">'.$label.$required_ast.' :</label>';
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
@@ -211,10 +215,67 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				$out .= "<div class='input-group file'>";
-				$out .= Form::text($field_name, $default_val, $params);
-				$out .= "<span class='input-group-addon file' file_type='file' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
+				if(!is_numeric($default_val)) {
+					$default_val = 0;
+				}
+				$out .= Form::hidden($field_name, $default_val, $params);
+
+				if($default_val != 0) {
+					$upload = \App\Upload::find($default_val);
+				}
+				if(isset($upload->id)) {
+					$out .= "<a class='btn btn-default btn_upload_file hide' file_type='file' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<a class='uploaded_file' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
+				} else {
+					$out .= "<a class='btn btn-default btn_upload_file' file_type='file' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<a class='uploaded_file hide' target='_blank'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
+				}
 				break;
+
+			case 'Files':
+				$out .= '<label for="'.$field_name.'" style="display:block;">'.$label.$required_ast.' :</label>';
+				
+				if($default_val == null) {
+					$default_val = $defaultvalue;
+				}
+				// Override the edit value
+				if(isset($row) && isset($row->$field_name)) {
+					$default_val = $row->$field_name;
+				}
+				if(is_array($default_val)) {
+					$default_val = json_encode($default_val);
+				}
+				
+				$default_val_arr = json_decode($default_val);
+				
+				if(is_array($default_val_arr) && count($default_val_arr) > 0) {
+					$uploadIds = array();
+					$uploadImages = "";
+					foreach ($default_val_arr as $uploadId) {
+						$upload = \App\Upload::find($uploadId);
+						if(isset($upload->id)) {
+							$uploadIds[] = $upload->id;
+							$fileImage = "";
+							if(in_array($upload->extension, ["jpg", "png", "gif", "jpeg"])) {
+								$fileImage = "<img src='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=90")."'>";
+							} else {
+								$fileImage = "<i class='fa fa-file-o'></i>";
+							}
+							$uploadImages .= "<a class='uploaded_file2' upload_id='".$upload->id."' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
+						}
+					}
+					
+					$out .= Form::hidden($field_name, json_encode($uploadIds), $params);
+					if(count($uploadIds) > 0) {
+						$out .= "<div class='uploaded_files'>".$uploadImages."</div>";
+					}
+				} else {
+					$out .= Form::hidden($field_name, "[]", $params);
+					$out .= "<div class='uploaded_files'></div>";
+				}
+				$out .= "<a class='btn btn-default btn_upload_files' file_type='files' selecter='".$field_name."' style='margin-top:5px;'>Upload <i class='fa fa-cloud-upload'></i></a>";
+				break;
+
 			case 'Float':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
@@ -245,7 +306,7 @@ class LAFormMaker
 				$out .= Form::hidden($field_name, $default_val, $params);
 				break;
 			case 'Image':
-				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
+				$out .= '<label for="'.$field_name.'" style="display:block;">'.$label.$required_ast.' :</label>';
 				
 				if($default_val == null) {
 					$default_val = $defaultvalue;
@@ -254,10 +315,22 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				$out .= "<div class='input-group file'>";
-				$out .= Form::text($field_name, $default_val, $params);
-				$out .= "<span class='input-group-addon preview'></span>";
-				$out .= "<span class='input-group-addon file' file_type='image' selecter='".$field_name."'><span class='fa fa-cloud-upload'></span></span></div>";
+				if(!is_numeric($default_val)) {
+					$default_val = 0;
+				}
+				$out .= Form::hidden($field_name, $default_val, $params);
+
+				if($default_val != 0) {
+					$upload = \App\Upload::find($default_val);
+				}
+				if(isset($upload->id)) {
+					$out .= "<a class='btn btn-default btn_upload_image hide' file_type='image' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<div class='uploaded_image'><img src='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=150")."'><i title='Remove Image' class='fa fa-times'></i></div>";
+				} else {
+					$out .= "<a class='btn btn-default btn_upload_image' file_type='image' selecter='".$field_name."'>Upload <i class='fa fa-cloud-upload'></i></a>
+						<div class='uploaded_image hide'><img src=''><i title='Remove Image' class='fa fa-times'></i></div>";
+				}
+				
 				break;
 			case 'Integer':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
@@ -270,7 +343,7 @@ class LAFormMaker
 				if(isset($row) && isset($row->$field_name)) {
 					$default_val = $row->$field_name;
 				}
-				$params['min'] = "0";
+				// $params['min'] = "0"; // Required for Non-negative numbers
 				$out .= Form::number($field_name, $default_val, $params);
 				break;
 			case 'Mobile':
@@ -329,15 +402,7 @@ class LAFormMaker
 			case 'Password':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 				
-				if($default_val == null) {
-					$default_val = $defaultvalue;
-				}
-				// Override the edit value
-				if(isset($row) && isset($row->$field_name)) {
-					$default_val = $row->$field_name;
-				}
-				
-				$out .= Form::password($field_name, $default_val, $params);
+				$out .= Form::password($field_name, $params);
 				break;
 			case 'Radio':
 				$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' : </label><br>';
@@ -465,8 +530,10 @@ class LAFormMaker
 	
 	/**
 	* Processes the populated values for Multiselect / Taginput / Dropdown
+	* get data from module / table whichever is found if starts with '@'
 	**/
-	private static function process_values($json) {
+	// $values = LAFormMaker::process_values($data);
+	public static function process_values($json) {
 		$out = array();
 		// Check if populated values are from Module or Database Table
 		if(is_string($json) && starts_with($json, "@")) {
@@ -477,7 +544,7 @@ class LAFormMaker
 			
 			// Search Module
 			$module = Module::getByTable($table_name);
-			if(isset($module)) {
+			if(isset($module->id)) {
 				$out = Module::getDDArray($module->name);
 			} else {
 				// Search Table if no module found
@@ -544,6 +611,7 @@ class LAFormMaker
 	**/
 	public static function display($module, $field_name, $class = 'form-control')
 	{
+		$fieldObj = $module->fields[$field_name];
 		$label = $module->fields[$field_name]['label'];
 		$field_type = $module->fields[$field_name]['field_type'];
 		$field_type = ModuleFieldTypes::find($field_type);
@@ -586,13 +654,60 @@ class LAFormMaker
 				
 				break;
 			case 'Dropdown':
-				
+				$values = LAFormMaker::process_values($fieldObj['popup_vals']);
+				if(starts_with($fieldObj['popup_vals'], "@")) {
+					if($value != 0) {
+						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+						if(isset($moduleVal->id)) {
+							$value = "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$value)."' class='label label-primary'>".$values[$value]."</a> ";
+						} else {
+							$value = "<a class='label label-primary'>".$values[$value]."</a> ";
+						}
+					} else {
+						$value = "None";
+					}
+				}
 				break;
 			case 'Email':
 				$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
 				break;
 			case 'File':
-				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><i class="fa fa-file-o"</i></a>';
+				if($value != 0) {
+					$upload = \App\Upload::find($value);
+					if(isset($upload->id)) {
+						$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'">
+						<span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> '.$upload->name.'</a>';
+					} else {
+						$value = 'Uplaoded file not found.';
+					}
+				} else {
+					$value = 'No file.';
+				}
+				break;
+			case 'Files':
+				if($value != "" && $value != "[]" && $value != "null" && starts_with($value, "[")) {
+					$uploads = json_decode($value);
+					$uploads_html = "";
+
+					foreach ($uploads as $uploadId) {
+						$upload = \App\Upload::find($uploadId);
+						if(isset($upload->id)) {
+							$uploadIds[] = $upload->id;
+							$fileImage = "";
+							if(in_array($upload->extension, ["jpg", "png", "gif", "jpeg"])) {
+								$fileImage = "<img src='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=90")."'>";
+							} else {
+								$fileImage = "<i class='fa fa-file-o'></i>";
+							}
+							// $uploadImages .= "<a class='uploaded_file2' upload_id='".$upload->id."' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
+							$uploads_html .= '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'" data-toggle="tooltip" data-placement="top" data-container="body" style="display:inline-block;margin-right:5px;" title="'.$upload->name.'">
+									'.$fileImage.'</a>';
+						}
+					}
+					$value = $uploads_html;
+				} else {
+					$value = 'No files found.';
+				}
 				break;
 			case 'Float':
 				
@@ -600,7 +715,14 @@ class LAFormMaker
 			case 'HTML':
 				break;
 			case 'Image':
-				$value = '<a class="preview" target="_blank" href="'.asset($value).'"><img src="'.asset($value).'"></a>';
+				if($value != 0) {
+					$upload = \App\Upload::find($value);
+				}
+				if(isset($upload->id)) {
+					$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'"><img src="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=150").'"></a>';
+				} else {
+					$value = 'Uplaoded image not found.';
+				}
 				break;
 			case 'Integer':
 				
@@ -610,18 +732,21 @@ class LAFormMaker
 				break;
 			case 'Multiselect':
 				$valueOut = "";
-				if (strpos($value, '[') !== false) {
-					$arr = json_decode($value);
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+				$values = LAFormMaker::process_values($fieldObj['popup_vals']);
+				if(count($values)) {
+					if(starts_with($fieldObj['popup_vals'], "@")) {
+						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+						$valueSel = json_decode($value);
+						foreach ($values as $key => $val) {
+							if(in_array($key, $valueSel)) {
+								$valueOut .= "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$key)."' class='label label-primary'>".$val."</a> ";
+							}
+						}
+					} else {
+						foreach ($values as $key => $val) {
+							$valueOut .= "<span class='label label-primary'>".$val."</span> ";
+						}
 					}
-				} else if (strpos($value, ',') !== false) {
-					$arr = array_map('trim', explode(",", $value));
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
-					}
-				} else {
-					$valueOut = "<div class='label label-primary'>".$value."</div> ";
 				}
 				$value = $valueOut;
 				break;
@@ -629,7 +754,7 @@ class LAFormMaker
 				
 				break;
 			case 'Password':
-				$value = '<a href="#" data-toggle="tooltip" data-placement="top" title="Cannot be declassified !!!">********</a>';
+				$value = '<a href="#" data-toggle="tooltip" data-placement="top" data-container="body" title="Cannot be declassified !!!">********</a>';
 				break;
 			case 'Radio':
 				
@@ -639,18 +764,21 @@ class LAFormMaker
 				break;
 			case 'Taginput':
 				$valueOut = "";
-				if (strpos($value, '[') !== false) {
-					$arr = json_decode($value);
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
+				$values = LAFormMaker::process_values($fieldObj['popup_vals']);
+				if(count($values)) {
+					if(starts_with($fieldObj['popup_vals'], "@")) {
+						$moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+						$valueSel = json_decode($value);
+						foreach ($values as $key => $val) {
+							if(in_array($key, $valueSel)) {
+								$valueOut .= "<a href='".url(config("laraadmin.adminRoute")."/".$moduleVal->name_db."/".$key)."' class='label label-primary'>".$val."</a> ";
+							}
+						}
+					} else {
+						foreach ($values as $key => $val) {
+							$valueOut .= "<span class='label label-primary'>".$val."</span> ";
+						}
 					}
-				} else if (strpos($value, ',') !== false) {
-					$arr = array_map('trim', explode(",", $value));
-					foreach ($arr as $key) {
-						$valueOut .= "<div class='label label-primary'>".$key."</div> ";
-					}
-				} else {
-					$valueOut = "<div class='label label-primary'>".$value."</div> ";
 				}
 				$value = $valueOut;
 				break;
@@ -683,5 +811,13 @@ class LAFormMaker
 			$out .= LAFormMaker::input($module, $field);
 		}
 		return $out;
+	}
+	
+	/**
+	* 
+	**/
+	public static function la_access($module_id, $access_type = "view", $user_id = 0)
+	{
+		return Module::hasAccess($module_id, $access_type, $user_id);
 	}
 }

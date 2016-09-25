@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit __singular_var__: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__') }}">__module_name__</a> :
+@endsection
 @section("contentheader_description", $__singular_var__->$view_col)
 @section("section", "__module_name__")
 @section("section_url", url(config('laraadmin.adminRoute') . '/__db_table_name__'))
@@ -9,6 +11,17 @@
 @section("htmlheader_title", "__singular_cap_var__ Edit : ".$__singular_var__->$view_col)
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="box">
 	<div class="box-header">
 		
@@ -28,13 +41,7 @@
 					</div>
 				{!! Form::close() !!}
 				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
+			
 			</div>
 		</div>
 	</div>

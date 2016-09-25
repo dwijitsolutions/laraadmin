@@ -9,21 +9,24 @@ Route::group([
     'middleware' => ['web', 'auth']
 ], function () {
     
-	/* ================== Files ================== */
-	Route::get(config('laraadmin.adminRoute') . '/folder_files/{folder_name}', 'FileController@get_folder_files');
-	Route::post(config('laraadmin.adminRoute') . '/upload_files', 'FileController@upload_files');
-
 	/* ================== Modules ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/modules', 'ModuleController');
 	Route::resource(config('laraadmin.adminRoute') . '/module_fields', 'FieldController');
 	Route::get(config('laraadmin.adminRoute') . '/module_generate_crud/{model_id}', 'ModuleController@generate_crud');
 	Route::get(config('laraadmin.adminRoute') . '/module_generate_migr/{model_id}', 'ModuleController@generate_migr');
+	Route::get(config('laraadmin.adminRoute') . '/module_generate_migr_crud/{model_id}', 'ModuleController@generate_migr_crud');
+	Route::get(config('laraadmin.adminRoute') . '/modules/{model_id}/set_view_col/{column_name}', 'ModuleController@set_view_col');
+	Route::post(config('laraadmin.adminRoute') . '/save_role_module_permissions/{id}', 'ModuleController@save_role_module_permissions');
 	
 	/* ================== Code Editor ================== */
 	Route::get(config('laraadmin.adminRoute') . '/laeditor', 'CodeEditorController@index');
 	Route::any(config('laraadmin.adminRoute') . '/laeditor_get_dir', 'CodeEditorController@get_dir');
 	Route::post(config('laraadmin.adminRoute') . '/laeditor_get_file', 'CodeEditorController@get_file');
 	Route::post(config('laraadmin.adminRoute') . '/laeditor_save_file', 'CodeEditorController@save_file');
+
+	/* ================== Menu Editor ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/la_menus', 'MenuController');
+	Route::post(config('laraadmin.adminRoute') . '/la_menus/update_hierarchy', 'MenuController@update_hierarchy');
 	
     Route::group([
         'middleware' => 'role'

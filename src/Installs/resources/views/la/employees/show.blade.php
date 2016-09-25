@@ -109,7 +109,6 @@
 						@la_display($module, 'mobile2')
 						@la_display($module, 'email')
 						@la_display($module, 'dept')
-						@la_display($module, 'role')
 						@la_display($module, 'city')
 						@la_display($module, 'address')
 						@la_display($module, 'about')

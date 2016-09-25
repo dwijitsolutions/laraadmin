@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
+use Schema;
 
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
@@ -110,29 +111,10 @@ class FieldController extends Controller
     public function update(Request $request, $id)
     {
         $module_id = $request->module_id;
-        // $module = Module::find($field->module);
         
-        $field = ModuleFields::find($id);
-        $field->colname = $request->colname;
-        $field->label = $request->label;
-        $field->module = $request->module_id;
-        $field->field_type = $request->field_type;
-        if($request->readonly) {
-            $field->readonly = true;
-        } else {
-            $field->readonly = false;
-        }
-        $field->defaultvalue = $request->defaultvalue;
-        $field->minlength = $request->minlength;
-        $field->maxlength = $request->maxlength;
-        if($request->required) {
-            $field->required = true;
-        } else {
-            $field->required = false;
-        }
-        $field->popup_vals = $request->popup_vals;
-        $field->save();
-        return redirect()->action('LA\ModuleController@show', [$module_id]);
+        ModuleFields::updateField($id, $request);
+        
+        return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
     }
 
     /**
@@ -143,6 +125,16 @@ class FieldController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Get Context
+        $field = ModuleFields::find($id);
+        $module = Module::find($field->module);
+        
+        // Delete from Table
+        Schema::table($module->name_db, function ($table) use ($field) {
+            $table->dropColumn($field->colname);
+        });
+
+        // Delete Context
+        $field->delete();
     }
 }
