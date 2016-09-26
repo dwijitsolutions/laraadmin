@@ -140,13 +140,13 @@
 					</thead>
 					@foreach($modules_access as $module)
 						<tr>
-							<td><input class="module_checkb" type="checkbox" name="module_{{$module->id}}" id="module_{{$module->id}}" checked="checked">&nbsp; {{ $module->name }}</td>
-							<td><input class="view_checkb" type="checkbox" name="module_view_{{$module->id}}" id="module_view_{{$module->id}}" <?php if($module->accesses->view == 1) { echo 'checked="checked"'; } ?> ></td>
-							<td><input class="create_checkb" type="checkbox" name="module_create_{{$module->id}}" id="module_create_{{$module->id}}" <?php if($module->accesses->create == 1) { echo 'checked="checked"'; } ?> ></td>
-							<td><input class="edit_checkb" type="checkbox" name="module_edit_{{$module->id}}" id="module_edit_{{$module->id}}" <?php if($module->accesses->edit == 1) { echo 'checked="checked"'; } ?> ></td>
-							<td><input class="delete_checkb" type="checkbox" name="module_delete_{{$module->id}}" id="module_delete_{{$module->id}}" <?php if($module->accesses->delete == 1) { echo 'checked="checked"'; } ?> ></td>
+							<td><input module_id="{{ $module->id }}" class="module_checkb" type="checkbox" name="module_{{$module->id}}" id="module_{{$module->id}}" checked="checked">&nbsp; {{ $module->name }}</td>
+							<td><input module_id="{{ $module->id }}" class="view_checkb" type="checkbox" name="module_view_{{$module->id}}" id="module_view_{{$module->id}}" <?php if($module->accesses->view == 1) { echo 'checked="checked"'; } ?> ></td>
+							<td><input module_id="{{ $module->id }}" class="create_checkb" type="checkbox" name="module_create_{{$module->id}}" id="module_create_{{$module->id}}" <?php if($module->accesses->create == 1) { echo 'checked="checked"'; } ?> ></td>
+							<td><input module_id="{{ $module->id }}" class="edit_checkb" type="checkbox" name="module_edit_{{$module->id}}" id="module_edit_{{$module->id}}" <?php if($module->accesses->edit == 1) { echo 'checked="checked"'; } ?> ></td>
+							<td><input module_id="{{ $module->id }}" class="delete_checkb" type="checkbox" name="module_delete_{{$module->id}}" id="module_delete_{{$module->id}}" <?php if($module->accesses->delete == 1) { echo 'checked="checked"'; } ?> ></td>
 							<td>
-								<a role_id="{{ $module->id }}" class="toggle-adv-access btn btn-default btn-sm hide_row"><i class="fa fa-chevron-down"></i></a>
+								<a module_id="{{ $module->id }}" class="toggle-adv-access btn btn-default btn-sm hide_row"><i class="fa fa-chevron-down"></i></a>
 							</td>
 						</tr>
 						<tr class="tr-access-adv module_fields_{{ $module->id }} hide" module_id="{{ $module->id }}" >
@@ -257,8 +257,8 @@ $(function () {
 				$(this).addClass("green");
 			}
 		}
-	});
-
+	});	
+	
 	$("#module_select_all,  #view_all").on("change", function() {
 		$(".module_checkb").prop('checked', this.checked);
 		$(".view_checkb").prop('checked', this.checked);
@@ -270,6 +270,26 @@ $(function () {
 		$("#create_all").prop('checked', this.checked);
 		$("#edit_all").prop('checked', this.checked);
 		$("#delete_all").prop('checked', this.checked);		
+	});
+	
+	$(".module_checkb,  .view_checkb").on("change", function() {
+		var val = $(this).attr( "module_id" );
+		$("#module_"+val).prop('checked', this.checked)
+		$("#module_view_"+val).prop('checked', this.checked);
+		$("#module_create_"+val).prop('checked', this.checked)
+		$("#module_edit_"+val).prop('checked', this.checked);
+		$("#module_delete_"+val).prop('checked', this.checked);
+	});
+	
+	$(".create_checkb,  .edit_checkb, .delete_checkb").on("change", function() {
+		var val = $(this).attr( "module_id" );
+		$(this).prop('checked', this.checked);
+		if(!$("#module_"+val).is(':checked')){
+			$("#module_"+val).prop('checked', this.checked);
+		}
+		if(!$("#module_view_"+val).is(':checked')){
+			$("#module_view_"+val).prop('checked', this.checked);
+		}		
 	});
 	
 	$("#create_all").on("change", function() {
@@ -303,8 +323,8 @@ $(function () {
 	});
 	
 	$(".hide_row").on("click", function() { 
-		var val = $(this).attr( "role_id" );
-		var $icon = $(".hide_row[role_id="+val+"] > i");
+		var val = $(this).attr( "module_id" );
+		var $icon = $(".hide_row[module_id="+val+"] > i");
 		if($('.module_fields_'+val).hasClass('hide')) {
 			$('.module_fields_'+val).removeClass('hide');
 			$icon.removeClass('fa-chevron-down');
