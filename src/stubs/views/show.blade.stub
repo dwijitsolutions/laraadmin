@@ -81,10 +81,15 @@
 			</div>
 		</div>
 		<div class="col-md-1 actions">
-			<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__/'.$__singular_var__->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
-			{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.__db_table_name__.destroy', $__singular_var__->id], 'method' => 'delete', 'style'=>'display:inline']) }}
-				<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
-			{{ Form::close() }}
+			@la_access("__module_name__", "edit")
+				<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__/'.$__singular_var__->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
+			@endla_access
+			
+			@la_access("__module_name__", "delete")
+				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.__db_table_name__.destroy', $__singular_var__->id], 'method' => 'delete', 'style'=>'display:inline']) }}
+					<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
+				{{ Form::close() }}
+			@endla_access
 		</div>
 	</div>
 
