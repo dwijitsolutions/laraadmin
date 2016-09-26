@@ -274,7 +274,9 @@ class RolesController extends Controller
 				} else {
 					DB:: table('role_module')->where('role_id', $id)->where('module_id', $module->id)->update(['acc_view' => $view, 'acc_create' => $create, 'acc_edit' => $edit, 'acc_delete' => $delete]);
 				}
-			}
+			} else {
+                DB:: table('role_module')->where('role_id', $id)->where('module_id', $module->id)->update(['acc_view' => 0, 'acc_create' => 0, 'acc_edit' => 0, 'acc_delete' => 0]);
+            }
 		}
         return redirect(config('laraadmin.adminRoute') . '/roles/'.$id);
 	}
