@@ -12793,7 +12793,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
  * http://api.jqueryui.com/slider/
  */
 
-
+/*
 var slider = $.widget( "ui.slider", $.ui.mouse, {
 	version: "1.11.4",
 	widgetEventPrefix: "slide",
@@ -13482,7 +13482,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 		}
 	}
 });
-
+*/
 
 /*!
  * jQuery UI Sortable 1.11.4

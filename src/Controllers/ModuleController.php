@@ -279,4 +279,17 @@ class ModuleController extends Controller
 		}
         return redirect(config('laraadmin.adminRoute') . '/modules/'.$id);
 	}
+	
+	public function save_module_field_sort(Request $request, $id)
+	{
+		$sort_array = $request->sort_array;
+		
+		foreach ($sort_array as $index => $field_id) {
+			DB:: table('module_fields')->where('id', $field_id)->update(['sort' => ($index + 1)]);
+		}
+		
+		return response()->json([
+			'status' => 'success'
+		]);
+	}
 }

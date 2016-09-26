@@ -24,6 +24,7 @@ class CreateModuleFieldsTable extends Migration
             $table->integer('maxlength')->unsigned();
             $table->boolean('required')->default(false);
             $table->text('popup_vals');
+            $table->integer('sort')->unsigned()->default(0);
             $table->timestamps();
         });
     }

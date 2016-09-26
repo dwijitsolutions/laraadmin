@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit organization: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/organizations') }}">Organizations</a> :
+@endsection
 @section("contentheader_description", $organization->$view_col)
 @section("section", "Organizations")
 @section("section_url", url(config('laraadmin.adminRoute') . '/organizations'))
@@ -49,13 +51,7 @@
 					</div>
 				{!! Form::close() !!}
 				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
+			
 			</div>
 		</div>
 	</div>

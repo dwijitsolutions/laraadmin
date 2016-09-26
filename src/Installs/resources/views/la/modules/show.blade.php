@@ -68,6 +68,7 @@ use Dwij\Laraadmin\Models\Module;
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" data-toggle="tooltip" data-placement="right" title="Back to Modules"> <i class="fa fa-chevron-left"></i>&nbsp;</a></li>
 		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> Module Fields</a></li>
 		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-access"><i class="fa fa-key"></i> Access</a></li>
+		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-sort"><i class="fa fa-sort"></i> Sort</a></li>
 		<a data-toggle="modal" data-target="#AddFieldModal" class="btn btn-success btn-sm pull-right btn-add-field" style="margin-top:10px;margin-right:10px;">Add Field</a>
 	</ul>
 
@@ -180,6 +181,13 @@ use Dwij\Laraadmin\Models\Module;
 			</form>
 		<!--<div class="text-center p30"><i class="fa fa-list-alt" style="font-size: 100px;"></i> <br> No posts to show</div>-->
 		</div>
+		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-sort">
+			<ul id="sortable_module_fields">
+				@foreach ($module->fields as $field)
+					<li class="ui-field" field_id="{{ $field['id'] }}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ $field['label'] }}</li>
+				@endforeach
+			</ul>
+		</div>
 	</div>
 	</div>
 	</div>
@@ -289,14 +297,42 @@ use Dwij\Laraadmin\Models\Module;
 .table-access .tr-access-adv .table{margin:0px;}
 .table-access .tr-access-adv > td{padding: 7px 6px;}
 .table-access .tr-access-adv .table-bordered td{padding:10px;}
+
+.ui-field{width:25%;list-style: none;padding: 3px 7px;border: solid 1px #cccccc;border-radius: 3px;background: #f5f5f5;margin-bottom: 4px;}
+
 </style>
 @endpush
 
 @push('scripts')
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('la-assets/plugins/bootstrap-slider/bootstrap-slider.js') }}"></script>
+<script src="{{ asset('la-assets/plugins/jQueryUI/jquery-ui.js') }}"></script>
+
 <script>
 $(function () {
+	$("#sortable_module_fields").sortable({
+		update: function(event, ui) {
+            // var index = ui.placeholder.index();
+            var array = [];
+			$("#sortable_module_fields li").each(function(index) {
+				var field_id = $(this).attr("field_id");
+				if(typeof field_id != "undefined") {
+					array.push(field_id);
+				}
+			});
+			
+			$.ajax({
+				url: "{{ url(config('laraadmin.adminRoute') . '/save_module_field_sort') }}/"+{{ $module->id }},
+				data : {'sort_array': array},
+				method: 'GET',
+				success: function( data ) {
+					console.log(data);
+				}
+			});
+        },
+	});
+    $("#sortable_module_fields").disableSelection();	
+	
 	$("#generate_migr").on("click", function() {
 		var $fa = $(this).find("i");
 		$fa.removeClass("fa-database");
