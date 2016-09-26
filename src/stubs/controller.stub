@@ -28,6 +28,17 @@ class __controller_class_name__ extends Controller
 	public function __construct() {
 		// for authentication (optional)
 		$this->middleware('auth');
+		
+		$module = Module::get('__module_name__');
+		$listing_cols_temp = array();
+		foreach ($this->listing_cols as $col) {
+			if($col == 'id') {
+				$listing_cols_temp[] = $col;
+			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
+				$listing_cols_temp[] = $col;
+			}
+		}
+		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
