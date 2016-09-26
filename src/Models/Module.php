@@ -949,9 +949,70 @@ class Module extends Model
                     continue;
                 }
             } else {
-                return false;
+                continue;
             }
         }
         return false;
+    }
+    
+    /**
+    * Get Module Field Access for role and access type
+    * Module::hasFieldAccess($module_id, $field_id, $access_type, $user_id);
+    **/
+    public static function hasFieldAccess($module_id, $field_id, $access_type = "view", $user_id = 0) {
+        $roles = array();
+        
+        if(is_string($module_id)) {
+            $module = Module::get($module_id);
+            $module_id = $module->id;
+        }
+        
+        if($access_type == null || $access_type == "") {
+            $access_type = "view";
+        }
+        
+        if($user_id) {
+            $user = \App\User::find($user_id);
+            if(isset($user->id)) {
+                $roles = $user->roles();
+            }
+        } else {
+            $roles = \Auth::user()->roles();
+        }
+        
+        $hasModuleAccess = false;
+        
+        foreach ($roles->get() as $role) {
+            $module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module_id)->first();
+            if(isset($module_perm->id)) {
+                if($access_type == "view" && isset($module_perm->{"acc_".$access_type}) && $module_perm->{"acc_".$access_type} == 1) {
+                    $hasModuleAccess = true;
+                    break;
+                } else if($access_type == "write" && ((isset($module_perm->{"acc_create"}) && $module_perm->{"acc_create"} == 1) || (isset($module_perm->{"acc_edit"}) && $module_perm->{"acc_edit"} == 1))) {
+                    $hasModuleAccess = true;
+                    break;
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+        }
+        if($hasModuleAccess) {
+            $module_field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field_id)->first();
+            if(isset($module_field_perm->access)) {
+                if($access_type == "view" && ($module_field_perm->{"access"} == "readonly" || $module_field_perm->{"access"} == "write")) {
+                    return true;
+                } else if($access_type == "write" && $module_field_perm->{"access"} == "write") {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
