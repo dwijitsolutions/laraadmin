@@ -91,10 +91,11 @@ class EmployeesController extends Controller
 			'type' => "Employee",
 		]);
 
-		// $user->detachRoles();
-		// $role = Role::find($request->role);
-		// $user->attachRole($role);
-
+        // update user role
+		$user->detachRoles();
+		$role = Role::find($request->role);
+		$user->attachRole($role);
+        
 		if(env('MAIL_USERNAME') != "null") {
 			// Send mail to User his Password
 			Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {
@@ -172,6 +173,11 @@ class EmployeesController extends Controller
         // Update User
         $user = User::where('context_id', $employee_id)->first();
         Module::updateRow("Users", $request, $user->id);
+        
+        // update user role
+        $user->detachRoles();
+		$role = Role::find($request->role);
+		$user->attachRole($role);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
     }
