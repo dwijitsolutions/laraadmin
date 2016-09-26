@@ -46,7 +46,7 @@ class Crud extends Command
         
         try {
             
-            $config = CodeGenerator::generateConfig($module);
+            $config = CodeGenerator::generateConfig($module, "fa-cube");
             
             CodeGenerator::createController($config, $this);
             CodeGenerator::createModel($config, $this);

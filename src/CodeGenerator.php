@@ -285,7 +285,7 @@ class CodeGenerator
 	}
 
     // $config = CodeGenerator::generateConfig($module_name);
-    public static function generateConfig($module,$icon)
+    public static function generateConfig($module, $icon)
     {
         $config = array();
         $config = (object) $config;
