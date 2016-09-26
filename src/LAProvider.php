@@ -128,6 +128,14 @@ class LAProvider extends ServiceProvider
             return "<?php } ?>";
         });
         
+        // LAForm Maker - Check Whether User has Module Field Access
+        Blade::directive('la_field_access', function($expression) {
+            return "<?php if(LAFormMaker::la_field_access$expression) { ?>";
+        });
+        Blade::directive('endla_field_access', function($expression) {
+            return "<?php } ?>";
+        });
+        
         /*
         |--------------------------------------------------------------------------
         | Register the Commands

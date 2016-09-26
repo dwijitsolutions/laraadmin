@@ -826,10 +826,18 @@ class LAFormMaker
 	}
 	
 	/**
-	* 
+	* Check Whether User has Module Access
 	**/
 	public static function la_access($module_id, $access_type = "view", $user_id = 0)
 	{
 		return Module::hasAccess($module_id, $access_type, $user_id);
+	}
+	
+	/**
+	* Check Whether User has Module Field Access
+	**/
+	public static function la_field_access($module_id, $field_id, $access_type = "view", $user_id = 0)
+	{
+		return Module::hasFieldAccess($module_id, $field_id, $access_type, $user_id);
 	}
 }
