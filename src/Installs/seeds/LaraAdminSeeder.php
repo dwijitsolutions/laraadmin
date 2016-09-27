@@ -48,6 +48,9 @@ class LaraAdminSeeder extends Seeder
         $role->dept = $dept->id;
         $role->save();
 		
-		
+		// Set Full Access For Super Admin Role
+		foreach ($modules as $module) {
+            Module::setFullRoleAccess($module->id, $role->id);
+        }
     }
 }

@@ -1015,4 +1015,36 @@ class Module extends Model
             return false;
         }
     }
+	
+	/**
+    * Get Module Access for all roles
+    * Module::setFullRoleAccess($module_id, $role_id);
+    **/
+    public static function setFullRoleAccess($module_id, $role_id) {
+        $module = Module::find($module_id);
+		$module = Module::get($module->name);
+        
+        $role = DB::table('roles')->where('id', $role_id)->first();
+		
+		// 1. Set Module Access
+		
+		$module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->first();
+		if(!isset($module_perm->id)) {
+			DB::insert('insert into role_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$role->id, $module->id, 1, 1, 1, 1, "now()", "now()"]);
+		} else {
+			DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->update(['acc_view' => 1, 'acc_create' => 1, 'acc_edit' => 1, 'acc_delete' => 1]);
+		}
+		
+		// 2. Set Module Fields Access
+		
+		foreach ($module->fields as $field) {
+			// find role field permission
+			$field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
+			if(!isset($field_perm->id)) {
+				DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], "write", "now()", "now()"]);
+			} else {
+				DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->update(['access' => "write"]);
+			}
+		}
+    }
 }
