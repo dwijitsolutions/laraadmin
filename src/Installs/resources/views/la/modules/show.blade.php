@@ -45,7 +45,8 @@ use Dwij\Laraadmin\Models\Module;
 		<div class="col-md-4">
 			@if($module->view_col != "")
 				@if(isset($module->is_gen) && $module->is_gen)
-					
+						<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_update" href="#"><i class="fa fa-refresh"></i> Update Module</a></div>
+				
 				@else
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration + CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD</a></div>
 					
@@ -64,11 +65,27 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 	</div>
 
-	<ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
+	<ul id="tabs" data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" data-toggle="tooltip" data-placement="right" title="Back to Modules"> <i class="fa fa-chevron-left"></i>&nbsp;</a></li>
-		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> Module Fields</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-access"><i class="fa fa-key"></i> Access</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-sort"><i class="fa fa-sort"></i> Sort</a></li>
+		
+		<li class="tab-pane active" id="fields">
+			<a id="tab_fields" role="tab" data-toggle="tab" class="tab_info active" href="#tab-general-info" data-target="#tab-info">
+					<i class="fa fa-bars"></i> Module Fields
+			</a>
+		</li>
+		
+		<li class="tab-pane " id="access">
+			<a id="tab_access" role="tab" data-toggle="tab"  class="tab_info " href="" data-target="#tab-access">
+				<i class="fa fa-key"></i> Access
+			</a>
+		</li>
+		
+		<li class="tab-pane " id="sort">
+			<a id="tab_sort" role="tab" data-toggle="tab"  class="tab_info " href="" data-target="#tab-sort">
+				<i class="fa fa-sort"></i> Sort
+			</a>
+		</li>
+		
 		<a data-toggle="modal" data-target="#AddFieldModal" class="btn btn-success btn-sm pull-right btn-add-field" style="margin-top:10px;margin-right:10px;">Add Field</a>
 	</ul>
 
@@ -309,6 +326,17 @@ use Dwij\Laraadmin\Models\Module;
 <script src="{{ asset('la-assets/plugins/jQueryUI/jquery-ui.js') }}"></script>
 
 <script>
+	
+$(function(){
+	
+	var url = window.location.href;
+	var activeTab = url.substring(url.indexOf("#") + 1);
+	if(!activeTab.includes("http")){
+		$(".tab-pane").removeClass("active");
+ 		$('#tab_'+activeTab).click();
+ 	}
+  });
+
 $(function () {
 	$("#sortable_module_fields").sortable({
 		update: function(event, ui) {
@@ -340,6 +368,23 @@ $(function () {
 		$fa.addClass("fa-spin");
 		$.ajax({
 			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr') }}/"+{{ $module->id }},
+			method: 'GET',
+			success: function( data ) {
+				$fa.removeClass("fa-refresh");
+				$fa.removeClass("fa-spin");
+				$fa.addClass("fa-check");
+				console.log(data);
+				location.reload();
+			}
+		});
+	});
+	$("#generate_update").on("click", function() {
+		var $fa = $(this).find("i");
+		$fa.removeClass("fa-database");
+		$fa.addClass("fa-refresh");
+		$fa.addClass("fa-spin");
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_update') }}/"+{{ $module->id }},
 			method: 'GET',
 			success: function( data ) {
 				$fa.removeClass("fa-refresh");
