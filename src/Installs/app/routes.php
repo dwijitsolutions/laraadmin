@@ -1,49 +1,46 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Routes File
+|--------------------------------------------------------------------------
+|
+| Here is where you will register all of the routes in an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the controller to call when that URI is requested.
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
 
 /* ================== Homepage ================== */
 
-Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index');
 
-Route::auth();
+Route::group(['middleware' => ['web']], function () {
+	Route::get('/', 'HomeController@index');
+	Route::get('/home', 'HomeController@index');
+	Route::auth();
+});
+	
+	
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| This route group applies the "web" middleware group to every route
+| it contains. The "web" middleware group is defined in your HTTP
+| kernel and includes session state, CSRF protection, and more.
+|
+*/
 
-/* ================== Dashboard ================== */
+if(Request::is(config('laraadmin.adminRoute').'/*') || Request::is(config('laraadmin.adminRoute'))){
+    require __DIR__.'/admin_routes.php';
+}
 
-Route::get(config('laraadmin.adminRoute'), 'LA\DashboardController@index');
-Route::get(config('laraadmin.adminRoute'). '/dashboard', 'LA\DashboardController@index');
-Route::get('/dashboard', 'LA\DashboardController@index');
 
-/* ================== Users ================== */
-Route::resource(config('laraadmin.adminRoute') . '/users', 'LA\UsersController');
-Route::get(config('laraadmin.adminRoute') . '/user_dt_ajax', 'LA\UsersController@dtajax');
 
-/* ================== Uploads ================== */
-Route::resource(config('laraadmin.adminRoute') . '/uploads', 'LA\UploadsController');
-Route::post(config('laraadmin.adminRoute') . '/upload_files', 'LA\UploadsController@upload_files');
-Route::get(config('laraadmin.adminRoute') . '/uploaded_files', 'LA\UploadsController@uploaded_files');
-Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
-Route::post(config('laraadmin.adminRoute') . '/uploads_update_caption', 'LA\UploadsController@update_caption');
-Route::post(config('laraadmin.adminRoute') . '/uploads_update_filename', 'LA\UploadsController@update_filename');
-Route::post(config('laraadmin.adminRoute') . '/uploads_update_public', 'LA\UploadsController@update_public');
-Route::post(config('laraadmin.adminRoute') . '/uploads_delete_file', 'LA\UploadsController@delete_file');
 
-/* ================== Roles ================== */
-Route::resource(config('laraadmin.adminRoute') . '/roles', 'LA\RolesController');
-Route::get(config('laraadmin.adminRoute') . '/role_dt_ajax', 'LA\RolesController@dtajax');
-Route::post(config('laraadmin.adminRoute') . '/save_module_role_permissions/{id}', 'LA\RolesController@save_module_role_permissions');
 
-/* ================== Permissions ================== */
-Route::resource(config('laraadmin.adminRoute') . '/permissions', 'LA\PermissionsController');
-Route::get(config('laraadmin.adminRoute') . '/permission_dt_ajax', 'LA\PermissionsController@dtajax');
-Route::post(config('laraadmin.adminRoute') . '/save_permissions/{id}', 'LA\PermissionsController@save_permissions');
-
-/* ================== Departments ================== */
-Route::resource(config('laraadmin.adminRoute') . '/departments', 'LA\DepartmentsController');
-Route::get(config('laraadmin.adminRoute') . '/department_dt_ajax', 'LA\DepartmentsController@dtajax');
-
-/* ================== Employees ================== */
-Route::resource(config('laraadmin.adminRoute') . '/employees', 'LA\EmployeesController');
-Route::get(config('laraadmin.adminRoute') . '/employee_dt_ajax', 'LA\EmployeesController@dtajax');
-
-/* ================== Organizations ================== */
-Route::resource(config('laraadmin.adminRoute') . '/organizations', 'LA\OrganizationsController');
-Route::get(config('laraadmin.adminRoute') . '/organization_dt_ajax', 'LA\OrganizationsController@dtajax');
