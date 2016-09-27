@@ -127,8 +127,12 @@ class CodeGenerator
         $templateDirectory = __DIR__.'/stubs';
 
         LAHelper::log("info", "Appending routes...", $comm);
-        $routesFile = app_path('Http/routes.php');
+        $routesFile = app_path('Http/admin_routes.php');
 
+		$contents = file_get_contents($routesFile);
+		$contents = str_replace('});', '', $contents);
+		file_put_contents($routesFile, $contents);
+		
         $md = file_get_contents($templateDirectory."/routes.stub");
 
         $md = str_replace("__module_name__", $config->moduleName, $md);
