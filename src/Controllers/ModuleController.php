@@ -190,7 +190,34 @@ class ModuleController extends Controller
 		$module->is_gen='1';
 		$module->save();
 	}
-
+/**
+	 * Generate Modules Update(migrations and crud) not routes
+	 *
+	 * @param  int  $module_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function generate_update($module_id)
+	{
+		$module = Module::find($module_id);
+		$module = Module::get($module->name);
+		
+		// Generate Migration
+		CodeGenerator::generateMigration($module->name_db, true);
+		
+		// Create Config for Code Generation
+		$config = CodeGenerator::generateConfig($module->name,$module->fa_icon);
+		
+		// Generate CRUD
+		CodeGenerator::createController($config);
+		CodeGenerator::createModel($config);
+		CodeGenerator::createViews($config);
+		
+		// Set Module Generated = True
+		$module = Module::find($module_id);
+		$module->is_gen='1';
+		$module->save();
+	}
+	
 	/**
 	 * Set the model view_column
 	 *
