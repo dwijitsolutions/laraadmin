@@ -134,6 +134,7 @@
                                 </p>
                             </li>
                             <!-- Menu Body -->
+							@role("SUPER_ADMIN")
                             <li class="user-body">
                                 <div class="col-xs-6 text-center mb10">
                                     <a href="{{ url(config('laraadmin.adminRoute') . '/laeditor') }}"><i class="fa fa-code"></i> <span>Editor</span></a>
@@ -145,6 +146,7 @@
                                     <a href="{{ url(config('laraadmin.adminRoute') . '/la_menus') }}"><i class="fa fa-bars"></i> <span>Menus</span></a>
                                 </div>
                             </li>
+							@endrole
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
