@@ -45,8 +45,7 @@ use Dwij\Laraadmin\Models\Module;
 		<div class="col-md-4">
 			@if($module->view_col != "")
 				@if(isset($module->is_gen) && $module->is_gen)
-						<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_update" href="#"><i class="fa fa-refresh"></i> Update Module</a></div>
-				
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_update" href="#"><i class="fa fa-refresh"></i> Update Module</a></div>
 				@else
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration + CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD</a></div>
 					
@@ -65,39 +64,33 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 	</div>
 
-	<ul id="tabs" data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
+	<ul id="module-tabs" data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" data-toggle="tooltip" data-placement="right" title="Back to Modules"> <i class="fa fa-chevron-left"></i>&nbsp;</a></li>
 		
-		<li class="tab-pane active" id="fields">
-			<a id="tab_fields" role="tab" data-toggle="tab" class="tab_info active" href="#tab-general-info" data-target="#tab-info">
-					<i class="fa fa-bars"></i> Module Fields
-			</a>
+		<li class="tab-pane" id="fields">
+			<a id="tab_fields" role="tab" data-toggle="tab" class="tab_info" href="#fields" data-target="#tab-info"><i class="fa fa-bars"></i> Module Fields</a>
 		</li>
 		
-		<li class="tab-pane " id="access">
-			<a id="tab_access" role="tab" data-toggle="tab"  class="tab_info " href="" data-target="#tab-access">
-				<i class="fa fa-key"></i> Access
-			</a>
+		<li class="tab-pane" id="access">
+			<a id="tab_access" role="tab" data-toggle="tab"  class="tab_info " href="#access" data-target="#tab-access"><i class="fa fa-key"></i> Access</a>
 		</li>
 		
-		<li class="tab-pane " id="sort">
-			<a id="tab_sort" role="tab" data-toggle="tab"  class="tab_info " href="" data-target="#tab-sort">
-				<i class="fa fa-sort"></i> Sort
-			</a>
+		<li class="tab-pane" id="sort">
+			<a id="tab_sort" role="tab" data-toggle="tab"  class="tab_info " href="#sort" data-target="#tab-sort"><i class="fa fa-sort"></i> Sort</a>
 		</li>
 		
 		<a data-toggle="modal" data-target="#AddFieldModal" class="btn btn-success btn-sm pull-right btn-add-field" style="margin-top:10px;margin-right:10px;">Add Field</a>
 	</ul>
 
 	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane active fade in" id="tab-info">
+		<div role="tabpanel" class="tab-pane fade in" id="tab-info">
 			<div class="tab-content">
 				<div class="panel">
 					<!--<div class="panel-default panel-heading">
 						<h4>Module Fields</h4>
 					</div>-->
 					<div class="panel-body">
-						<table id="dt_module_fields" class="table table-bordered">
+						<table id="dt_module_fields" class="table table-bordered" style="width:100% !important;">
 						<thead>
 						<tr class="success">
 							<th style="display:none;"></th>
@@ -144,6 +137,7 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-access">
 			<div class="guide1">
+				<span class="pull-left">Module Access for Roles</span>
 				<i class="fa fa-circle gray"></i> Invisible <i class="fa fa-circle orange"></i> Read-Only <i class="fa fa-circle green"></i> Write
 			</div>
 			<form action="{{ url(config('laraadmin.adminRoute') . '/save_role_module_permissions/'.$module->id) }}" method="post">
@@ -336,16 +330,6 @@ use Dwij\Laraadmin\Models\Module;
 <script src="{{ asset('la-assets/plugins/jQueryUI/jquery-ui.js') }}"></script>
 
 <script>
-	
-$(function(){
-	
-	var url = window.location.href;
-	var activeTab = url.substring(url.indexOf("#") + 1);
-	if(!activeTab.includes("http") && activeTab.length>1){
-		$(".tab-pane").removeClass("active");
- 		$('#tab_'+activeTab).click();
- 	}
-  });
 
 $(function () {
 	$("#sortable_module_fields").sortable({
@@ -436,6 +420,17 @@ $(function () {
 	});
 	$("#field-form").validate();
 	
+	/* ================== Tab Selection ================== */
+	
+	var $tabs = $('#module-tabs').tabs();
+	
+	var url = window.location.href;
+	var activeTab = url.substring(url.indexOf("#") + 1);
+	
+	if(!activeTab.includes("http") && activeTab.length > 1) {
+		$('#module-tabs #'+activeTab+' a').tab('show');
+	}
+	
 	/* ================== Access Control ================== */
 	
 	$('.slider').slider();
@@ -443,7 +438,7 @@ $(function () {
 	$(".slider.slider-horizontal").each(function(index) {
 		var field = $(this).next().attr("name");
 		var value = $(this).next().val();
-		console.log(""+field+" ^^^ "+value);
+		// console.log(""+field+" ^^^ "+value);
 		switch (value) {
 			case '0':
 				$(this).removeClass("orange");
@@ -467,7 +462,7 @@ $(function () {
 		if($(this).next().attr("name")) {
 			var field = $(this).next().attr("name");
 			var value = $(this).next().val();
-			console.log(""+field+" = "+value);
+			// console.log(""+field+" = "+value);
 			if(value == 0) {
 				$(this).removeClass("orange");
 				$(this).removeClass("green");
