@@ -59,7 +59,11 @@ class LAInstall extends Command
                 $this->line("\n".'Generating Controllers...');
                 $this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
                 $this->replaceFolder($from."/app/Controllers/LA", $to."/app/Http/Controllers/LA");
-                $this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
+                if(LAHelper::laravel_ver() == 5.3) {
+					$this->copyFile($from."/app/Controllers/Controller.5.3.php", $to."/app/Http/Controllers/Controller.php");
+				} else {
+					$this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
+				}
                 $this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
                 
                 // Models
@@ -107,20 +111,27 @@ class LAInstall extends Command
                 $this->line('Running migrations...');
                 $this->call('clear-compiled');
                 $this->call('cache:clear');
-                $this->call('migrate', ['--seed']);
+				$this->info(exec('composer dump-autoload'));
+				
+				$this->call('migrate:refresh');
+                // $this->call('migrate:refresh', ['--seed']);
                 
                 // $this->call('db:seed', ['--class' => 'LaraAdminSeeder']);
                 
                 // $this->line('Running seeds...');
                 // $this->info(exec('composer dump-autoload'));
-                // $this->call('db:seed');
+                $this->call('db:seed');
                 
                 // Routes
                 $this->line('Appending routes...');
                 //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
-                $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
-				$this->copyFile($from."/app/admin_routes.php", $to."/app/Http/admin_routes.php");
-                
+				if(LAHelper::laravel_ver() == 5.3) {
+					$this->appendFile($from."/app/routes.php", $to."/routes/web.php");
+					$this->copyFile($from."/app/admin_routes.php", $to."/routes/admin_routes.php");
+				} else {
+					$this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+					$this->copyFile($from."/app/admin_routes.php", $to."/app/Http/admin_routes.php");
+				}
                 // Utilities 
                 $this->line('Generating Utilities...');
                 // if(!$this->fileContains($to."/gulpfile.js", "admin-lte/AdminLTE.less")) {
