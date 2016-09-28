@@ -7,7 +7,7 @@
 @section("htmlheader_title", "Users Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add User</button>
+
 @endsection
 
 @section("main-content")
