@@ -671,7 +671,7 @@ class Module extends Model
         $module = Module::where('name', $module_name)->first();
         if(isset($module)) {
             $module = $module->toArray();
-            $fields = ModuleFields::where('module', $module['id'])->get()->toArray();
+            $fields = ModuleFields::where('module', $module['id'])->orderBy('sort', 'asc')->get()->toArray();
             $fields2 = array();
             foreach ($fields as $field) {
                 $fields2[$field['colname']] = $field;
