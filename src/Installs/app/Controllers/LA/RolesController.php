@@ -224,7 +224,7 @@ class RolesController extends Controller
             $modules_access[] = $module_obj;
         }
        
-        $now = 'now()';
+        $now = date("Y-m-d H:i:s");
         
 		foreach($modules_access as $module) {
 			
