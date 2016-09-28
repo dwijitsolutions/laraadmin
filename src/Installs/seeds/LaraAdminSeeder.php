@@ -8,6 +8,7 @@ use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Models\Menu;
 
 use App\Role;
+use App\Permission;
 use App\Department;
 
 class LaraAdminSeeder extends Seeder
@@ -52,5 +53,14 @@ class LaraAdminSeeder extends Seeder
 		foreach ($modules as $module) {
             Module::setDefaultRoleAccess($module->id, $role->id, "full");
         }
+		
+		// Create Admin Panel Permission
+		$perm = new Permission;
+        $perm->name = "ADMIN_PANEL";
+        $perm->display_name = "Admin Panel";
+        $perm->description = "Admin Panel Permission";
+        $perm->save();
+		
+		$role->attachPermission($perm);
     }
 }

@@ -6,7 +6,7 @@
 
 Route::group([
     'namespace'  => 'Dwij\Laraadmin\Controllers',
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL', 'role:SUPER_ADMIN']
 ], function () {
     
 	/* ================== Modules ================== */

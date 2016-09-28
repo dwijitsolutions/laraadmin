@@ -96,7 +96,7 @@ class EmployeesController extends Controller
 		$user->detachRoles();
 		$role = Role::find($request->role);
 		$user->attachRole($role);
-        
+		
 		if(env('MAIL_USERNAME') != null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "") {
 			// Send mail to User his Password
 			Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {

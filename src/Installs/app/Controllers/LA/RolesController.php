@@ -18,6 +18,7 @@ use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
 use App\Role;
+use App\Permission;
 
 class RolesController extends Controller
 {
@@ -80,6 +81,10 @@ class RolesController extends Controller
 		foreach ($modules as $module) {
             Module::setDefaultRoleAccess($module->id, $insert_id, "readonly");
         }
+		
+		$role = Role::find($insert_id);
+		$perm = Permission::where("name", "ADMIN_PANEL")->first();
+		$role->attachPermission($perm);
         
         return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
     }
