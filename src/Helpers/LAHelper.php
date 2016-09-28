@@ -249,7 +249,7 @@ class LAHelper
 	}
 
 	// LAHelper::print_menu($menu)
-	public static function print_menu($menu) {
+	public static function print_menu($menu, $active = false) {
 		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
 
 		$treeview = "";
@@ -258,7 +258,12 @@ class LAHelper
 			$treeview = " class=\"treeview\"";
 			$subviewSign = '<i class="fa fa-angle-left pull-right"></i>';
 		}
-		$str = '<li'.$treeview.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
+		$active_str = '';
+		if($active) {
+			$active_str = 'class="active"';
+		}
+		
+		$str = '<li'.$treeview.' '.$active_str.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
 		
 		if(count($childrens)) {
 			$str .= '<ul class="treeview-menu">';

@@ -33,7 +33,7 @@
         <ul class="sidebar-menu">
             <li class="header">MODULES</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
+            <li><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>Dashboard</span></a></li>
             <?php
             $menuItems = Dwij\Laraadmin\Models\Menu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
             ?>
@@ -43,7 +43,11 @@
                     $temp_module_obj = Module::get($menu->name);
                     ?>
                     @la_access($temp_module_obj->id)
-                        <?php echo LAHelper::print_menu($menu); ?>
+						@if(isset($module->id) && $module->name == $menu->name)
+                        	<?php echo LAHelper::print_menu($menu ,true); ?>
+						@else
+							<?php echo LAHelper::print_menu($menu); ?>
+						@endif
                     @endla_access
                 @else
                     <?php echo LAHelper::print_menu($menu); ?>
