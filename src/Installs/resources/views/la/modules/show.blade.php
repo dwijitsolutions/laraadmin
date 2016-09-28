@@ -83,6 +83,7 @@ use Dwij\Laraadmin\Models\Module;
 						<table id="dt_module_fields" class="table table-bordered">
 						<thead>
 						<tr class="success">
+							<th style="display:none;"></th>
 							<th>#</th>
 							<th>Label</th>
 							<th>Column</th>
@@ -96,9 +97,10 @@ use Dwij\Laraadmin\Models\Module;
 							<th><i class="fa fa-cogs"></i></th>
 						</tr>
 						</thead>
-						<tbody>
+						<tbody>														
 							@foreach ($module->fields as $field)
 								<tr>
+									<td style="display:none;">{{ $field['sort'] }}</td>
 									<td>{{ $field['id'] }}</td>
 									<td>{{ $field['label'] }}</td>
 									<td>{{ $field['colname'] }}</td>
@@ -182,11 +184,19 @@ use Dwij\Laraadmin\Models\Module;
 		<!--<div class="text-center p30"><i class="fa fa-list-alt" style="font-size: 100px;"></i> <br> No posts to show</div>-->
 		</div>
 		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-sort">
-			<ul id="sortable_module_fields">
-				@foreach ($module->fields as $field)
-					<li class="ui-field" field_id="{{ $field['id'] }}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ $field['label'] }}</li>
-				@endforeach
-			</ul>
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3">
+					<ul id="sortable_module_fields">
+						@foreach ($module->fields as $field)
+							<li class="ui-field" field_id="{{ $field['id'] }}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ $field['label'] }}
+								@if($field['colname'] == $module->view_col)
+									<i class="fa fa-eye pull-right" style="margin-top:3px;"></i>
+								@endif
+							</li>
+						@endforeach
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 	</div>
@@ -298,7 +308,7 @@ use Dwij\Laraadmin\Models\Module;
 .table-access .tr-access-adv > td{padding: 7px 6px;}
 .table-access .tr-access-adv .table-bordered td{padding:10px;}
 
-.ui-field{width:25%;list-style: none;padding: 3px 7px;border: solid 1px #cccccc;border-radius: 3px;background: #f5f5f5;margin-bottom: 4px;}
+.ui-field{list-style: none;padding: 3px 7px;border: solid 1px #cccccc;border-radius: 3px;background: #f5f5f5;margin-bottom: 4px;}
 
 </style>
 @endpush
