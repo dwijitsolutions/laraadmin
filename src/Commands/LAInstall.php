@@ -85,8 +85,7 @@ class LAInstall extends Command
                     throw new Exception("Please set Cache Driver to array in .env (Required for Zizaco\Entrust) and run la:install again:"
                             ."\n\n\tCACHE_DRIVER=array\n\n", 1);
                 }
-
-                
+				
                 // migrations
                 $this->line('Generating migrations...');
                 $this->copyFolder($from."/migrations", $to."/database/migrations");
@@ -114,6 +113,7 @@ class LAInstall extends Command
                 $this->line('Appending routes...');
                 //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
                 $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+				$this->copyFile($from."/app/admin_routes.php", $to."/app/Http/admin_routes.php");
                 
                 // Utilities 
                 $this->line('Generating Utilities...');

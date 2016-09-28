@@ -1,33 +1,18 @@
-<?php
-
-/*
-|--------------------------------------------------------------------------
-| Routes File
-|--------------------------------------------------------------------------
-|
-| Here is where you will register all of the routes in an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 /* ================== Homepage ================== */
-
 
 Route::group(['middleware' => ['web']], function () {
 	Route::get('/', 'HomeController@index');
 	Route::get('/home', 'HomeController@index');
 	Route::auth();
 });
-	
-	
+
+/* ================== Access Uploaded Files ================== */
+Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
+
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Admin Application Routes
 |--------------------------------------------------------------------------
 |
 | This route group applies the "web" middleware group to every route
@@ -36,11 +21,6 @@ Route::group(['middleware' => ['web']], function () {
 |
 */
 
-if(Request::is(config('laraadmin.adminRoute').'/*') || Request::is(config('laraadmin.adminRoute'))){
-    require __DIR__.'/admin_routes.php';
+if(Request::is(config('laraadmin.adminRoute')) || Request::is(config('laraadmin.adminRoute').'/*')) {
+	require __DIR__.'/admin_routes.php';
 }
-
-
-
-
-
