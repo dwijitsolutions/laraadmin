@@ -278,7 +278,7 @@ class LAHelper
 	
 	// LAHelper::laravel_ver()
 	public static function laravel_ver() {
-		$var = app()::VERSION;
+		$var = \App::VERSION();
 		
 		if(starts_with($var, "5.2")) {
 			return 5.2;

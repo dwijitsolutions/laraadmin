@@ -85,7 +85,7 @@ class LAInstall extends Command
                 // It is required for Zizaco/Entrust
                 // https://github.com/Zizaco/entrust/issues/468
                 $driver_type = env('CACHE_DRIVER');
-                if($driver_type == "file") {
+                if($driver_type != "array") {
                     throw new Exception("Please set Cache Driver to array in .env (Required for Zizaco\Entrust) and run la:install again:"
                             ."\n\n\tCACHE_DRIVER=array\n\n", 1);
                 }
@@ -94,9 +94,8 @@ class LAInstall extends Command
                 $this->line('Generating migrations...');
                 $this->copyFolder($from."/migrations", $to."/database/migrations");
 				
-				$this->line('Copying seeds seeds...');
-        		$this->copyFile($from."/seeds/LaraAdminSeeder.php", $to."/database/seeds/LaraAdminSeeder.php");
-                $this->copyFile($from."/seeds/DatabaseSeeder.php", $to."/database/seeds/DatabaseSeeder.php");
+				$this->line('Copying seeds...');
+        		$this->copyFile($from."/seeds/DatabaseSeeder.php", $to."/database/seeds/DatabaseSeeder.php");
                 
                 // resources
                 $this->line('Generating resources: assets + views...');
