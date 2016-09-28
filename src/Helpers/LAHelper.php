@@ -275,4 +275,20 @@ class LAHelper
 		$str .= '</li>';
 		return $str;
 	}
+	
+	// LAHelper::laravel_ver()
+	public static function laravel_ver() {
+		$var = app()::VERSION;
+		
+		if(starts_with($var, "5.2")) {
+			return 5.2;
+		} else if(starts_with($var, "5.3")) {
+			return 5.3;
+		} else if(substr_count($var, ".") == 3) {
+			$var = substr($var, 0, strrpos($var, "."));
+			return $var."-str";
+		} else {
+			return floatval($var);
+		}
+	}
 }
