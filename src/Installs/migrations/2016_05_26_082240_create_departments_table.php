@@ -6,9 +6,6 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Dwij\Laraadmin\Models\Module;
-use Dwij\Laraadmin\Models\ModuleFields;
-use App\Department;
 
 class CreateDepartmentsTable extends Migration
 {
@@ -26,13 +23,6 @@ class CreateDepartmentsTable extends Migration
             ["hod", "HOD", "Dropdown", false, "3", 0, 0, false, "@employees"],
         ]);
 		
-		$row = new Department;
-        $row->name = "Administration";
-        $row->tags = "[]";
-        $row->color = "#000";
-        $row->hod = 1;
-        $row->save();
-
 		/*
 		Row Format:
 		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]

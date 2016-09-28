@@ -76,6 +76,10 @@ class Packaging extends Command
         $this->line('Exporting migrations...');
         $this->replaceFolder($from."/database/migrations", $to."/migrations");
         
+		// seeds
+        $this->line('Exporting seeds...');
+        $this->copyFile($from."/database/seeds/LaraAdminSeeder.php", $to."/seeds/LaraAdminSeeder.php");
+        
         // resources
         $this->line('Exporting resources: assets + views...');
         $this->replaceFolder($from."/resources/assets", $to."/resources/assets");

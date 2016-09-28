@@ -75,6 +75,11 @@ class RolesController extends Controller
         $request->name = str_replace(" ", "_", strtoupper(trim($request->name)));
         
         $insert_id = Module::insert("Roles", $request);
+		
+		$modules = Module::all();
+		foreach ($modules as $module) {
+            Module::setDefaultRoleAccess($module->id, $insert_id, "readonly");
+        }
         
         return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
     }

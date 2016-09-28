@@ -7,9 +7,6 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-use Dwij\Laraadmin\Models\Module;
-use Dwij\Laraadmin\Models\Menu;
-
 class CreateMenusTable extends Migration
 {
     /**
@@ -29,18 +26,6 @@ class CreateMenusTable extends Migration
             $table->integer('hierarchy')->unsigned()->default(0);
             $table->timestamps();
         });
-
-        // Generating Module Menus
-        $modules = Module::all();
-        foreach ($modules as $module) {
-            Menu::create([
-                "name" => $module->name,
-                "url" => $module->name_db,
-                "icon" => $module->fa_icon,
-                "type" => 'module',
-                "parent" => 0
-            ]);
-        }
     }
 
     /**

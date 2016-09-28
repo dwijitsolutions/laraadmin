@@ -6,9 +6,6 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Dwij\Laraadmin\Models\Module;
-use Dwij\Laraadmin\Models\ModuleFields;
-use App\Role;
 
 class CreateRolesTable extends Migration
 {
@@ -27,14 +24,6 @@ class CreateRolesTable extends Migration
             ["dept", "Department", "Dropdown", false, "3", 0, 0, false, "@departments"],
         ]);
 
-		$row = new Role;
-        $row->name = "SUPER_ADMIN";
-        $row->display_name = "Super Admin";
-        $row->description = "FUll Access Role";
-        $row->parent = 0;
-        $row->dept = 1;
-        $row->save();
-		
 		/*
 		Row Format:
 		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]

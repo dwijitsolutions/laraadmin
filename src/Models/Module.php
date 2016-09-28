@@ -1015,4 +1015,58 @@ class Module extends Model
             return false;
         }
     }
+	
+	/**
+    * Get Module Access for all roles
+    * Module::setDefaultRoleAccess($module_id, $role_id);
+    **/
+    public static function setDefaultRoleAccess($module_id, $role_id, $access_type = "readonly") {
+        $module = Module::find($module_id);
+		$module = Module::get($module->name);
+        
+        $role = DB::table('roles')->where('id', $role_id)->first();
+		
+		$access_view = 0;
+		$access_create = 0;
+		$access_edit = 0;
+		$access_delete = 0;
+		$access_fields = "invisible";
+		
+		if($access_type == "full") {
+			$access_view = 1;
+			$access_create = 1;
+			$access_edit = 1;
+			$access_delete = 1;
+			$access_fields = "write";
+			
+		} else if($access_type == "readonly") {
+			$access_view = 1;
+			$access_create = 0;
+			$access_edit = 0;
+			$access_delete = 0;
+			
+			$access_fields = "readonly";
+		}
+		
+		// 1. Set Module Access
+		
+		$module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->first();
+		if(!isset($module_perm->id)) {
+			DB::insert('insert into role_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$role->id, $module->id, $access_view, $access_create, $access_edit, $access_delete, "now()", "now()"]);
+		} else {
+			DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->update(['acc_view' => $access_view, 'acc_create' => $access_create, 'acc_edit' => $access_edit, 'acc_delete' => $access_delete]);
+		}
+		
+		// 2. Set Module Fields Access
+		
+		foreach ($module->fields as $field) {
+			// find role field permission
+			$field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
+			if(!isset($field_perm->id)) {
+				DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], $access_fields, "now()", "now()"]);
+			} else {
+				DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->update(['access' => $access_fields]);
+			}
+		}
+    }
 }

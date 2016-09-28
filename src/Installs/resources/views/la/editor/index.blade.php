@@ -61,7 +61,7 @@ $(function () {
 		bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
 		exec: function(editor) {
 			// console.log("saving", editor.session.getValue());
-			saveFileCode(cntFile, editor.session.getValue());
+			saveFileCode(cntFile, editor.session.getValue(), false);
 		}
 	});
 	
@@ -99,7 +99,7 @@ function openFile(filepath) {
 	var fileFound = fileContains(filepath);
 	// console.log("openFile: "+filepath+" fileFound: "+fileFound);
 	
-	loadFileCode(filepath);
+	loadFileCode(filepath, false);
 	// console.log($openFiles);
 }
 
@@ -122,7 +122,7 @@ function closeFile(filepath) {
 	}
 }
 
-function loadFileCode(filepath, reload = false) {
+function loadFileCode(filepath, reload) {
 	// console.log("loadFileCode: "+filepath+" contains: "+fileContains(filepath));
 	if(!fileContains(filepath)) {
 		$.ajax({
@@ -163,7 +163,7 @@ function loadFileCode(filepath, reload = false) {
 	}
 }
 
-function saveFileCode(filepath, filedata, reload = false) {
+function saveFileCode(filepath, filedata, reload) {
 	//console.log("saveFileCode: "+filepath);
 	if(filepath != "") {
 		$(".laeditor-tabs li[filepath='"+filepath+"'] i.fa").removeClass("fa-times").addClass("fa-spin").addClass("fa-refresh");

@@ -90,6 +90,9 @@ class LAInstall extends Command
                 // migrations
                 $this->line('Generating migrations...');
                 $this->copyFolder($from."/migrations", $to."/database/migrations");
+				
+				$this->line('Running seeds...');
+        		$this->copyFile($from."/seeds/LaraAdminSeeder.php", $to."/database/seeds/LaraAdminSeeder.php");
                 
                 // resources
                 $this->line('Generating resources: assets + views...');
@@ -105,6 +108,7 @@ class LAInstall extends Command
                 $this->call('clear-compiled');
                 $this->call('cache:clear');
                 $this->call('migrate');
+				$this->call('db:seed', ['--class' => 'LaraAdminSeeder']);
                 
                 // Routes
                 $this->line('Appending routes...');
