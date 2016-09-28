@@ -107,13 +107,13 @@ class LAInstall extends Command
                 $this->line('Running migrations...');
                 $this->call('clear-compiled');
                 $this->call('cache:clear');
-                $this->call('migrate');
+                $this->call('migrate', ['--seed']);
                 
                 // $this->call('db:seed', ['--class' => 'LaraAdminSeeder']);
                 
-                $this->line('Running seeds...');
-                $this->info(exec('composer dump-autoload'));
-                $this->call('db:seed');
+                // $this->line('Running seeds...');
+                // $this->info(exec('composer dump-autoload'));
+                // $this->call('db:seed');
                 
                 // Routes
                 $this->line('Appending routes...');
