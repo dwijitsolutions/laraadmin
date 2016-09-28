@@ -429,6 +429,8 @@ $(function () {
 	
 	if(!activeTab.includes("http") && activeTab.length > 1) {
 		$('#module-tabs #'+activeTab+' a').tab('show');
+	} else {
+		$('#module-tabs #fields a').tab('show');
 	}
 	
 	/* ================== Access Control ================== */
