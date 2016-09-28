@@ -11,6 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(database\seeds\LaraAdminSeeder::class);
+        $this->call(LaraAdminSeeder::class);
     }
 }
