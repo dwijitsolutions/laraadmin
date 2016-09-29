@@ -59,7 +59,11 @@ class LAInstall extends Command
                 $this->line("\n".'Generating Controllers...');
                 $this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
                 $this->replaceFolder($from."/app/Controllers/LA", $to."/app/Http/Controllers/LA");
-                $this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
+                if(LAHelper::laravel_ver() == 5.3) {
+					$this->copyFile($from."/app/Controllers/Controller.5.3.php", $to."/app/Http/Controllers/Controller.php");
+				} else {
+					$this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
+				}
                 $this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
                 
                 // Models
@@ -67,6 +71,17 @@ class LAInstall extends Command
                 foreach ($this->modelsInstalled as $model) {
                     $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
                 }
+				
+				// Generate Uploads / Thumbnails folders in /storage
+				$this->line('Generating Uploads / Thumbnails folders...');
+				if(!file_exists($to."/storage/uploads")) {
+					$this->info("mkdir: (".$to."/storage/uploads)");
+					mkdir($to."/storage/uploads");
+				}
+				if(!file_exists($to."/storage/thumbnails")) {
+					$this->info("mkdir: (".$to."/storage/thumbnails)");
+					mkdir($to."/storage/thumbnails");
+				}
                 
                 // Config
                 $this->line('Generating Config...');
@@ -81,18 +96,17 @@ class LAInstall extends Command
                 // It is required for Zizaco/Entrust
                 // https://github.com/Zizaco/entrust/issues/468
                 $driver_type = env('CACHE_DRIVER');
-                if($driver_type == "file") {
+                if($driver_type != "array") {
                     throw new Exception("Please set Cache Driver to array in .env (Required for Zizaco\Entrust) and run la:install again:"
                             ."\n\n\tCACHE_DRIVER=array\n\n", 1);
                 }
-
-                
+				
                 // migrations
                 $this->line('Generating migrations...');
                 $this->copyFolder($from."/migrations", $to."/database/migrations");
 				
-				$this->line('Running seeds...');
-        		$this->copyFile($from."/seeds/LaraAdminSeeder.php", $to."/database/seeds/LaraAdminSeeder.php");
+				$this->line('Copying seeds...');
+        		$this->copyFile($from."/seeds/DatabaseSeeder.php", $to."/database/seeds/DatabaseSeeder.php");
                 
                 // resources
                 $this->line('Generating resources: assets + views...');
@@ -107,14 +121,27 @@ class LAInstall extends Command
                 $this->line('Running migrations...');
                 $this->call('clear-compiled');
                 $this->call('cache:clear');
-                $this->call('migrate');
-				$this->call('db:seed', ['--class' => 'LaraAdminSeeder']);
+				$this->info(exec('composer dump-autoload'));
+				
+				$this->call('migrate:refresh');
+                // $this->call('migrate:refresh', ['--seed']);
+                
+                // $this->call('db:seed', ['--class' => 'LaraAdminSeeder']);
+                
+                // $this->line('Running seeds...');
+                // $this->info(exec('composer dump-autoload'));
+                $this->call('db:seed');
                 
                 // Routes
                 $this->line('Appending routes...');
                 //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
-                $this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
-                
+				if(LAHelper::laravel_ver() == 5.3) {
+					$this->appendFile($from."/app/routes.php", $to."/routes/web.php");
+					$this->copyFile($from."/app/admin_routes.php", $to."/routes/admin_routes.php");
+				} else {
+					$this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+					$this->copyFile($from."/app/admin_routes.php", $to."/app/Http/admin_routes.php");
+				}
                 // Utilities 
                 $this->line('Generating Utilities...');
                 // if(!$this->fileContains($to."/gulpfile.js", "admin-lte/AdminLTE.less")) {

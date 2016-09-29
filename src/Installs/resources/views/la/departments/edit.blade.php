@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit department: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/departments') }}">Departments</a> :
+@endsection
 @section("contentheader_description", $department->$view_col)
 @section("section", "Departments")
 @section("section_url", url(config('laraadmin.adminRoute') . '/departments'))
@@ -9,6 +11,17 @@
 @section("htmlheader_title", "Department Edit : ".$department->$view_col)
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="box">
 	<div class="box-header">
 		
@@ -30,14 +43,6 @@
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url(config('laraadmin.adminRoute') . '/departments') }}">Cancel</a></button>
 					</div>
 				{!! Form::close() !!}
-				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
 			</div>
 		</div>
 	</div>

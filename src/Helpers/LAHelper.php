@@ -249,7 +249,7 @@ class LAHelper
 	}
 
 	// LAHelper::print_menu($menu)
-	public static function print_menu($menu) {
+	public static function print_menu($menu, $active = false) {
 		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
 
 		$treeview = "";
@@ -258,7 +258,12 @@ class LAHelper
 			$treeview = " class=\"treeview\"";
 			$subviewSign = '<i class="fa fa-angle-left pull-right"></i>';
 		}
-		$str = '<li'.$treeview.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
+		$active_str = '';
+		if($active) {
+			$active_str = 'class="active"';
+		}
+		
+		$str = '<li'.$treeview.' '.$active_str.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
 		
 		if(count($childrens)) {
 			$str .= '<ul class="treeview-menu">';
@@ -269,5 +274,21 @@ class LAHelper
 		}
 		$str .= '</li>';
 		return $str;
+	}
+	
+	// LAHelper::laravel_ver()
+	public static function laravel_ver() {
+		$var = \App::VERSION();
+		
+		if(starts_with($var, "5.2")) {
+			return 5.2;
+		} else if(starts_with($var, "5.3")) {
+			return 5.3;
+		} else if(substr_count($var, ".") == 3) {
+			$var = substr($var, 0, strrpos($var, "."));
+			return $var."-str";
+		} else {
+			return floatval($var);
+		}
 	}
 }

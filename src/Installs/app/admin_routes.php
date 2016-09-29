@@ -1,12 +1,10 @@
 <?php
-Route::group(['middleware' => ['web']], function () {
-	Route::get('/', 'HomeController@index');
-	Route::get('/home', 'HomeController@index');
+Route::group(['middleware' => ['permission:ADMIN_PANEL']], function () {
+	
 	/* ================== Dashboard ================== */
 	
 	Route::get(config('laraadmin.adminRoute'), 'LA\DashboardController@index');
 	Route::get(config('laraadmin.adminRoute'). '/dashboard', 'LA\DashboardController@index');
-	Route::get('/dashboard', 'LA\DashboardController@index');
 	
 	/* ================== Users ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/users', 'LA\UsersController');
@@ -16,7 +14,6 @@ Route::group(['middleware' => ['web']], function () {
 	Route::resource(config('laraadmin.adminRoute') . '/uploads', 'LA\UploadsController');
 	Route::post(config('laraadmin.adminRoute') . '/upload_files', 'LA\UploadsController@upload_files');
 	Route::get(config('laraadmin.adminRoute') . '/uploaded_files', 'LA\UploadsController@uploaded_files');
-	Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
 	Route::post(config('laraadmin.adminRoute') . '/uploads_update_caption', 'LA\UploadsController@update_caption');
 	Route::post(config('laraadmin.adminRoute') . '/uploads_update_filename', 'LA\UploadsController@update_filename');
 	Route::post(config('laraadmin.adminRoute') . '/uploads_update_public', 'LA\UploadsController@update_public');
@@ -39,10 +36,9 @@ Route::group(['middleware' => ['web']], function () {
 	/* ================== Employees ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/employees', 'LA\EmployeesController');
 	Route::get(config('laraadmin.adminRoute') . '/employee_dt_ajax', 'LA\EmployeesController@dtajax');
+	Route::post(config('laraadmin.adminRoute') . '/change_password/{id}', 'LA\EmployeesController@change_password');
 	
 	/* ================== Organizations ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/organizations', 'LA\OrganizationsController');
 	Route::get(config('laraadmin.adminRoute') . '/organization_dt_ajax', 'LA\OrganizationsController@dtajax');
-
 });
-

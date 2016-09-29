@@ -242,7 +242,7 @@ class ModuleController extends Controller
 		$modules = LAHelper::getModuleNames([]);
 		$roles = Role::all();
 		
-		$now = "now()";        
+		$now = date("Y-m-d H:i:s");        
         
 		foreach($roles as $role) {
 			

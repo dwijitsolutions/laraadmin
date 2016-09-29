@@ -35,8 +35,8 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="readonly">Read Only:</label>
-						{{ Form::checkbox("readonly", "readonly") }}
+						<label for="unique">Unique:</label>
+						{{ Form::checkbox("unique", "unique") }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					

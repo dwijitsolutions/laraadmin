@@ -62,6 +62,7 @@ class Packaging extends Command
         // Routes
         $this->line('Exporting Routes...');
         $this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
+		$this->copyFile($from."/app/Http/admin_routes.php", $to."/app/admin_routes.php");
         
         // Config
         $this->line('Exporting Config...');
@@ -78,7 +79,7 @@ class Packaging extends Command
         
 		// seeds
         $this->line('Exporting seeds...');
-        $this->copyFile($from."/database/seeds/LaraAdminSeeder.php", $to."/seeds/LaraAdminSeeder.php");
+        $this->copyFile($from."/database/seeds/DatabaseSeeder.php", $to."/seeds/DatabaseSeeder.php");
         
         // resources
         $this->line('Exporting resources: assets + views...');

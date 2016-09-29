@@ -18,7 +18,7 @@ class CreateModuleFieldsTable extends Migration
             $table->string('label', 100);
             $table->integer('module')->unsigned();
             $table->integer('field_type')->unsigned();
-            $table->boolean('readonly')->default(false);
+            $table->boolean('unique')->default(false);
             $table->string('defaultvalue');
             $table->integer('minlength')->unsigned();
             $table->integer('maxlength')->unsigned();

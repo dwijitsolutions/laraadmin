@@ -8,9 +8,10 @@ use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Models\Menu;
 
 use App\Role;
+use App\Permission;
 use App\Department;
 
-class LaraAdminSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,7 +20,10 @@ class LaraAdminSeeder extends Seeder
      */
     public function run()
     {
-		// Generating Module Menus
+        
+        /* ================ LaraAdmin Seeder Code ================ */
+        
+        // Generating Module Menus
         $modules = Module::all();
         foreach ($modules as $module) {
             Menu::create([
@@ -52,5 +56,14 @@ class LaraAdminSeeder extends Seeder
 		foreach ($modules as $module) {
             Module::setDefaultRoleAccess($module->id, $role->id, "full");
         }
+		
+		// Create Admin Panel Permission
+		$perm = new Permission;
+        $perm->name = "ADMIN_PANEL";
+        $perm->display_name = "Admin Panel";
+        $perm->description = "Admin Panel Permission";
+        $perm->save();
+		
+		$role->attachPermission($perm);
     }
 }

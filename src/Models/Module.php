@@ -121,7 +121,7 @@ class Module extends Model
                             'colname' => $field->colname,
                             'label' => $field->label,
                             'field_type' => $ftypes[$field->field_type],
-                            'readonly' => $field->readonly,
+                            'unique' => $field->unique,
                             'defaultvalue' => $dvalue,
                             'minlength' => $field->minlength,
                             'maxlength' => $field->maxlength,
@@ -625,9 +625,9 @@ class Module extends Model
             $obj->field_type = $field[2];
             
             if(!isset($field[3])) {
-                $obj->readonly = 0;
+                $obj->unique = 0;
             } else {
-                $obj->readonly = $field[3];
+                $obj->unique = $field[3];
             }
             if(!isset($field[4])) {
                 $obj->defaultvalue = '';
@@ -671,7 +671,7 @@ class Module extends Model
         $module = Module::where('name', $module_name)->first();
         if(isset($module)) {
             $module = $module->toArray();
-            $fields = ModuleFields::where('module', $module['id'])->get()->toArray();
+            $fields = ModuleFields::where('module', $module['id'])->orderBy('sort', 'asc')->get()->toArray();
             $fields2 = array();
             foreach ($fields as $field) {
                 $fields2[$field['colname']] = $field;
@@ -961,10 +961,19 @@ class Module extends Model
     **/
     public static function hasFieldAccess($module_id, $field_id, $access_type = "view", $user_id = 0) {
         $roles = array();
+		
+		if(\Auth::guest()) {
+			return false;
+		}
         
         if(is_string($module_id)) {
             $module = Module::get($module_id);
             $module_id = $module->id;
+        }
+		
+		if(is_string($field_id)) {
+            $field_object = ModuleFields::where('module', $module_id)->where('colname', $field_id)->first();
+            $field_id = $field_object->id;
         }
         
         if($access_type == null || $access_type == "") {
@@ -977,7 +986,7 @@ class Module extends Model
                 $roles = $user->roles();
             }
         } else {
-            $roles = \Auth::user()->roles();
+			$roles = \Auth::user()->roles();
         }
         
         $hasModuleAccess = false;
@@ -1048,11 +1057,13 @@ class Module extends Model
 			$access_fields = "readonly";
 		}
 		
+		$now = date("Y-m-d H:i:s");
+		
 		// 1. Set Module Access
 		
 		$module_perm = DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->first();
 		if(!isset($module_perm->id)) {
-			DB::insert('insert into role_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$role->id, $module->id, $access_view, $access_create, $access_edit, $access_delete, "now()", "now()"]);
+			DB::insert('insert into role_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$role->id, $module->id, $access_view, $access_create, $access_edit, $access_delete, $now, $now]);
 		} else {
 			DB::table('role_module')->where('role_id', $role->id)->where('module_id', $module->id)->update(['acc_view' => $access_view, 'acc_create' => $access_create, 'acc_edit' => $access_edit, 'acc_delete' => $access_delete]);
 		}
@@ -1063,7 +1074,7 @@ class Module extends Model
 			// find role field permission
 			$field_perm = DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
 			if(!isset($field_perm->id)) {
-				DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], $access_fields, "now()", "now()"]);
+				DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], $access_fields, $now, $now]);
 			} else {
 				DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->update(['access' => $access_fields]);
 			}

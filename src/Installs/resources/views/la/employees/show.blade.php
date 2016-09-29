@@ -1,4 +1,4 @@
-@extends("la.layouts.app")
+@extends('la.layouts.app')
 
 @section('htmlheader_title')
 	Employee View
@@ -31,17 +31,17 @@
 		<div class="col-md-4">
 			<!--
 			<div class="teamview">
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user1-128x128.jpg') }}" alt=""><i class="status-online"></i></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user2-160x160.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user3-128x128.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user4-128x128.jpg') }}" alt=""><i class="status-online"></i></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user5-128x128.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user6-128x128.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user7-128x128.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user8-128x128.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user5-128x128.jpg') }}" alt=""></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user6-128x128.jpg') }}" alt=""><i class="status-online"></i></a>
-				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('/img/user7-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user1-128x128.jpg') }}" alt=""><i class="status-online"></i></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user2-160x160.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user3-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user4-128x128.jpg') }}" alt=""><i class="status-online"></i></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user5-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user6-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user7-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user8-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user5-128x128.jpg') }}" alt=""></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user6-128x128.jpg') }}" alt=""><i class="status-online"></i></a>
+				<a class="face" data-toggle="tooltip" data-placement="top" title="John Doe"><img src="{{ asset('la-assets/img/user7-128x128.jpg') }}" alt=""></a>
 			</div>
 			-->
 			<div class="dats1 pb">
@@ -79,19 +79,25 @@
 			</div>
 		</div>
 		<div class="col-md-1 actions">
-			<a href="{{ url(config('laraadmin.adminRoute') . '/employees/'.$employee->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
-			{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $employee->id], 'method' => 'delete', 'style'=>'display:inline']) }}
-				<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
-			{{ Form::close() }}
+			@la_access("Employees", "edit")
+				<a href="{{ url(config('laraadmin.adminRoute') . '/employees/'.$employee->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
+			@endla_access
+			
+			@la_access("Employees", "delete")
+				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $employee->id], 'method' => 'delete', 'style'=>'display:inline']) }}
+					<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
+				{{ Form::close() }}
+			@endla_access
 		</div>
 	</div>
 
 	<ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}" data-toggle="tooltip" data-placement="right" title="Back to Employees"><i class="fa fa-chevron-left"></i></a></li>
 		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-social-links"><i class="fa fa-twitter"></i> Social Links</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-account-settings"><i class="fa fa-key"></i> Account settings</a></li>
+		<li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li>
+		@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
+			<li class=""><a role="tab" data-toggle="tab" href="#tab-account-settings" data-target="#tab-account-settings"><i class="fa fa-key"></i> Account settings</a></li>
+		@endif
 	</ul>
 
 	<div class="tab-content">
@@ -214,86 +220,39 @@
 			</ul>
 			<!--<div class="text-center p30"><i class="fa fa-list-alt" style="font-size: 100px;"></i> <br> No posts to show</div>-->
 		</div>
-		<div role="tabpanel" class="tab-pane fade" id="tab-social-links">
-			<div class="tab-content">
-				<form action="" id="social-links-form" class="general-form dashed-row white" role="form" method="post" accept-charset="utf-8" novalidate="novalidate">
-					<div class="panel">
-						<div class="panel-default panel-heading">
-							<h4> Social Links</h4>
-						</div>
-						<div class="panel-body">
-							<div class="form-group">
-								<label for="facebook" class=" col-md-2">Facebook</label>
-								<div class=" col-md-10">
-									<input type="text" name="facebook" value="" id="facebook" class="form-control" placeholder="https://www.facebook.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="twitter" class=" col-md-2">Twitter</label>
-								<div class=" col-md-10">
-									<input type="text" name="twitter" value="" id="twitter" class="form-control" placeholder="https://twitter.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="github" class=" col-md-2">Github</label>
-								<div class=" col-md-10">
-									<input type="text" name="github" value="" id="github" class="form-control" placeholder="https://github.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="linkedin" class=" col-md-2">Linkedin</label>
-								<div class=" col-md-10">
-									<input type="text" name="linkedin" value="" id="linkedin" class="form-control" placeholder="https://www.linkedin.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="googleplus" class=" col-md-2">Google plus</label>
-								<div class=" col-md-10">
-									<input type="text" name="googleplus" value="" id="googleplus" class="form-control" placeholder="https://plus.google.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="instagram" class=" col-md-2">Instagram</label>
-								<div class=" col-md-10">
-									<input type="text" name="instagram" value="" id="instagram" class="form-control" placeholder="https://instagram.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="youtube" class=" col-md-2">youtube</label>
-								<div class=" col-md-10">
-									<input type="text" name="youtube" value="" id="youtube" class="form-control" placeholder="https://www.youtube.com/">
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
 		
+		@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
 		<div role="tabpanel" class="tab-pane fade" id="tab-account-settings">
 			<div class="tab-content">
-				<form action="" id="account-info-form" class="general-form dashed-row white" role="form" method="post" accept-charset="utf-8" novalidate="novalidate">
+				<form action="{{ url(config('laraadmin.adminRoute') . '/change_password/'.$employee->id) }}" id="password-reset-form" class="general-form dashed-row white" method="post" accept-charset="utf-8">
+					{{ csrf_field() }}
 					<div class="panel">
 						<div class="panel-default panel-heading">
 							<h4>Account settings</h4>
 						</div>
 						<div class="panel-body">
-							<div class="form-group">
-								<label for="email" class=" col-md-2">Email</label>
-								<div class=" col-md-10">
-									<input type="text" name="email" value="{{ $employee->email }}" id="email" class="form-control" placeholder="Email" autocomplete="off" data-rule-email="1" data-msg-email="Please enter a valid email address." data-rule-required="1" data-msg-required="This field is required." aria-required="true">
+							@if (count($errors) > 0)
+								<div class="alert alert-danger">
+									<ul>
+										@foreach ($errors->all() as $error)
+											<li>{{ $error }}</li>
+										@endforeach
+									</ul>
 								</div>
-							</div>
+							@endif
+							@if(Session::has('success_message'))
+								<p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('success_message') }}</p>
+							@endif
 							<div class="form-group">
 								<label for="password" class=" col-md-2">Password</label>
 								<div class=" col-md-10">
-									<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" autocomplete="off" data-rule-minlength="6" data-msg-minlength="Please enter at least 6 characters.">
+									<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" autocomplete="off" required="required" data-rule-minlength="6" data-msg-minlength="Please enter at least 6 characters.">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="retype_password" class=" col-md-2">Retype password</label>
+								<label for="password_confirmation" class=" col-md-2">Retype password</label>
 								<div class=" col-md-10">
-									<input type="password" name="retype_password" value="" id="retype_password" class="form-control" placeholder="Retype password" autocomplete="off" data-rule-equalto="#password" data-msg-equalto="Please enter the same value again.">
+									<input type="password" name="password_confirmation" value="" id="password_confirmation" class="form-control" placeholder="Retype password" autocomplete="off" required="required" data-rule-equalto="#password" data-msg-equalto="Please enter the same value again.">
 								</div>
 							</div>
 						</div>
@@ -304,8 +263,21 @@
 				</form>
 			</div>
 		</div>
+		@endif
 	</div>
 	</div>
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(function () {
+	@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
+	$('#password-reset-form').validate({
+		
+	});
+	@endif
+});
+</script>
+@endpush

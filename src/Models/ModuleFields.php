@@ -14,7 +14,7 @@ class ModuleFields extends Model
     protected $table = 'module_fields';
     
     protected $fillable = [
-        "colname", "label", "module", "field_type", "readonly", "defaultvalue", "minlength", "maxlength", "required", "popup_vals"
+        "colname", "label", "module", "field_type", "unique", "defaultvalue", "minlength", "maxlength", "required", "popup_vals"
     ];
     
     protected $hidden = [
@@ -32,10 +32,10 @@ class ModuleFields extends Model
             $field->label = $request->label;
             $field->module = $request->module_id;
             $field->field_type = $request->field_type;
-            if($request->readonly) {
-                $field->readonly = true;
+            if($request->unique) {
+                $field->unique = true;
             } else {
-                $field->readonly = false;
+                $field->unique = false;
             }
             $field->defaultvalue = $request->defaultvalue;
             $field->minlength = $request->minlength;
@@ -84,10 +84,10 @@ class ModuleFields extends Model
         $field->label = $request->label;
         $field->module = $request->module_id;
         $field->field_type = $request->field_type;
-        if($request->readonly) {
-            $field->readonly = true;
+        if($request->unique) {
+            $field->unique = true;
         } else {
-            $field->readonly = false;
+            $field->unique = false;
         }
         $field->defaultvalue = $request->defaultvalue;
         $field->minlength = $request->minlength;

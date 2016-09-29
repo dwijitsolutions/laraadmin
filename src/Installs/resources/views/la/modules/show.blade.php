@@ -45,8 +45,7 @@ use Dwij\Laraadmin\Models\Module;
 		<div class="col-md-4">
 			@if($module->view_col != "")
 				@if(isset($module->is_gen) && $module->is_gen)
-						<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_update" href="#"><i class="fa fa-refresh"></i> Update Module</a></div>
-				
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_update" href="#"><i class="fa fa-refresh"></i> Update Module</a></div>
 				@else
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration + CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD</a></div>
 					
@@ -65,46 +64,41 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 	</div>
 
-	<ul id="tabs" data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
+	<ul id="module-tabs" data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" data-toggle="tooltip" data-placement="right" title="Back to Modules"> <i class="fa fa-chevron-left"></i>&nbsp;</a></li>
 		
-		<li class="tab-pane active" id="fields">
-			<a id="tab_fields" role="tab" data-toggle="tab" class="tab_info active" href="#tab-general-info" data-target="#tab-info">
-					<i class="fa fa-bars"></i> Module Fields
-			</a>
+		<li class="tab-pane" id="fields">
+			<a id="tab_fields" role="tab" data-toggle="tab" class="tab_info" href="#fields" data-target="#tab-info"><i class="fa fa-bars"></i> Module Fields</a>
 		</li>
 		
-		<li class="tab-pane " id="access">
-			<a id="tab_access" role="tab" data-toggle="tab"  class="tab_info " href="" data-target="#tab-access">
-				<i class="fa fa-key"></i> Access
-			</a>
+		<li class="tab-pane" id="access">
+			<a id="tab_access" role="tab" data-toggle="tab"  class="tab_info " href="#access" data-target="#tab-access"><i class="fa fa-key"></i> Access</a>
 		</li>
 		
-		<li class="tab-pane " id="sort">
-			<a id="tab_sort" role="tab" data-toggle="tab"  class="tab_info " href="" data-target="#tab-sort">
-				<i class="fa fa-sort"></i> Sort
-			</a>
+		<li class="tab-pane" id="sort">
+			<a id="tab_sort" role="tab" data-toggle="tab"  class="tab_info " href="#sort" data-target="#tab-sort"><i class="fa fa-sort"></i> Sort</a>
 		</li>
 		
 		<a data-toggle="modal" data-target="#AddFieldModal" class="btn btn-success btn-sm pull-right btn-add-field" style="margin-top:10px;margin-right:10px;">Add Field</a>
 	</ul>
 
 	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane active fade in" id="tab-info">
+		<div role="tabpanel" class="tab-pane fade in" id="tab-info">
 			<div class="tab-content">
 				<div class="panel">
 					<!--<div class="panel-default panel-heading">
 						<h4>Module Fields</h4>
 					</div>-->
 					<div class="panel-body">
-						<table id="dt_module_fields" class="table table-bordered">
+						<table id="dt_module_fields" class="table table-bordered" style="width:100% !important;">
 						<thead>
 						<tr class="success">
+							<th style="display:none;"></th>
 							<th>#</th>
 							<th>Label</th>
 							<th>Column</th>
 							<th>Type</th>
-							<th>Readonly</th>
+							<th>Unique</th>
 							<th>Default</th>
 							<th>Min</th>
 							<th>Max</th>
@@ -113,14 +107,15 @@ use Dwij\Laraadmin\Models\Module;
 							<th><i class="fa fa-cogs"></i></th>
 						</tr>
 						</thead>
-						<tbody>
+						<tbody>														
 							@foreach ($module->fields as $field)
 								<tr>
+									<td style="display:none;">{{ $field['sort'] }}</td>
 									<td>{{ $field['id'] }}</td>
 									<td>{{ $field['label'] }}</td>
 									<td>{{ $field['colname'] }}</td>
 									<td>{{ $ftypes[$field['field_type']] }}</td>
-									<td>@if($field['readonly']) <span class="text-danger">True</span>@endif </td>
+									<td>@if($field['unique']) <span class="text-danger">True</span>@endif </td>
 									<td>{{ $field['defaultvalue'] }}</td>
 									<td>{{ $field['minlength'] }}</td>
 									<td>{{ $field['maxlength'] }}</td>
@@ -142,6 +137,7 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-access">
 			<div class="guide1">
+				<span class="pull-left">Module Access for Roles</span>
 				<i class="fa fa-circle gray"></i> Invisible <i class="fa fa-circle orange"></i> Read-Only <i class="fa fa-circle green"></i> Write
 			</div>
 			<form action="{{ url(config('laraadmin.adminRoute') . '/save_role_module_permissions/'.$module->id) }}" method="post">
@@ -199,11 +195,19 @@ use Dwij\Laraadmin\Models\Module;
 		<!--<div class="text-center p30"><i class="fa fa-list-alt" style="font-size: 100px;"></i> <br> No posts to show</div>-->
 		</div>
 		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-sort">
-			<ul id="sortable_module_fields">
-				@foreach ($module->fields as $field)
-					<li class="ui-field" field_id="{{ $field['id'] }}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ $field['label'] }}</li>
-				@endforeach
-			</ul>
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-3">
+					<ul id="sortable_module_fields">
+						@foreach ($module->fields as $field)
+							<li class="ui-field" field_id="{{ $field['id'] }}"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{ $field['label'] }}
+								@if($field['colname'] == $module->view_col)
+									<i class="fa fa-eye pull-right" style="margin-top:3px;"></i>
+								@endif
+							</li>
+						@endforeach
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 	</div>
@@ -238,8 +242,8 @@ use Dwij\Laraadmin\Models\Module;
 					</div>
 					
 					<div class="form-group">
-						<label for="readonly">Read Only:</label>
-						{{ Form::checkbox("readonly", "readonly", false, []) }}
+						<label for="unique">Unique:</label>
+						{{ Form::checkbox("unique", "unique", false, []) }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					
@@ -261,12 +265,6 @@ use Dwij\Laraadmin\Models\Module;
 					<div class="form-group">
 						<label for="required">Required:</label>
 						{{ Form::checkbox("required", "required", false, []) }}
-						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
-					</div>
-					
-					<div class="form-group">
-						<label for="required">Unique:</label>
-						{{ Form::checkbox("unique", "unique", false, []) }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					
@@ -315,7 +313,7 @@ use Dwij\Laraadmin\Models\Module;
 .table-access .tr-access-adv > td{padding: 7px 6px;}
 .table-access .tr-access-adv .table-bordered td{padding:10px;}
 
-.ui-field{width:25%;list-style: none;padding: 3px 7px;border: solid 1px #cccccc;border-radius: 3px;background: #f5f5f5;margin-bottom: 4px;}
+.ui-field{list-style: none;padding: 3px 7px;border: solid 1px #cccccc;border-radius: 3px;background: #f5f5f5;margin-bottom: 4px;}
 
 </style>
 @endpush
@@ -326,16 +324,6 @@ use Dwij\Laraadmin\Models\Module;
 <script src="{{ asset('la-assets/plugins/jQueryUI/jquery-ui.js') }}"></script>
 
 <script>
-	
-$(function(){
-	
-	var url = window.location.href;
-	var activeTab = url.substring(url.indexOf("#") + 1);
-	if(!activeTab.includes("http") && activeTab.length>1){
-		$(".tab-pane").removeClass("active");
- 		$('#tab_'+activeTab).click();
- 	}
-  });
 
 $(function () {
 	$("#sortable_module_fields").sortable({
@@ -426,6 +414,19 @@ $(function () {
 	});
 	$("#field-form").validate();
 	
+	/* ================== Tab Selection ================== */
+	
+	var $tabs = $('#module-tabs').tabs();
+	
+	var url = window.location.href;
+	var activeTab = url.substring(url.indexOf("#") + 1);
+	
+	if(!activeTab.includes("http") && activeTab.length > 1) {
+		$('#module-tabs #'+activeTab+' a').tab('show');
+	} else {
+		$('#module-tabs #fields a').tab('show');
+	}
+	
 	/* ================== Access Control ================== */
 	
 	$('.slider').slider();
@@ -433,7 +434,7 @@ $(function () {
 	$(".slider.slider-horizontal").each(function(index) {
 		var field = $(this).next().attr("name");
 		var value = $(this).next().val();
-		console.log(""+field+" ^^^ "+value);
+		// console.log(""+field+" ^^^ "+value);
 		switch (value) {
 			case '0':
 				$(this).removeClass("orange");
@@ -457,7 +458,7 @@ $(function () {
 		if($(this).next().attr("name")) {
 			var field = $(this).next().attr("name");
 			var value = $(this).next().val();
-			console.log(""+field+" = "+value);
+			// console.log(""+field+" = "+value);
 			if(value == 0) {
 				$(this).removeClass("orange");
 				$(this).removeClass("green");

@@ -20,14 +20,14 @@ class CreatePermissionsTable extends Migration
     public function up()
     {
         Module::generate("Permissions", 'permissions', 'name', 'fa-magic', [
-            ["name", "Name", "Name", false, "", 1, 256, true],
+            ["name", "Name", "Name", true, "", 1, 256, true],
             ["display_name", "Display Name", "String", false, "", 0, 256, true],
             ["description", "Description", "Textarea", false, "", 0, 1000, false],
         ]);
 		
 		/*
 		Row Format:
-		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
+		["field_name_db", "Label", "UI Type", "Unique", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
         Module::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
         
 		Module::generate("Books", 'books', 'name', [
