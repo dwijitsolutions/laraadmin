@@ -71,6 +71,17 @@ class LAInstall extends Command
                 foreach ($this->modelsInstalled as $model) {
                     $this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
                 }
+				
+				// Generate Uploads / Thumbnails folders in /storage
+				$this->line('Generating Uploads / Thumbnails folders...');
+				if(!file_exists($to."/storage/uploads")) {
+					$this->info("mkdir: (".$to."/storage/uploads)");
+					mkdir($to."/storage/uploads");
+				}
+				if(!file_exists($to."/storage/thumbnails")) {
+					$this->info("mkdir: (".$to."/storage/thumbnails)");
+					mkdir($to."/storage/thumbnails");
+				}
                 
                 // Config
                 $this->line('Generating Config...');
