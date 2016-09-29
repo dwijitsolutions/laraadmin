@@ -269,12 +269,6 @@ use Dwij\Laraadmin\Models\Module;
 					</div>
 					
 					<div class="form-group">
-						<label for="required">Unique:</label>
-						{{ Form::checkbox("unique", "unique", false, []) }}
-						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
-					</div>
-					
-					<div class="form-group">
 						<label for="popup_vals">Values :</label>
 						{{ Form::text("popup_vals", null, ['class'=>'form-control', 'placeholder'=>'Popup Values (Only for Radio, Dropdown, Multiselect, Taginput)']) }}
 					</div>
