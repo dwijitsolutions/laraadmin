@@ -55,6 +55,9 @@ class LAFormMaker
 			}
 			if($unique && !isset($params['unique'])) {
 				$params['data-rule-unique'] = "true";
+				$params['field_id'] = $module->fields[$field_name]['id'];
+				$params['adminRoute'] = config('laraadmin.adminRoute');
+				$out .= '<input type="hidden" name="_token_'.$module->fields[$field_name]['id'].'" value="'.csrf_token().'">';
 			}
 			
 			if($required && !isset($params['required'])) {
