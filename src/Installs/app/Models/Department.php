@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-	use SoftDeletes;
-
-    protected $table = 'departments';
+    use SoftDeletes;
+	
+	protected $table = 'departments';
 	
 	protected $hidden = [
         

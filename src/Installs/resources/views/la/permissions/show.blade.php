@@ -81,17 +81,24 @@
 			</div>
 		</div>
 		<div class="col-md-1 actions">
-			<a href="{{ url(config('laraadmin.adminRoute') . '/permissions/'.$permission->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
-			{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.permissions.destroy', $permission->id], 'method' => 'delete', 'style'=>'display:inline']) }}
-				<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
-			{{ Form::close() }}
+			@la_access("Permissions", "edit")
+				<a href="{{ url(config('laraadmin.adminRoute') . '/permissions/'.$permission->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
+			@endla_access
+			
+			@la_access("Permissions", "delete")
+				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.permissions.destroy', $permission->id], 'method' => 'delete', 'style'=>'display:inline']) }}
+					<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
+				{{ Form::close() }}
+			@endla_access
 		</div>
 	</div>
 
 	<ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/permissions') }}" data-toggle="tooltip" data-placement="right" title="Back to Permissions"><i class="fa fa-chevron-left"></i></a></li>
 		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
+		@role("SUPER_ADMIN")
 		<li class=""><a role="tab" data-toggle="tab" href="" data-target="#tab-access"><i class="fa fa-key"></i> Access</a></li>
+		@endrole
 	</ul>
 
 	<div class="tab-content">
@@ -109,6 +116,7 @@
 				</div>
 			</div>
 		</div>
+		@role("SUPER_ADMIN")
 		<div role="tabpanel" class="tab-pane fade in p20 bg-white" id="tab-access">
 			<div class="tab-content">
 				<div class="panel infolist">
@@ -145,6 +153,7 @@
 				</div>
 			</div>
 		</div>
+		@endrole
 	</div>
 	</div>
 	</div>

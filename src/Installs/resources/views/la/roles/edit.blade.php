@@ -40,14 +40,6 @@
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url(config('laraadmin.adminRoute') . '/roles') }}">Cancel</a></button>
 					</div>
 				{!! Form::close() !!}
-				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
 			</div>
 		</div>
 	</div>

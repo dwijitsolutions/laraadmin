@@ -7,7 +7,9 @@
 @section("htmlheader_title", "Roles Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Role</button>
+@la_access("Roles", "create")
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Role</button>
+@endla_access
 @endsection
 
 @section("main-content")
@@ -43,6 +45,7 @@
 	</div>
 </div>
 
+@la_access("Roles", "create")
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -68,6 +71,7 @@
 		</div>
 	</div>
 </div>
+@endla_access
 
 @endsection
 

@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit permission: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/permissions') }}">Permissions</a> :
+@endsection
 @section("contentheader_description", $permission->$view_col)
 @section("section", "Permissions")
 @section("section_url", url(config('laraadmin.adminRoute') . '/permissions'))
@@ -40,14 +42,6 @@
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url(config('laraadmin.adminRoute') . '/permissions') }}">Cancel</a></button>
 					</div>
 				{!! Form::close() !!}
-				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
 			</div>
 		</div>
 	</div>

@@ -223,8 +223,8 @@ class OrganizationsController extends Controller
 				// }
 			}
 			
-			$output = '';
 			if($this->show_action) {
+				$output = '';
 				if(Module::hasAccess("Organizations", "edit")) {
 					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/organizations/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
 				}

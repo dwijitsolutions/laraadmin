@@ -50,8 +50,6 @@
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url(config('laraadmin.adminRoute') . '/organizations') }}">Cancel</a></button>
 					</div>
 				{!! Form::close() !!}
-				
-			
 			</div>
 		</div>
 	</div>

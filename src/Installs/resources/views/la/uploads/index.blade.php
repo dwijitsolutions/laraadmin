@@ -7,7 +7,9 @@
 @section("htmlheader_title", "Uploaded images & files")
 
 @section("headerElems")
-<button id="AddNewUploads" class="btn btn-success btn-sm pull-right">Add New</button>
+@la_access("Uploads", "create")
+	<button id="AddNewUploads" class="btn btn-success btn-sm pull-right">Add New</button>
+@endla_access
 @endsection
 
 @section("main-content")
@@ -60,7 +62,7 @@
                                 <input type="hidden" name="file_id" value="0">
                                 <div class="form-group">
                                     <label for="filename">File Name</label>
-                                    <input class="form-control" placeholder="File Name" name="filename" type="text" @if(!config('laraadmin.uploads.allow_filename_change')) readonly @endif value="">
+                                    <input class="form-control" placeholder="File Name" name="filename" type="text" @if(!config('laraadmin.uploads.allow_filename_change') || !Module::hasFieldAccess("Uploads", "name", "write")) readonly @endif value="">
                                 </div>
                                 <div class="form-group">
                                     <label for="url">URL</label>
@@ -68,7 +70,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="caption">Label</label>
-                                    <input class="form-control" placeholder="Caption" name="caption" type="text" value="">
+                                    <input class="form-control" placeholder="Caption" name="caption" type="text" value="" @if(!Module::hasFieldAccess("Uploads", "caption", "write")) readonly @endif>
                                 </div>
                                 @if(!config('laraadmin.uploads.private_uploads'))
                                     <div class="form-group">
@@ -83,7 +85,9 @@
 			</div>
 			<div class="modal-footer">
 				<a class="btn btn-success" id="downFileBtn" href="">Download</a>
+				@la_access("Uploads", "delete")
                 <button type="button" class="btn btn-danger" id="delFileBtn">Delete</button>
+				@endla_access
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
@@ -102,6 +106,7 @@ var bsurl = $('body').attr("bsurl");
 var fm_dropzone_main = null;
 var cntFiles = null;
 $(function () {
+	@la_access("Uploads", "create")
 	fm_dropzone_main = new Dropzone("#fm_dropzone_main", {
         maxFilesize: 2,
         acceptedFiles: "image/*,application/pdf",
@@ -123,6 +128,8 @@ $(function () {
     $("#closeDZ1").on("click", function() {
         $("#fm_dropzone_main").slideUp();
     });
+	@endla_access
+	
     $("body").on("click", "ul.files_container .fm_file_sel", function() {
         var upload = $(this).attr("upload");
         upload = JSON.parse(upload);
@@ -164,7 +171,7 @@ $(function () {
         }
         $("#EditFileModal").modal('show');
     });
-    @if(!config('laraadmin.uploads.private_uploads'))
+    @if(!config('laraadmin.uploads.private_uploads') && Module::hasFieldAccess("Uploads", "public", "write"))
     $('#EditFileModal .Switch.Ajax').click(function() {
         $.ajax({
             url: "{{ url(config('laraadmin.adminRoute') . '/uploads_update_public') }}",
@@ -178,6 +185,8 @@ $(function () {
         
     });
     @endif
+	
+	@la_field_access("Uploads", "caption", "write")
     $(".file-info-form input[name=caption]").on("blur", function() {
         // TODO: Update Caption
         $.ajax({
@@ -190,8 +199,9 @@ $(function () {
             }
         });
     });
-
-    @if(config('laraadmin.uploads.allow_filename_change'))
+	@endla_field_access
+	
+    @if(config('laraadmin.uploads.allow_filename_change') && Module::hasFieldAccess("Uploads", "name", "write"))
     $(".file-info-form input[name=filename]").on("blur", function() {
         // TODO: Change Filename
         $.ajax({
@@ -206,6 +216,7 @@ $(function () {
     });
     @endif
 
+	@la_access("Uploads", "delete")
     $("#EditFileModal #delFileBtn").on("click", function() {
         if(confirm("Delete image "+$(".file-info-form input[name=filename]").val()+" ?")) {
             $.ajax({
@@ -220,6 +231,8 @@ $(function () {
             });
         }
     });
+	@endla_access
+	
     loadUploadedFiles();
 });
 function loadUploadedFiles() {

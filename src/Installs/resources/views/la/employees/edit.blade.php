@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit employee: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}">Employees</a> :
+@endsection
 @section("contentheader_description", $employee->$view_col)
 @section("section", "Employees")
 @section("section_url", url(config('laraadmin.adminRoute') . '/employees'))
@@ -46,7 +48,7 @@
 					@la_input($module, 'date_left')
 					@la_input($module, 'salary_cur')
 					--}}
-					<div class="form-group">
+                    <div class="form-group">
 						<label for="dept">Role* :</label>
 						<select class="form-control" required="1" data-placeholder="Select Role" rel="select2" name="role">
 							<?php $roles = App\Role::all(); ?>
@@ -57,18 +59,12 @@
 							@endforeach
 						</select>
 					</div>
+					<br>
 					<div class="form-group">
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}">Cancel</a></button>
 					</div>
 				{!! Form::close() !!}
 				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
 			</div>
 		</div>
 	</div>

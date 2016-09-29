@@ -7,7 +7,9 @@
 @section("htmlheader_title", "Permissions Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Permission</button>
+@la_access("Permissions", "create")
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Permission</button>
+@endla_access
 @endsection
 
 @section("main-content")
@@ -43,6 +45,7 @@
 	</div>
 </div>
 
+@la_access("Permissions", "create")
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -70,6 +73,7 @@
 		</div>
 	</div>
 </div>
+@endla_access
 
 @endsection
 
