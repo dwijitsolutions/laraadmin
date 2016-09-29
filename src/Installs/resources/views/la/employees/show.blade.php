@@ -95,8 +95,9 @@
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}" data-toggle="tooltip" data-placement="right" title="Back to Employees"><i class="fa fa-chevron-left"></i></a></li>
 		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
 		<li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="#tab-social-links" data-target="#tab-social-links"><i class="fa fa-twitter"></i> Social Links</a></li>
-		<li class=""><a role="tab" data-toggle="tab" href="#tab-account-settings" data-target="#tab-account-settings"><i class="fa fa-key"></i> Account settings</a></li>
+		@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
+			<li class=""><a role="tab" data-toggle="tab" href="#tab-account-settings" data-target="#tab-account-settings"><i class="fa fa-key"></i> Account settings</a></li>
+		@endif
 	</ul>
 
 	<div class="tab-content">
@@ -219,62 +220,8 @@
 			</ul>
 			<!--<div class="text-center p30"><i class="fa fa-list-alt" style="font-size: 100px;"></i> <br> No posts to show</div>-->
 		</div>
-		<div role="tabpanel" class="tab-pane fade" id="tab-social-links">
-			<div class="tab-content">
-				<form action="" id="social-links-form" class="general-form dashed-row white" role="form" method="post" accept-charset="utf-8" novalidate="novalidate">
-					<div class="panel">
-						<div class="panel-default panel-heading">
-							<h4> Social Links</h4>
-						</div>
-						<div class="panel-body">
-							<div class="form-group">
-								<label for="facebook" class=" col-md-2">Facebook</label>
-								<div class=" col-md-10">
-									<input type="text" name="facebook" value="" id="facebook" class="form-control" placeholder="https://www.facebook.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="twitter" class=" col-md-2">Twitter</label>
-								<div class=" col-md-10">
-									<input type="text" name="twitter" value="" id="twitter" class="form-control" placeholder="https://twitter.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="github" class=" col-md-2">Github</label>
-								<div class=" col-md-10">
-									<input type="text" name="github" value="" id="github" class="form-control" placeholder="https://github.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="linkedin" class=" col-md-2">Linkedin</label>
-								<div class=" col-md-10">
-									<input type="text" name="linkedin" value="" id="linkedin" class="form-control" placeholder="https://www.linkedin.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="googleplus" class=" col-md-2">Google plus</label>
-								<div class=" col-md-10">
-									<input type="text" name="googleplus" value="" id="googleplus" class="form-control" placeholder="https://plus.google.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="instagram" class=" col-md-2">Instagram</label>
-								<div class=" col-md-10">
-									<input type="text" name="instagram" value="" id="instagram" class="form-control" placeholder="https://instagram.com/">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="youtube" class=" col-md-2">youtube</label>
-								<div class=" col-md-10">
-									<input type="text" name="youtube" value="" id="youtube" class="form-control" placeholder="https://www.youtube.com/">
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
 		
+		@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
 		<div role="tabpanel" class="tab-pane fade" id="tab-account-settings">
 			<div class="tab-content">
 				<form action="{{ url(config('laraadmin.adminRoute') . '/change_password/'.$employee->id) }}" id="password-reset-form" class="general-form dashed-row white" method="post" accept-charset="utf-8">
@@ -316,6 +263,7 @@
 				</form>
 			</div>
 		</div>
+		@endif
 	</div>
 	</div>
 	</div>
@@ -325,9 +273,11 @@
 @push('scripts')
 <script>
 $(function () {
+	@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
 	$('#password-reset-form').validate({
 		
 	});
+	@endif
 });
 </script>
 @endpush
