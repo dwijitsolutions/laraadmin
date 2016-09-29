@@ -223,8 +223,8 @@ class __controller_class_name__ extends Controller
 				// }
 			}
 			
-			$output = '';
 			if($this->show_action) {
+				$output = '';
 				if(Module::hasAccess("__module_name__", "edit")) {
 					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/__route_resource__/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
 				}
@@ -234,8 +234,8 @@ class __controller_class_name__ extends Controller
 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
 					$output .= Form::close();
 				}
+				$data->data[$i][] = (string)$output;
 			}
-			$data->data[$i][] = (string)$output;
 		}
 		$out->setData($data);
 		return $out;
