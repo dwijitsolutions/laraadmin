@@ -961,6 +961,10 @@ class Module extends Model
     **/
     public static function hasFieldAccess($module_id, $field_id, $access_type = "view", $user_id = 0) {
         $roles = array();
+		
+		if(\Auth::guest()) {
+			return false;
+		}
         
         if(is_string($module_id)) {
             $module = Module::get($module_id);
@@ -982,7 +986,7 @@ class Module extends Model
                 $roles = $user->roles();
             }
         } else {
-            $roles = \Auth::user()->roles();
+			$roles = \Auth::user()->roles();
         }
         
         $hasModuleAccess = false;
