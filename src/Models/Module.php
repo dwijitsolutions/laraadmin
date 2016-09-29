@@ -966,6 +966,11 @@ class Module extends Model
             $module = Module::get($module_id);
             $module_id = $module->id;
         }
+		
+		if(is_string($field_id)) {
+            $field_object = ModuleFields::where('module', $module_id)->where('colname', $field_id)->first();
+            $field_id = $field_object->id;
+        }
         
         if($access_type == null || $access_type == "") {
             $access_type = "view";
