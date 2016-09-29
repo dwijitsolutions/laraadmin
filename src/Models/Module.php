@@ -121,7 +121,7 @@ class Module extends Model
                             'colname' => $field->colname,
                             'label' => $field->label,
                             'field_type' => $ftypes[$field->field_type],
-                            'readonly' => $field->readonly,
+                            'unique' => $field->unique,
                             'defaultvalue' => $dvalue,
                             'minlength' => $field->minlength,
                             'maxlength' => $field->maxlength,
@@ -625,9 +625,9 @@ class Module extends Model
             $obj->field_type = $field[2];
             
             if(!isset($field[3])) {
-                $obj->readonly = 0;
+                $obj->unique = 0;
             } else {
-                $obj->readonly = $field[3];
+                $obj->unique = $field[3];
             }
             if(!isset($field[4])) {
                 $obj->defaultvalue = '';

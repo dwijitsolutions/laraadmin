@@ -98,7 +98,7 @@ use Dwij\Laraadmin\Models\Module;
 							<th>Label</th>
 							<th>Column</th>
 							<th>Type</th>
-							<th>Readonly</th>
+							<th>Unique</th>
 							<th>Default</th>
 							<th>Min</th>
 							<th>Max</th>
@@ -115,7 +115,7 @@ use Dwij\Laraadmin\Models\Module;
 									<td>{{ $field['label'] }}</td>
 									<td>{{ $field['colname'] }}</td>
 									<td>{{ $ftypes[$field['field_type']] }}</td>
-									<td>@if($field['readonly']) <span class="text-danger">True</span>@endif </td>
+									<td>@if($field['unique']) <span class="text-danger">True</span>@endif </td>
 									<td>{{ $field['defaultvalue'] }}</td>
 									<td>{{ $field['minlength'] }}</td>
 									<td>{{ $field['maxlength'] }}</td>
@@ -242,8 +242,8 @@ use Dwij\Laraadmin\Models\Module;
 					</div>
 					
 					<div class="form-group">
-						<label for="readonly">Read Only:</label>
-						{{ Form::checkbox("readonly", "readonly", false, []) }}
+						<label for="unique">Unique:</label>
+						{{ Form::checkbox("unique", "unique", false, []) }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					

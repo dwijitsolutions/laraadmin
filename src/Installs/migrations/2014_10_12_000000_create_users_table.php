@@ -22,14 +22,14 @@ class CreateUsersTable extends Migration
         Module::generate("Users", 'users', 'name', 'fa-group', [
             ["name", "Name", "Name", false, "", 5, 256, true],
             ["context_id", "Context", "Integer", false, "0", 0, 0, false],
-            ["email", "Email", "Email", false, "", 0, 0, false],
+            ["email", "Email", "Email", true, "", 0, 0, false],
             ["password", "Password", "Password", false, "", 6, 256, true],
             ["type", "User Type", "Dropdown", false, "Employee", 0, 0, false, ["Employee","Client"]],
         ]);
 		
 		/*
 		Row Format:
-		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
+		["field_name_db", "Label", "UI Type", "Unique", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
         Module::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
         
 		Module::generate("Books", 'books', 'name', [

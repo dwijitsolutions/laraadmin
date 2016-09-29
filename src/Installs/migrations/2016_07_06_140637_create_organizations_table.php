@@ -20,8 +20,8 @@ class CreateOrganizationsTable extends Migration
     public function up()
     {
         Module::generate("Organizations", 'organizations', 'name', 'fa-university', [
-            ["name", "Name", "Name", false, "", 5, 256, true],
-            ["email", "Email", "Email", false, "", 0, 100, false],
+            ["name", "Name", "Name", true, "", 5, 256, true],
+            ["email", "Email", "Email", true, "", 0, 100, false],
             ["phone", "Phone", "Mobile", false, "", 0, 20, false],
             ["website", "Website", "URL", false, "http://", 0, 256, false],
             ["assigned_to", "Assigned to", "Dropdown", false, "0", 0, 0, false, "@employees"],
@@ -35,7 +35,7 @@ class CreateOrganizationsTable extends Migration
 		
 		/*
 		Row Format:
-		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
+		["field_name_db", "Label", "UI Type", "Unique", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
         Module::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
         
 		Module::generate("Books", 'books', 'name', [

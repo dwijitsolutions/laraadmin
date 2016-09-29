@@ -214,9 +214,9 @@ class CodeGenerator
                 $ftypes = ModuleFieldTypes::getFTypes2();
                 foreach ($module->fields as $field) {
                     $ftype = $ftypes[$field['field_type']];
-                    $readonly = "false";
-                    if($field['readonly']) {
-                        $readonly = "true";
+                    $unique = "false";
+                    if($field['unique']) {
+                        $unique = "true";
                     }
                     $dvalue = "";
                     if($field['defaultvalue'] != "") {
@@ -242,7 +242,7 @@ class CodeGenerator
                             $values = ', "'.$field['popup_vals'].'"';
                         }
                     }
-                    $generateData .= '["'.$field['colname'].'", "'.$field['label'].'", "'.$ftype.'", '.$readonly.', '.$dvalue.', '.$minlength.', '.$maxlength.', '.$required.''.$values.'],'."\n            ";
+                    $generateData .= '["'.$field['colname'].'", "'.$field['label'].'", "'.$ftype.'", '.$unique.', '.$dvalue.', '.$minlength.', '.$maxlength.', '.$required.''.$values.'],'."\n            ";
                 }
                 $generateData = trim($generateData);
 

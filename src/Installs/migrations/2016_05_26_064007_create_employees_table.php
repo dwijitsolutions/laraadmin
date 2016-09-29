@@ -25,7 +25,7 @@ class CreateEmployeesTable extends Migration
             ["gender", "Gender", "Radio", false, "Male", 0, 0, true, ["Male","Female"]],
             ["mobile", "Mobile", "Mobile", false, "", 10, 20, true],
             ["mobile2", "Alernative Mobile", "Mobile", false, "", 10, 20, false],
-            ["email", "Email", "Email", false, "", 5, 100, true],
+            ["email", "Email", "Email", true, "", 5, 100, true],
             ["dept", "Department", "Dropdown", false, "0", 0, 0, true, "@departments"],
             ["city", "City", "String", false, "", 0, 50, false],
             ["address", "Address", "Address", false, "", 0, 1000, false],
@@ -38,7 +38,7 @@ class CreateEmployeesTable extends Migration
 		
 		/*
 		Row Format:
-		["field_name_db", "Label", "UI Type", "Readonly", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
+		["field_name_db", "Label", "UI Type", "Unique", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]
         Module::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
         
 		Module::generate("Books", 'books', 'name', [

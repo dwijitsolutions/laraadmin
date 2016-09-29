@@ -25,7 +25,7 @@ class LAFormMaker
 			//print_r($module->fields);
 			$label = $module->fields[$field_name]['label'];
 			$field_type = $module->fields[$field_name]['field_type'];
-			$readonly = $module->fields[$field_name]['readonly'];
+			$unique = $module->fields[$field_name]['unique'];
 			$defaultvalue = $module->fields[$field_name]['defaultvalue'];
 			$minlength = $module->fields[$field_name]['minlength'];
 			$maxlength = $module->fields[$field_name]['maxlength'];
@@ -53,8 +53,8 @@ class LAFormMaker
 			if($maxlength) {
 				$params['data-rule-maxlength'] = $maxlength;
 			}
-			if($readonly && !isset($params['readonly'])) {
-				$params['readonly'] = "readonly";
+			if($unique && !isset($params['unique'])) {
+				$params['data-rule-unique'] = "true";
 			}
 			
 			if($required && !isset($params['required'])) {
