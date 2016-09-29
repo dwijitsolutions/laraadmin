@@ -1,5 +1,5 @@
 <?php
-Route::group(['middleware' => ['web', 'auth', 'permission:ADMIN_PANEL']], function () {
+Route::group(['middleware' => ['permission:ADMIN_PANEL']], function () {
 	
 	/* ================== Dashboard ================== */
 	
@@ -36,6 +36,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:ADMIN_PANEL']], functi
 	/* ================== Employees ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/employees', 'LA\EmployeesController');
 	Route::get(config('laraadmin.adminRoute') . '/employee_dt_ajax', 'LA\EmployeesController@dtajax');
+	Route::post(config('laraadmin.adminRoute') . '/change_password/{id}', 'LA\EmployeesController@change_password');
 	
 	/* ================== Organizations ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/organizations', 'LA\OrganizationsController');

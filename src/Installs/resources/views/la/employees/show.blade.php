@@ -277,28 +277,35 @@
 		
 		<div role="tabpanel" class="tab-pane fade" id="tab-account-settings">
 			<div class="tab-content">
-				<form action="" id="account-info-form" class="general-form dashed-row white" role="form" method="post" accept-charset="utf-8" novalidate="novalidate">
+				<form action="{{ url(config('laraadmin.adminRoute') . '/change_password/'.$employee->id) }}" id="password-reset-form" class="general-form dashed-row white" method="post" accept-charset="utf-8">
+					{{ csrf_field() }}
 					<div class="panel">
 						<div class="panel-default panel-heading">
 							<h4>Account settings</h4>
 						</div>
 						<div class="panel-body">
-							<div class="form-group">
-								<label for="email" class=" col-md-2">Email</label>
-								<div class=" col-md-10">
-									<input type="text" name="email" value="{{ $employee->email }}" id="email" class="form-control" placeholder="Email" autocomplete="off" data-rule-email="1" data-msg-email="Please enter a valid email address." data-rule-required="1" data-msg-required="This field is required." aria-required="true">
+							@if (count($errors) > 0)
+								<div class="alert alert-danger">
+									<ul>
+										@foreach ($errors->all() as $error)
+											<li>{{ $error }}</li>
+										@endforeach
+									</ul>
 								</div>
-							</div>
+							@endif
+							@if(Session::has('success_message'))
+								<p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('success_message') }}</p>
+							@endif
 							<div class="form-group">
 								<label for="password" class=" col-md-2">Password</label>
 								<div class=" col-md-10">
-									<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" autocomplete="off" data-rule-minlength="6" data-msg-minlength="Please enter at least 6 characters.">
+									<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" autocomplete="off" required="required" data-rule-minlength="6" data-msg-minlength="Please enter at least 6 characters.">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="retype_password" class=" col-md-2">Retype password</label>
+								<label for="password_confirmation" class=" col-md-2">Retype password</label>
 								<div class=" col-md-10">
-									<input type="password" name="retype_password" value="" id="retype_password" class="form-control" placeholder="Retype password" autocomplete="off" data-rule-equalto="#password" data-msg-equalto="Please enter the same value again.">
+									<input type="password" name="password_confirmation" value="" id="password_confirmation" class="form-control" placeholder="Retype password" autocomplete="off" required="required" data-rule-equalto="#password" data-msg-equalto="Please enter the same value again.">
 								</div>
 							</div>
 						</div>
@@ -314,3 +321,13 @@
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(function () {
+	$('#password-reset-form').validate({
+		
+	});
+});
+</script>
+@endpush

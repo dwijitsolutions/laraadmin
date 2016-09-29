@@ -286,4 +286,36 @@ class EmployeesController extends Controller
 		$out->setData($data);
 		return $out;
 	}
+	
+	/**
+     * Change Employee Password
+     *
+     * @return
+     */
+	public function change_password($id, Request $request) {
+		
+		$validator = Validator::make($request->all(), [
+            'password' => 'required|min:6',
+			'password_confirmation' => 'required|min:6|same:password'
+        ]);
+		
+		if ($validator->fails()) {
+			return \Redirect::to(config('laraadmin.adminRoute') . '/employees/'.$id)->withErrors($validator);
+		}
+		
+		$employee = Employee::find($id);
+		$user = User::where("context_id", $employee->id)->where('type', 'Employee')->first();
+		$user->password = bcrypt($request->password);
+		$user->save();
+		
+		\Session::flash('success_message', 'Password is successfully changed');
+
+		// Send mail to User his new Password
+		Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
+			$m->from('hello@laraadmin.com', 'MIT TBI');
+			$m->to('madhavikhatal@gmail.com', $user->name)->subject('LaraAdmin - Login Credentials chnaged');
+		});
+		
+		return redirect(config('laraadmin.adminRoute') . '/employees/'.$id);
+	}
 }
