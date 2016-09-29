@@ -234,8 +234,8 @@ class __controller_class_name__ extends Controller
 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
 					$output .= Form::close();
 				}
-				$data->data[$i][] = (string)$output;
 			}
+			$data->data[$i][] = (string)$output;
 		}
 		$out->setData($data);
 		return $out;
