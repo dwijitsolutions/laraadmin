@@ -268,9 +268,24 @@ use Dwij\Laraadmin\Models\Module;
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					
+					<!--
 					<div class="form-group">
 						<label for="popup_vals">Values :</label>
-						{{ Form::text("popup_vals", null, ['class'=>'form-control', 'placeholder'=>'Popup Values (Only for Radio, Dropdown, Multiselect, Taginput)']) }}
+						{{-- Form::text("popup_vals", null, ['class'=>'form-control', 'placeholder'=>'Popup Values (Only for Radio, Dropdown, Multiselect, Taginput)']) --}}
+					</div>
+					-->
+					
+					<div class="form-group values">
+						<label for="popup_vals">Values :</label>
+						<div class="radio" style="margin-bottom:20px;">
+							<label>{{ Form::radio("popup_value_type", "table", true) }} From Table</label>
+							<label>{{ Form::radio("popup_value_type", "list", false) }} From List</label>
+						</div>
+						{{ Form::select("popup_vals", $tables, "", ['class'=>'form-control', 'rel' => '']) }}
+						
+						<select class="form-control popup_vals_list" rel="taginput" multiple="1" data-placeholder="Add Multiple values (Press Enter to add)" name="popup_vals_list[]">
+							
+						</select>
 					</div>
 					
 				</div>
@@ -326,6 +341,42 @@ use Dwij\Laraadmin\Models\Module;
 <script>
 
 $(function () {
+	
+	$("select.popup_vals_list").show();
+	$("select.popup_vals_list").next().show();
+	$("select[name='popup_vals']").hide();
+	
+	function showValuesSection() {
+		if($("select[name='field_type']").val() == 7 || $("select[name='field_type']").val() == 15 || $("select[name='field_type']").val() == 18 || $("select[name='field_type']").val() == 20) {
+			$(".form-group.values").show();
+		} else {
+			$(".form-group.values").hide();
+		}
+	}
+
+	$("select[name='field_type']").on("change", function() {
+		showValuesSection();
+	});
+	showValuesSection();
+
+	function showValuesTypes() {
+		console.log($("input[name='popup_value_type']:checked").val());
+		if($("input[name='popup_value_type']:checked").val() == "list") {
+			$("select.popup_vals_list").show();
+			$("select.popup_vals_list").next().show();
+			$("select[name='popup_vals']").hide();
+		} else {
+			$("select[name='popup_vals']").show();
+			$("select.popup_vals_list").hide();
+			$("select.popup_vals_list").next().hide();
+		}
+	}
+	
+	$("input[name='popup_value_type']").on("change", function() {
+		showValuesTypes();
+	});
+	showValuesTypes();
+
 	$("#sortable_module_fields").sortable({
 		update: function(event, ui) {
             // var index = ui.placeholder.index();
