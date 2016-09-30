@@ -276,7 +276,7 @@ class PermissionsController extends Controller
 					}
 				}
 			}
-			return redirect(config('laraadmin.adminRoute') . '/permissions/'.$id);
+			return redirect(config('laraadmin.adminRoute') . '/permissions/'.$id."#tab-access");
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
