@@ -140,4 +140,17 @@ class ModuleFields extends Model
 			return $value;
 		}
     }
+	
+	public static function listingColumnAccessScan($module_name, $listing_cols) {
+        $module = Module::get($module_name);
+		$listing_cols_temp = array();
+		foreach ($listing_cols as $col) {
+			if($col == 'id') {
+				$listing_cols_temp[] = $col;
+			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
+				$listing_cols_temp[] = $col;
+			}
+		}
+		return $listing_cols_temp;
+    }
 }

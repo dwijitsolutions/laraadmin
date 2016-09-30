@@ -28,19 +28,15 @@ class RolesController extends Controller
 	public $listing_cols = ['id', 'name', 'display_name', 'parent', 'dept'];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
-		
-		$module = Module::get('Roles');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('Roles', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('Roles', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -181,7 +177,7 @@ class RolesController extends Controller
 	{
 		if(Module::hasAccess("Roles", "edit")) {
 			
-			$rules = Module::validateRules("Roles", $request);
+			$rules = Module::validateRules("Roles", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			
@@ -190,6 +186,10 @@ class RolesController extends Controller
 			}
 			
 			$request->name = str_replace(" ", "_", strtoupper(trim($request->name)));
+			
+			if($request->name == "SUPER_ADMIN") {
+				$request->parent = 0;
+			}
 			
 			$insert_id = Module::updateRow("Roles", $request, $id);
 			

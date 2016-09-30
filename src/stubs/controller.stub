@@ -26,19 +26,15 @@ class __controller_class_name__ extends Controller
 	public $listing_cols = ['id', __listing_cols__];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
-		
-		$module = Module::get('__module_name__');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('__module_name__', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('__module_name__', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -161,7 +157,7 @@ class __controller_class_name__ extends Controller
 	{
 		if(Module::hasAccess("__module_name__", "edit")) {
 			
-			$rules = Module::validateRules("__module_name__", $request);
+			$rules = Module::validateRules("__module_name__", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			

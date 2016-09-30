@@ -6,6 +6,9 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Models\ModuleFields;
+use App\Role;
 
 class CreateRolesTable extends Migration
 {
@@ -17,13 +20,13 @@ class CreateRolesTable extends Migration
     public function up()
     {
         Module::generate("Roles", 'roles', 'name', 'fa-user-plus', [
-            ["name", "Name", "Name", true, "", 1, 256, true],
+            ["name", "Name", "Name", true, "", 1, 250, true],
             ["display_name", "Display Name", "String", false, "", 0, 250, true],
             ["description", "Description", "Textarea", false, "", 0, 1000, false],
             ["parent", "Parent Role", "Dropdown", false, "3", 0, 0, false, "@roles"],
             ["dept", "Department", "Dropdown", false, "3", 0, 0, false, "@departments"],
         ]);
-
+		
 		/*
 		Row Format:
 		["field_name_db", "Label", "UI Type", "Unique", "Default_Value", "min_length", "max_length", "Required", "Pop_values"]

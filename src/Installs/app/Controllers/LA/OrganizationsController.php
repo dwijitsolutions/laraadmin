@@ -26,19 +26,15 @@ class OrganizationsController extends Controller
 	public $listing_cols = ['id', 'name', 'email', 'phone', 'website', 'assigned_to', 'city'];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
-		
-		$module = Module::get('Organizations');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('Organizations', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('Organizations', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -88,7 +84,7 @@ class OrganizationsController extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-				
+			
 			$insert_id = Module::insert("Organizations", $request);
 			
 			return redirect()->route(config('laraadmin.adminRoute') . '.organizations.index');
@@ -161,7 +157,7 @@ class OrganizationsController extends Controller
 	{
 		if(Module::hasAccess("Organizations", "edit")) {
 			
-			$rules = Module::validateRules("Organizations", $request);
+			$rules = Module::validateRules("Organizations", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			

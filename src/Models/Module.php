@@ -728,7 +728,7 @@ class Module extends Model
         }
     }
     
-    public static function validateRules($module_name, $request) {
+    public static function validateRules($module_name, $request, $isEdit = false) {
         $module = Module::get($module_name);
         $rules = [];
         if(isset($module)) {
@@ -750,8 +750,8 @@ class Module extends Model
                             $col .= "max:".$field['maxlength']."|";
                         }
                     }
-					if($field['unique']) {
-						$col .= "unique:".$module->name_db."|";
+					if($field['unique'] && !$isEdit) {
+						$col .= "unique:".$module->name_db.",deleted_at,NULL";
 					}
                     // 'name' => 'required|unique|min:5|max:256',
                     // 'author' => 'required|max:50',
@@ -776,17 +776,22 @@ class Module extends Model
             $model = "App\\".ucfirst(str_singular($module_name));
 			
 			// Delete if unique rows available which are deleted
+			$old_row = null;
 			$uniqueFields = ModuleFields::where('module', $module->id)->where('unique', '1')->get()->toArray();
 			foreach ($uniqueFields as $field) {
 				Log::debug("insert: ".$module->name_db." - ".$field['colname']." - ".$request->{$field['colname']});
-				$first_row = DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->first();
-				if(isset($first_row->id)) {
+				$old_row = DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->first();
+				if(isset($old_row->id)) {
 					Log::debug("deleting: ".$module->name_db." - ".$field['colname']." - ".$request->{$field['colname']});
 					DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->delete();
 				}
 			}
 			
             $row = new $model;
+			if(isset($old_row->id)) {
+				// To keep old & new row id remain same
+				$row->id = $old_row->id;
+			}
             $row = Module::processDBRow($module, $request, $row);
             $row->save();
             return $row->id;

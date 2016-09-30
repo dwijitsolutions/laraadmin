@@ -29,19 +29,15 @@ class PermissionsController extends Controller
 	public $listing_cols = ['id', 'name', 'display_name'];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
-		
-		$module = Module::get('Permissions');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('Permissions', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('Permissions', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -91,7 +87,7 @@ class PermissionsController extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-				
+			
 			$insert_id = Module::insert("Permissions", $request);
 			
 			return redirect()->route(config('laraadmin.adminRoute') . '.permissions.index');
@@ -167,7 +163,7 @@ class PermissionsController extends Controller
 	{
 		if(Module::hasAccess("Permissions", "edit")) {
 			
-			$rules = Module::validateRules("Permissions", $request);
+			$rules = Module::validateRules("Permissions", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			

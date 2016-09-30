@@ -25,7 +25,7 @@ class CreateEmployeesTable extends Migration
             ["gender", "Gender", "Radio", false, "Male", 0, 0, true, ["Male","Female"]],
             ["mobile", "Mobile", "Mobile", false, "", 10, 20, true],
             ["mobile2", "Alernative Mobile", "Mobile", false, "", 10, 20, false],
-            ["email", "Email", "Email", true, "", 5, 100, true],
+            ["email", "Email", "Email", true, "", 5, 250, true],
             ["dept", "Department", "Dropdown", false, "0", 0, 0, true, "@departments"],
             ["city", "City", "String", false, "", 0, 50, false],
             ["address", "Address", "Address", false, "", 0, 1000, false],
@@ -70,7 +70,7 @@ class CreateEmployeesTable extends Migration
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/
-
+		
 		// if (Schema::hasTable('users')) {
             // Schema::table('users', function ($table) {
             //     $table->foreign('context_id')->references('id')->on('employees');
