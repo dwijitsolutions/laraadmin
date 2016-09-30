@@ -88,7 +88,7 @@ class __controller_class_name__ extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-				
+			
 			$insert_id = Module::insert("__module_name__", $request);
 			
 			return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');

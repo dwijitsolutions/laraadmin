@@ -116,7 +116,7 @@ class Module extends Model
                             $pvalues = json_encode($field->popup_vals);
                         }
                         
-                        ModuleFields::create([
+                        $field_obj = ModuleFields::create([
                             'module' => $module->id,
                             'colname' => $field->colname,
                             'label' => $field->label,
@@ -128,6 +128,7 @@ class Module extends Model
                             'required' => $field->required,
                             'popup_vals' => $pvalues
                         ]);
+						$field->id = $field_obj->id;
                     }
                     
                     // Schema::dropIfExists($names->table);
@@ -180,7 +181,7 @@ class Module extends Model
         } else {
             $defval = $field->defaultvalue;
         }
-        Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
+		Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
                 ." - ".$defval." - ".$field->maxlength);
         
         switch ($field->field_type) {
@@ -614,6 +615,11 @@ class Module extends Model
                 }
                 break;
         }
+		
+		// set column unique
+		if($field->unique && $var != null && $field->maxlength < 256) {
+			$table->unique($field->colname);
+		}
     }
     
     public static function format_fields($fields) {
@@ -642,7 +648,12 @@ class Module extends Model
             if(!isset($field[6])) {
                 $obj->maxlength = 0;
             } else {
-                $obj->maxlength = $field[6];
+                // Because maxlength above 256 will not be supported by Unique
+				if($obj->unique) {
+					$obj->maxlength = 250;
+				} else {
+					$obj->maxlength = $field[6];
+				}
             }
             if(!isset($field[7])) {
                 $obj->required = 0;
