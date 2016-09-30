@@ -750,6 +750,9 @@ class Module extends Model
                             $col .= "max:".$field['maxlength']."|";
                         }
                     }
+					if($field['unique']) {
+						$col .= "unique:".$module->name_db."|";
+					}
                     // 'name' => 'required|unique|min:5|max:256',
                     // 'author' => 'required|max:50',
                     // 'price' => 'decimal',
