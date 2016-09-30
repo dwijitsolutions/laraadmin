@@ -304,7 +304,7 @@ class ModuleController extends Controller
 				}
 			}
 		}
-        return redirect(config('laraadmin.adminRoute') . '/modules/'.$id);
+        return redirect(config('laraadmin.adminRoute') . '/modules/'.$id."#access");
 	}
 	
 	public function save_module_field_sort(Request $request, $id)
