@@ -154,7 +154,7 @@ class FieldController extends Controller
 		$module = Module::find($field->module);
 		
 		// echo $module->name_db." ".$field->colname." ".$request->field_value;
-		$rowCount = DB::table($module->name_db)->where($field->colname, $request->field_value)->count();
+		$rowCount = DB::table($module->name_db)->where($field->colname, $request->field_value)->where("id", "!=", $request->row_id)->whereNull('deleted_at')->count();
 		
 		if($rowCount > 0) {
 			$valExists = true;

@@ -57,6 +57,13 @@ class LAFormMaker
 				$params['data-rule-unique'] = "true";
 				$params['field_id'] = $module->fields[$field_name]['id'];
 				$params['adminRoute'] = config('laraadmin.adminRoute');
+				if(isset($row)) {
+					$params['isEdit'] = true;
+					$params['row_id'] = $row->id;
+				} else {
+					$params['isEdit'] = false;
+					$params['row_id'] = 0;
+				}
 				$out .= '<input type="hidden" name="_token_'.$module->fields[$field_name]['id'].'" value="'.csrf_token().'">';
 			}
 			
