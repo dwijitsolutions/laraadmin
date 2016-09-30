@@ -988,6 +988,8 @@ class Module extends Model
     public static function hasFieldAccess($module_id, $field_id, $access_type = "view", $user_id = 0) {
         $roles = array();
 		
+		// \Log::debug("module_id: ".$module_id." field_id: ".$field_id." access_type: ".$access_type);
+		
 		if(\Auth::guest()) {
 			return false;
 		}
@@ -1049,6 +1051,7 @@ class Module extends Model
         } else {
             return false;
         }
+		return false;
     }
 	
 	/**
