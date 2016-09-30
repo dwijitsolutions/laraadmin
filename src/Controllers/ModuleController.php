@@ -146,6 +146,10 @@ class ModuleController extends Controller
 		$module = Module::find($module_id);
 		$module->is_gen='1';
 		$module->save();
+		
+		// Give Default Full Access to Super Admin
+		$role = Role::where("name", "SUPER_ADMIN")->first();
+		Module::setDefaultRoleAccess($module->id, $role->id, "full");
 	}
 	
 	/**
@@ -189,6 +193,10 @@ class ModuleController extends Controller
 		$module = Module::find($module_id);
 		$module->is_gen='1';
 		$module->save();
+		
+		// Give Default Full Access to Super Admin
+		$role = Role::where("name", "SUPER_ADMIN")->first();
+		Module::setDefaultRoleAccess($module->id, $role->id, "full");
 	}
 /**
 	 * Generate Modules Update(migrations and crud) not routes
