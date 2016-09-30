@@ -762,8 +762,11 @@ class LAFormMaker
 								}
 							}
 						} else {
+							$valueSel = json_decode($value);
 							foreach ($values as $key => $val) {
-								$valueOut .= "<span class='label label-primary'>".$val."</span> ";
+								if(in_array($key, $valueSel)) {
+									$valueOut .= "<span class='label label-primary'>".$val."</span> ";
+								}
 							}
 						}
 					}
