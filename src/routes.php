@@ -1,11 +1,13 @@
 <?php
 
-//use Dwij\Laraadmin\Controllers\ModuleController;
-
-//Route::get('laraadmin', 'ModuleController@index');
+$as = "";
+if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+	$as = config('laraadmin.adminRoute').'.';
+}
 
 Route::group([
     'namespace'  => 'Dwij\Laraadmin\Controllers',
+	'as' => $as,
     'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL', 'role:SUPER_ADMIN']
 ], function () {
     

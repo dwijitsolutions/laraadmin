@@ -1,5 +1,11 @@
 <?php
-Route::group(['middleware' => ['permission:ADMIN_PANEL']], function () {
+
+$as = "";
+if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+	$as = config('laraadmin.adminRoute').'.';
+}
+
+Route::group(['as' => $as, 'middleware' => ['permission:ADMIN_PANEL']], function () {
 	
 	/* ================== Dashboard ================== */
 	
