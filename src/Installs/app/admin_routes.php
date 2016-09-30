@@ -3,9 +3,12 @@
 $as = "";
 if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 	$as = config('laraadmin.adminRoute').'.';
+	
+	// Routes for Laravel 5.3
+	Route::get('/logout', 'Auth\LoginController@logout');
 }
 
-Route::group(['as' => $as, 'middleware' => ['permission:ADMIN_PANEL']], function () {
+Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], function () {
 	
 	/* ================== Dashboard ================== */
 	
