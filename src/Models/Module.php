@@ -771,6 +771,18 @@ class Module extends Model
         $module = Module::get($module_name);
         if(isset($module)) {
             $model = "App\\".ucfirst(str_singular($module_name));
+			
+			// Delete if unique rows available which are deleted
+			$uniqueFields = ModuleFields::where('module', $module->id)->where('unique', '1')->get()->toArray();
+			foreach ($uniqueFields as $field) {
+				Log::debug("insert: ".$module->name_db." - ".$field['colname']." - ".$request->{$field['colname']});
+				$first_row = DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->first();
+				if(isset($first_row->id)) {
+					Log::debug("deleting: ".$module->name_db." - ".$field['colname']." - ".$request->{$field['colname']});
+					DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->delete();
+				}
+			}
+			
             $row = new $model;
             $row = Module::processDBRow($module, $request, $row);
             $row->save();
