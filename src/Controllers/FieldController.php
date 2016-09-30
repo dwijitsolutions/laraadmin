@@ -58,6 +58,10 @@ class FieldController extends Controller
 		
 		$field_id = ModuleFields::createField($request);
 		
+		// Give Default Full Access to Super Admin
+		$role = \App\Role::where("name", "SUPER_ADMIN")->first();
+		Module::setDefaultFieldRoleAccess($field_id, $role->id, "full");
+		
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
 
