@@ -134,10 +134,9 @@ class __controller_class_name__ extends Controller
 	 */
 	public function edit($id)
 	{
-		if(Module::hasAccess("__module_name__", "edit")) {
-			if(isset($__singular_var__->id)) {
-				$__singular_var__ = __model_name__::find($id);
-				
+		if(Module::hasAccess("__module_name__", "edit")) {			
+			$__singular_var__ = __model_name__::find($id);
+			if(isset($__singular_var__->id)) {	
 				$module = Module::get('__module_name__');
 				
 				$module->row = $__singular_var__;
