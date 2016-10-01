@@ -61,8 +61,13 @@ class Packaging extends Command
         
         // Routes
         $this->line('Exporting Routes...');
-        $this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
-		$this->copyFile($from."/app/Http/admin_routes.php", $to."/app/admin_routes.php");
+        if(LAHelper::laravel_ver() == 5.3) {
+			$this->copyFile($from."/routes/web.php", $to."/app/routes.php");
+			$this->copyFile($from."/routes/admin_routes.php", $to."/app/admin_routes.php");
+		} else {
+			$this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
+			$this->copyFile($from."/app/Http/admin_routes.php", $to."/app/admin_routes.php");
+		}
         
         // Config
         $this->line('Exporting Config...');
