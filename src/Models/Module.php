@@ -532,7 +532,7 @@ class Module extends Model
 						$var = $table->string($field->colname, $field->maxlength);
 					}
 				}
-				if($field->defaultvalue != "") {
+				if($field->defaultvalue != null) {
 					$var->default($field->defaultvalue);
 				}
 				break;
