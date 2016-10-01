@@ -118,23 +118,29 @@ class RolesController extends Controller
 		if(Module::hasAccess("Roles", "view")) {
 			
 			$role = Role::find($id);
-			$module = Module::get('Roles');
-			$module->row = $role;
-			
-			$modules_arr = DB::table('modules')->get();
-			$modules_access = array();
-			foreach ($modules_arr as $module_obj) {
-				$module_obj->accesses = Module::getRoleAccess($module_obj->id, $id)[0];
-				$modules_access[] = $module_obj;
+			if(isset($role->id)) {
+				$module = Module::get('Roles');
+				$module->row = $role;
+				
+				$modules_arr = DB::table('modules')->get();
+				$modules_access = array();
+				foreach ($modules_arr as $module_obj) {
+					$module_obj->accesses = Module::getRoleAccess($module_obj->id, $id)[0];
+					$modules_access[] = $module_obj;
+				}
+				return view('la.roles.show', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding",
+					'modules_access' => $modules_access
+				])->with('role', $role);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("role"),
+				]);
 			}
-			return view('la.roles.show', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding",
-            	'modules_access' => $modules_access
-			])->with('role', $role);
-			
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -151,16 +157,21 @@ class RolesController extends Controller
 		if(Module::hasAccess("Roles", "edit")) {
 			
 			$role = Role::find($id);
-			
-			$module = Module::get('Roles');
-			
-			$module->row = $role;
-			
-			return view('la.roles.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('role', $role);
-			
+			if(isset($role->id)) {
+				$module = Module::get('Roles');
+				
+				$module->row = $role;
+				
+				return view('la.roles.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+				])->with('role', $role);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("role"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}

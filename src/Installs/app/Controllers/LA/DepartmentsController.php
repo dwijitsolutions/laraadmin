@@ -105,16 +105,22 @@ class DepartmentsController extends Controller
 		if(Module::hasAccess("Departments", "view")) {
 			
 			$department = Department::find($id);
-			$module = Module::get('Departments');
-			$module->row = $department;
-			
-			return view('la.departments.show', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding"
-			])->with('department', $department);
-			
+			if(isset($department->id)) {
+				$module = Module::get('Departments');
+				$module->row = $department;
+				
+				return view('la.departments.show', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding"
+				])->with('department', $department);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("department"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -131,16 +137,22 @@ class DepartmentsController extends Controller
 		if(Module::hasAccess("Departments", "edit")) {
 			
 			$department = Department::find($id);
-			
-			$module = Module::get('Departments');
-			
-			$module->row = $department;
-			
-			return view('la.departments.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('department', $department);
-			
+			if(isset($department->id)) {
+				
+				$module = Module::get('Departments');
+				
+				$module->row = $department;
+				
+				return view('la.departments.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+				])->with('department', $department);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("department"),
+				]);
+			}			
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}

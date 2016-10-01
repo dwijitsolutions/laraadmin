@@ -108,19 +108,25 @@ class PermissionsController extends Controller
 		if(Module::hasAccess("Permissions", "view")) {
 			
 			$permission = Permission::find($id);
-			$module = Module::get('Permissions');
-			$module->row = $permission;
-			
-			$roles = Role::all();
-			
-			return view('la.permissions.show', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding",
-				'roles' => $roles
-			])->with('permission', $permission);
-			
+			if(isset($permission->id)) {
+				$module = Module::get('Permissions');
+				$module->row = $permission;
+				
+				$roles = Role::all();
+				
+				return view('la.permissions.show', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding",
+					'roles' => $roles
+				])->with('permission', $permission);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("permission"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -135,18 +141,21 @@ class PermissionsController extends Controller
 	public function edit($id)
 	{
 		if(Module::hasAccess("Permissions", "edit")) {
-			
 			$permission = Permission::find($id);
-			
-			$module = Module::get('Permissions');
-			
-			$module->row = $permission;
-			
-			return view('la.permissions.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('permission', $permission);
-			
+			if(isset($permission->id)) {
+				$module = Module::get('Permissions');				
+				$module->row = $permission;
+				
+				return view('la.permissions.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+				])->with('permission', $permission);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("permission"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}

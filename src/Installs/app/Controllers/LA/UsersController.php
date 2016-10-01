@@ -67,11 +67,17 @@ class UsersController extends Controller
 	{
 		if(Module::hasAccess("Users", "view")) {
 			$user = User::findOrFail($id);
-			
-			if($user['type'] == "Employee") {
-				return redirect(config('laraadmin.adminRoute') . '/employees/'.$user->id);
-			} else if($user['type'] == "Client") {
-				return redirect(config('laraadmin.adminRoute') . '/clients/'.$user->id);
+			if(isset($user->id)) {
+				if($user['type'] == "Employee") {
+					return redirect(config('laraadmin.adminRoute') . '/employees/'.$user->id);
+				} else if($user['type'] == "Client") {
+					return redirect(config('laraadmin.adminRoute') . '/clients/'.$user->id);
+				}
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("user"),
+				]);
 			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");

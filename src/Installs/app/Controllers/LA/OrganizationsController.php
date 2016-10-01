@@ -105,16 +105,22 @@ class OrganizationsController extends Controller
 		if(Module::hasAccess("Organizations", "view")) {
 			
 			$organization = Organization::find($id);
-			$module = Module::get('Organizations');
-			$module->row = $organization;
-			
-			return view('la.organizations.show', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding"
-			])->with('organization', $organization);
-			
+			if(isset($organization->id)) {
+				$module = Module::get('Organizations');
+				$module->row = $organization;
+				
+				return view('la.organizations.show', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding"
+				])->with('organization', $organization);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("organization"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -129,18 +135,23 @@ class OrganizationsController extends Controller
 	public function edit($id)
 	{
 		if(Module::hasAccess("Organizations", "edit")) {
-			
-			$organization = Organization::find($id);
-			
-			$module = Module::get('Organizations');
-			
-			$module->row = $organization;
-			
-			return view('la.organizations.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('organization', $organization);
-			
+			if(isset($organization->id)) {
+				$organization = Organization::find($id);
+				
+				$module = Module::get('Organizations');
+				
+				$module->row = $organization;
+				
+				return view('la.organizations.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+				])->with('organization', $organization);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("organization"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
