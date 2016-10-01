@@ -174,9 +174,13 @@ class EmployeesController extends Controller
 			
 			$module->row = $employee;
 			
+			// Get User Table Information
+        	$user = User::where('context_id', '=', $id)->firstOrFail();
+			
 			return view('la.employees.edit', [
 				'module' => $module,
 				'view_col' => $this->view_col,
+				'user' => $user,
 			])->with('employee', $employee);
 			
 		} else {
@@ -207,7 +211,8 @@ class EmployeesController extends Controller
         	
 			// Update User
 			$user = User::where('context_id', $employee_id)->first();
-			Module::updateRow("Users", $request, $user->id);
+			$user->name = $request->name;
+			$user->save();
 			
 			// update user role
 			$user->detachRoles();
@@ -308,11 +313,16 @@ class EmployeesController extends Controller
 		\Session::flash('success_message', 'Password is successfully changed');
 
 		// Send mail to User his new Password
-		Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
-			$m->from('hello@laraadmin.com', 'MIT TBI');
-			$m->to('madhavikhatal@gmail.com', $user->name)->subject('LaraAdmin - Login Credentials chnaged');
-		});
+		if(env('MAIL_USERNAME') != null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "") {
+			// Send mail to User his new Password
+			Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
+				$m->from('hello@laraadmin.com', 'MIT TBI');
+				$m->to('madhavikhatal@gmail.com', $user->name)->subject('LaraAdmin - Login Credentials chnaged');
+			});
+		} else {
+			Log::info("User change_password: username: ".$user->email." Password: ".$request->password);
+		}
 		
-		return redirect(config('laraadmin.adminRoute') . '/employees/'.$id);
+		return redirect(config('laraadmin.adminRoute') . '/employees/'.$id.'#tab-account-settings');
 	}
 }

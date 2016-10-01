@@ -189,6 +189,7 @@ class UploadsController extends Controller
 						"path" => $folder.DIRECTORY_SEPARATOR.$date_append.$filename,
 						"extension" => pathinfo($filename, PATHINFO_EXTENSION),
 						"caption" => "",
+						"hash" => "",
 						"public" => $public,
 						"user_id" => Auth::user()->id
 					]);
