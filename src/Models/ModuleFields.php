@@ -38,8 +38,22 @@ class ModuleFields extends Model
                 $field->unique = false;
             }
             $field->defaultvalue = $request->defaultvalue;
+            if($request->minlength == "") {
+				$request->minlength = 0;
+			}
+			if($request->maxlength == "") {
+				if(in_array($request->field_type, [1, 8, 16, 17, 19, 20, 22, 23 ])) {
+					$request->maxlength = 256;
+				} else if(in_array($request->field_type, [14])) {
+					$request->maxlength = 20;
+				} else if(in_array($request->field_type, [3, 6, 10, 13])) {
+					$request->maxlength = 11;
+				}
+			}
             $field->minlength = $request->minlength;
-            $field->maxlength = $request->maxlength;
+            if($request->maxlength != null && $request->maxlength != "") {
+				$field->maxlength = $request->maxlength;
+			}
             if($request->required) {
                 $field->required = true;
             } else {
@@ -52,7 +66,9 @@ class ModuleFields extends Model
                     $request->popup_vals_list = json_encode($request->popup_vals_list);
                     $field->popup_vals = $request->popup_vals_list;
                 }
-            }
+            } else {
+				$field->popup_vals = "";
+			}
             $field->save();
             
             // Create Schema for Module Field
@@ -97,8 +113,22 @@ class ModuleFields extends Model
             $field->unique = false;
         }
         $field->defaultvalue = $request->defaultvalue;
-        $field->minlength = $request->minlength;
-        $field->maxlength = $request->maxlength;
+        if($request->minlength == "") {
+			$request->minlength = 0;
+		}
+		if($request->maxlength == "") {
+			if(in_array($request->field_type, [1, 8, 16, 17, 19, 20, 22, 23 ])) {
+				$request->maxlength = 256;
+			} else if(in_array($request->field_type, [14])) {
+				$request->maxlength = 20;
+			} else if(in_array($request->field_type, [3, 6, 10, 13])) {
+				$request->maxlength = 11;
+			}
+		}
+		$field->minlength = $request->minlength;
+		if($request->maxlength != null && $request->maxlength != "") {
+			$field->maxlength = $request->maxlength;
+		}
         if($request->required) {
             $field->required = true;
         } else {
@@ -111,7 +141,9 @@ class ModuleFields extends Model
                 $request->popup_vals_list = json_encode($request->popup_vals_list);
                 $field->popup_vals = $request->popup_vals_list;
             }
-        }
+        } else {
+			$field->popup_vals = "";
+		}
         $field->save();
 
         Schema::table($module->name_db, function ($table) use ($field) {
