@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Unauthorized access.</title>
+        <title>Record not found.</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet" type="text/css">
 		<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@
             }
 
             .title {
-                font-size: 72px;
+                font-size: 60px;
                 margin-bottom: 40px;
 				color: #444;
             }
@@ -47,8 +47,13 @@
     <body>
         <div class="container">
             <div class="content">
-				<i class="fa fa-ban" style="font-size:120px;color:#FF5959;margin-bottom:30px;"></i>
-                <div class="title">Unauthorized access</div>
+				<i class="fa fa-search" style="font-size:120px;color:#FF5959;margin-bottom:30px;"></i>
+                @if(isset($record_name) && isset($record_id))
+					<div class="title">{{ $record_name }} with id {{ $record_id }} not found</div>
+				@else
+					<div class="title">Record with not found</div>
+				@endif
+				
 				@if(Auth::guest())
 					<a href="{{ url('/') }}">Homepage</a> | 
 					<a href="javascript:history.back()">Go Back</a>

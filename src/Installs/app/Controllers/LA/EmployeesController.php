@@ -139,20 +139,26 @@ class EmployeesController extends Controller
 		if(Module::hasAccess("Employees", "view")) {
 			
 			$employee = Employee::find($id);
-			$module = Module::get('Employees');
-			$module->row = $employee;
-			
-			// Get User Table Information
-        	$user = User::where('context_id', '=', $id)->firstOrFail();
-			
-			return view('la.employees.show', [
-				'user' => $user,
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding"
-			])->with('employee', $employee);
-			
+			if(isset($employee->id)) {
+				$module = Module::get('Employees');
+				$module->row = $employee;
+				
+				// Get User Table Information
+				$user = User::where('context_id', '=', $id)->firstOrFail();
+				
+				return view('la.employees.show', [
+					'user' => $user,
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding"
+				])->with('employee', $employee);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("employee"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
