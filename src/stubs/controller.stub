@@ -135,18 +135,23 @@ class __controller_class_name__ extends Controller
 	public function edit($id)
 	{
 		if(Module::hasAccess("__module_name__", "edit")) {
-			
-			$__singular_var__ = __model_name__::find($id);
-			
-			$module = Module::get('__module_name__');
-			
-			$module->row = $__singular_var__;
-			
-			return view('la.__view_folder__.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('__singular_var__', $__singular_var__);
-			
+			if(isset($__singular_var__->id)) {
+				$__singular_var__ = __model_name__::find($id);
+				
+				$module = Module::get('__module_name__');
+				
+				$module->row = $__singular_var__;
+				
+				return view('la.__view_folder__.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+				])->with('__singular_var__', $__singular_var__);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("__singular_var__"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
