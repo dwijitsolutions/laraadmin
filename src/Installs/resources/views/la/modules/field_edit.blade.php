@@ -45,14 +45,16 @@
 						{{ Form::text("defaultvalue", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
 					</div>
 					
-					<div class="form-group">
-						<label for="minlength">Minimum :</label>
-						{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
-					</div>
-					
-					<div class="form-group">
-						<label for="maxlength">Maximum :</label>
-						{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+					<div id="length_div">
+						<div class="form-group">
+							<label for="minlength">Minimum :</label>
+							{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						</div>
+						
+						<div class="form-group">
+							<label for="maxlength">Maximum :</label>
+							{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						</div>
 					</div>
 					
 					<div class="form-group">
@@ -122,10 +124,16 @@ $(function () {
 	$("select[name='popup_vals_table']").hide();
 	
 	function showValuesSection() {
-		if($("select[name='field_type']").val() == 7 || $("select[name='field_type']").val() == 15 || $("select[name='field_type']").val() == 18 || $("select[name='field_type']").val() == 20) {
+		var ft_val = $("select[name='field_type']").val();
+		if(ft_val == 7 || ft_val == 15 || ft_val == 18 || ft_val == 20) {
 			$(".form-group.values").show();
 		} else {
 			$(".form-group.values").hide();
+		}
+		
+		$('#length_div').removeClass("hide");
+		if(ft_val == 2 || ft_val == 4 || ft_val == 5 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 21 || ft_val == 24 ) {
+			$('#length_div').addClass("hide");
 		}
 	}
 

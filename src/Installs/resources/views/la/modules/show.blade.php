@@ -123,6 +123,7 @@ use Dwij\Laraadmin\Models\Module;
 									<td><?php echo LAHelper::parseValues($field['popup_vals']) ?></td>
 									<td>
 										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/edit') }}" class="btn btn-edit-field btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/delete') }}" class="btn btn-edit-field btn-danger btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-trash"></i></a>
 										@if($field['colname'] != $module->view_col)
 											<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/set_view_col/'.$field['colname']) }}" class="btn btn-edit-field btn-success btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" data-placement="left" title="Set View Column"><i class="fa fa-eye"></i></a>
 										@endif
@@ -251,15 +252,16 @@ use Dwij\Laraadmin\Models\Module;
 						<label for="defaultvalue">Default Value :</label>
 						{{ Form::text("defaultvalue", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
 					</div>
-					
-					<div class="form-group">
-						<label for="minlength">Minimum :</label>
-						{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Minimum Value']) }}
-					</div>
-					
-					<div class="form-group">
-						<label for="maxlength">Maximum :</label>
-						{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Maximum Value']) }}
+					<div id="length_div">
+						<div class="form-group">
+							<label for="minlength">Minimum :</label>
+							{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Minimum Value']) }}
+						</div>
+						
+						<div class="form-group">
+							<label for="maxlength">Maximum :</label>
+							{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Maximum Value']) }}
+						</div>
 					</div>
 					
 					<div class="form-group">
@@ -347,10 +349,16 @@ $(function () {
 	$("select[name='popup_vals']").hide();
 	
 	function showValuesSection() {
-		if($("select[name='field_type']").val() == 7 || $("select[name='field_type']").val() == 15 || $("select[name='field_type']").val() == 18 || $("select[name='field_type']").val() == 20) {
+		var ft_val = $("select[name='field_type']").val();
+		if(ft_val == 7 || ft_val == 15 || ft_val == 18 || ft_val == 20) {
 			$(".form-group.values").show();
 		} else {
 			$(".form-group.values").hide();
+		}
+				
+		$('#length_div').removeClass("hide");
+		if(ft_val == 2 || ft_val == 4 || ft_val == 5 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 21 || ft_val == 24 ) {
+			$('#length_div').addClass("hide");
 		}
 	}
 
@@ -464,7 +472,7 @@ $(function () {
 		}
 	});
 	$("#field-form").validate();
-	
+		
 	/* ================== Tab Selection ================== */
 	
 	var $tabs = $('#module-tabs').tabs();
