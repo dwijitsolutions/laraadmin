@@ -322,13 +322,13 @@ class EmployeesController extends Controller
 		$user->save();
 		
 		\Session::flash('success_message', 'Password is successfully changed');
-
+		
 		// Send mail to User his new Password
 		if(env('MAIL_USERNAME') != null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "") {
 			// Send mail to User his new Password
 			Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
-				$m->from('hello@laraadmin.com', 'MIT TBI');
-				$m->to('madhavikhatal@gmail.com', $user->name)->subject('LaraAdmin - Login Credentials chnaged');
+				$m->from(config('default_email'), config('sitename'));
+				$m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials chnaged');
 			});
 		} else {
 			Log::info("User change_password: username: ".$user->email." Password: ".$request->password);
