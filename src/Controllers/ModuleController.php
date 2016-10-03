@@ -12,9 +12,13 @@ use App\Http\Requests;
 use DB;
 use Dwij\Laraadmin\Helpers\LAHelper;
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\CodeGenerator;
 use App\Role;
+use Schema;
+use Dwij\Laraadmin\Models\Menu;
+use Illuminate\Support\Facades\Storage;
 
 class ModuleController extends Controller
 {
@@ -120,7 +124,32 @@ class ModuleController extends Controller
 	 */
 	public function destroy($id)
 	{
-		//
+		$module = Module::find($id);
+		
+		//Delete from la_menu table
+		$menuItems = Menu::where('name',$module->name)->first();
+		if(isset($menuItems)) {
+			$menuItems->delete();
+		}	
+		
+		// Delete from Table module_field
+		$module_fields = ModuleFields::where('module',$module->id)->delete();
+		
+		//delete view directory
+		$delete_dir = Storage::deleteDirectory('/var/www/html/la1/resources/views/la'.$module->name_db);
+		
+		//delete file of controller
+		$delete_file = Storage::delete('/var/www/html/la1/app/Http/Controllers/LA/'.$module->name.'Controller.php');
+		echo 'delete_dir'.$delete_dir.'delete_file'.$delete_file;
+		
+		//delete table
+		Schema::drop($module->name_db);
+		
+		//Delete from module table
+		$module->delete();
+		
+		$modules = Module::all();
+		//return redirect()->route(config('laraadmin.adminRoute') . '.modules.index', ['modules' => $modules]);
 	}
 	
 	/**

@@ -116,7 +116,7 @@ class ModuleFields extends Model
         if($request->minlength == "") {
 			$request->minlength = 0;
 		}
-		if($request->maxlength == "") {
+		if($request->maxlength == "" || $request->maxlength == 0) {
 			if(in_array($request->field_type, [1, 8, 16, 17, 19, 20, 22, 23 ])) {
 				$request->maxlength = 256;
 			} else if(in_array($request->field_type, [14])) {

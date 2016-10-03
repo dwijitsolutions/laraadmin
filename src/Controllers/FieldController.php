@@ -133,13 +133,14 @@ class FieldController extends Controller
 		$field = ModuleFields::find($id);
 		$module = Module::find($field->module);
 		
-		// Delete from Table
+		// Delete from Table module_field
 		Schema::table($module->name_db, function ($table) use ($field) {
 			$table->dropColumn($field->colname);
 		});
-
+		
 		// Delete Context
 		$field->delete();
+		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module->id]);
 	}
 	
 	/**

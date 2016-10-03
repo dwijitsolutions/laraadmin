@@ -22,6 +22,8 @@ Route::group([
 	Route::post(config('laraadmin.adminRoute') . '/save_role_module_permissions/{id}', 'ModuleController@save_role_module_permissions');
 	Route::get(config('laraadmin.adminRoute') . '/save_module_field_sort/{model_id}', 'ModuleController@save_module_field_sort');
 	Route::post(config('laraadmin.adminRoute') . '/check_unique_val/{field_id}', 'FieldController@check_unique_val');
+	Route::get(config('laraadmin.adminRoute') . '/module_fields/{id}/delete', 'FieldController@destroy');
+	Route::get(config('laraadmin.adminRoute') . '/modules/{id}/delete', 'ModuleController@destroy');
 	
 	/* ================== Code Editor ================== */
 	Route::get(config('laraadmin.adminRoute') . '/laeditor', 'CodeEditorController@index');
