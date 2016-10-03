@@ -169,9 +169,17 @@ class ModuleFields extends Model
 		if(Schema::hasTable($external_table_name)) {
 			$external_value = DB::table($external_table_name)->where('id', $value)->get();
 			if(isset($external_value[0])) {
-				$external_module = DB::table('modules')->where('name_db', $external_table_name)->first();
-				$external_value_viewcol_name = $external_module->view_col;
-				return $external_value[0]->$external_value_viewcol_name;
+                $external_module = DB::table('modules')->where('name_db', $external_table_name)->first();
+                if(isset($external_module->view_col)) {
+                    $external_value_viewcol_name = $external_module->view_col;
+				    return $external_value[0]->$external_value_viewcol_name;
+                } else {
+                    if(isset($external_value[0]->{"name"})) {
+                        return $external_value[0]->name;
+                    } else if(isset($external_value[0]->{"title"})) {
+                        return $external_value[0]->title;
+                    }
+                }
 			} else {
 				return $value;
 			}
