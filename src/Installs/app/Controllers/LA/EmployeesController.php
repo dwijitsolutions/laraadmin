@@ -32,19 +32,16 @@ class EmployeesController extends Controller
 	public $listing_cols = ['id', 'name', 'designation', 'mobile', 'email', 'dept'];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
 		
-		$module = Module::get('Employees');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('Employees', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('Employees', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -94,7 +91,7 @@ class EmployeesController extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-				
+			
 			// generate password
 			$password = LAHelper::gen_password();
 			
@@ -142,20 +139,26 @@ class EmployeesController extends Controller
 		if(Module::hasAccess("Employees", "view")) {
 			
 			$employee = Employee::find($id);
-			$module = Module::get('Employees');
-			$module->row = $employee;
-			
-			// Get User Table Information
-        	$user = User::where('context_id', '=', $id)->firstOrFail();
-			
-			return view('la.employees.show', [
-				'user' => $user,
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding"
-			])->with('employee', $employee);
-			
+			if(isset($employee->id)) {
+				$module = Module::get('Employees');
+				$module->row = $employee;
+				
+				// Get User Table Information
+				$user = User::where('context_id', '=', $id)->firstOrFail();
+				
+				return view('la.employees.show', [
+					'user' => $user,
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding"
+				])->with('employee', $employee);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("employee"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -172,16 +175,25 @@ class EmployeesController extends Controller
 		if(Module::hasAccess("Employees", "edit")) {
 			
 			$employee = Employee::find($id);
-			
-			$module = Module::get('Employees');
-			
-			$module->row = $employee;
-			
-			return view('la.employees.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('employee', $employee);
-			
+			if(isset($employee->id)) {
+				$module = Module::get('Employees');
+				
+				$module->row = $employee;
+				
+				// Get User Table Information
+				$user = User::where('context_id', '=', $id)->firstOrFail();
+				
+				return view('la.employees.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'user' => $user,
+				])->with('employee', $employee);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("employee"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -198,7 +210,7 @@ class EmployeesController extends Controller
 	{
 		if(Module::hasAccess("Employees", "edit")) {
 			
-			$rules = Module::validateRules("Employees", $request);
+			$rules = Module::validateRules("Employees", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			
@@ -210,7 +222,8 @@ class EmployeesController extends Controller
         	
 			// Update User
 			$user = User::where('context_id', $employee_id)->first();
-			Module::updateRow("Users", $request, $user->id);
+			$user->name = $request->name;
+			$user->save();
 			
 			// update user role
 			$user->detachRoles();
@@ -309,13 +322,18 @@ class EmployeesController extends Controller
 		$user->save();
 		
 		\Session::flash('success_message', 'Password is successfully changed');
-
-		// Send mail to User his new Password
-		Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
-			$m->from('hello@laraadmin.com', 'MIT TBI');
-			$m->to('madhavikhatal@gmail.com', $user->name)->subject('LaraAdmin - Login Credentials chnaged');
-		});
 		
-		return redirect(config('laraadmin.adminRoute') . '/employees/'.$id);
+		// Send mail to User his new Password
+		if(env('MAIL_USERNAME') != null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "") {
+			// Send mail to User his new Password
+			Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
+				$m->from(config('default_email'), config('sitename'));
+				$m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials chnaged');
+			});
+		} else {
+			Log::info("User change_password: username: ".$user->email." Password: ".$request->password);
+		}
+		
+		return redirect(config('laraadmin.adminRoute') . '/employees/'.$id.'#tab-account-settings');
 	}
 }

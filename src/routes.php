@@ -1,11 +1,13 @@
 <?php
 
-//use Dwij\Laraadmin\Controllers\ModuleController;
-
-//Route::get('laraadmin', 'ModuleController@index');
+$as = "";
+if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+	$as = config('laraadmin.adminRoute').'.';
+}
 
 Route::group([
     'namespace'  => 'Dwij\Laraadmin\Controllers',
+	'as' => $as,
     'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL', 'role:SUPER_ADMIN']
 ], function () {
     
@@ -19,6 +21,9 @@ Route::group([
 	Route::get(config('laraadmin.adminRoute') . '/modules/{model_id}/set_view_col/{column_name}', 'ModuleController@set_view_col');
 	Route::post(config('laraadmin.adminRoute') . '/save_role_module_permissions/{id}', 'ModuleController@save_role_module_permissions');
 	Route::get(config('laraadmin.adminRoute') . '/save_module_field_sort/{model_id}', 'ModuleController@save_module_field_sort');
+	Route::post(config('laraadmin.adminRoute') . '/check_unique_val/{field_id}', 'FieldController@check_unique_val');
+	Route::get(config('laraadmin.adminRoute') . '/module_fields/{id}/delete', 'FieldController@destroy');
+	Route::get(config('laraadmin.adminRoute') . '/modules/{id}/delete', 'ModuleController@destroy');
 	
 	/* ================== Code Editor ================== */
 	Route::get(config('laraadmin.adminRoute') . '/laeditor', 'CodeEditorController@index');

@@ -49,12 +49,16 @@
 					@la_input($module, 'salary_cur')
 					--}}
                     <div class="form-group">
-						<label for="dept">Role* :</label>
+						<label for="role">Role* :</label>
 						<select class="form-control" required="1" data-placeholder="Select Role" rel="select2" name="role">
 							<?php $roles = App\Role::all(); ?>
 							@foreach($roles as $role)
-								@if($role->id != 1)
-									<option value="{{ $role->id }}">{{ $role->name }}</option>
+								@if($role->id != 1 || Entrust::hasRole("SUPER_ADMIN"))
+									@if($user->hasRole($role->name))
+										<option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+									@else
+										<option value="{{ $role->id }}">{{ $role->name }}</option>
+									@endif
 								@endif
 							@endforeach
 						</select>

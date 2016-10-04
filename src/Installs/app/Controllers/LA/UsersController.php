@@ -26,19 +26,15 @@ class UsersController extends Controller
 	public $listing_cols = ['id', 'name', 'email', 'type'];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
-		
-		$module = Module::get('Users');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('Users', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('Users', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -68,16 +64,26 @@ class UsersController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id)
-    {
-        $user = User::findOrFail($id);
-        
-        if($user['type'] == "Employee") {
-            return redirect(config('laraadmin.adminRoute') . '/employees/'.$user->id);
-        } else if($user['type'] == "Client") {
-            return redirect(config('laraadmin.adminRoute') . '/clients/'.$user->id);
-        }
-    }
-
+	{
+		if(Module::hasAccess("Users", "view")) {
+			$user = User::findOrFail($id);
+			if(isset($user->id)) {
+				if($user['type'] == "Employee") {
+					return redirect(config('laraadmin.adminRoute') . '/employees/'.$user->id);
+				} else if($user['type'] == "Client") {
+					return redirect(config('laraadmin.adminRoute') . '/clients/'.$user->id);
+				}
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("user"),
+				]);
+			}
+		} else {
+			return redirect(config('laraadmin.adminRoute')."/");
+		}
+	}
+	
 	/**
 	 * Datatable Ajax fetch
 	 *

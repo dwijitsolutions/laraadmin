@@ -20,8 +20,8 @@ class CreateModuleFieldsTable extends Migration
             $table->integer('field_type')->unsigned();
             $table->boolean('unique')->default(false);
             $table->string('defaultvalue');
-            $table->integer('minlength')->unsigned();
-            $table->integer('maxlength')->unsigned();
+            $table->integer('minlength')->unsigned()->default(0);
+            $table->integer('maxlength')->unsigned()->default(0);
             $table->boolean('required')->default(false);
             $table->text('popup_vals');
             $table->integer('sort')->unsigned()->default(0);

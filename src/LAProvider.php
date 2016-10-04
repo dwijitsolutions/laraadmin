@@ -31,6 +31,29 @@ class LAProvider extends ServiceProvider
         // Artisan::call('migrate', ['--path' => "vendor/dwij/laraadmin/src/Migrations/"]);
         //echo "Migrations completed !!!.";
         // Execute by php artisan vendor:publish --provider="Dwij\Laraadmin\LAProvider"
+		
+		/*
+        |--------------------------------------------------------------------------
+        | Blade Directives for Entrust not working in Laravel 5.3
+        |--------------------------------------------------------------------------
+        */
+		if(LAHelper::laravel_ver() == 5.3) {
+			
+			// Call to Entrust::hasRole
+			Blade::directive('role', function($expression) {
+				return "<?php if (\\Entrust::hasRole({$expression})) : ?>";
+			});
+			
+			// Call to Entrust::can
+			Blade::directive('permission', function($expression) {
+				return "<?php if (\\Entrust::can({$expression})) : ?>";
+			});
+			
+			// Call to Entrust::ability
+			Blade::directive('ability', function($expression) {
+				return "<?php if (\\Entrust::ability({$expression})) : ?>";
+			});
+		}
     }
 
     /**
@@ -100,8 +123,8 @@ class LAProvider extends ServiceProvider
         $this->app->make('Dwij\Laraadmin\Controllers\FieldController');
         $this->app->make('Dwij\Laraadmin\Controllers\CodeEditorController');
         $this->app->make('Dwij\Laraadmin\Controllers\MenuController');
-        
-        /*
+		
+		/*
         |--------------------------------------------------------------------------
         | Blade Directives
         |--------------------------------------------------------------------------

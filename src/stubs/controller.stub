@@ -26,19 +26,15 @@ class __controller_class_name__ extends Controller
 	public $listing_cols = ['id', __listing_cols__];
 	
 	public function __construct() {
-		// for authentication (optional)
-		$this->middleware('auth');
-		
-		$module = Module::get('__module_name__');
-		$listing_cols_temp = array();
-		foreach ($this->listing_cols as $col) {
-			if($col == 'id') {
-				$listing_cols_temp[] = $col;
-			} else if(Module::hasFieldAccess($module->id, $module->fields[$col]['id'])) {
-				$listing_cols_temp[] = $col;
-			}
+		// Field Access of Listing Columns
+		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+			$this->middleware(function ($request, $next) {
+				$this->listing_cols = ModuleFields::listingColumnAccessScan('__module_name__', $this->listing_cols);
+				return $next($request);
+			});
+		} else {
+			$this->listing_cols = ModuleFields::listingColumnAccessScan('__module_name__', $this->listing_cols);
 		}
-		$this->listing_cols = $listing_cols_temp;
 	}
 	
 	/**
@@ -88,7 +84,7 @@ class __controller_class_name__ extends Controller
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-				
+			
 			$insert_id = Module::insert("__module_name__", $request);
 			
 			return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
@@ -109,16 +105,22 @@ class __controller_class_name__ extends Controller
 		if(Module::hasAccess("__module_name__", "view")) {
 			
 			$__singular_var__ = __model_name__::find($id);
-			$module = Module::get('__module_name__');
-			$module->row = $__singular_var__;
-			
-			return view('la.__view_folder__.show', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-				'no_header' => true,
-				'no_padding' => "no-padding"
-			])->with('__singular_var__', $__singular_var__);
-			
+			if(isset($__singular_var__->id)) {
+				$module = Module::get('__module_name__');
+				$module->row = $__singular_var__;
+				
+				return view('la.__view_folder__.show', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+					'no_header' => true,
+					'no_padding' => "no-padding"
+				])->with('__singular_var__', $__singular_var__);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("__singular_var__"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -132,19 +134,23 @@ class __controller_class_name__ extends Controller
 	 */
 	public function edit($id)
 	{
-		if(Module::hasAccess("__module_name__", "edit")) {
-			
+		if(Module::hasAccess("__module_name__", "edit")) {			
 			$__singular_var__ = __model_name__::find($id);
-			
-			$module = Module::get('__module_name__');
-			
-			$module->row = $__singular_var__;
-			
-			return view('la.__view_folder__.edit', [
-				'module' => $module,
-				'view_col' => $this->view_col,
-			])->with('__singular_var__', $__singular_var__);
-			
+			if(isset($__singular_var__->id)) {	
+				$module = Module::get('__module_name__');
+				
+				$module->row = $__singular_var__;
+				
+				return view('la.__view_folder__.edit', [
+					'module' => $module,
+					'view_col' => $this->view_col,
+				])->with('__singular_var__', $__singular_var__);
+			} else {
+				return view('errors.404', [
+					'record_id' => $id,
+					'record_name' => ucfirst("__singular_var__"),
+				]);
+			}
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -161,7 +167,7 @@ class __controller_class_name__ extends Controller
 	{
 		if(Module::hasAccess("__module_name__", "edit")) {
 			
-			$rules = Module::validateRules("__module_name__", $request);
+			$rules = Module::validateRules("__module_name__", $request, true);
 			
 			$validator = Validator::make($request->all(), $rules);
 			

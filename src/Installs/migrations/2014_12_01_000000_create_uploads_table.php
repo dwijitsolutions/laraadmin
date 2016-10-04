@@ -20,12 +20,12 @@ class CreateUploadsTable extends Migration
     public function up()
     {
         Module::generate("Uploads", 'uploads', 'name', 'fa-files-o', [
-            ["name", "Name", "Name", false, "", 5, 256, true],
-            ["path", "Path", "String", false, "", 0, 256, false],
+            ["name", "Name", "Name", false, "", 5, 250, true],
+            ["path", "Path", "String", false, "", 0, 250, false],
             ["extension", "Extension", "String", false, "", 0, 20, false],
-            ["caption", "Caption", "String", false, "", 0, 256, false],
+            ["caption", "Caption", "String", false, "", 0, 250, false],
             ["user_id", "Owner", "Dropdown", false, "1", 0, 0, false, "@users"],
-            ["hash", "Hash", "String", false, "", 0, 256, false],
+            ["hash", "Hash", "String", false, "", 0, 250, false],
             ["public", "Is Public", "Checkbox", false, "0", 0, 0, false],
         ]);
 		
@@ -48,18 +48,18 @@ class CreateUploadsTable extends Migration
             ["files",       "Files",        "Files",    false, "",          0,  10,     false],
             ["weight",      "Weight",       "Float",    false, 0.0,         0,  20.00,  true],
             ["biography",   "Biography",    "HTML",     false, "<p>This is description</p>", 0, 0, true],
-            ["profile_image", "Profile Image", "Image", false, "img_path.jpg", 0, 256,  false],
+            ["profile_image", "Profile Image", "Image", false, "img_path.jpg", 0, 250,  false],
             ["pages",       "Pages",        "Integer",  false, 0,           0,  5000,   false],
             ["mobile",      "Mobile",       "Mobile",   false, "+91  8888888888", 0, 20,false],
             ["media_type",  "Media Type",   "Multiselect", false, ["Audiobook"], 0, 0,  false, ["Print","Audiobook","E-book"]],
             ["media_type",  "Media Type",   "Multiselect", false, [2,3],    0,  0,      false, "@media_types"],
-            ["name",        "Name",         "Name",     false, "John Doe",  5,  256,    true],
-            ["password",    "Password",     "Password", false, "",          6,  256,    true],
+            ["name",        "Name",         "Name",     false, "John Doe",  5,  250,    true],
+            ["password",    "Password",     "Password", false, "",          6,  250,    true],
             ["status",      "Status",       "Radio",    false, "Published", 0,  0,      false, ["Draft","Published","Unpublished"]],
-            ["author",      "Author",       "String",   false, "JRR Tolkien", 0, 256,   true],
+            ["author",      "Author",       "String",   false, "JRR Tolkien", 0, 250,   true],
             ["genre",       "Genre",        "Taginput", false, ["Fantacy","Adventure"], 0, 0, false],
             ["description", "Description",  "Textarea", false, "",          0,  1000,   false],
-            ["short_intro", "Introduction", "TextField",false, "",          5,  256,    true],
+            ["short_intro", "Introduction", "TextField",false, "",          5,  250,    true],
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/

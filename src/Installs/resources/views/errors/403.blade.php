@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Be right back.</title>
+        <title>Unauthorized access.</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet" type="text/css">
 		<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
@@ -47,8 +47,8 @@
     <body>
         <div class="container">
             <div class="content">
-				<i class="fa fa-wrench" style="font-size:120px;color:#666;margin-bottom:30px;"></i>
-                <div class="title">Be right back</div>
+				<i class="fa fa-ban" style="font-size:120px;color:#FF5959;margin-bottom:30px;"></i>
+                <div class="title">Unauthorized access</div>
 				@if(Auth::guest())
 					<a href="{{ url('/') }}">Homepage</a> | 
 					<a href="javascript:history.back()">Go Back</a>
