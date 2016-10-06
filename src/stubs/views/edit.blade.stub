@@ -1,14 +1,14 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title")
-	<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__') }}">__module_name__</a> :
+	<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__') }}">{{LAHelper::real_module_name("__module_name__")}}</a> :
 @endsection
 @section("contentheader_description", $__singular_var__->$view_col)
-@section("section", "__module_name__")
+@section("section", LAHelper::real_module_name("__module_name__"))
 @section("section_url", url(config('laraadmin.adminRoute') . '/__db_table_name__'))
 @section("sub_section", "Edit")
 
-@section("htmlheader_title", "__singular_cap_var__ Edit : ".$__singular_var__->$view_col)
+@section("htmlheader_title", LAHelper::real_module_name("__singular_cap_var__")." Edit : ".$__singular_var__->$view_col)
 
 @section("main-content")
 
