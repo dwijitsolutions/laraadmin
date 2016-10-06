@@ -49,6 +49,42 @@ class LAInstall extends Command
             
             $this->info('from: '.$from." to: ".$to);
             
+            if ($this->confirm("Do you wish to set your DB config in the .env file?", true)) {
+	            $this->line("DB Assistant Initiated....");
+	            $db_data = array();
+	            if(LAHelper::laravel_ver() == 5.3) {
+		            $db_data['dbhost'] = $this->ask('Database Host');
+		            $db_data['dbport'] = $this->ask('Database Port');
+		        }
+                $db_data['db'] = $this->ask('Database Name');
+                $db_data['dbuser'] = $this->ask('Database User');
+                $db_data['dbpass'] = $this->ask('Database Password');
+                
+                $envfile =  $this->openFile('.env');
+                
+                $dbline = $this->getLineWithString('.env','DB_DATABASE=');
+                $dbuserline = $this->getLineWithString('.env','DB_USERNAME=');
+                $dbpassline = $this->getLineWithString('.env','DB_PASSWORD=');
+
+                if(LAHelper::laravel_ver() == 5.3) {
+	                $dbhostline = $this->getLineWithString('.env','DB_HOST=');
+	                $dbportline = $this->getLineWithString('.env','DB_PORT=');
+	                $envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
+					$envfile = str_replace($dbportline, "DB_PORT=".$db_data['dbport']."\n",$envfile);
+	            }
+                $envfile = str_replace($dbline, "DB_DATABASE=".$db_data['db']."\n",$envfile);
+                $envfile = str_replace($dbuserline, "DB_USERNAME=".$db_data['dbuser']."\n",$envfile);
+                $envfile = str_replace($dbpassline, "DB_PASSWORD=".$db_data['dbpass']."\n",$envfile);
+				file_put_contents('.env', $envfile);
+	        }
+	        
+	        if ($this->confirm("LaraAdmin requires an Array as CACHE_DRIVER, Do you wish to set your CACHE_DRIVER to ARRAY? ", true)) {
+                $envfile =  $this->openFile('.env');
+                $cachedriverline = $this->getLineWithString('.env','CACHE_DRIVER=');
+                $envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
+				file_put_contents('.env', $envfile);
+	        }
+	        
             if ($this->confirm("This process may change/append to the following of your existing project files:"
                     ."\n\n\t app/Http/routes.php"
                     ."\n\t app/User.php"
@@ -202,6 +238,25 @@ class LAInstall extends Command
         }
     }
     
+    private function openFile($from) {
+        // $this->info("appendFile: ($from, $to)");
+        $md = file_get_contents($from);
+        return $md;
+    }
+    private function writeFile($from, $to) {
+        $md = file_get_contents($from);
+        file_put_contents($to, $md);
+    }
+    
+    function getLineWithString($fileName, $str) {
+    $lines = file($fileName);
+    foreach ($lines as $lineNumber => $line) {
+        if (strpos($line, $str) !== false) {
+            return $line;
+        }
+    }
+    return -1;
+}
     private function copyFolder($from, $to) {
         // $this->info("copyFolder: ($from, $to)");
         LAHelper::recurse_copy($from, $to);
