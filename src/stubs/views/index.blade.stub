@@ -1,14 +1,14 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "__module_name__")
-@section("contentheader_description", "__db_table_name__ listing")
-@section("section", "__module_name__")
+@section("contentheader_title", LAHelper::real_module_name("__module_name__"))
+@section("contentheader_description", LAHelper::real_module_name("__db_table_name__ listing"))
+@section("section", LAHelper::real_module_name("__module_name__"))
 @section("sub_section", "Listing")
-@section("htmlheader_title", "__module_name__ Listing")
+@section("htmlheader_title", LAHelper::real_module_name("__module_name__ Listing"))
 
 @section("headerElems")
 @la_access("__module_name__", "create")
-	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add __singular_cap_var__</button>
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add {{LAHelper::real_module_name("__singular_cap_var__")}}</button>
 @endla_access
 @endsection
 
@@ -51,7 +51,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add __singular_cap_var__</h4>
+				<h4 class="modal-title" id="myModalLabel">Add {{LAHelper::real_module_name("__singular_cap_var__")}}</h4>
 			</div>
 			{!! Form::open(['action' => 'LA\__controller_class_name__@store', 'id' => '__singular_var__-add-form']) !!}
 			<div class="modal-body">
