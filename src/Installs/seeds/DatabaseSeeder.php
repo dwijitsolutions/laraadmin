@@ -65,5 +65,46 @@ class DatabaseSeeder extends Seeder
         $perm->save();
 		
 		$role->attachPermission($perm);
+		
+		$laconfig = new LAConfigs;
+		$laconfig->key = "sidebar_first";
+		$laconfig->value = "Lara";
+		$laconfig->save();
+		
+		$laconfig->key = "sidebar_second";
+		$laconfig->value = "Admin 1.0";
+		$laconfig->save();
+		
+		$laconfig->key = "sidebar_short";
+		$laconfig->value = "LA";
+		$laconfig->save();
+		
+		$laconfig->key = "check_search";
+		$laconfig->value = "on";
+		$laconfig->save();
+		
+		$laconfig->key = "check_messages";
+		$laconfig->value = "on";
+		$laconfig->save();
+		
+		$laconfig->key = "check_notifications";
+		$laconfig->value = "on";
+		$laconfig->save();
+		
+		$laconfig->key = "check_tasks";
+		$laconfig->value = "on";
+		$laconfig->save();
+		
+		$laconfig->key = "check_rightsidebar";
+		$laconfig->value = "on";
+		$laconfig->save();
+		
+		$laconfig->key = "skin";
+		$laconfig->value = "skin-white";
+		$laconfig->save();
+		
+		$laconfig->key = "layout";
+		$laconfig->value = "fixed";
+		$laconfig->save();
     }
 }
