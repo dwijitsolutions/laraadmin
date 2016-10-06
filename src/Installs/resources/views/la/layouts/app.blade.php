@@ -1,3 +1,6 @@
+<?php
+use Dwij\Laraadmin\Models\LAConfigs;
+?>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -30,7 +33,7 @@ desired effect
 |---------------------------------------------------------|
 -->
 
-<body class="skin-white fixed {{ $sidebar_mini or '' }}" bsurl="{{ url('') }}" adminRoute="{{ config('laraadmin.adminRoute') }}">
+<body class="{{LAConfigs::getByKey('skin')}} {{LAConfigs::getByKey('layout')}} {{ $sidebar_mini or '' }}" bsurl="{{ url('') }}" adminRoute="{{ config('laraadmin.adminRoute') }}">
 <div class="wrapper">
 
     @include('la.layouts.partials.mainheader')
@@ -44,7 +47,6 @@ desired effect
             @include('la.layouts.partials.contentheader')
         @endif
         
-
         <!-- Main content -->
         <section class="content {{ $no_padding or '' }}">
             <!-- Your Page Content Here -->
