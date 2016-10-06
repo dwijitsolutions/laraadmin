@@ -4,9 +4,10 @@
     <!-- Logo -->
     <a href="{{ url(config('laraadmin.adminRoute')) }}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>LA</b></span>
+        <span class="logo-mini"><b>{{Dwij\Laraadmin\Models\LAConfigs::getByKey('sidebar_short')}}</b></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>{{ config('laraadmin.sitename2')[0] }}</b> {{ config('laraadmin.sitename2')[1] }}</span>
+        <span class="logo-lg"><b>{{Dwij\Laraadmin\Models\LAConfigs::getByKey('sidebar_first')}}</b>
+         {{Dwij\Laraadmin\Models\LAConfigs::getByKey('sidebar_second')}}</span>
     </a>
 
     <!-- Header Navbar -->
@@ -19,6 +20,7 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
+                @if(Dwij\Laraadmin\Models\LAConfigs::getByKey('check_messages')=="on")
                 <li class="dropdown messages-menu">
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -50,7 +52,8 @@
                         <li class="footer"><a href="#">See All Messages</a></li>
                     </ul>
                 </li><!-- /.messages-menu -->
-
+				@endif
+				@if(Dwij\Laraadmin\Models\LAConfigs::getByKey('check_notifications')=="on")
                 <!-- Notifications Menu -->
                 <li class="dropdown notifications-menu">
                     <!-- Menu toggle button -->
@@ -73,6 +76,8 @@
                         <li class="footer"><a href="#">View all</a></li>
                     </ul>
                 </li>
+                @endif
+				@if(Dwij\Laraadmin\Models\LAConfigs::getByKey('check_tasks')=="on")
                 <!-- Tasks Menu -->
                 <li class="dropdown tasks-menu">
                     <!-- Menu Toggle Button -->
@@ -108,6 +113,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>
                     <li><a href="{{ url('/register') }}">Register</a></li>
@@ -145,6 +151,9 @@
                                 <div class="col-xs-6 text-center">
                                     <a href="{{ url(config('laraadmin.adminRoute') . '/la_menus') }}"><i class="fa fa-bars"></i> <span>Menus</span></a>
                                 </div>
+                                <div class="col-xs-6 text-center">
+                                    <a href="{{ url(config('laraadmin.adminRoute') . '/la_configs') }}"><i class="fa fa-cogs"></i> <span>Configuration</span></a>
+                                </div>
                             </li>
 							@endrole
                             <!-- Menu Footer-->
@@ -159,12 +168,13 @@
                         </ul>
                     </li>
                 @endif
-
+				@if(Dwij\Laraadmin\Models\LAConfigs::getByKey('check_rightsidebar')=="on")
                 <!-- Control Sidebar Toggle Button -->
                 <li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-comments-o"></i> <span class="label label-warning">10</span></a>
                     
                 </li>
+                @endif
             </ul>
         </div>
     </nav>
