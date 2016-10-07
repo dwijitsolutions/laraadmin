@@ -6,6 +6,7 @@ use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Models\Menu;
+use Dwij\Laraadmin\Models\LAConfigs;
 
 use App\Role;
 use App\Permission;
@@ -71,38 +72,47 @@ class DatabaseSeeder extends Seeder
 		$laconfig->value = "Lara";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "sidebar_second";
 		$laconfig->value = "Admin 1.0";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "sidebar_short";
 		$laconfig->value = "LA";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "check_search";
 		$laconfig->value = "on";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "check_messages";
 		$laconfig->value = "on";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "check_notifications";
 		$laconfig->value = "on";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "check_tasks";
 		$laconfig->value = "on";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "check_rightsidebar";
 		$laconfig->value = "on";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "skin";
 		$laconfig->value = "skin-white";
 		$laconfig->save();
 		
+		$laconfig = new LAConfigs;
 		$laconfig->key = "layout";
 		$laconfig->value = "fixed";
 		$laconfig->save();
