@@ -263,7 +263,7 @@ class LAHelper
 			$active_str = 'class="active"';
 		}
 		
-		$str = '<li'.$treeview.' '.$active_str.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.$menu->name.'</span> '.$subviewSign.'</a>';
+		$str = '<li'.$treeview.' '.$active_str.'><a href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'"><i class="fa '.$menu->icon.'"></i> <span>'.LAHelper::real_module_name($menu->name).'</span> '.$subviewSign.'</a>';
 		
 		if(count($childrens)) {
 			$str .= '<ul class="treeview-menu">';
@@ -291,4 +291,10 @@ class LAHelper
 			return floatval($var);
 		}
 	}
+
+	public static function real_module_name($name){
+		$name = str_replace('_', ' ', $name);
+		return $name;
+	}
+	
 }
