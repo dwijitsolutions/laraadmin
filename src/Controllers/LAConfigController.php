@@ -45,8 +45,23 @@ class LAConfigController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request){
-		
 		$all = $request->all();
+		if(!isset($all['check_search'])){
+			$all['check_search']="off";
+		}
+		if(!isset($all['check_messages'])){
+			$all['check_messages']="off";
+		}
+		if(!isset($all['check_notifications'])){
+			$all['check_notifications']="off";
+		}
+		if(!isset($all['check_tasks'])){
+			$all['check_tasks']="off";
+		}
+		if(!isset($all['check_rightsidebar'])){
+			$all['check_rightsidebar']="off";
+		}
+
 		foreach($all as $key=>$value){
 			LAConfigs::where('key',$key)->update(['value'=>$value]);
 		}
@@ -54,11 +69,13 @@ class LAConfigController extends Controller
 		$configs = LAConfigs::all();
 		$skin_array=['White Skin'=>'skin-white','Blue Skin'=>'skin-blue','Black Skin'=>'skin-black','Purple Skin'=>'skin-purple','Yellow Sking'=>'skin-yellow','Red Skin'=>'skin-red','Green Skin'=>'skin-green'];
 		$layout_array=['Fixed Layout'=>'fixed','Boxed Layout'=>'layout-boxed','Top Navigation Layout'=>'layout-top-nav','Sidebar Collapse Layout'=>'sidebar-collapse','Mini Sidebar Layout'=>'sidebar-mini'];
+
 		return View('la.la_configs.index', [
 			'configs' => $configs,
 			'skins' => $skin_array,
 			'layouts' => $layout_array
 		]);
+
 	}
 	
 	
