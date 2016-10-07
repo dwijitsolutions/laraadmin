@@ -19,7 +19,7 @@
         @endif
 
         <!-- search form (Optional) -->
-        @if(Dwij\Laraadmin\Models\LAConfigs::getByKey('check_search')=="on")
+        @if(LAConfigs::getByKey('sidebar_search') == "on")
         <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
 	                <input type="text" name="q" class="form-control" placeholder="Search..."/>
