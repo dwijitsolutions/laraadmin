@@ -95,18 +95,21 @@ class LAProvider extends ServiceProvider
         // For Gravatar User Profile Pics
         $loader->alias('Gravatar', \Creativeorange\Gravatar\Facades\Gravatar::class);
         
-        // For Lara Admin Code Generation
+        // For LaraAdmin Code Generation
         $loader->alias('CodeGenerator', \Dwij\Laraadmin\CodeGenerator::class);
         
-        // For Lara Admin Form Helper
+        // For LaraAdmin Form Helper
         $loader->alias('LAFormMaker', \Dwij\Laraadmin\LAFormMaker::class);
         
-        // For Lara Admin Helper
+        // For LaraAdmin Helper
         $loader->alias('LAHelper', \Dwij\Laraadmin\Helpers\LAHelper::class);
         
-        // For Lara Admin Helper
+        // LaraAdmin Module Model 
         $loader->alias('Module', \Dwij\Laraadmin\Models\Module::class);
 
+		// For LaraAdmin Configuration Model
+		$loader->alias('LAConfigs', \Dwij\Laraadmin\Models\LAConfigs::class);
+		
         // For Entrust
 		$loader->alias('Entrust', \Zizaco\Entrust\EntrustFacade::class);
         $loader->alias('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
