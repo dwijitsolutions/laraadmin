@@ -41,7 +41,7 @@ use Dwij\Laraadmin\Models\Module;
 						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}#fields" class="btn btn-primary btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
 						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}#access" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-key"></i></a>
 						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}#sort" class="btn btn-success btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-sort"></i></a>
-						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}/delete" class="btn btn-danger btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-trash"></i></a>
+						<a module_name="{{ $module->name }}" module_id="{{ $module->id }}" class="btn btn-danger btn-xs delete_module" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-trash"></i></a>
 					</td>
 				</tr>
 			@endforeach
@@ -82,6 +82,28 @@ use Dwij\Laraadmin\Models\Module;
 	</div>
 </div>
 
+<!----------confirmation box--------->
+<div class="modal" id="module_delete_confirm">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title">Module Delete</h4>
+			</div>
+			<div class="modal-body">
+				<p>Do you really want to delete module <></p>
+			</div>
+			<div class="modal-footer">
+				<a id="module_delete" class="btn btn-primary pull-left">Yes</a>
+				<a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" class="btn btn-default pull-right" >No</a>				
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
 @endsection
 
 @push('styles')
@@ -93,6 +115,11 @@ use Dwij\Laraadmin\Models\Module;
 <script src="{{ asset('la-assets/plugins/iconpicker/fontawesome-iconpicker.js') }}"></script>
 <script>
 $(function () {
+	$('.delete_module').on("click", function () {
+    	var module_id = $(this).attr('module_id');
+		var module_name = $(this).attr('module_name');
+	});
+	
 	$('input[name=icon]').iconpicker();
 	$("#dt_modules").DataTable({
 		
