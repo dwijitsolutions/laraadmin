@@ -42,6 +42,7 @@ class CreateModuleFieldTypesTable extends Migration
         ModuleFieldTypes::create(["name" => "Textarea"]);
         ModuleFieldTypes::create(["name" => "TextField"]);
         ModuleFieldTypes::create(["name" => "URL"]);
+        ModuleFieldTypes::create(["name" => "Files"]);
     }
 
     /**

@@ -38,7 +38,10 @@ use Dwij\Laraadmin\Models\Module;
 					<td>{{ $module->name_db }}</td>
 					<td>{{ Module::itemCount($module->name) }}</td>
 					<td>
-						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/edit') }}" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}#fields" class="btn btn-primary btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
+						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}#access" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-key"></i></a>
+						<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id)}}#sort" class="btn btn-success btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-sort"></i></a>
+						<a module_name="{{ $module->name }}" module_id="{{ $module->id }}" class="btn btn-danger btn-xs delete_module" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-trash"></i></a>
 					</td>
 				</tr>
 			@endforeach
@@ -61,10 +64,12 @@ use Dwij\Laraadmin\Models\Module;
 						<label for="name">Module Name :</label>
 						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
 					</div>
-					
 					<div class="form-group">
-						<label for="name">Table Name (lowercase only) :</label>
-						{{ Form::text("name_db", null, ['class'=>'form-control', 'placeholder'=>'Table Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
+						<label for="icon">Icon</label>
+						<div class="input-group">
+							<input class="form-control" placeholder="FontAwesome Icon" name="icon" type="text" value="fa-cube"  data-rule-minlength="1" required>
+							<span class="input-group-addon"></span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -77,6 +82,28 @@ use Dwij\Laraadmin\Models\Module;
 	</div>
 </div>
 
+<!----------confirmation box--------->
+<div class="modal" id="module_delete_confirm">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title">Module Delete</h4>
+			</div>
+			<div class="modal-body">
+				<p>Do you really want to delete module <></p>
+			</div>
+			<div class="modal-footer">
+				<a id="module_delete" class="btn btn-primary pull-left">Yes</a>
+				<a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" class="btn btn-default pull-right" >No</a>				
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
 @endsection
 
 @push('styles')
@@ -85,8 +112,15 @@ use Dwij\Laraadmin\Models\Module;
 
 @push('scripts')
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('la-assets/plugins/iconpicker/fontawesome-iconpicker.js') }}"></script>
 <script>
 $(function () {
+	$('.delete_module').on("click", function () {
+    	var module_id = $(this).attr('module_id');
+		var module_name = $(this).attr('module_name');
+	});
+	
+	$('input[name=icon]').iconpicker();
 	$("#dt_modules").DataTable({
 		
 	});

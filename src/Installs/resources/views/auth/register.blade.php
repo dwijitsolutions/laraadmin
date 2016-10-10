@@ -24,7 +24,7 @@
         @endif
 
         <div class="register-box-body">
-            <p class="login-box-msg">Register a new membership</p>
+            <p class="login-box-msg">Register Super Admin</p>
             <form action="{{ url('/register') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group has-feedback">
@@ -47,7 +47,7 @@
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
                             <label>
-                                <input type="checkbox"> I agree to the <a href="#">terms</a>
+                                <input type="checkbox"> I agree to the terms
                             </label>
                         </div>
                     </div><!-- /.col -->
@@ -58,8 +58,8 @@
             </form>
 
             @include('auth.partials.social_login')
-
-            <a href="{{ url('/login') }}" class="text-center">I already have a membership</a>
+            <hr>
+            <center><a href="{{ url('/login') }}" class="text-center">Login</a></center>
         </div><!-- /.form-box -->
     </div><!-- /.register-box -->
 

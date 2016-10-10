@@ -7,15 +7,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    protected $table = 'departments';
+    use SoftDeletes;
 	
-	// By default making all fields fillable
-	// protected $fillable = [];
+	protected $table = 'departments';
 	
 	protected $hidden = [
         
     ];
+
+	protected $guarded = [];
+
+	protected $dates = ['deleted_at'];
 }

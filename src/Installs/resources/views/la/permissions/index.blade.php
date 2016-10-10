@@ -1,16 +1,28 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Books")
-@section("contentheader_description", "books listing")
-@section("section", "Books")
+@section("contentheader_title", "Permissions")
+@section("contentheader_description", "permissions listing")
+@section("section", "Permissions")
 @section("sub_section", "Listing")
-@section("htmlheader_title", "Books Listing")
+@section("htmlheader_title", "Permissions Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Book</button>
+@la_access("Permissions", "create")
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Permission</button>
+@endla_access
 @endsection
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="box box-success">
 	<!--<div class="box-header"></div>-->
@@ -33,37 +45,23 @@
 	</div>
 </div>
 
+@la_access("Permissions", "create")
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add Book</h4>
+				<h4 class="modal-title" id="myModalLabel">Add Permission</h4>
 			</div>
-			{!! Form::open(['action' => 'LA\BooksController@store', 'id' => 'book-add-form']) !!}
+			{!! Form::open(['action' => 'LA\PermissionsController@store', 'id' => 'permission-add-form']) !!}
 			<div class="modal-body">
 				<div class="box-body">
                     @la_form($module)
 					
 					{{--
 					@la_input($module, 'name')
-					@la_input($module, 'author')
-					@la_input($module, 'author_address')
-					@la_input($module, 'price')
-					@la_input($module, 'weight')
-					@la_input($module, 'pages')
-					@la_input($module, 'genre')
-					@la_input($module, 'publisher')
-					@la_input($module, 'status')
-					@la_input($module, 'media_type')
+					@la_input($module, 'display_name')
 					@la_input($module, 'description')
-					@la_input($module, 'email')
-					@la_input($module, 'restricted')
-					@la_input($module, 'mobile')
-					@la_input($module, 'preview')
-					@la_input($module, 'website')
-					@la_input($module, 'date_release')
-					@la_input($module, 'time_started')
 					--}}
 				</div>
 			</div>
@@ -75,6 +73,7 @@
 		</div>
 	</div>
 </div>
+@endla_access
 
 @endsection
 
@@ -89,7 +88,7 @@ $(function () {
 	$("#example1").DataTable({
 		processing: true,
         serverSide: true,
-        ajax: "{{ url(config('laraadmin.adminRoute') . '/book_dt_ajax') }}",
+        ajax: "{{ url(config('laraadmin.adminRoute') . '/permission_dt_ajax') }}",
 		language: {
 			lengthMenu: "_MENU_",
 			search: "_INPUT_",
@@ -99,7 +98,7 @@ $(function () {
 		columnDefs: [ { orderable: false, targets: [-1] }],
 		@endif
 	});
-	$("#book-add-form").validate({
+	$("#permission-add-form").validate({
 		
 	});
 });

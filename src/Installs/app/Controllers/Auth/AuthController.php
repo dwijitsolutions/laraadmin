@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Employee;
+use App\Role;
 use Validator;
+use Eloquent;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -39,6 +42,26 @@ class AuthController extends Controller
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
+    
+    public function showRegistrationForm()
+    {
+        $userCount = User::count();
+        if($userCount == 0) {
+            return view('auth.register');
+        } else {
+            return redirect('login');
+        }
+    }
+    
+    public function showLoginForm()
+    {
+        $userCount = User::count();
+        if($userCount == 0) {
+            return redirect('register');
+        } else {
+            return view('auth.login');
+        }
+    }
 
     /**
      * Get a validator for an incoming registration request.
@@ -63,10 +86,36 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        // TODO: This is Not Standard. Need to find alternative
+        Eloquent::unguard();
+        
+        $employee = Employee::create([
+            'name' => $data['name'],
+            'designation' => "Super Admin",
+            'mobile' => "8888888888",
+            'mobile2' => "",
+            'email' => $data['email'],
+            'gender' => 'Male',
+            'dept' => "1",
+            'city' => "Pune",
+            'address' => "Karve nagar, Pune 411030",
+            'about' => "About user / biography",
+            'date_birth' => date("Y-m-d"),
+            'date_hire' => date("Y-m-d"),
+            'date_left' => date("Y-m-d"),
+            'salary_cur' => 0,
+        ]);
+        
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'context_id' => $employee->id,
+            'type' => "Employee",
         ]);
+        $role = Role::where('name', 'SUPER_ADMIN')->first();
+        $user->attachRole($role);
+    
+        return $user;
     }
 }

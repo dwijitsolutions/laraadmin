@@ -7,10 +7,22 @@
 @section("htmlheader_title", "Employees Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Employee</button>
+@la_access("Employees", "create")
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Employee</button>
+@endla_access
 @endsection
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="box box-success">
 	<!--<div class="box-header"></div>-->
@@ -33,6 +45,7 @@
 	</div>
 </div>
 
+@la_access("Employees", "create")
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -53,7 +66,6 @@
 					@la_input($module, 'mobile2')
 					@la_input($module, 'email')
 					@la_input($module, 'dept')
-					@la_input($module, 'role')
 					@la_input($module, 'city')
 					@la_input($module, 'address')
 					@la_input($module, 'about')
@@ -62,6 +74,17 @@
 					@la_input($module, 'date_left')
 					@la_input($module, 'salary_cur')
 					--}}
+					<div class="form-group">
+						<label for="role">Role* :</label>
+						<select class="form-control" required="1" data-placeholder="Select Role" rel="select2" name="role">
+							<?php $roles = App\Role::all(); ?>
+							@foreach($roles as $role)
+								@if($role->id != 1)
+									<option value="{{ $role->id }}">{{ $role->name }}</option>
+								@endif
+							@endforeach
+						</select>
+					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -72,6 +95,7 @@
 		</div>
 	</div>
 </div>
+@endla_access
 
 @endsection
 

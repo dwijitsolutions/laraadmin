@@ -1,34 +1,21 @@
 
 /* ================== Homepage ================== */
-
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
-
 Route::auth();
 
-/* ================== Dashboard ================== */
+/* ================== Access Uploaded Files ================== */
+Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
 
-Route::get(config('laraadmin.adminRoute'), 'LA\DashboardController@index');
-Route::get(config('laraadmin.adminRoute'). '/dashboard', 'LA\DashboardController@index');
-Route::get('/dashboard', 'LA\DashboardController@index');
+/*
+|--------------------------------------------------------------------------
+| Admin Application Routes
+|--------------------------------------------------------------------------
+|
+| This route group applies the "web" middleware group to every route
+| it contains. The "web" middleware group is defined in your HTTP
+| kernel and includes session state, CSRF protection, and more.
+|
+*/
 
-/* ================== Users ================== */
-Route::resource(config('laraadmin.adminRoute') . '/users', 'LA\UsersController');
-Route::get(config('laraadmin.adminRoute') . '/user_dt_ajax', 'LA\UsersController@dtajax');
-
-
-/* ================== Roles ================== */
-Route::resource(config('laraadmin.adminRoute') . '/roles', 'LA\RolesController');
-Route::get(config('laraadmin.adminRoute') . '/role_dt_ajax', 'LA\RolesController@dtajax');
-
-/* ================== Departments ================== */
-Route::resource(config('laraadmin.adminRoute') . '/departments', 'LA\DepartmentsController');
-Route::get(config('laraadmin.adminRoute') . '/department_dt_ajax', 'LA\DepartmentsController@dtajax');
-
-/* ================== Employees ================== */
-Route::resource(config('laraadmin.adminRoute') . '/employees', 'LA\EmployeesController');
-Route::get(config('laraadmin.adminRoute') . '/employee_dt_ajax', 'LA\EmployeesController@dtajax');
-
-/* ================== Books ================== */
-Route::resource(config('laraadmin.adminRoute') . '/books', 'LA\BooksController');
-Route::get(config('laraadmin.adminRoute') . '/book_dt_ajax', 'LA\BooksController@dtajax');
+require __DIR__.'/admin_routes.php';

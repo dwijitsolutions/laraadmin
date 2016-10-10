@@ -28,6 +28,8 @@ class Packaging extends Command
     
     protected $from;
     protected $to;
+
+    var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization"];
     
     /**
      * Generate a CRUD files inclusing Controller, Model and Routes
@@ -52,14 +54,20 @@ class Packaging extends Command
         
         // Models
         $this->line('Exporting Models...');
-        $models = ["User", "Role", "Employee", "Department", "Book"];
-        foreach ($models as $model) {
+        
+        foreach ($this->modelsInstalled as $model) {
             $this->copyFile($from."/app/".$model.".php", $to."/app/Models/".$model.".php");
         }
         
         // Routes
         $this->line('Exporting Routes...');
-        $this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
+        if(LAHelper::laravel_ver() == 5.3) {
+			$this->copyFile($from."/routes/web.php", $to."/app/routes.php");
+			$this->copyFile($from."/routes/admin_routes.php", $to."/app/admin_routes.php");
+		} else {
+			$this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
+			$this->copyFile($from."/app/Http/admin_routes.php", $to."/app/admin_routes.php");
+		}
         
         // Config
         $this->line('Exporting Config...');
@@ -73,6 +81,10 @@ class Packaging extends Command
         // migrations
         $this->line('Exporting migrations...');
         $this->replaceFolder($from."/database/migrations", $to."/migrations");
+        
+		// seeds
+        $this->line('Exporting seeds...');
+        $this->copyFile($from."/database/seeds/DatabaseSeeder.php", $to."/seeds/DatabaseSeeder.php");
         
         // resources
         $this->line('Exporting resources: assets + views...');

@@ -3,7 +3,8 @@
     <head>
         <title>Be right back.</title>
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet" type="text/css">
+		<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
 
         <style>
             html, body {
@@ -16,7 +17,7 @@
                 width: 100%;
                 color: #B0BEC5;
                 display: table;
-                font-weight: 100;
+                font-weight: 200;
                 font-family: 'Lato';
             }
 
@@ -34,13 +35,27 @@
             .title {
                 font-size: 72px;
                 margin-bottom: 40px;
+				color: #444;
             }
+			a {
+				font-weight:normal;
+				color:#3061B6;
+				text-decoration: none;
+			}
         </style>
     </head>
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Be right back.</div>
+				<i class="fa fa-wrench" style="font-size:120px;color:#666;margin-bottom:30px;"></i>
+                <div class="title">Be right back</div>
+				@if(Auth::guest())
+					<a href="{{ url('/') }}">Homepage</a> | 
+					<a href="javascript:history.back()">Go Back</a>
+				@else
+					<a href="{{ url(config('laraadmin.adminRoute')) }}">Dashboard.</a> | 
+					<a href="javascript:history.back()">Go Back</a>
+				@endif
             </div>
         </div>
     </body>

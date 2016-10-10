@@ -8,13 +8,15 @@
         "issues": "https://github.com/dwijitsolutions/laraadmin/issues",
         "source": "https://github.com/dwijitsolutions/laraadmin"
     },
-    "version": "1.0.7",
+    "version": "1.0.34",
     "require": {
         "illuminate/support": "5.*",
         "laravelcollective/html": "^5.2|^5.1",
         "illuminate/container": "^5.2|^5.1",
         "yajra/laravel-datatables-oracle": "~6.0",
-        "creativeorange/gravatar": "^1.0"
+        "creativeorange/gravatar": "^1.0",
+        "doctrine/dbal": "~2.3",
+        "zizaco/entrust": "1.7.0"
     },
     "authors": [
         {

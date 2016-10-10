@@ -7,10 +7,22 @@
 @section("htmlheader_title", "Departments Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Department</button>
+@la_access("Departments", "create")
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Department</button>
+@endla_access
 @endsection
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="box box-success">
 	<!--<div class="box-header"></div>-->
@@ -33,6 +45,7 @@
 	</div>
 </div>
 
+@la_access("Departments", "create")
 <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -61,6 +74,7 @@
 		</div>
 	</div>
 </div>
+@endla_access
 
 @endsection
 

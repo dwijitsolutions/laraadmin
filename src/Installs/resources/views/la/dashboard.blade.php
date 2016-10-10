@@ -480,8 +480,8 @@
 (function($) {
 	$('body').pgNotification({
 		style: 'circle',
-		title: 'John Doe',
-		message: "Awesome",
+		title: 'LaraAdmin',
+		message: "Welcome to LaraAdmin...",
 		position: "top-right",
 		timeout: 0,
 		type: "success",

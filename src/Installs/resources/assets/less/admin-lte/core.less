@@ -191,183 +191,40 @@ a:focus {
     max-height:100px;
 }
 
-/*margin and padding*/
+/* margin and padding */
 
-.m0{
-    margin: 0;
-}
-.m5{
-    margin: 5px;
-}
-.mt5 {
-    margin-top: 5px;
-}
-.m10{
-    margin: 10px;
-}
-.m15{
-    margin: 15px;
-}
-.m20{
-    margin: 20px;
-}
-.ml15 {
-    margin-left: 15px !important;
-}
-.mt15 {
-    margin-top: 15px;
-}
-.mt20 {
-    margin-top: 20px;
-}
-.mr15 {
-    margin-right: 15px !important;
-}
-.mb15 {
-    margin-bottom: 15px;
-}
-.mb20 {
-    margin-bottom: 20px;
-}
-.ml10 {
-    margin-left: 10px;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.mr-1 {
-    margin-right: -1px !important;
-}
-.ml-1 {
-    margin-left: -1px !important;
-}
-.mb0{
-    margin-bottom: 0 !important; 
-}
-.mt50{
-    margin-top: 50px !important; 
-}
-.mt0{
-    margin-top: 0 !important; 
-}
-.mt-5{
-    margin-top: -5px;
-}
-.mt-50{
-    margin-top: -50px;
-}
-.p0 {
-    padding: 0 !important;
-}
-.p5 {
-    padding: 5px;
-}
-.p10 {
-    padding: 10px;
-}
-.p15 {
-    padding: 15px;
-}
-.p20 {
-    padding: 20px !important;
-}
-.p30 {
-    padding: 30px;
-}
-.pb10{
-    padding-bottom:10px; 
-}
-.pb5{
-    padding-bottom:5px; 
-}
-.pl0 {
-    padding-left: 0px;
-}
-.pl10{
-    padding-left:10px; 
-}
-.pl15{
-    padding-left:15px; 
-}
-.pr10{
-    padding-right:10px; 
-}
-.pr15{
-    padding-right:15px; 
-}
-.pt10 {
-    padding-top: 10px;
-}
-.pt5 {
-    padding-top: 5px !important;
-}
-.pt0 {
-    padding-top: 0px !important;
-}
-.w50 {
-    width: 50px;
-}
-.w80 {
-    width: 80px;
-}
-.w100 {
-    width: 100px;
-}
-.w150 {
-    width: 150px;
-}
-.w200 {
-    width: 200px;
-}
-.w250 {
-    width: 250px;
-}
-.w300 {
-    width: 300px;
-}
-.min-w150{
-    min-width: 150px;
-}
-.w5p{
-    width:5%;
-}
-.w10p{
-    width:10%;
-}
-.w15p{
-    width:15%;
-}
-.w20p{
-    width:20%;
-}
-.w25p{
-    width:25%;
-}
-.w30p{
-    width:30%;
-}
-.w50p{
-    width:50%;
-}
-.w60p{
-    width:60%;
-}
-.w70p{
-    width:70%;
-}
-.w80p{
-    width:80%;
-}
-.w90p{
-    width:90%;
-}
-.w100p{
-    width:100%;
-}
-.h100p{
-    height:100%;
+// ............................................................
+// .for
+
+.for(@i, @n) {.-each(@i)}
+.for(@n)     when (isnumber(@n)) {.for(1, @n)}
+.for(@i, @n) when not (@i = @n)  {
+    .for((@i + (@n - @i) / abs(@n - @i)), @n);
 }
 
+// ............................................................
+// .for-each
+
+.for(@array)   when (default()) {.for-impl_(length(@array))}
+.for-impl_(@i) when (@i > 1)    {.for-impl_((@i - 1))}
+.for-impl_(@i) when (@i > 0)    {.-each(extract(@array, @i))}
+
+@dists: 30, 25, 20, 15, 10, 5, 0;
+
+.for(@dists); .-each(@dist) {
+    &.m@{dist} {margin: unit(@dist, px)}
+    &.mt@{dist} {margin-top: unit(@dist, px)}
+    &.mr@{dist} {margin-right: unit(@dist, px)}
+    &.mb@{dist} {margin-bottom: unit(@dist, px)}
+    &.ml@{dist} {margin-left: unit(@dist, px)}
+    &.p@{dist} {padding: unit(@dist, px)}
+    &.pt@{dist} {padding-top: unit(@dist, px)}
+    &.pr@{dist} {padding-right: unit(@dist, px)}
+    &.pb@{dist} {padding-bottom: unit(@dist, px)}
+    &.pl@{dist} {padding-left: unit(@dist, px)}
+}
+
+/* margin and padding ends */
 
 /*bg*/
 .bg-danger {

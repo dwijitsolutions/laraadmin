@@ -1,13 +1,17 @@
-# LaraAdmin 0.1
+<p align="center">
+  <img src="http://laraadmin.com/img/favicon/android-chrome-96x96.png">
+  <h1 align="center" style="margin-top:5px;">LaraAdmin 1.0</h1>
+</p>
 
 [![Total Downloads](https://poser.pugx.org/dwij/laraadmin/d/total.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![Latest Stable Version](https://poser.pugx.org/dwij/laraadmin/v/stable.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![Latest Unstable Version](https://poser.pugx.org/dwij/laraadmin/v/unstable.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![License](https://poser.pugx.org/dwij/laraadmin/license.svg)](https://packagist.org/packages/dwij/laraadmin)
+[![Code Triagers Badge](https://www.codetriage.com/dwijitsolutions/laraadmin/badges/users.svg)](https://www.codetriage.com/dwijitsolutions/laraadmin)
 
 LaraAdmin is a Open source CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and Workflows.
 ##### Website: [laraadmin.com](http://laraadmin.com)
-
+##### Creator: [@gdbhosale](https://github.com/gdbhosale), [Dwij IT Solutions](https://github.com/dwijitsolutions)
 --------
 
 ### Features:
@@ -62,3 +66,11 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - https://github.com/acacha/adminlte-laravel
 - https://github.com/yajra/laravel-datatables
 - https://github.com/creativeorange/gravatar
+
+<p align="center">
+  <br>
+  Brought to you by<br>
+  <a href="http://dwijitsolutions.com">
+  <img src="http://dwijitsolutions.com/wp-content/uploads/2016/01/dwij-it-solutions.png">
+  </a>
+</p>

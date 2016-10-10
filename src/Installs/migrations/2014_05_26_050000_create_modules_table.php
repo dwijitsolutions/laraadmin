@@ -20,6 +20,7 @@ class CreateModulesTable extends Migration
             $table->string('view_col', 50);
             $table->string('model', 50);
             $table->string('controller', 100);
+            $table->string('fa_icon', 30)->default("fa-cube");
             $table->boolean('is_gen');
             $table->timestamps();
         });

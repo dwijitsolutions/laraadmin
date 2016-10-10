@@ -1,6 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Edit employee: ")
+@section("contentheader_title")
+	<a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}">Employees</a> :
+@endsection
 @section("contentheader_description", $employee->$view_col)
 @section("section", "Employees")
 @section("section_url", url(config('laraadmin.adminRoute') . '/employees'))
@@ -9,6 +11,17 @@
 @section("htmlheader_title", "Employee Edit : ".$employee->$view_col)
 
 @section("main-content")
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="box">
 	<div class="box-header">
 		
@@ -27,7 +40,6 @@
 					@la_input($module, 'mobile2')
 					@la_input($module, 'email')
 					@la_input($module, 'dept')
-					@la_input($module, 'role')
 					@la_input($module, 'city')
 					@la_input($module, 'address')
 					@la_input($module, 'about')
@@ -36,19 +48,27 @@
 					@la_input($module, 'date_left')
 					@la_input($module, 'salary_cur')
 					--}}
-                    <br>
+                    <div class="form-group">
+						<label for="role">Role* :</label>
+						<select class="form-control" required="1" data-placeholder="Select Role" rel="select2" name="role">
+							<?php $roles = App\Role::all(); ?>
+							@foreach($roles as $role)
+								@if($role->id != 1 || Entrust::hasRole("SUPER_ADMIN"))
+									@if($user->hasRole($role->name))
+										<option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+									@else
+										<option value="{{ $role->id }}">{{ $role->name }}</option>
+									@endif
+								@endif
+							@endforeach
+						</select>
+					</div>
+					<br>
 					<div class="form-group">
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <button class="btn btn-default pull-right"><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}">Cancel</a></button>
 					</div>
 				{!! Form::close() !!}
 				
-				@if($errors->any())
-				<ul class="alert alert-danger">
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-				@endif
 			</div>
 		</div>
 	</div>

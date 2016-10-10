@@ -46,7 +46,7 @@ class Crud extends Command
         
         try {
             
-            $config = CodeGenerator::generateConfig($module);
+            $config = CodeGenerator::generateConfig($module, "fa-cube");
             
             CodeGenerator::createController($config, $this);
             CodeGenerator::createModel($config, $this);
@@ -56,9 +56,8 @@ class Crud extends Command
             
         } catch (Exception $e) {
             $this->error("Crud::handle exception: ".$e);
-            throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
+            throw new Exception("Unable to generate migration for ".($module)." : ".$e->getMessage(), 1);
         }
-        
-        $this->info("\nCRUD successfully generated for ".$this->moduleName."\n");
+        $this->info("\nCRUD successfully generated for ".($module)."\n");
     }
 }

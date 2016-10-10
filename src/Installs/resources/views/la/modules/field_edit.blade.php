@@ -35,8 +35,8 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="readonly">Read Only:</label>
-						{{ Form::checkbox("readonly", "readonly", []) }}
+						<label for="unique">Unique:</label>
+						{{ Form::checkbox("unique", "unique") }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					
@@ -45,14 +45,16 @@
 						{{ Form::text("defaultvalue", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
 					</div>
 					
-					<div class="form-group">
-						<label for="minlength">Minimum :</label>
-						{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
-					</div>
-					
-					<div class="form-group">
-						<label for="maxlength">Maximum :</label>
-						{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+					<div id="length_div">
+						<div class="form-group">
+							<label for="minlength">Minimum :</label>
+							{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						</div>
+						
+						<div class="form-group">
+							<label for="maxlength">Maximum :</label>
+							{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						</div>
 					</div>
 					
 					<div class="form-group">
@@ -61,14 +63,33 @@
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					
-					<div class="form-group">
+					<div class="form-group values">
 						<label for="popup_vals">Values :</label>
+						<?php
+						$default_val = "";
+						$popup_value_type_table = false;
+						$popup_value_type_list = false;
+						if(starts_with($field->popup_vals, "@")) {
+							$popup_value_type_table = true;
+							$default_val = str_replace("@", "", $field->popup_vals);
+						} else if(starts_with($field->popup_vals, "[")) {
+							$popup_value_type_list = true;
+							$default_val = json_decode($field->popup_vals);
+						}
+						?>
 						<div class="radio" style="margin-bottom:20px;">
-							<label>{{ Form::radio("popup_value_type", "table", false) }} From Table</label>
-							<label>{{ Form::radio("popup_value_type", "list", true) }} From List</label>
+							<label>{{ Form::radio("popup_value_type", "table", $popup_value_type_table) }} From Table</label>
+							<label>{{ Form::radio("popup_value_type", "list", $popup_value_type_list) }} From List</label>
 						</div>
-						{{ Form::select("popup_vals_table", $tables, [], ['class'=>'form-control', 'rel' => '']) }}
-						{{ Form::select("popup_vals_list[]", [], [], ['class'=>'form-control popup_vals_list', 'rel' => 'taginput', 'multiple' => true, 'data-placeholder'=> 'Add Multiple values (Press Enter to add)']) }}
+						{{ Form::select("popup_vals_table", $tables, $default_val, ['class'=>'form-control', 'rel' => '']) }}
+						
+						<select class="form-control popup_vals_list" rel="taginput" multiple="1" data-placeholder="Add Multiple values (Press Enter to add)" name="popup_vals_list[]">
+							@if(is_array($default_val))
+								@foreach ($default_val as $value)
+									<option selected>{{ $value }}</option>
+								@endforeach
+							@endif
+						</select>
 						
 						<?php
 						// print_r($tables);
@@ -102,9 +123,28 @@ $(function () {
 	$("select.popup_vals_list").next().show();
 	$("select[name='popup_vals_table']").hide();
 	
-	$("input[name='popup_value_type']").on("change", function() {
-		console.log($(this).val());
-		if($(this).val() == "list") {
+	function showValuesSection() {
+		var ft_val = $("select[name='field_type']").val();
+		if(ft_val == 7 || ft_val == 15 || ft_val == 18 || ft_val == 20) {
+			$(".form-group.values").show();
+		} else {
+			$(".form-group.values").hide();
+		}
+		
+		$('#length_div').removeClass("hide");
+		if(ft_val == 2 || ft_val == 4 || ft_val == 5 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 21 || ft_val == 24 ) {
+			$('#length_div').addClass("hide");
+		}
+	}
+
+	$("select[name='field_type']").on("change", function() {
+		showValuesSection();
+	});
+	showValuesSection();
+
+	function showValuesTypes() {
+		console.log($("input[name='popup_value_type']:checked").val());
+		if($("input[name='popup_value_type']:checked").val() == "list") {
 			$("select.popup_vals_list").show();
 			$("select.popup_vals_list").next().show();
 			$("select[name='popup_vals_table']").hide();
@@ -113,7 +153,13 @@ $(function () {
 			$("select.popup_vals_list").hide();
 			$("select.popup_vals_list").next().hide();
 		}
-	})
+	}
+	
+	$("input[name='popup_value_type']").on("change", function() {
+		showValuesTypes();
+	});
+	showValuesTypes();
+
 	$("#field-edit-form").validate({
 		
 	});
