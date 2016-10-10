@@ -59,7 +59,7 @@ class LAInstall extends Command
 				}
 				$db_data['db'] = $this->ask('Database Name');
 				$db_data['dbuser'] = $this->ask('Database User');
-				$db_data['dbpass'] = $this->ask('Database Password');
+				$db_data['dbpass'] = $this->ask('Database Password', false);
 				
 				$envfile =  $this->openFile('.env');
 				
