@@ -12,7 +12,7 @@
 			<div class="row">
 				<div class="col-md-3">
 					<!--<img class="profile-image" src="{{ asset('la-assets/img/avatar5.png') }}" alt="">-->
-					<div class="profile-icon text-primary"><i class="fa fa-cube"></i></div>
+					<div class="profile-icon text-primary"><i class="fa {{ $module->fa_icon }}"></i></div>
 				</div>
 				<div class="col-md-9">
 					<h4 class="name">{{ $organization->$view_col }}</h4>
