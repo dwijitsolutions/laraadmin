@@ -72,7 +72,7 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        $md = str_replace("__singular_cap_var__", str_replace('_', ' ', $config->singularCapitalVar), $md);
 
         // Listing columns
         $inputFields = "";
@@ -91,7 +91,7 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        $md = str_replace("__singular_cap_var__", str_replace('_', ' ', $config->singularCapitalVar), $md);
 
         // Listing columns
         $inputFields = "";
