@@ -120,5 +120,11 @@ class DatabaseSeeder extends Seeder
 		$laconfig->key = "layout";
 		$laconfig->value = "fixed";
 		$laconfig->save();
+		
+		$modules = Module::all();
+		foreach ($modules as $module) {
+			$module->is_gen=true;
+			$module->save();	
+		}
 	}
 }
