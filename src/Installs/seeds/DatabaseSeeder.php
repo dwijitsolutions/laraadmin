@@ -27,13 +27,15 @@ class DatabaseSeeder extends Seeder
 		// Generating Module Menus
 		$modules = Module::all();
 		foreach ($modules as $module) {
-			Menu::create([
-				"name" => $module->name,
-				"url" => $module->name_db,
-				"icon" => $module->fa_icon,
-				"type" => 'module',
-				"parent" => 0
-			]);
+			if($module->name != "Backups") {
+				Menu::create([
+					"name" => $module->name,
+					"url" => $module->name_db,
+					"icon" => $module->fa_icon,
+					"type" => 'module',
+					"parent" => 0
+				]);
+			}
 		}
 		
 		// Create Administration Department

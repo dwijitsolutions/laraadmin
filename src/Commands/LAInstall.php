@@ -32,7 +32,7 @@ class LAInstall extends Command
 	protected $from;
 	protected $to;
 
-	var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization"];
+	var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization", "Backup"];
 	
 	/**
 	 * Generate Whole structure for /admin
@@ -59,7 +59,7 @@ class LAInstall extends Command
 				}
 				$db_data['db'] = $this->ask('Database Name');
 				$db_data['dbuser'] = $this->ask('Database User');
-				$db_data['dbpass'] = $this->ask('Database Password');
+				$db_data['dbpass'] = $this->ask('Database Password', false);
 				
 				$envfile =  $this->openFile('.env');
 				
@@ -154,7 +154,7 @@ class LAInstall extends Command
 				// Checking database
 				$this->line('Checking database...');
 				DB::connection()->reconnect();
-				
+
 				// Running migrations...
 				$this->line('Running migrations...');
 				$this->call('clear-compiled');
@@ -165,11 +165,25 @@ class LAInstall extends Command
 				// $this->call('migrate:refresh', ['--seed']);
 				
 				// $this->call('db:seed', ['--class' => 'LaraAdminSeeder']);
-				
+
 				// $this->line('Running seeds...');
 				// $this->info(exec('composer dump-autoload'));
 				$this->call('db:seed');
 				
+				// Install Spatie Backup
+				$this->call('vendor:publish', ['--provider' => 'Spatie\Backup\BackupServiceProvider']);
+
+				// Edit config/database.php for Spatie Backup Configuration
+				$newDBConfig = "            'driver' => 'mysql',\n"
+					."            'dump_command_path' => '/opt/lampp/bin', // only the path, so without 'mysqldump' or 'pg_dump'\n"
+					."            'dump_command_timeout' => 60 * 5, // 5 minute timeout\n"
+					."            'dump_using_single_transaction' => true, // perform dump using a single transaction\n";
+				
+				$envfile =  $this->openFile('config/database.php');
+				$mysqldriverline = $this->getLineWithString('config/database.php',"'driver' => 'mysql'");
+				$envfile = str_replace($mysqldriverline, $newDBConfig, $envfile);
+				file_put_contents('config/database.php', $envfile);
+
 				// Routes
 				$this->line('Appending routes...');
 				//if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {

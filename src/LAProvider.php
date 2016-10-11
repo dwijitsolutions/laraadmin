@@ -79,6 +79,8 @@ class LAProvider extends ServiceProvider
         $this->app->register(\Creativeorange\Gravatar\GravatarServiceProvider::class);
         // For Entrust
         $this->app->register(\Zizaco\Entrust\EntrustServiceProvider::class);
+        // For Spatie Backup
+        $this->app->register(\Spatie\Backup\BackupServiceProvider::class);
         
         /*
         |--------------------------------------------------------------------------

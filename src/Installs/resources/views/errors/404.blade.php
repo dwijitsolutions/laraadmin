@@ -58,7 +58,7 @@
 					<a href="{{ url('/') }}">Homepage</a> | 
 					<a href="javascript:history.back()">Go Back</a>
 				@else
-					<a href="{{ url(config('laraadmin.sitename')) }}">Dashboard.</a> | 
+					<a href="{{ url(config('laraadmin.adminRoute')) }}">Dashboard.</a> | 
 					<a href="javascript:history.back()">Go Back</a>
 				@endif
             </div>
