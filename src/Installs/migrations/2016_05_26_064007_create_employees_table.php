@@ -7,8 +7,6 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Dwij\Laraadmin\Models\Module;
-use Dwij\Laraadmin\Models\ModuleFields;
-use App\Employee;
 
 class CreateEmployeesTable extends Migration
 {
