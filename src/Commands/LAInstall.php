@@ -112,23 +112,25 @@ class LAInstall extends Command
 				
 				// Models
 				$this->line('Generating Models...');
-				foreach ($this->modelsInstalled as $model) {
-					if ($this->confirm("Would you like to use a custom folder to store your modules?", true)) {
+				if ($this->confirm("Would you like to use a custom folder to store your modules?", true)) {
 						$models_folder = $this->ask('Folder name:');
 						if(!file_exists($to."/app/".$models_folder)) {
 							$this->info("mkdir: (".$to."/app/".$models_folder.")");
 							mkdir($to."/app/".$models_folder);
 						}
-						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$models_folder."/".$model.".php");
+						$this->line('Made');
+						$models_folder .= "/";
 						$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
-						$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => ''");
-						$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."'",$laconfigfile);
+						$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => '',");
+						$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."',",$laconfigfile);
 						file_put_contents($to."/config/laraadmin.php", $laconfigfile);
-					}else{
-						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
-					}
 				}
-				if ($this->confirm('\nDefault admin route is domain.com/admin\n Would you like to customize this route?', true)) {
+				
+				foreach ($this->modelsInstalled as $model) {
+					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
+				}
+				$this->line("Default admin route is domain.com/admin");
+				if ($this->confirm('Would you like to customize this route?', true)) {
 						$custom_admin_route = $this->ask('Custom admin route:');
 						$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
 						$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");

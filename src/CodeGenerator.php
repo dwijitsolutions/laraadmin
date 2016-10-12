@@ -54,7 +54,7 @@ class CodeGenerator
         $md = str_replace("__model_class_name__", $config->modelName, $md);
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
 
-        file_put_contents(base_path('app/'.$config->modelName.".php"), $md);
+        file_put_contents(base_path('app/'.config('laraadmin.adminRoute').$config->modelName.".php"), $md);
     }
 
     public static function createViews($config, $comm = null) {
