@@ -1,10 +1,10 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title")
-	<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__') }}">__module_name__</a> :
+	<a href="{{ url(config('laraadmin.adminRoute') . '/__db_table_name__') }}">__singular_cap_var__</a> :
 @endsection
 @section("contentheader_description", $__singular_var__->$view_col)
-@section("section", "__module_name__")
+@section("section", "__singular_cap_var__")
 @section("section_url", url(config('laraadmin.adminRoute') . '/__db_table_name__'))
 @section("sub_section", "Edit")
 
