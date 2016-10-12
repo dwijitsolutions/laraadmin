@@ -124,12 +124,17 @@ class LAInstall extends Command
 						$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => ''");
 						$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."'",$laconfigfile);
 						file_put_contents($to."/config/laraadmin.php", $laconfigfile);
-						 
 					}else{
 						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
 					}
 				}
-				
+				if ($this->confirm('\nDefault admin route is domain.com/admin\n Would you like to customize this route?', true)) {
+						$custom_admin_route = $this->ask('Custom admin route:');
+						$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
+						$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");
+						$laconfigfile = str_replace($arline, "'adminRoute' => '".$custom_admin_route."',",$laconfigfile);
+						file_put_contents($to."/config/laraadmin.php", $laconfigfile);
+				}
 				// Generate Uploads / Thumbnails folders in /storage
 				$this->line('Generating Uploads / Thumbnails folders...');
 				if(!file_exists($to."/storage/uploads")) {
