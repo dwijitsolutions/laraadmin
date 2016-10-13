@@ -150,7 +150,6 @@ class LAInstall extends Command
 					file_put_contents($to."/app/Http/Controllers/LA/".$model."sController.php",$controller_file);
 
 					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
-<<<<<<< HEAD
 					$module_namespace = '';
 					if(config('laraadmin.modules_folder')!=''){
 			        	$module_namespace = '\\'.str_replace('/','',config('laraadmin.modules_folder'));
@@ -158,8 +157,6 @@ class LAInstall extends Command
 					$model_file =  $this->openFile($to."/app/".config('laraadmin.models_folder').$model.".php");
 					$model_file = str_replace("__custom_module_namespace__",$module_namespace,$model_file);
 					file_put_contents($to."/app/".config('laraadmin.models_folder').$model.".php",$model_file);
-=======
->>>>>>> parent of 6b0e578... Added custom namespace to module generation and LAInstall
 				}
 				
 				
