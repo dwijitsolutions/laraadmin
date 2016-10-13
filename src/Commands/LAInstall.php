@@ -150,7 +150,7 @@ class LAInstall extends Command
 					file_put_contents($to."/app/Http/Controllers/LA/".$model."sController.php",$controller_file);
 
 					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
-					 $module_namespace = '';
+					$module_namespace = '';
 					if(config('laraadmin.modules_folder')!=''){
 			        	$module_namespace = '\\'.str_replace('/','',config('laraadmin.modules_folder'));
 					}
@@ -203,7 +203,15 @@ class LAInstall extends Command
 				
 				$this->line('Copying seeds...');
 				$this->copyFile($from."/seeds/DatabaseSeeder.php", $to."/database/seeds/DatabaseSeeder.php");
-				
+				//set module folder for db seeder
+				$ladatabaseseedfile =  $this->openFile($to."/database/seeds/DatabaseSeeder.php");
+				$module_namespace = '';
+				if(config('laraadmin.modules_folder')!=''){
+		        	$module_namespace = '\\'.str_replace('/','\\',config('laraadmin.modules_folder'));
+				}
+				$ladatabaseseedfile = str_replace("__custom_module_folder__",$module_namespace,$ladatabaseseedfile);
+				file_put_contents($to."/database/seeds/DatabaseSeeder.php",$ladatabaseseedfile);				
+	
 				// resources
 				$this->line('Generating resources: assets + views...');
 				$this->copyFolder($from."/resources/assets", $to."/resources/assets");
@@ -226,8 +234,9 @@ class LAInstall extends Command
 
 				// $this->line('Running seeds...');
 				// $this->info(exec('composer dump-autoload'));
+				$this->line("A");
 				$this->call('db:seed');
-				
+				$this->line("B");
 				// Install Spatie Backup
 				$this->call('vendor:publish', ['--provider' => 'Spatie\Backup\BackupServiceProvider']);
 
@@ -241,7 +250,7 @@ class LAInstall extends Command
 				$mysqldriverline = $this->getLineWithString('config/database.php',"'driver' => 'mysql'");
 				$envfile = str_replace($mysqldriverline, $newDBConfig, $envfile);
 				file_put_contents('config/database.php', $envfile);
-
+$this->line("C");
 				// Routes
 				$this->line('Appending routes...');
 				//if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {

@@ -8,9 +8,9 @@ use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Models\Menu;
 use Dwij\Laraadmin\Models\LAConfigs;
 
-use App\Role;
-use App\Permission;
-use App\Department;
+use App\__custom_module_folder__Role;
+use App\__custom_module_folder__Permission;
+use App\__custom_module_folder__Department;
 
 class DatabaseSeeder extends Seeder
 {
