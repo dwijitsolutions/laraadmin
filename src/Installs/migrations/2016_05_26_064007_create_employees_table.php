@@ -69,11 +69,11 @@ class CreateEmployeesTable extends Migration
         ]);
 		*/
 		
-		// if (Schema::hasTable('users')) {
-            // Schema::table('users', function ($table) {
-            //     $table->foreign('context_id')->references('id')->on('employees');
-            // });
-        // }
+		if (Schema::hasTable('departments')) {
+            Schema::table('employees', function ($table) {
+                $table->foreign('dept')->references('id')->on('departments');
+            });
+        }
     }
 
     /**

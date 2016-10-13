@@ -43,7 +43,6 @@ class DatabaseSeeder extends Seeder
 		$dept->name = "Administration";
 		$dept->tags = "[]";
 		$dept->color = "#000";
-		$dept->hod = 1;
 		$dept->save();
 		
 		// Create Super Admin Role

@@ -36,7 +36,6 @@
 					@la_input($module, 'name')
 					@la_input($module, 'tags')
 					@la_input($module, 'color')
-					@la_input($module, 'hod')
 					--}}
                     <br>
 					<div class="form-group">
