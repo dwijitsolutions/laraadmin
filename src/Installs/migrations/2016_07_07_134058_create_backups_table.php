@@ -19,9 +19,8 @@ class CreateBackupsTable extends Migration
     {
         Module::generate("Backups", 'backups', 'name', 'fa-hdd-o', [
             ["name", "Name", "Name", true, "", 0, 256, true],
-            ["date", "Generated Date", "Date", false, "", 0, 0, true],
             ["file_name", "File Name", "String", true, "", 0, 256, true],
-            ["backup_size", "File Size", "Integer",  false, 0, 0, 5000, true],
+            ["backup_size", "File Size", "String",  false, 0, 0, 10, true],
         ]);
 		
 		/*
