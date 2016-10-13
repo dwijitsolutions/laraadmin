@@ -253,14 +253,6 @@ class LAInstall extends Command
 					file_put_contents('config/database.php', $envfile);
 				}
 				
-<<<<<<< HEAD
-				$envfile =  $this->openFile('config/database.php');
-				$mysqldriverline = $this->getLineWithString('config/database.php',"'driver' => 'mysql'");
-				$envfile = str_replace($mysqldriverline, $newDBConfig, $envfile);
-				file_put_contents('config/database.php', $envfile);
-$this->line("C");
-=======
->>>>>>> dwijitsolutions/master
 				// Routes
 				$this->line('Appending routes...');
 				//if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
