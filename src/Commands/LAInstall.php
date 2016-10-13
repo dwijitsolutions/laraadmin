@@ -48,36 +48,44 @@ class LAInstall extends Command
 			$to = base_path();
 			
 			$this->info('from: '.$from." to: ".$to);
-			
+			$db_data = array();
 			if ($this->confirm("Do you wish to set your DB config in the .env file ?", true)) {
 				$this->line("DB Assistant Initiated....");
 				
-				$db_data = array();
+				
 				if(LAHelper::laravel_ver() == 5.3) {
 					$db_data['dbhost'] = $this->ask('Database Host');
 					$db_data['dbport'] = $this->ask('Database Port');
 				}
 				$db_data['db'] = $this->ask('Database Name');
 				$db_data['dbuser'] = $this->ask('Database User');
-				$db_data['dbpass'] = $this->ask('Database Password', false);
+				$db_data['dbpass'] = $this->ask('Database Password');
 				
 				$envfile =  $this->openFile('.env');
 				
 				$dbline = $this->getLineWithString('.env', 'DB_DATABASE=');
 				$dbuserline = $this->getLineWithString('.env', 'DB_USERNAME=');
 				$dbpassline = $this->getLineWithString('.env', 'DB_PASSWORD=');
+				$dbhostline = $this->getLineWithString('.env','DB_HOST=');
 
-				if(LAHelper::laravel_ver() == 5.3) {
-					$dbhostline = $this->getLineWithString('.env','DB_HOST=');
+				if(LAHelper::laravel_ver() == 5.3) {					
 					$dbportline = $this->getLineWithString('.env','DB_PORT=');
-					$envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
 					$envfile = str_replace($dbportline, "DB_PORT=".$db_data['dbport']."\n",$envfile);
+					config(['env.DB_PORT' => $db_data['dbport']]);
 				}
-
+				$envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
 				$envfile = str_replace($dbline, "DB_DATABASE=".$db_data['db']."\n",$envfile);
 				$envfile = str_replace($dbuserline, "DB_USERNAME=".$db_data['dbuser']."\n",$envfile);
 				$envfile = str_replace($dbpassline, "DB_PASSWORD=".$db_data['dbpass']."\n",$envfile);
 				file_put_contents('.env', $envfile);
+				/*
+				@slozano95 Trying to set enviromental variables at runtime, will check that later 
+				config(['env.DB_HOST' => $db_data['dbhost']]);
+				config(['env.DB_DATABASE' => $db_data['db']]);
+				config(['env.DB_USERNAME' => $db_data['dbuser']]);
+				config(['env.DB_PASSWORD' => $db_data['dbpass']]);
+				*/
+				
 				$this->line("\n".'You might need to run php artisan la:install again for changes to take effect');	
 			}
 			
@@ -87,6 +95,9 @@ class LAInstall extends Command
 				$envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
 				file_put_contents('.env', $envfile);
 				$this->line("\n".'You might need to run php artisan la:install again for changes to take effect');
+				//runtime setting
+				//@slozano95 Trying to set enviromental variables at runtime, will check that later 
+				//config(['env.CACHE_DRIVER' => 'array']);
 			}
 			
 			if ($this->confirm("This process may change/append to the following of your existing project files:"
@@ -120,12 +131,16 @@ class LAInstall extends Command
 						$this->info("mkdir: (".$to."/app/".$models_folder.")");
 						mkdir($to."/app/".$models_folder);
 					}
-					$this->line('Made');
+					$this->line('');
+					$this->line('');
 					$models_folder .= "/";
+					//save to laraadmin config
 					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
 					$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => '',");
 					$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."',",$laconfigfile);
 					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
+					//set models at runtime
+					config(['laraadmin.models_folder' => $models_folder]);
 				}
 			
 				foreach ($this->modelsInstalled as $model) {
@@ -133,7 +148,7 @@ class LAInstall extends Command
 					$new_module_path = str_replace('/','\\',config('laraadmin.models_folder'),$new_module_path);
 					$controller_file = str_replace("__config_laraadmin_modules_folder__",$new_module_path,$controller_file);
 					file_put_contents($to."/app/Http/Controllers/LA/".$model."sController.php",$controller_file);
-					
+
 					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
 				}
 				
@@ -146,6 +161,7 @@ class LAInstall extends Command
 					$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");
 					$laconfigfile = str_replace($arline, "'adminRoute' => '".$custom_admin_route."',",$laconfigfile);
 					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
+					config(['laraadmin.adminRoute' => $custom_admin_route]);
 				}
 				
 				
@@ -274,7 +290,7 @@ class LAInstall extends Command
 				$role = \App\Role::whereName('SUPER_ADMIN')->first();
 				$user->attachRole($role);
 				
-				$this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
+				$this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/".config('laraadmin.adminRoute')." !!!\n");
 			} else {
 				$this->error("Installation aborted. Please try again after backup. Thank you...");
 			}

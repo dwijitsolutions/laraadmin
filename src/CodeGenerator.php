@@ -22,7 +22,7 @@ class CodeGenerator
 
         LAHelper::log("info", "Creating controller...", $comm);
         $md = file_get_contents($templateDirectory."/controller.stub");
-
+		$md = str_replace("__config_laraadmin_modules_folder__", config('laraadmin.models_folder'));
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__model_name__", $config->modelName, $md);
         $md = str_replace("__module_name__", $config->moduleName, $md);
