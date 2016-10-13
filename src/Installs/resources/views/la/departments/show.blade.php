@@ -110,7 +110,6 @@
 						@la_display($module, 'name')
 						@la_display($module, 'tags')
 						@la_display($module, 'color')
-						@la_display($module, 'hod')
 					</div>
 				</div>
 			</div>
