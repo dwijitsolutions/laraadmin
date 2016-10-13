@@ -59,6 +59,12 @@ class CreateRolesTable extends Migration
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/
+        
+        if (Schema::hasTable('departments')) {
+            Schema::table('roles', function ($table) {
+                $table->foreign('dept')->references('id')->on('departments');
+            });
+        }
     }
 
     /**

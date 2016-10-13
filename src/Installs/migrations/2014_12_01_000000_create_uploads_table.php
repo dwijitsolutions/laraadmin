@@ -61,6 +61,12 @@ class CreateUploadsTable extends Migration
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/
+
+        if (Schema::hasTable('users')) {
+            Schema::table('uploads', function ($table) {
+                $table->foreign('user_id')->references('id')->on('users');
+            });
+        }
     }
 
     /**
