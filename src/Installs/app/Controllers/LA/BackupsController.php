@@ -70,7 +70,22 @@ class BackupsController extends Controller
 			$exitCode = Artisan::call('backup:run');
 			$outputStr = Artisan::output();
 			
-			if($this->getLineWithString($outputStr, "Copying ") != -1 && $exitCode == 0) {
+			if($this->getLineWithString($outputStr, "Copying ") == -1) {
+				if($this->getLineWithString($outputStr, "mysqldump: No such file or directory") != -1) {
+					return response()->json([
+						'status' => 'failed',
+						'message' => "Configure dump_command_path in config/database.php. Check console for error details.",
+						'exitCode' => $exitCode,
+						'output' => $outputStr
+					]);
+				}
+				return response()->json([
+					'status' => 'failed',
+					'message' => "Error while creating Backup.",
+					'exitCode' => $exitCode,
+					'output' => $outputStr
+				]);
+			} else {
 				$dataStr = $this->getLineWithString($outputStr, "Copying ");
 				$dataStr = str_replace("Copying ", "", $dataStr);
 				$dataStr = substr($dataStr, 0, strpos($dataStr, ")"));
@@ -88,13 +103,6 @@ class BackupsController extends Controller
 					'status' => 'success',
 					'message' => 'Backup successfully created.',
 					'insert_id' => $insert_id,
-					'exitCode' => $exitCode,
-					'output' => $outputStr
-				]);
-			} else {
-				return response()->json([
-					'status' => 'failed',
-					'message' => 'No rights to create Backup.',
 					'exitCode' => $exitCode,
 					'output' => $outputStr
 				]);
@@ -137,7 +145,7 @@ class BackupsController extends Controller
 	 */
 	public function dtajax()
 	{
-		$values = DB::table('backups')->select($this->listing_cols)->whereNull('deleted_at');
+		$values = DB::table('backups')->select($this->listing_cols)->orderBy('created_at', 'desc')->whereNull('deleted_at');
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();
 

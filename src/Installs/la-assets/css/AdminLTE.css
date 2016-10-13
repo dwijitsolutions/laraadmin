@@ -7235,10 +7235,11 @@ fieldset[disabled] .btn-yahoo.active {
   }
 }
 .pgn-circle .alert {
-  border-radius: 300px;
+  border-radius: 30px;
   animation: fadeInCircle 0.3s ease forwards, resizeCircle 0.3s 0.4s cubic-bezier(0.25, 0.25, 0.4, 1.6) forwards;
   -webkit-animation: fadeInCircle 0.3s ease forwards, resizeCircle 0.3s 0.4s cubic-bezier(0.25, 0.25, 0.4, 1.6) forwards;
-  height: 60px;
+  min-height: 60px;
+  height: auto;
   overflow: hidden;
   padding: 6px 55px 6px 6px;
   -webkit-transform: translateZ(0);
@@ -7262,7 +7263,8 @@ fieldset[disabled] .btn-yahoo.active {
 }
 .pgn-circle .alert > div > div.pgn-message > div {
   opacity: 0;
-  height: 47px;
+  min-height: 47px;
+  height: auto;
   padding-left: 9px;
   animation: fadeIn .3s .5s ease forwards;
   -webkit-animation: fadeIn .3s .5s ease forwards;
@@ -7287,6 +7289,9 @@ fieldset[disabled] .btn-yahoo.active {
 }
 .pgn-circle .alert p {
   margin-bottom: 0;
+  width: 200px;
+  height: auto;
+  white-space: pre-wrap;
 }
 .pgn-circle .alert > div {
   display: table;
@@ -7294,7 +7299,7 @@ fieldset[disabled] .btn-yahoo.active {
 }
 .pgn-circle .alert > div > div {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: top;
 }
 @keyframes fadeInCircle {
   0% {
