@@ -151,8 +151,8 @@ class LAInstall extends Command
 
 					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
 					$module_namespace = '';
-					if(config('laraadmin.modules_folder')!=''){
-			        	$module_namespace = '\\'.str_replace('/','',config('laraadmin.modules_folder'));
+					if(config('laraadmin.models_folder')!=''){
+			        	$module_namespace = '\\'.str_replace('/','',config('laraadmin.models_folder'));
 					}
 					$model_file =  $this->openFile($to."/app/".config('laraadmin.models_folder').$model.".php");
 					$model_file = str_replace("__custom_module_namespace__",$module_namespace,$model_file);
@@ -206,9 +206,10 @@ class LAInstall extends Command
 				//set module folder for db seeder
 				$ladatabaseseedfile =  $this->openFile($to."/database/seeds/DatabaseSeeder.php");
 				$module_namespace = '';
-				if(config('laraadmin.modules_folder')!=''){
-		        	$module_namespace = '\\'.str_replace('/','\\',config('laraadmin.modules_folder'));
+				if(config('laraadmin.models_folder')!=''){
+		        	$module_namespace = ''.str_replace('/','\\',config('laraadmin.models_folder'));
 				}
+				$this->line('mdns: '.$module_namespace);
 				$ladatabaseseedfile = str_replace("__custom_module_folder__",$module_namespace,$ladatabaseseedfile);
 				file_put_contents($to."/database/seeds/DatabaseSeeder.php",$ladatabaseseedfile);				
 	

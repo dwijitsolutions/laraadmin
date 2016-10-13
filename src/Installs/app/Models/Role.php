@@ -4,7 +4,7 @@
  * Help: http://laraadmin.com
  */
 
-namespace App;
+namespace App__custom_module_namespace__;
 
 use Zizaco\Entrust\EntrustRole;
 use Illuminate\Database\Eloquent\SoftDeletes;

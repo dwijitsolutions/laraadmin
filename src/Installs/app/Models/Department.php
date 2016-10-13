@@ -4,7 +4,7 @@
  * Help: http://laraadmin.com
  */
 
-namespace App;
+namespace App__custom_module_namespace__;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
