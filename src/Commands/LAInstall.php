@@ -95,6 +95,7 @@ class LAInstall extends Command
 					."\n\t database/migrations/2014_10_12_000000_create_users_table.php"
 					."\n\t gulpfile.js"
 					."\n\n Please take backup or use git. Do you wish to continue ?", true)) {
+				
 				// Controllers
 				$this->line("\n".'Generating Controllers...');
 				$this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
@@ -106,6 +107,7 @@ class LAInstall extends Command
 				}
 				$this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
 				
+				
 				// Config
 				$this->line('Generating Config...');
 				$this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
@@ -113,30 +115,40 @@ class LAInstall extends Command
 				// Models
 				$this->line('Generating Models...');
 				if ($this->confirm("Would you like to use a custom folder to store your modules?", true)) {
-						$models_folder = $this->ask('Folder name:');
-						if(!file_exists($to."/app/".$models_folder)) {
-							$this->info("mkdir: (".$to."/app/".$models_folder.")");
-							mkdir($to."/app/".$models_folder);
-						}
-						$this->line('Made');
-						$models_folder .= "/";
-						$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
-						$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => '',");
-						$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."',",$laconfigfile);
-						file_put_contents($to."/config/laraadmin.php", $laconfigfile);
+					$models_folder = $this->ask('Folder name:');
+					if(!file_exists($to."/app/".$models_folder)) {
+						$this->info("mkdir: (".$to."/app/".$models_folder.")");
+						mkdir($to."/app/".$models_folder);
+					}
+					$this->line('Made');
+					$models_folder .= "/";
+					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
+					$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => '',");
+					$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."',",$laconfigfile);
+					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
 				}
-				
+			
 				foreach ($this->modelsInstalled as $model) {
+					$controller_file =  $this->openFile($to."/app/Http/Controllers/LA/".$model."sController.php");
+					$new_module_path = str_replace('/','\\',config('laraadmin.models_folder'),$new_module_path);
+					$controller_file = str_replace("__config_laraadmin_modules_folder__",$new_module_path,$controller_file);
+					file_put_contents($to."/app/Http/Controllers/LA/".$model."sController.php",$controller_file);
+					
 					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
 				}
+				
+				
+				//Custom Admin Route
 				$this->line("Default admin route is domain.com/admin");
 				if ($this->confirm('Would you like to customize this route?', true)) {
-						$custom_admin_route = $this->ask('Custom admin route:');
-						$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
-						$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");
-						$laconfigfile = str_replace($arline, "'adminRoute' => '".$custom_admin_route."',",$laconfigfile);
-						file_put_contents($to."/config/laraadmin.php", $laconfigfile);
+					$custom_admin_route = $this->ask('Custom admin route:');
+					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
+					$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");
+					$laconfigfile = str_replace($arline, "'adminRoute' => '".$custom_admin_route."',",$laconfigfile);
+					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
 				}
+				
+				
 				// Generate Uploads / Thumbnails folders in /storage
 				$this->line('Generating Uploads / Thumbnails folders...');
 				if(!file_exists($to."/storage/uploads")) {

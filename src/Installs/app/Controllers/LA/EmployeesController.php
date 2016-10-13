@@ -19,9 +19,9 @@ use Dwij\Laraadmin\Models\ModuleFields;
 
 use Dwij\Laraadmin\Helpers\LAHelper;
 
-use App\User;
-use App\Employee;
-use App\Role;
+use App\__config_laraadmin_modules_folder__User;
+use App\__config_laraadmin_modules_folder__Employee;
+use App\__config_laraadmin_modules_folder__Role;
 use Mail;
 use Log;
 

@@ -24,7 +24,7 @@ use File;
 use Validator;
 use Datatables;
 
-use App\Upload;
+use App\__config_laraadmin_modules_folder__Upload;
 
 class UploadsController extends Controller
 {

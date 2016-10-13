@@ -17,7 +17,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
-use App\User;
+use App\__config_laraadmin_modules_folder__User;
 
 class UsersController extends Controller
 {
