@@ -779,7 +779,7 @@ class Module extends Model
 	public static function insert($module_name, $request) {
 		$module = Module::get($module_name);
 		if(isset($module)) {
-			$model = "App\\".str_replace('/','\\',config('laraadmin.models_folder')).ucfirst(str_singular($module_name));
+			$model = "App\\".ucfirst(str_singular($module_name));
 			
 			// Delete if unique rows available which are deleted
 			$old_row = null;
