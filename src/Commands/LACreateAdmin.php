@@ -83,13 +83,7 @@ class LACreateAdmin extends Command
 				$role = \App\MODULES\Role::whereName('SUPER_ADMIN')->first();
 				$user->attachRole($role);
 				$this->info("You can now login from yourdomain.com/".config('laraadmin.adminRoute')." !!!\n");
-				$module_namespace = '';
-				if(config('laraadmin.models_folder')!=''){
-		        	$module_namespace = ''.str_replace('/','\\',config('laraadmin.models_folder'));
-				}
-				$la_create_admin =  $this->openFile('vendor/dwij/laraadmin/src/Commands/LACreateAdmin.php');
-				$la_create_admin = str_replace($module_namespace,'__custom_module_namespace__', $la_create_admin);
-				file_put_contents('vendor/dwij/laraadmin/src/Commands/LACreateAdmin.php', $la_create_admin);
+				
 
 				return true;
 		}

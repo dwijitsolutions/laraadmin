@@ -269,7 +269,7 @@ class LAInstall extends Command
 				$this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
 				
 				// Creating Super Admin User
-				$this->line('Creating Super Admin User...');
+				
 				$module_namespace = '';
 				if(config('laraadmin.models_folder')!=''){
 		        	$module_namespace = ''.str_replace('/','\\',config('laraadmin.models_folder'));
