@@ -125,7 +125,7 @@ class LAInstall extends Command
 				
 				// Models
 				$this->line('Generating Models...');
-				if ($this->confirm("Would you like to use a custom folder to store your modules?", true)) {
+				if ($this->confirm("Would you like to use a custom folder to store your models ?", false)) {
 					$models_folder = $this->ask('Folder name:');
 					if(!file_exists($to."/app/".$models_folder)) {
 						$this->info("mkdir: (".$to."/app/".$models_folder.")");
