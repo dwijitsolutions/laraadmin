@@ -13,6 +13,7 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 use Eloquent;
 use DB;
 
+
 class LAInstall extends Command
 {
 	/**
@@ -235,9 +236,7 @@ class LAInstall extends Command
 
 				// $this->line('Running seeds...');
 				// $this->info(exec('composer dump-autoload'));
-				$this->line("A");
 				$this->call('db:seed');
-				$this->line("B");
 				// Install Spatie Backup
 				$this->call('vendor:publish', ['--provider' => 'Spatie\Backup\BackupServiceProvider']);
 
@@ -271,45 +270,23 @@ class LAInstall extends Command
 				
 				// Creating Super Admin User
 				$this->line('Creating Super Admin User...');
-				
-				$user = \App\User::where('context_id', "1")->first();
-				if(!isset($user['id'])) {
-					$data = array();
-					$data['name']     = $this->ask('Super Admin name');
-					$data['email']    = $this->ask('Super Admin email');
-					$data['password'] = bcrypt($this->secret('Super Admin password'));
-					$data['context_id']  = "1";
-					$data['type']  = "Employee";
-					$user = \App\User::create($data);
-					
-					// TODO: This is Not Standard. Need to find alternative
-					Eloquent::unguard();
-					
-					\App\Employee::create([
-						'name' => $data['name'],
-						'designation' => "Super Admin",
-						'mobile' => "8888888888",
-						'mobile2' => "",
-						'email' => $data['email'],
-						'gender' => 'Male',
-						'dept' => "1",
-						'city' => "Pune",
-						'address' => "Karve nagar, Pune 411030",
-						'about' => "About user / biography",
-						'date_birth' => date("Y-m-d"),
-						'date_hire' => date("Y-m-d"),
-						'date_left' => date("Y-m-d"),
-						'salary_cur' => 0,
-					]);
-					
-					$this->info("Super Admin User '".$data['name']."' successfully created. ");
-				} else {
-					$this->info("Super Admin User '".$user['name']."' exists. ");
+				$module_namespace = '';
+				if(config('laraadmin.models_folder')!=''){
+		        	$module_namespace = ''.str_replace('/','\\',config('laraadmin.models_folder'));
 				}
-				$role = \App\Role::whereName('SUPER_ADMIN')->first();
-				$user->attachRole($role);
+				$la_create_admin =  $this->openFile('vendor/dwij/laraadmin/src/Commands/LACreateAdmin.php');
+				$la_create_admin = str_replace('__custom_module_namespace__', $module_namespace, $la_create_admin);
+				file_put_contents('vendor/dwij/laraadmin/src/Commands/LACreateAdmin.php', $la_create_admin);
+				$this->info("\nLaraAdmin successfully installed.");
+				$this->info("\nPlease run php artisan la:create_admin to create a new admin");
 				
-				$this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/".config('laraadmin.adminRoute')." !!!\n");
+				
+/*
+
+				if($this->call('la:create_admin')){
+					
+				}
+*/
 			} else {
 				$this->error("Installation aborted. Please try again after backup. Thank you...");
 			}
