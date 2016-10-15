@@ -264,7 +264,7 @@ class LAInstall extends Command
 					// TODO: This is Not Standard. Need to find alternative
 					Eloquent::unguard();
 					
-					\App\Employee::create([
+					\App\Models\Employee::create([
 						'name' => $data['name'],
 						'designation' => "Super Admin",
 						'mobile' => "8888888888",
