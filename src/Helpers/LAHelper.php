@@ -275,7 +275,37 @@ class LAHelper
 		$str .= '</li>';
 		return $str;
 	}
-	
+
+	// LAHelper::print_menu_topnav($menu)
+	public static function print_menu_topnav($menu, $active = false) {
+		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+
+		$treeview = "";
+		$treeview2 = "";
+		$subviewSign = "";
+		if(count($childrens)) {
+			$treeview = " class=\"dropdown\"";
+			$treeview2 = " class=\"dropdown-toggle\" data-toggle=\"dropdown\"";
+			$subviewSign = ' <span class="caret"></span>';
+		}
+		$active_str = '';
+		if($active) {
+			$active_str = 'class="active"';
+		}
+		
+		$str = '<li '.$treeview.''.$active_str.'><a '.$treeview2.' href="'.url(config("laraadmin.adminRoute") . '/' . $menu->url ) .'">'.LAHelper::real_module_name($menu->name).$subviewSign.'</a>';
+		
+		if(count($childrens)) {
+			$str .= '<ul class="dropdown-menu" role="menu">';
+			foreach($childrens as $children) {
+				$str .= LAHelper::print_menu_topnav($children);
+			}
+			$str .= '</ul>';
+		}
+		$str .= '</li>';
+		return $str;
+	}
+
 	// LAHelper::laravel_ver()
 	public static function laravel_ver() {
 		$var = \App::VERSION();
