@@ -32,6 +32,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $roleCount = \App\Role::count();
+		if($roleCount != 0) {
+			if($roleCount != 0) {
+				return view('home');
+			}
+		} else {
+			return view('errors.error', [
+				'title' => 'Migration not completed',
+				'message' => 'Please run command <code>php artisan db:seed</code> to generate required table data.',
+			]);
+		}
     }
 }
