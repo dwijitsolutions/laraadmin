@@ -138,10 +138,10 @@ class LAInstall extends Command
 					$this->info("mkdir: (".$to."/app/Models)");
 					mkdir($to."/app/Models");
 				}
-				foreach ($this->modelsInstalled as $model) {
-					if($model=="User" || $model=="Role" || $model=="Permission"){
+				foreach($this->modelsInstalled as $model) {
+					if($model == "User" || $model == "Role" || $model == "Permission") {
 						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
-					}else{
+					} else {
 						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/Models/".$model.".php");
 					}
 				}

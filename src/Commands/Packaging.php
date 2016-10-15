@@ -56,7 +56,11 @@ class Packaging extends Command
         $this->line('Exporting Models...');
         
         foreach ($this->modelsInstalled as $model) {
-            $this->copyFile($from."/app/".config('laraadmin.models_folder').$model.".php", $to."/app/Models/".$model.".php");
+            if($model == "User" || $model == "Role" || $model == "Permission") {
+				$this->copyFile($from."/app/".$model.".php", $to."/app/Models/".$model.".php");
+			} else {
+				$this->copyFile($from."/app/Models/".$model.".php", $to."/app/Models/".$model.".php");
+			}
         }
         
         // Routes
