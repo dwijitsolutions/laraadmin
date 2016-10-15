@@ -22,7 +22,7 @@ class CreateEmployeesTable extends Migration
             ["designation", "Designation", "String", false, "", 0, 50, true],
             ["gender", "Gender", "Radio", false, "Male", 0, 0, true, ["Male","Female"]],
             ["mobile", "Mobile", "Mobile", false, "", 10, 20, true],
-            ["mobile2", "Alernative Mobile", "Mobile", false, "", 10, 20, false],
+            ["mobile2", "Alternative Mobile", "Mobile", false, "", 10, 20, false],
             ["email", "Email", "Email", true, "", 5, 250, true],
             ["dept", "Department", "Dropdown", false, "0", 0, 0, true, "@departments"],
             ["city", "City", "String", false, "", 0, 50, false],
