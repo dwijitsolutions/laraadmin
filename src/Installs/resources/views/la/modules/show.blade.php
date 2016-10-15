@@ -1,8 +1,6 @@
 @extends('la.layouts.app')
 
-@section('htmlheader_title')
-	Module View
-@endsection
+@section('htmlheader_title', 'Module View')
 
 <?php
 use Dwij\Laraadmin\Models\Module;
@@ -213,7 +211,6 @@ use Dwij\Laraadmin\Models\Module;
 	</div>
 	</div>
 </div>
-@endsection
 
 <div class="modal fade" id="AddFieldModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
@@ -299,6 +296,8 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 	</div>
 </div>
+
+@endsection
 
 @push('styles')
 <link rel="stylesheet" type="text/css" href="{{ asset('la-assets/plugins/datatables/datatables.min.css') }}"/>

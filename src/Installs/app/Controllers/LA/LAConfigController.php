@@ -25,11 +25,11 @@ class LAConfigController extends Controller
 	var $layout_array = [
 		'Fixed Layout' => 'fixed',
 		'Boxed Layout' => 'layout-boxed',
-		'Top Navigation Layout' => 'layout-top-nav',
 		'Sidebar Collapse Layout' => 'sidebar-collapse',
 		'Mini Sidebar Layout' => 'sidebar-mini'
 	];
-	
+	// 'Top Navigation Layout' => 'layout-top-nav', // Not Working well with application structure
+
 	/**
 	 * Display a listing of the resource.
 	 *

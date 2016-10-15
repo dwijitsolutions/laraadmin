@@ -8,29 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 @section('htmlheader')
 	@include('la.layouts.partials.htmlheader')
 @show
-
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
-
-<body class="{{ LAConfigs::getByKey('skin') }} {{ LAConfigs::getByKey('layout') }} {{ $sidebar_mini or '' }}" bsurl="{{ url('') }}" adminRoute="{{ config('laraadmin.adminRoute') }}">
+<body class="{{ LAConfigs::getByKey('skin') }} {{ LAConfigs::getByKey('layout') }} @if(LAConfigs::getByKey('layout') == 'sidebar-mini') sidebar-collapse @endif" bsurl="{{ url('') }}" adminRoute="{{ config('laraadmin.adminRoute') }}">
 <div class="wrapper">
 
 	@include('la.layouts.partials.mainheader')
