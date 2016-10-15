@@ -250,6 +250,9 @@ class LAInstall extends Command
 				
 				$user = \App\User::where('context_id', "1")->first();
 				if(!isset($user['id'])) {
+
+					$this->line('Creating Super Admin User...');
+
 					$data = array();
 					$data['name']     = $this->ask('Super Admin name');
 					$data['email']    = $this->ask('Super Admin email');

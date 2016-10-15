@@ -28,9 +28,12 @@ class Module extends Model
 		
 		// Check is Generated
 		$is_gen = false;
-		if(file_exists(base_path('app/Http/Controllers/'.($names->controller).".php")) && 
-			file_exists(base_path('app/Models/'.($names->model).".php"))) {
-			$is_gen = true;
+		if(file_exists(base_path('app/Http/Controllers/'.($names->controller).".php"))) {
+			if(($names->model == "User" || $model == "Role" || $model == "Permission") && file_exists(base_path('app/'.($names->model).".php"))) {
+				$is_gen = true;
+			} else if(file_exists(base_path('app/Models/'.($names->model).".php"))) {
+				$is_gen = true;
+			}
 		}
 		$module = Module::where('name', $names->module)->first();
 		if(!isset($module->id)) {
@@ -61,9 +64,12 @@ class Module extends Model
 		} else {
 			// Check is Generated
 			$is_gen = false;
-			if(file_exists(base_path('app/Http/Controllers/'.($names->controller).".php")) && 
-				file_exists(base_path('app/Models/'.($names->model).".php"))) {
-				$is_gen = true;
+			if(file_exists(base_path('app/Http/Controllers/'.($names->controller).".php"))) {
+				if(($names->model == "User" || $model == "Role" || $model == "Permission") && file_exists(base_path('app/'.($names->model).".php"))) {
+					$is_gen = true;
+				} else if(file_exists(base_path('app/Models/'.($names->model).".php"))) {
+					$is_gen = true;
+				}
 			}
 			
 			$module = Module::where('name', $names->module)->first();
@@ -722,9 +728,9 @@ class Module extends Model
 		$module = Module::where('name', $module_name)->first();
 		if(isset($module)) {
 			$model_name = ucfirst(str_singular($module_name));
-			if($model_name=="User" || $model_name=="Role" || $model_name=="Permission"){
+			if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
 				$model = "App\\".ucfirst(str_singular($module_name));
-			}else{
+			} else {
 				$model = "App\\Models\\".ucfirst(str_singular($module_name));
 			}
 
@@ -744,13 +750,6 @@ class Module extends Model
 		$module = Module::get($module_name);
 		$rules = [];
 		if(isset($module)) {
-			$model_name = ucfirst(str_singular($module_name));
-			if($model_name=="User" || $model_name=="Role" || $model_name=="Permission"){
-				$module_path = "App\\".$module_name;
-			}else{
-				$model = "App\\Models\\".$module_name;
-			}
-
 			$ftypes = ModuleFieldTypes::getFTypes2();
 			foreach ($module->fields as $field) {
 				if(isset($request->{$field['colname']})) {
@@ -792,9 +791,9 @@ class Module extends Model
 		$module = Module::get($module_name);
 		if(isset($module)) {
 			$model_name = ucfirst(str_singular($module_name));
-			if($model_name=="User" || $model_name=="Role" || $model_name=="Permission"){
+			if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
 				$model = "App\\".ucfirst(str_singular($module_name));
-			}else{
+			} else {
 				$model = "App\\Models\\".ucfirst(str_singular($module_name));
 			}
 			
@@ -827,9 +826,9 @@ class Module extends Model
 		$module = Module::get($module_name);
 		if(isset($module)) {
 			$model_name = ucfirst(str_singular($module_name));
-			if($model_name=="User" || $model_name=="Role" || $model_name=="Permission"){
+			if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
 				$model = "App\\".ucfirst(str_singular($module_name));
-			}else{
+			} else {
 				$model = "App\\Models\\".ucfirst(str_singular($module_name));
 			}
 			//$row = new $module_path;
@@ -906,14 +905,14 @@ class Module extends Model
 		$module = Module::get($module_name);
 		if(isset($module)) {
 			$model_name = ucfirst(str_singular($module_name));
-			if($model_name=="User" || $model_name=="Role" || $model_name=="Permission"){
+			if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
 				if(file_exists(base_path('app/'.$model_name.".php"))) {
-				$model = "App\\".$model_name;
-				return $model::count();
+					$model = "App\\".$model_name;
+					return $model::count();
 				} else {
 					return "Model doesn't exists";
 				}
-			}else{
+			} else {
 				if(file_exists(base_path('app/Models/'.$model_name.".php"))) {
 					$model = "App\\Models\\".$model_name;
 					return $model::count();

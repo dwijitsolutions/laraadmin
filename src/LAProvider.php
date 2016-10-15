@@ -191,7 +191,7 @@ class LAProvider extends ServiceProvider
             \Dwij\Laraadmin\Commands\Migration::class,
             \Dwij\Laraadmin\Commands\Crud::class,
             \Dwij\Laraadmin\Commands\Packaging::class,
-            \Dwij\Laraadmin\Commands\LAInstall::class,
+            \Dwij\Laraadmin\Commands\LAInstall::class
         ]);
     }
 }
