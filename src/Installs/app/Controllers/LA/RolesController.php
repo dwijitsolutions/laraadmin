@@ -18,8 +18,8 @@ use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
-use App\__config_laraadmin_modules_folder__Role;
-use App\__config_laraadmin_modules_folder__Permission;
+use App\Role;
+use App\Permission;
 
 class RolesController extends Controller
 {

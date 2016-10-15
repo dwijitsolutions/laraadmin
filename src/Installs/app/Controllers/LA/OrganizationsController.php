@@ -17,7 +17,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
-use App\__config_laraadmin_modules_folder__Organization;
+use App\Models\Organization;
 
 class OrganizationsController extends Controller
 {

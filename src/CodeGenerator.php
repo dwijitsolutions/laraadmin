@@ -22,7 +22,6 @@ class CodeGenerator
 
         LAHelper::log("info", "Creating controller...", $comm);
         $md = file_get_contents($templateDirectory."/controller.stub");
-		$md = str_replace("__config_laraadmin_modules_folder__", str_replace('/','\\',config('laraadmin.models_folder')),$md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__model_name__", $config->modelName, $md);
         $md = str_replace("__module_name__", $config->moduleName, $md);
@@ -53,12 +52,7 @@ class CodeGenerator
 
         $md = str_replace("__model_class_name__", $config->modelName, $md);
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
-        $module_namespace = '';
-		if(config('laraadmin.modules_folder')!=''){
-        	$module_namespace = '\\'.str_replace('/','',config('laraadmin.modules_folder'));
-		}
-		$md = str_replace("__custom_module_namespace__", $module_namespace, $md);
-        file_put_contents(base_path('app/'.config('laraadmin.models_folder').$config->modelName.".php"), $md);
+        file_put_contents(base_path('app/Models/'.$config->modelName.".php"), $md);
     }
 
     public static function createViews($config, $comm = null) {

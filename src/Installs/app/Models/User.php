@@ -4,7 +4,7 @@
  * Help: http://laraadmin.com
  */
 
-namespace App__custom_module_namespace__;
+namespace App;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;

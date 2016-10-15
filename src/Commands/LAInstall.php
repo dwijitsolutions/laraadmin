@@ -126,38 +126,16 @@ class LAInstall extends Command
 				
 				// Models
 				$this->line('Generating Models...');
-				if ($this->confirm("Would you like to use a custom folder to store your models ?", false)) {
-					$models_folder = $this->ask('Folder name:');
-					if(!file_exists($to."/app/".$models_folder)) {
-						$this->info("mkdir: (".$to."/app/".$models_folder.")");
-						mkdir($to."/app/".$models_folder);
-					}
-					$this->line('');
-					$this->line('');
-					$models_folder .= "/";
-					//save to laraadmin config
-					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
-					$mfline = $this->getLineWithString($to."/config/laraadmin.php","'models_folder' => '',");
-					$laconfigfile = str_replace($mfline, "'models_folder' => '".$models_folder."',",$laconfigfile);
-					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
-					//set models at runtime
-					config(['laraadmin.models_folder' => $models_folder]);
+				if(!file_exists($to."/app/Models")) {
+					$this->info("mkdir: (".$to."/app/Models)");
+					mkdir($to."/app/Models");
 				}
-			
 				foreach ($this->modelsInstalled as $model) {
-					$controller_file =  $this->openFile($to."/app/Http/Controllers/LA/".$model."sController.php");
-					$new_module_path = str_replace('/','\\',config('laraadmin.models_folder'),$new_module_path);
-					$controller_file = str_replace("__config_laraadmin_modules_folder__",$new_module_path,$controller_file);
-					file_put_contents($to."/app/Http/Controllers/LA/".$model."sController.php",$controller_file);
-
-					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".config('laraadmin.models_folder').$model.".php");
-					$module_namespace = '';
-					if(config('laraadmin.models_folder')!=''){
-			        	$module_namespace = '\\'.str_replace('/','',config('laraadmin.models_folder'));
+					if($model=="User" || $model=="Role" || $model=="Permission"){
+						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
+					}else{
+						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/Models/".$model.".php");
 					}
-					$model_file =  $this->openFile($to."/app/".config('laraadmin.models_folder').$model.".php");
-					$model_file = str_replace("__custom_module_namespace__",$module_namespace,$model_file);
-					file_put_contents($to."/app/".config('laraadmin.models_folder').$model.".php",$model_file);
 				}
 				
 				
@@ -204,15 +182,7 @@ class LAInstall extends Command
 				
 				$this->line('Copying seeds...');
 				$this->copyFile($from."/seeds/DatabaseSeeder.php", $to."/database/seeds/DatabaseSeeder.php");
-				//set module folder for db seeder
-				$ladatabaseseedfile =  $this->openFile($to."/database/seeds/DatabaseSeeder.php");
-				$module_namespace = '';
-				if(config('laraadmin.models_folder')!=''){
-		        	$module_namespace = ''.str_replace('/','\\',config('laraadmin.models_folder'));
-				}
-				$this->line('mdns: '.$module_namespace);
-				$ladatabaseseedfile = str_replace("__custom_module_folder__",$module_namespace,$ladatabaseseedfile);
-				file_put_contents($to."/database/seeds/DatabaseSeeder.php",$ladatabaseseedfile);				
+						
 	
 				// resources
 				$this->line('Generating resources: assets + views...');
@@ -270,23 +240,45 @@ class LAInstall extends Command
 				
 				// Creating Super Admin User
 				
-				$module_namespace = '';
-				if(config('laraadmin.models_folder')!=''){
-		        	$module_namespace = ''.str_replace('/','\\',config('laraadmin.models_folder'));
-				}
-				$la_create_admin =  $this->openFile('vendor/dwij/laraadmin/src/Commands/LACreateAdmin.php');
-				$la_create_admin = str_replace('__custom_module_namespace__', $module_namespace, $la_create_admin);
-				file_put_contents('vendor/dwij/laraadmin/src/Commands/LACreateAdmin.php', $la_create_admin);
-				$this->info("\nLaraAdmin successfully installed.");
-				$this->info("\nPlease run php artisan la:create_admin to create a new admin");
-				
-				
-/*
-
-				if($this->call('la:create_admin')){
+				$user = \App\User::where('context_id', "1")->first();
+				if(!isset($user['id'])) {
+					$data = array();
+					$data['name']     = $this->ask('Super Admin name');
+					$data['email']    = $this->ask('Super Admin email');
+					$data['password'] = bcrypt($this->secret('Super Admin password'));
+					$data['context_id']  = "1";
+					$data['type']  = "Employee";
+					$user = \App\User::create($data);
 					
+					// TODO: This is Not Standard. Need to find alternative
+					Eloquent::unguard();
+					
+					\App\Employee::create([
+						'name' => $data['name'],
+						'designation' => "Super Admin",
+						'mobile' => "8888888888",
+						'mobile2' => "",
+						'email' => $data['email'],
+						'gender' => 'Male',
+						'dept' => "1",
+						'city' => "Pune",
+						'address' => "Karve nagar, Pune 411030",
+						'about' => "About user / biography",
+						'date_birth' => date("Y-m-d"),
+						'date_hire' => date("Y-m-d"),
+						'date_left' => date("Y-m-d"),
+						'salary_cur' => 0,
+					]);
+					
+					$this->info("Super Admin User '".$data['name']."' successfully created. ");
+				} else {
+					$this->info("Super Admin User '".$user['name']."' exists. ");
 				}
-*/
+				$role = \App\Role::whereName('SUPER_ADMIN')->first();
+				$user->attachRole($role);
+				$this->info("\nLaraAdmin successfully installed.");
+				$this->info("You can now login from yourdomain.com/".config('laraadmin.adminRoute')." !!!\n");
+				
 			} else {
 				$this->error("Installation aborted. Please try again after backup. Thank you...");
 			}

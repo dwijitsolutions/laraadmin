@@ -17,7 +17,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Artisan;
-use App\__config_laraadmin_modules_folder__Backup;
+use App\Models\Backup;
 
 class BackupsController extends Controller
 {

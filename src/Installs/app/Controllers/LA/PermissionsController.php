@@ -19,8 +19,8 @@ use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Helpers\LAHelper;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
-use App\__config_laraadmin_modules_folder__Permission;
-use App\__config_laraadmin_modules_folder__Role;
+use App\Permission;
+use App\Role;
 
 class PermissionsController extends Controller
 {
