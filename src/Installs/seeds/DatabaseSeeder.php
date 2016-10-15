@@ -10,7 +10,7 @@ use Dwij\Laraadmin\Models\LAConfigs;
 
 use App\Role;
 use App\Permission;
-use App\models\Department;
+use App\Models\Department;
 
 class DatabaseSeeder extends Seeder
 {
