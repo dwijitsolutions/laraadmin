@@ -12,7 +12,6 @@ use App\Http\Requests;
 use DB;
 use Dwij\Laraadmin\Helpers\LAHelper;
 use Dwij\Laraadmin\Models\LAConfigs;
-use App\Role;
 
 class LAConfigController extends Controller
 {
