@@ -49,10 +49,11 @@ class LAInstall extends Command
 			$to = base_path();
 			
 			$this->info('from: '.$from." to: ".$to);
-			$db_data = array();
+			
 			if ($this->confirm("Do you wish to set your DB config in the .env file ?", true)) {
 				$this->line("DB Assistant Initiated....");
-				
+				$db_data = array();
+				$envfile =  $this->openFile('.env');
 				
 				if(LAHelper::laravel_ver() == 5.3) {
 					$db_data['dbhost'] = $this->ask('Database Host');
@@ -62,43 +63,50 @@ class LAInstall extends Command
 				$db_data['dbuser'] = $this->ask('Database User');
 				$db_data['dbpass'] = $this->ask('Database Password');
 				
-				$envfile =  $this->openFile('.env');
-				
-				$dbline = $this->getLineWithString('.env', 'DB_DATABASE=');
-				$dbuserline = $this->getLineWithString('.env', 'DB_USERNAME=');
-				$dbpassline = $this->getLineWithString('.env', 'DB_PASSWORD=');
-				$dbhostline = $this->getLineWithString('.env','DB_HOST=');
-
-				if(LAHelper::laravel_ver() == 5.3) {					
+				if(LAHelper::laravel_ver() == 5.3) {
+					$dbhostline = $this->getLineWithString('.env','DB_HOST=');					
 					$dbportline = $this->getLineWithString('.env','DB_PORT=');
+					$envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
 					$envfile = str_replace($dbportline, "DB_PORT=".$db_data['dbport']."\n",$envfile);
 					config(['env.DB_PORT' => $db_data['dbport']]);
 				}
-				$envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
+				$dbline = $this->getLineWithString('.env', 'DB_DATABASE=');
+				$dbuserline = $this->getLineWithString('.env', 'DB_USERNAME=');
+				$dbpassline = $this->getLineWithString('.env', 'DB_PASSWORD=', false);
 				$envfile = str_replace($dbline, "DB_DATABASE=".$db_data['db']."\n",$envfile);
 				$envfile = str_replace($dbuserline, "DB_USERNAME=".$db_data['dbuser']."\n",$envfile);
 				$envfile = str_replace($dbpassline, "DB_PASSWORD=".$db_data['dbpass']."\n",$envfile);
+
 				file_put_contents('.env', $envfile);
+				
 				/*
-				@slozano95 Trying to set enviromental variables at runtime, will check that later 
+				// runtime database setting
+				// @slozano95 Trying to set enviromental variables at runtime, will check that later 
 				config(['env.DB_HOST' => $db_data['dbhost']]);
 				config(['env.DB_DATABASE' => $db_data['db']]);
 				config(['env.DB_USERNAME' => $db_data['dbuser']]);
 				config(['env.DB_PASSWORD' => $db_data['dbpass']]);
 				*/
+
+				config(['env.DB_USERNAME' => $db_data['dbuser']]);
+
+				$this->line(env('DB_USERNAME'));
 				
-				$this->line("\n".'You might need to run php artisan la:install again for changes to take effect');	
+				$this->line("\n".'Run "php artisan la:install" again for db-config to take effect.'."\n");
+				return;
 			}
 			
-			if ($this->confirm("LaraAdmin requires CACHE_DRIVER to be an Array, Do you wish to set it in .env ?", true)) {
+			if ($this->confirm("LaraAdmin requires CACHE_DRIVER to be an Array, Set it in .env ?", true)) {
 				$envfile =  $this->openFile('.env');
 				$cachedriverline = $this->getLineWithString('.env','CACHE_DRIVER=');
 				$envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
 				file_put_contents('.env', $envfile);
-				$this->line("\n".'You might need to run php artisan la:install again for changes to take effect');
-				//runtime setting
-				//@slozano95 Trying to set enviromental variables at runtime, will check that later 
-				//config(['env.CACHE_DRIVER' => 'array']);
+				
+				/*
+				// runtime setting
+				// @slozano95 Trying to set enviromental variables at runtime, will check that later 
+				config(['env.CACHE_DRIVER' => 'array']);
+				*/
 			}
 			
 			if ($this->confirm("This process may change/append to the following of your existing project files:"
@@ -140,7 +148,7 @@ class LAInstall extends Command
 				
 				
 				//Custom Admin Route
-				$this->line("Default admin url route is /admin");
+				$this->line("\nDefault admin url route is /admin");
 				if ($this->confirm('Would you like to customize this url ?', false)) {
 					$custom_admin_route = $this->ask('Custom admin route:');
 					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
