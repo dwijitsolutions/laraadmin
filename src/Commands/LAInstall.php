@@ -90,7 +90,7 @@ class LAInstall extends Command
 				$this->line("\n".'You might need to run php artisan la:install again for changes to take effect');	
 			}
 			
-			if ($this->confirm("LaraAdmin requires an Array as CACHE_DRIVER, Do you wish to set your CACHE_DRIVER to ARRAY ?", true)) {
+			if ($this->confirm("LaraAdmin requires CACHE_DRIVER to be an Array, Do you wish to set it in .env ?", true)) {
 				$envfile =  $this->openFile('.env');
 				$cachedriverline = $this->getLineWithString('.env','CACHE_DRIVER=');
 				$envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
@@ -140,8 +140,8 @@ class LAInstall extends Command
 				
 				
 				//Custom Admin Route
-				$this->line("Default admin route is domain.com/admin");
-				if ($this->confirm('Would you like to customize this route?', true)) {
+				$this->line("Default admin url route is /admin");
+				if ($this->confirm('Would you like to customize this url ?', false)) {
 					$custom_admin_route = $this->ask('Custom admin route:');
 					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
 					$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");

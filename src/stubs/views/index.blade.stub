@@ -1,10 +1,10 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "__singular_cap_var__s")
-@section("contentheader_description", "__singular_cap_var__s listing")
-@section("section", "__singular_cap_var__")
+@section("contentheader_title", "__module_name_2__")
+@section("contentheader_description", "__module_name_2__ listing")
+@section("section", "__module_name_2__")
 @section("sub_section", "Listing")
-@section("htmlheader_title", "__singular_cap_var__ Listing")
+@section("htmlheader_title", "__module_name_2__ Listing")
 
 @section("headerElems")
 @la_access("__module_name__", "create")

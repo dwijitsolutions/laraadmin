@@ -907,15 +907,15 @@ class Module extends Model
 		if(isset($module)) {
 			$model_name = ucfirst(str_singular($module_name));
 			if($model_name=="User" || $model_name=="Role" || $model_name=="Permission"){
-				if(file_exists(base_path('app/'.$modelName.".php"))) {
-				$model = "App\\".$modelName;
+				if(file_exists(base_path('app/'.$model_name.".php"))) {
+				$model = "App\\".$model_name;
 				return $model::count();
 				} else {
 					return "Model doesn't exists";
 				}
 			}else{
-				if(file_exists(base_path('app/Models/'.$modelName.".php"))) {
-					$model = "App\\Models\\".$modelName;
+				if(file_exists(base_path('app/Models/'.$model_name.".php"))) {
+					$model = "App\\Models\\".$model_name;
 					return $model::count();
 				} else {
 					return "Model doesn't exists";
