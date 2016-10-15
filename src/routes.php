@@ -36,7 +36,7 @@ Route::group([
 	Route::post(config('laraadmin.adminRoute') . '/la_menus/update_hierarchy', 'MenuController@update_hierarchy');
 	
 	/* ================== Configuration ================== */
-	Route::resource(config('laraadmin.adminRoute') . '/la_configs', 'LAConfigController');
+	Route::resource(config('laraadmin.adminRoute') . '/la_configs', '\App\Http\Controllers\LA\LAConfigController');
 	
     Route::group([
         'middleware' => 'role'

@@ -15,7 +15,7 @@ class CreateLaConfigsTable extends Migration
         Schema::create('la_configs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key', 50);
-            $table->string('value', 100);
+            $table->string('value', 255);
             $table->timestamps();
         });
     }

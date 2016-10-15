@@ -34,46 +34,54 @@
 						{{ csrf_field() }}
 						<!-- text input -->
 						<div class="form-group">
+							<label>Sitename</label>
+							<input type="text" class="form-control" placeholder="Lara" name="sitename" value="{{$configs->sitename}}">
+						</div>
+						<div class="form-group">
 							<label>Sitename First Word</label>
-							<input type="text" class="form-control" placeholder="Lara" name="sitename_part1" value="{{$configs[0]->value}}">
+							<input type="text" class="form-control" placeholder="Lara" name="sitename_part1" value="{{$configs->sitename_part1}}">
 						</div>
 						<div class="form-group">
 							<label>Sitename Second Word</label>
-							<input type="text" class="form-control" placeholder="Admin 1.0" name="sitename_part2" value="{{$configs[1]->value}}">
+							<input type="text" class="form-control" placeholder="Admin 1.0" name="sitename_part2" value="{{$configs->sitename_part2}}">
 						</div>
 						<div class="form-group">
 							<label>Sitename Short (2/3 Characters)</label>
-							<input type="text" class="form-control" placeholder="LA" maxlength="2" name="sitename_short" value="{{$configs[2]->value}}">
+							<input type="text" class="form-control" placeholder="LA" maxlength="2" name="sitename_short" value="{{$configs->sitename_short}}">
+						</div>
+						<div class="form-group">
+							<label>Site Description</label>
+							<input type="text" class="form-control" placeholder="Description in 140 Characters" maxlength="140" name="site_description" value="{{$configs->site_description}}">
 						</div>
 						<!-- checkbox -->
 						<div class="form-group">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="sidebar_search" @if($configs[3]->value=="on") checked @endif>
+									<input type="checkbox" name="sidebar_search" @if($configs->sidebar_search == "on") checked @endif>
 									Show Search Bar
 								</label>
 							</div>
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="show_messages" @if($configs[4]->value=="on") checked @endif>
+									<input type="checkbox" name="show_messages" @if($configs->show_messages == "on") checked @endif>
 									Show Messages Icon
 								</label>
 							</div>
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="show_notifications" @if($configs[5]->value=="on") checked @endif>
+									<input type="checkbox" name="show_notifications" @if($configs->show_notifications == "on") checked @endif>
 									Show Notifications Icon
 								</label>
 							</div>
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="show_tasks" @if($configs[6]->value=="on") checked @endif>
+									<input type="checkbox" name="show_tasks" @if($configs->show_tasks == "on") checked @endif>
 									Show Tasks Icon
 								</label>
 							</div>
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="show_rightsidebar" @if($configs[7]->value=="on") checked @endif>
+									<input type="checkbox" name="show_rightsidebar" @if($configs->show_rightsidebar == "on") checked @endif>
 									Show Right SideBar Icon
 								</label>
 							</div>
@@ -83,7 +91,7 @@
 							<label>Skin Color</label>
 							<select class="form-control" name="skin">
 								@foreach($skins as $name=>$property)
-									<option value="{{ $property }}" @if($configs[8]->value == $property) selected @endif>{{ $name }}</option>
+									<option value="{{ $property }}" @if($configs->skin == $property) selected @endif>{{ $name }}</option>
 								@endforeach
 							</select>
 						</div>
@@ -92,9 +100,14 @@
 							<label>Layout</label>
 							<select class="form-control" name="layout">
 								@foreach($layouts as $name=>$property)
-									<option value="{{ $property }}" @if($configs[9]->value == $property) selected @endif>{{ $name }}</option>
+									<option value="{{ $property }}" @if($configs->layout == $property) selected @endif>{{ $name }}</option>
 								@endforeach
 							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Default Email Address</label>
+							<input type="text" class="form-control" placeholder="To send emails to others via SMTP" maxlength="100" name="default_email" value="{{$configs->default_email}}">
 						</div>
 					</div><!-- /.box-body -->
 					<div class="box-footer">

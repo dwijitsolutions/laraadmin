@@ -92,7 +92,7 @@ class DatabaseSeeder extends Seeder
 
 		$laconfig = new LAConfigs;
 		$laconfig->key = "site_description";
-		$laconfig->value = "LaraAdmin is a Open source CMS + CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and many more.";
+		$laconfig->value = "LaraAdmin is a open-source Laravel Admin Panel for quick-start Admin based applications and boilerplate for CRM or CMS systems.";
 		$laconfig->save();
 
 		// Display Configurations

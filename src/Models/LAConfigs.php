@@ -32,4 +32,13 @@ class LAConfigs extends Model
 		}
 	}
 	
+	// LAConfigs::getAll();
+	public static function getAll() {
+		$configs = array();
+		$configs_db = LAConfigs::all();
+		foreach ($configs_db as $row) {
+			$configs[$row->key] = $row->value;
+		}
+		return (object) $configs;
+	}
 }
