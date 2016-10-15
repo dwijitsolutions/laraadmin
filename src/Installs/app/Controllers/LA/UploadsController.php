@@ -24,7 +24,7 @@ use File;
 use Validator;
 use Datatables;
 
-use App\Upload;
+use App\Models\Upload;
 
 class UploadsController extends Controller
 {

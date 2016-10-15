@@ -20,7 +20,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
 use App\User;
-use App\Employee;
+use App\Models\Employee;
 use App\Role;
 use Mail;
 use Log;
