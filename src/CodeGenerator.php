@@ -22,7 +22,7 @@ class CodeGenerator
 
         LAHelper::log("info", "Creating controller...", $comm);
         $md = file_get_contents($templateDirectory."/controller.stub");
-
+		
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__model_name__", $config->modelName, $md);
         $md = str_replace("__module_name__", $config->moduleName, $md);
@@ -54,7 +54,7 @@ class CodeGenerator
         $md = str_replace("__model_class_name__", $config->modelName, $md);
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
 
-        file_put_contents(base_path('app/'.$config->modelName.".php"), $md);
+        file_put_contents(base_path('app/Models/'.$config->modelName.".php"), $md);
     }
 
     public static function createViews($config, $comm = null) {
@@ -72,7 +72,8 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+		$md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        $md = str_replace("__module_name_2__", $config->moduleName2, $md);
 
         // Listing columns
         $inputFields = "";
@@ -91,7 +92,8 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
-        $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+		$md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+        $md = str_replace("__module_name_2__", $config->moduleName2, $md);
 
         // Listing columns
         $inputFields = "";
@@ -110,6 +112,7 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
         $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+		$md = str_replace("__module_name_2__", $config->moduleName2, $md);
 
         // Listing columns
         $displayFields = "";
@@ -309,10 +312,11 @@ class CodeGenerator
         $config->dbTableName = $tableP;
         $config->fa_icon = $icon;
         $config->moduleName = ucfirst(str_plural($module));
+		$config->moduleName2 = str_replace('_', ' ', ucfirst(str_plural($module)));
         $config->controllerName = ucfirst(str_plural($module))."Controller";
         $config->singularVar = strtolower(str_singular($module));
-        $config->singularCapitalVar = ucfirst(str_singular($module));
-
+        $config->singularCapitalVar = str_replace('_', ' ', ucfirst(str_singular($module)));
+		
         $module = Module::get($config->moduleName);
         if(!isset($module->id)) {
             throw new Exception("Please run 'php artisan migrate' for 'create_".$config->dbTableName."_table' in order to create CRUD.\nOr check if any problem in Module Name '".$config->moduleName."'.", 1);

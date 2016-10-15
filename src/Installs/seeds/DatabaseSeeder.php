@@ -10,7 +10,7 @@ use Dwij\Laraadmin\Models\LAConfigs;
 
 use App\Role;
 use App\Permission;
-use App\Department;
+use App\models\Department;
 
 class DatabaseSeeder extends Seeder
 {
@@ -119,5 +119,11 @@ class DatabaseSeeder extends Seeder
 		$laconfig->key = "layout";
 		$laconfig->value = "fixed";
 		$laconfig->save();
+		
+		$modules = Module::all();
+		foreach ($modules as $module) {
+			$module->is_gen=true;
+			$module->save();	
+		}
 	}
 }

@@ -17,7 +17,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
-use App\__model_name__;
+use App\Models\__model_name__;
 
 class __controller_class_name__ extends Controller
 {

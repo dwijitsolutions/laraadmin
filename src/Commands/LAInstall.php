@@ -13,6 +13,7 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 use Eloquent;
 use DB;
 
+
 class LAInstall extends Command
 {
 	/**
@@ -51,40 +52,61 @@ class LAInstall extends Command
 			
 			if ($this->confirm("Do you wish to set your DB config in the .env file ?", true)) {
 				$this->line("DB Assistant Initiated....");
-				
 				$db_data = array();
+				$envfile =  $this->openFile('.env');
+				
 				if(LAHelper::laravel_ver() == 5.3) {
 					$db_data['dbhost'] = $this->ask('Database Host');
 					$db_data['dbport'] = $this->ask('Database Port');
 				}
 				$db_data['db'] = $this->ask('Database Name');
 				$db_data['dbuser'] = $this->ask('Database User');
-				$db_data['dbpass'] = $this->ask('Database Password', false);
+				$db_data['dbpass'] = $this->ask('Database Password');
 				
-				$envfile =  $this->openFile('.env');
-				
-				$dbline = $this->getLineWithString('.env', 'DB_DATABASE=');
-				$dbuserline = $this->getLineWithString('.env', 'DB_USERNAME=');
-				$dbpassline = $this->getLineWithString('.env', 'DB_PASSWORD=');
-
 				if(LAHelper::laravel_ver() == 5.3) {
-					$dbhostline = $this->getLineWithString('.env','DB_HOST=');
+					$dbhostline = $this->getLineWithString('.env','DB_HOST=');					
 					$dbportline = $this->getLineWithString('.env','DB_PORT=');
 					$envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
 					$envfile = str_replace($dbportline, "DB_PORT=".$db_data['dbport']."\n",$envfile);
+					config(['env.DB_PORT' => $db_data['dbport']]);
 				}
-
+				$dbline = $this->getLineWithString('.env', 'DB_DATABASE=');
+				$dbuserline = $this->getLineWithString('.env', 'DB_USERNAME=');
+				$dbpassline = $this->getLineWithString('.env', 'DB_PASSWORD=', false);
 				$envfile = str_replace($dbline, "DB_DATABASE=".$db_data['db']."\n",$envfile);
 				$envfile = str_replace($dbuserline, "DB_USERNAME=".$db_data['dbuser']."\n",$envfile);
 				$envfile = str_replace($dbpassline, "DB_PASSWORD=".$db_data['dbpass']."\n",$envfile);
+
 				file_put_contents('.env', $envfile);
+				
+				/*
+				// runtime database setting
+				// @slozano95 Trying to set enviromental variables at runtime, will check that later 
+				config(['env.DB_HOST' => $db_data['dbhost']]);
+				config(['env.DB_DATABASE' => $db_data['db']]);
+				config(['env.DB_USERNAME' => $db_data['dbuser']]);
+				config(['env.DB_PASSWORD' => $db_data['dbpass']]);
+				*/
+
+				config(['env.DB_USERNAME' => $db_data['dbuser']]);
+
+				$this->line(env('DB_USERNAME'));
+				
+				$this->line("\n".'Run "php artisan la:install" again for db-config to take effect.'."\n");
+				return;
 			}
 			
-			if ($this->confirm("LaraAdmin requires an Array as CACHE_DRIVER, Do you wish to set your CACHE_DRIVER to ARRAY ?", true)) {
+			if ($this->confirm("LaraAdmin requires CACHE_DRIVER to be an Array, Set it in .env ?", true)) {
 				$envfile =  $this->openFile('.env');
 				$cachedriverline = $this->getLineWithString('.env','CACHE_DRIVER=');
 				$envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
 				file_put_contents('.env', $envfile);
+				
+				/*
+				// runtime setting
+				// @slozano95 Trying to set enviromental variables at runtime, will check that later 
+				config(['env.CACHE_DRIVER' => 'array']);
+				*/
 			}
 			
 			if ($this->confirm("This process may change/append to the following of your existing project files:"
@@ -93,6 +115,7 @@ class LAInstall extends Command
 					."\n\t database/migrations/2014_10_12_000000_create_users_table.php"
 					."\n\t gulpfile.js"
 					."\n\n Please take backup or use git. Do you wish to continue ?", true)) {
+				
 				// Controllers
 				$this->line("\n".'Generating Controllers...');
 				$this->copyFolder($from."/app/Controllers/Auth", $to."/app/Http/Controllers/Auth");
@@ -104,11 +127,37 @@ class LAInstall extends Command
 				}
 				$this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
 				
+				
+				// Config
+				$this->line('Generating Config...');
+				$this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
+				
 				// Models
 				$this->line('Generating Models...');
-				foreach ($this->modelsInstalled as $model) {
-					$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
+				if(!file_exists($to."/app/Models")) {
+					$this->info("mkdir: (".$to."/app/Models)");
+					mkdir($to."/app/Models");
 				}
+				foreach($this->modelsInstalled as $model) {
+					if($model == "User" || $model == "Role" || $model == "Permission") {
+						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
+					} else {
+						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/Models/".$model.".php");
+					}
+				}
+				
+				
+				//Custom Admin Route
+				$this->line("\nDefault admin url route is /admin");
+				if ($this->confirm('Would you like to customize this url ?', false)) {
+					$custom_admin_route = $this->ask('Custom admin route:');
+					$laconfigfile =  $this->openFile($to."/config/laraadmin.php");
+					$arline = $this->getLineWithString($to."/config/laraadmin.php","'adminRoute' => 'admin',");
+					$laconfigfile = str_replace($arline, "'adminRoute' => '".$custom_admin_route."',",$laconfigfile);
+					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
+					config(['laraadmin.adminRoute' => $custom_admin_route]);
+				}
+				
 				
 				// Generate Uploads / Thumbnails folders in /storage
 				$this->line('Generating Uploads / Thumbnails folders...');
@@ -120,11 +169,7 @@ class LAInstall extends Command
 					$this->info("mkdir: (".$to."/storage/thumbnails)");
 					mkdir($to."/storage/thumbnails");
 				}
-				
-				// Config
-				$this->line('Generating Config...');
-				$this->copyFile($from."/config/laraadmin.php", $to."/config/laraadmin.php");
-				
+								
 				// la-assets
 				$this->line('Generating LaraAdmin Public Assets...');
 				$this->replaceFolder($from."/la-assets", $to."/public/la-assets");
@@ -145,7 +190,8 @@ class LAInstall extends Command
 				
 				$this->line('Copying seeds...');
 				$this->copyFile($from."/seeds/DatabaseSeeder.php", $to."/database/seeds/DatabaseSeeder.php");
-				
+						
+	
 				// resources
 				$this->line('Generating resources: assets + views...');
 				$this->copyFolder($from."/resources/assets", $to."/resources/assets");
@@ -169,7 +215,6 @@ class LAInstall extends Command
 				// $this->line('Running seeds...');
 				// $this->info(exec('composer dump-autoload'));
 				$this->call('db:seed');
-				
 				// Install Spatie Backup
 				$this->call('vendor:publish', ['--provider' => 'Spatie\Backup\BackupServiceProvider']);
 
@@ -202,10 +247,12 @@ class LAInstall extends Command
 				$this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
 				
 				// Creating Super Admin User
-				$this->line('Creating Super Admin User...');
 				
 				$user = \App\User::where('context_id', "1")->first();
 				if(!isset($user['id'])) {
+
+					$this->line('Creating Super Admin User...');
+
 					$data = array();
 					$data['name']     = $this->ask('Super Admin name');
 					$data['email']    = $this->ask('Super Admin email');
@@ -240,8 +287,9 @@ class LAInstall extends Command
 				}
 				$role = \App\Role::whereName('SUPER_ADMIN')->first();
 				$user->attachRole($role);
+				$this->info("\nLaraAdmin successfully installed.");
+				$this->info("You can now login from yourdomain.com/".config('laraadmin.adminRoute')." !!!\n");
 				
-				$this->info("\nLaraAdmin successfully installed. You can now login from yourdomain.com/admin !!!\n");
 			} else {
 				$this->error("Installation aborted. Please try again after backup. Thank you...");
 			}

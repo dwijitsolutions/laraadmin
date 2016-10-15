@@ -13,7 +13,7 @@ class LAHelper
     public static function generateModuleNames($module_name, $icon) {
 		$array = array();
 		$module_name = trim($module_name);
-		$module_name = str_replace(" ", "", $module_name);
+		$module_name = str_replace(" ", "_", $module_name);
 		
 		$array['module'] = ucfirst(str_plural($module_name));
 		$array['label'] = ucfirst(str_plural($module_name));

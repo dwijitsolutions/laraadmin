@@ -1,10 +1,10 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "__module_name__")
-@section("contentheader_description", "__db_table_name__ listing")
-@section("section", "__module_name__")
+@section("contentheader_title", "__module_name_2__")
+@section("contentheader_description", "__module_name_2__ listing")
+@section("section", "__module_name_2__")
 @section("sub_section", "Listing")
-@section("htmlheader_title", "__module_name__ Listing")
+@section("htmlheader_title", "__module_name_2__ Listing")
 
 @section("headerElems")
 @la_access("__module_name__", "create")
