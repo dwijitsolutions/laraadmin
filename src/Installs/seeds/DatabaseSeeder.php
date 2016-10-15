@@ -71,6 +71,11 @@ class DatabaseSeeder extends Seeder
 		// Generate LaraAdmin Default Configurations
 		
 		$laconfig = new LAConfigs;
+		$laconfig->key = "sitename";
+		$laconfig->value = "LaraAdmin 1.0";
+		$laconfig->save();
+
+		$laconfig = new LAConfigs;
 		$laconfig->key = "sitename_part1";
 		$laconfig->value = "Lara";
 		$laconfig->save();
@@ -84,6 +89,13 @@ class DatabaseSeeder extends Seeder
 		$laconfig->key = "sitename_short";
 		$laconfig->value = "LA";
 		$laconfig->save();
+
+		$laconfig = new LAConfigs;
+		$laconfig->key = "site_description";
+		$laconfig->value = "LaraAdmin is a Open source CMS + CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and many more.";
+		$laconfig->save();
+
+		// Display Configurations
 		
 		$laconfig = new LAConfigs;
 		$laconfig->key = "sidebar_search";
@@ -118,6 +130,13 @@ class DatabaseSeeder extends Seeder
 		$laconfig = new LAConfigs;
 		$laconfig->key = "layout";
 		$laconfig->value = "fixed";
+		$laconfig->save();
+
+		// Admin Configurations
+
+		$laconfig = new LAConfigs;
+		$laconfig->key = "default_email";
+		$laconfig->value = "test@example.com";
 		$laconfig->save();
 		
 		$modules = Module::all();

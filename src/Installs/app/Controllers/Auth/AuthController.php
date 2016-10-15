@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use App\Employee;
+use App\Models\Employee;
 use App\Role;
 use Validator;
 use Eloquent;
