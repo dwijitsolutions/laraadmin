@@ -57,7 +57,6 @@ use Dwij\Laraadmin\Models\Module;
 		</div>
 		
 		<div class="col-md-1 actions">
-			<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
 			{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.modules.destroy', $module->id], 'method' => 'delete', 'style'=>'display:inline']) }}
 				<button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
 			{{ Form::close() }}
