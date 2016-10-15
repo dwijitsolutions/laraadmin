@@ -154,11 +154,13 @@ class ModuleFields extends Model
 	public static function getModuleFields($moduleName) {
         $module = Module::where('name', $moduleName)->first();
         $fields = DB::table('module_fields')->where('module', $module->id)->get();
-        
-        $fields_popup = array();
+        $ftypes = ModuleFieldTypes::getFTypes();
+		
+		$fields_popup = array();
         $fields_popup['id'] = null;
         
 		foreach($fields as $f) {
+			$f->field_type_str = array_search($f->field_type, $ftypes);
             $fields_popup [ $f->colname ] = $f;
         }
 		return $fields_popup;
