@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 
 @section('htmlheader')
@@ -13,11 +9,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 	@include('la.layouts.partials.mainheader')
 
-	@include('la.layouts.partials.sidebar')
+	@if(LAConfigs::getByKey('layout') != 'layout-top-nav')
+		@include('la.layouts.partials.sidebar')
+	@endif
 
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
-		
+		@if(LAConfigs::getByKey('layout') == 'layout-top-nav') <div class="container"> @endif
 		@if(!isset($no_header))
 			@include('la.layouts.partials.contentheader')
 		@endif
@@ -27,6 +25,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			<!-- Your Page Content Here -->
 			@yield('main-content')
 		</section><!-- /.content -->
+
+		@if(LAConfigs::getByKey('layout') == 'layout-top-nav') </div> @endif
 	</div><!-- /.content-wrapper -->
 
 	@include('la.layouts.partials.controlsidebar')
