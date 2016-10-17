@@ -141,7 +141,7 @@ class ModuleController extends Controller
 		\File::delete(app_path('/Http/Controllers/LA/'.$module->name.'Controller.php'));
 		
 		// Delete Model
-		if($model == "User" || $model == "Role" || $model == "Permission") {
+		if($module->model == "User" || $module->model == "Role" || $module->model == "Permission") {
 			\File::delete(app_path($module->model.'.php'));
 		} else {
 			\File::delete(app_path('Models/'.$module->model.'.php'));
