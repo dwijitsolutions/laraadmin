@@ -68,12 +68,6 @@ class CreateEmployeesTable extends Migration
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/
-		
-		if (Schema::hasTable('departments')) {
-            Schema::table('employees', function ($table) {
-                $table->foreign('dept')->references('id')->on('departments');
-            });
-        }
     }
 
     /**

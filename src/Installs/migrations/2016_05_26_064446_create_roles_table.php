@@ -21,8 +21,8 @@ class CreateRolesTable extends Migration
             ["name", "Name", "Name", true, "", 1, 250, true],
             ["display_name", "Display Name", "String", false, "", 0, 250, true],
             ["description", "Description", "Textarea", false, "", 0, 1000, false],
-            ["parent", "Parent Role", "Dropdown", false, "3", 0, 0, false, "@roles"],
-            ["dept", "Department", "Dropdown", false, "3", 0, 0, false, "@departments"],
+            ["parent", "Parent Role", "Dropdown", false, "1", 0, 0, false, "@roles"],
+            ["dept", "Department", "Dropdown", false, "1", 0, 0, false, "@departments"],
         ]);
 		
 		/*
@@ -59,12 +59,6 @@ class CreateRolesTable extends Migration
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/
-        
-        if (Schema::hasTable('departments')) {
-            Schema::table('roles', function ($table) {
-                $table->foreign('dept')->references('id')->on('departments');
-            });
-        }
     }
 
     /**

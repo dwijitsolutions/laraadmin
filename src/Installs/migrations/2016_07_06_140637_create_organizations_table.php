@@ -65,12 +65,6 @@ class CreateOrganizationsTable extends Migration
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
         ]);
 		*/
-
-        if (Schema::hasTable('employees')) {
-            Schema::table('organizations', function ($table) {
-                $table->foreign('assigned_to')->references('id')->on('employees');
-            });
-        }
     }
 
     /**

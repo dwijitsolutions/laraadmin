@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
 		$role->name = "SUPER_ADMIN";
 		$role->display_name = "Super Admin";
 		$role->description = "Full Access Role";
-		$role->parent = 0;
+		$role->parent = 1;
 		$role->dept = $dept->id;
 		$role->save();
 		

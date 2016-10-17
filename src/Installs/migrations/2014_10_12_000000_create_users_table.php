@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             ["context_id", "Context", "Integer", false, "0", 0, 0, false],
             ["email", "Email", "Email", true, "", 0, 250, false],
             ["password", "Password", "Password", false, "", 6, 250, true],
-            ["type", "User Type", "Dropdown", false, "Employee", 0, 0, false, ["Employee","Client"]],
+            ["type", "User Type", "Dropdown", false, "Employee", 0, 0, false, ["Employee", "Client"]],
         ]);
 		
 		/*
