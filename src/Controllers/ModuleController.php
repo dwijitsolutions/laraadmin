@@ -162,7 +162,26 @@ class ModuleController extends Controller
 				file_put_contents(base_path('database/migrations/'.$mfile), $migrationData);
 			}
 		}
-
+		
+		// Delete Admin Routes
+		if(LAHelper::laravel_ver() == 5.3) {
+			$file_admin_routes = base_path("/routes/admin_routes.php");
+		} else {
+			$file_admin_routes = base_path("/app/Http/admin_routes.php");
+		}
+		while(LAHelper::getLineWithString($file_admin_routes, "LA\OrganizationsController") != -1) {
+			$line = LAHelper::getLineWithString($file_admin_routes, "LA\OrganizationsController");
+			$fileData = file_get_contents($file_admin_routes);
+			$fileData = str_replace($line, "", $fileData);
+			file_put_contents($file_admin_routes, $fileData);
+		}
+		if(LAHelper::getLineWithString($file_admin_routes, "=== Organizations ===") != -1) {
+			$line = LAHelper::getLineWithString($file_admin_routes, "=== Organizations ===");
+			$fileData = file_get_contents($file_admin_routes);
+			$fileData = str_replace($line, "", $fileData);
+			file_put_contents($file_admin_routes, $fileData);
+		}
+		
 		// Delete Table
 		Schema::drop($module->name_db);
 		
