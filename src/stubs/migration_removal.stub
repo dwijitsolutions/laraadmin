@@ -16,6 +16,9 @@ class __migration_class_name__ extends Migration
      */
     public function up()
     {
+        // This Module has been deleted.
+        // You can remove this file after migrate:reset
+        
 		if (Schema::hasTable('__db_table_name__')) {
             Schema::drop('__db_table_name__');
         }

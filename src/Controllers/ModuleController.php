@@ -125,28 +125,48 @@ class ModuleController extends Controller
 	{
 		$module = Module::find($id);
 		
-		//Delete from la_menu table
-		$menuItems = Menu::where('name',$module->name)->first();
+		//Delete Menu
+		$menuItems = Menu::where('name', $module->name)->first();
 		if(isset($menuItems)) {
 			$menuItems->delete();
 		}	
 		
-		// Delete from Table module_field
+		// Delete Module Fields
 		$module_fields = ModuleFields::where('module',$module->id)->delete();
 		
-		//delete view directory
-		\File::deleteDirectory('/var/www/html/la1/resources/views/la/'.$module->name_db);
+		// Delete Resource Views directory
+		\File::deleteDirectory(resource_path('/views/la/' . $module->name_db));
 		
-		//delete file of controller
-		\File::delete('/var/www/html/la1/app/Http/Controllers/LA/'.$module->name.'Controller.php');
+		// Delete Controller
+		\File::delete(app_path('/Http/Controllers/LA/'.$module->name.'Controller.php'));
 		
-		//delete file of model
-		\File::delete('/var/www/html/la1/app/'.$module->model.'.php');
+		// Delete Model
+		if($model == "User" || $model == "Role" || $model == "Permission") {
+			\File::delete(app_path($module->model.'.php'));
+		} else {
+			\File::delete(app_path('Models/'.$module->model.'.php'));
+		}
+		
+		// Modify Migration for Deletion
+		// Find existing migration file
+		$mfiles = scandir(base_path('database/migrations/'));
+		$fileExistName = "";
+		foreach ($mfiles as $mfile) {
+			if(str_contains($mfile, "create_".$module->name_db."_table")) {
+				$migrationClassName = ucfirst(camel_case("create_".$module->name_db."_table"));
 				
-		//delete table
+				$templateDirectory = __DIR__.'/../stubs';
+				$migrationData = file_get_contents($templateDirectory."/migration_removal.stub");
+				$migrationData = str_replace("__migration_class_name__", $migrationClassName, $migrationData);
+				$migrationData = str_replace("__db_table_name__", $module->name_db, $migrationData);
+				file_put_contents(base_path('database/migrations/'.$mfile), $migrationData);
+			}
+		}
+
+		// Delete Table
 		Schema::drop($module->name_db);
 		
-		//Delete from module table
+		// Delete Module
 		$module->delete();
 		
 		$modules = Module::all();
