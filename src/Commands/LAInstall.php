@@ -233,17 +233,22 @@ class LAInstall extends Command
 				$this->line('Appending routes...');
 				//if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
 				if(LAHelper::laravel_ver() == 5.3) {
-					$this->appendFile($from."/app/routes.php", $to."/routes/web.php");
+					if($this->getLineWithString($to."/routes/web.php", "require __DIR__.'/admin_routes.php';") == -1) {
+						$this->appendFile($from."/app/routes.php", $to."/routes/web.php");
+					}
 					$this->copyFile($from."/app/admin_routes.php", $to."/routes/admin_routes.php");
 				} else {
-					$this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+					if($this->getLineWithString($to."/app/Http/routes.php", "require __DIR__.'/admin_routes.php';") == -1) {
+						$this->appendFile($from."/app/routes.php", $to."/app/Http/routes.php");
+					}
 					$this->copyFile($from."/app/admin_routes.php", $to."/app/Http/admin_routes.php");
 				}
 				// Utilities 
 				$this->line('Generating Utilities...');
 				// if(!$this->fileContains($to."/gulpfile.js", "admin-lte/AdminLTE.less")) {
-				$this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
-				
+				if($this->getLineWithString($to."/gulpfile.js", "mix.less('admin-lte/AdminLTE.less', 'public/la-assets/css');") == -1) {
+					$this->appendFile($from."/gulpfile.js", $to."/gulpfile.js");
+				}
 				// Creating Super Admin User
 				
 				$user = \App\User::where('context_id', "1")->first();
