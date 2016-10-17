@@ -111,27 +111,27 @@ class DatabaseSeeder extends Seeder
 		
 		$laconfig = new LAConfigs;
 		$laconfig->key = "sidebar_search";
-		$laconfig->value = "on";
+		$laconfig->value = "1";
 		$laconfig->save();
 		
 		$laconfig = new LAConfigs;
 		$laconfig->key = "show_messages";
-		$laconfig->value = "on";
+		$laconfig->value = "1";
 		$laconfig->save();
 		
 		$laconfig = new LAConfigs;
 		$laconfig->key = "show_notifications";
-		$laconfig->value = "on";
+		$laconfig->value = "1";
 		$laconfig->save();
 		
 		$laconfig = new LAConfigs;
 		$laconfig->key = "show_tasks";
-		$laconfig->value = "on";
+		$laconfig->value = "1";
 		$laconfig->save();
 		
 		$laconfig = new LAConfigs;
 		$laconfig->key = "show_rightsidebar";
-		$laconfig->value = "on";
+		$laconfig->value = "1";
 		$laconfig->save();
 		
 		$laconfig = new LAConfigs;

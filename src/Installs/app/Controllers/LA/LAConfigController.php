@@ -54,22 +54,11 @@ class LAConfigController extends Controller
 	 */
 	public function store(Request $request) {
 		$all = $request->all();
-		if(!isset($all['sidebar_search'])) {
-			$all['sidebar_search'] = "off";
+		foreach(['sidebar_search', 'show_messages', 'show_notifications', 'show_tasks', 'show_rightsidebar'] as $key) {
+			if(!isset($all[$key])) {
+				$all[$key] = 0;
+			}
 		}
-		if(!isset($all['show_messages'])) {
-			$all['show_messages'] = "off";
-		}
-		if(!isset($all['show_notifications'])) {
-			$all['show_notifications'] = "off";
-		}
-		if(!isset($all['show_tasks'])) {
-			$all['show_tasks'] = "off";
-		}
-		if(!isset($all['show_rightsidebar'])) {
-			$all['show_rightsidebar'] = "off";
-		}
-
 		foreach($all as $key => $value) {
 			LAConfigs::where('key', $key)->update(['value' => $value]);
 		}

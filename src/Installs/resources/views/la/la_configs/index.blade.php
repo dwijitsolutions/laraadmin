@@ -54,31 +54,31 @@
 			<div class="form-group">
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="sidebar_search" @if($configs->sidebar_search == "on") checked @endif>
+						<input type="checkbox" name="sidebar_search" @if($configs->sidebar_search) checked @endif>
 						Show Search Bar
 					</label>
 				</div>
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="show_messages" @if($configs->show_messages == "on") checked @endif>
+						<input type="checkbox" name="show_messages" @if($configs->show_messages) checked @endif>
 						Show Messages Icon
 					</label>
 				</div>
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="show_notifications" @if($configs->show_notifications == "on") checked @endif>
+						<input type="checkbox" name="show_notifications" @if($configs->show_notifications) checked @endif>
 						Show Notifications Icon
 					</label>
 				</div>
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="show_tasks" @if($configs->show_tasks == "on") checked @endif>
+						<input type="checkbox" name="show_tasks" @if($configs->show_tasks) checked @endif>
 						Show Tasks Icon
 					</label>
 				</div>
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="show_rightsidebar" @if($configs->show_rightsidebar == "on") checked @endif>
+						<input type="checkbox" name="show_rightsidebar" @if($configs->show_rightsidebar) checked @endif>
 						Show Right SideBar Icon
 					</label>
 				</div>
