@@ -17,7 +17,9 @@ class CreateModuleFieldsTable extends Migration
             $table->string('colname', 30);
             $table->string('label', 100);
             $table->integer('module')->unsigned();
+            $table->foreign('module')->references('id')->on('modules')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('field_type')->unsigned();
+            $table->foreign('field_type')->references('id')->on('module_field_types')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('unique')->default(false);
             $table->string('defaultvalue');
             $table->integer('minlength')->unsigned()->default(0);
