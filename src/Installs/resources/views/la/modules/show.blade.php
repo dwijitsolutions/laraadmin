@@ -305,7 +305,7 @@ use Dwij\Laraadmin\Models\Module;
 							<label>{{ Form::radio("popup_value_type", "table", true) }} From Table</label>
 							<label>{{ Form::radio("popup_value_type", "list", false) }} From List</label>
 						</div>
-						{{ Form::select("popup_vals", $tables, "", ['class'=>'form-control', 'rel' => '']) }}
+						{{ Form::select("popup_vals_table", $tables, "", ['class'=>'form-control', 'rel' => '']) }}
 						
 						<select class="form-control popup_vals_list" rel="taginput" multiple="1" data-placeholder="Add Multiple values (Press Enter to add)" name="popup_vals_list[]">
 							
