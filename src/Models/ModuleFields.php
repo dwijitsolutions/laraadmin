@@ -79,7 +79,7 @@ class ModuleFields extends Model
                     $table->timestamps();
                 });
             }
-            Schema::table($module->name_db, function($table) use ($field) {
+            Schema::table($module->name_db, function($table) use ($field, $module) {
                 // $table->string($field->colname);
                 // createUpdateFieldSchema()
 				$field->module_obj = $module;
