@@ -57,6 +57,8 @@ class LAConfigController extends Controller
 		foreach(['sidebar_search', 'show_messages', 'show_notifications', 'show_tasks', 'show_rightsidebar'] as $key) {
 			if(!isset($all[$key])) {
 				$all[$key] = 0;
+			} else {
+				$all[$key] = 1;
 			}
 		}
 		foreach($all as $key => $value) {

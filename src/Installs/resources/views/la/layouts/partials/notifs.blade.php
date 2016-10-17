@@ -2,7 +2,7 @@
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav">
 				<!-- Messages: style can be found in dropdown.less-->
-				@if(LAConfigs::getByKey('show_messages') == "on")
+				@if(LAConfigs::getByKey('show_messages'))
 				<li class="dropdown messages-menu">
 					<!-- Menu toggle button -->
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -35,7 +35,7 @@
 					</ul>
 				</li><!-- /.messages-menu -->
 				@endif
-				@if(LAConfigs::getByKey('show_notifications') == "on")
+				@if(LAConfigs::getByKey('show_notifications'))
 				<!-- Notifications Menu -->
 				<li class="dropdown notifications-menu">
 					<!-- Menu toggle button -->
@@ -59,7 +59,7 @@
 					</ul>
 				</li>
 				@endif
-				@if(LAConfigs::getByKey('show_tasks') == "on")
+				@if(LAConfigs::getByKey('show_tasks'))
 				<!-- Tasks Menu -->
 				<li class="dropdown tasks-menu">
 					<!-- Menu Toggle Button -->
@@ -153,7 +153,7 @@
 						</ul>
 					</li>
 				@endif
-				@if(LAConfigs::getByKey('show_rightsidebar') == "on")
+				@if(LAConfigs::getByKey('show_rightsidebar'))
 				<!-- Control Sidebar Toggle Button -->
 				<li>
 					<a href="#" data-toggle="control-sidebar"><i class="fa fa-comments-o"></i> <span class="label label-warning">10</span></a>

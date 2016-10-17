@@ -22,9 +22,11 @@
 			@endif
 		@endforeach
 	</ul>
+	@if(LAConfigs::getByKey('sidebar_search'))
 	<form class="navbar-form navbar-left" role="search">
 		<div class="form-group">
 			<input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
 		</div>
 	</form>
+	@endif
 </div><!-- /.navbar-collapse -->

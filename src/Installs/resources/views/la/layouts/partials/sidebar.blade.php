@@ -19,7 +19,7 @@
         @endif
 
         <!-- search form (Optional) -->
-        @if(LAConfigs::getByKey('sidebar_search') == "on")
+        @if(LAConfigs::getByKey('sidebar_search'))
         <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
 	                <input type="text" name="q" class="form-control" placeholder="Search..."/>
@@ -28,7 +28,7 @@
               </span>
             </div>
         </form>
-        @endif    
+        @endif
         <!-- /.search form -->
 
         <!-- Sidebar Menu -->
