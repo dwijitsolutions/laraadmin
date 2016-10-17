@@ -212,7 +212,7 @@ use Dwij\Laraadmin\Models\Module;
 	</div>
 </div>
 
-<div class="modal fade" id="AddFieldModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="AddFieldModal" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

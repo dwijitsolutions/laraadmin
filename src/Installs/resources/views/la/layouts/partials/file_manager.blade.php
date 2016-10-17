@@ -1,6 +1,6 @@
 <script src="{{ asset('la-assets/plugins/dropzone/dropzone.js') }}"></script>
 
-<div class="modal fade" id="fm" tabindex="-1" role="dialog" aria-labelledby="fileManagerLabel">
+<div class="modal fade" id="fm" role="dialog" aria-labelledby="fileManagerLabel">
 	<input type="hidden" id="image_selecter_origin" value="">
 	<input type="hidden" id="image_selecter_origin_type" value="">
 	<div class="modal-dialog" role="document">

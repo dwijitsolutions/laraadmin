@@ -40,7 +40,7 @@
 </div>
 
 
-<div class="modal fade" id="EditFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="EditFileModal" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document" style="width:90%;">
 		<div class="modal-content">
 			<div class="modal-header">
