@@ -249,12 +249,14 @@ class Module extends Model
 				break;
 			case 'Datetime':
 				if($update) {
-					$var = $table->timestamp($field->colname)->change();
+					// Timestamp Edit Not working - http://stackoverflow.com/questions/34774628/how-do-i-make-doctrine-support-timestamp-columns
+					// Error Unknown column type "timestamp" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType()
+					// $var = $table->timestamp($field->colname)->change();
 				} else {
 					$var = $table->timestamp($field->colname);
 				}
 				// $table->timestamp('created_at')->useCurrent();
-				if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
+				if(isset($var) && $field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
 					$var->default($field->defaultvalue);
 				}
 				break;
