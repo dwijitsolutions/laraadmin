@@ -135,6 +135,7 @@ class Module extends Model
 							'popup_vals' => $pvalues
 						]);
 						$field->id = $field_obj->id;
+						$field->module_obj = $module;
 					}
 					
 					// Schema::dropIfExists($names->table);
@@ -293,14 +294,25 @@ class Module extends Model
 				}
 				$popup_vals = json_decode($field->popup_vals);
 				if(starts_with($field->popup_vals, "@")) {
+					$foreign_table_name = str_replace("@", "", $field->popup_vals);
 					if($update) {
 						$var = $table->integer($field->colname)->unsigned()->change();
+						if($field->defaultvalue == "" || $field->defaultvalue == "0") {
+							$var->default(1);
+						} else {
+							$var->default($field->defaultvalue);
+						}
+						$table->dropForeign($field->module_obj->name_db."_".$field->colname."_foreign");
+						$table->foreign($field->colname)->references('id')->on($foreign_table_name);
 					} else {
 						$var = $table->integer($field->colname)->unsigned();
+						if($field->defaultvalue == "" || $field->defaultvalue == "0") {
+							$var->default(1);
+						} else {
+							$var->default($field->defaultvalue);
+						}
+						$table->foreign($field->colname)->references('id')->on($foreign_table_name);
 					}
-					$foreign_table_name = str_replace("@", "", $field->popup_vals);
-					$table->dropForeign($field->colname);
-					$table->foreign($field->colname)->references('id')->on($foreign_table_name);
 				} else if(is_array($popup_vals)) {
 					if($update) {
 						$var = $table->string($field->colname)->change();

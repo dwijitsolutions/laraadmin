@@ -82,6 +82,7 @@ class ModuleFields extends Model
             Schema::table($module->name_db, function($table) use ($field) {
                 // $table->string($field->colname);
                 // createUpdateFieldSchema()
+				$field->module_obj = $module;
 				Module::create_field_schema($table, $field, false);
             });
         }
@@ -145,6 +146,8 @@ class ModuleFields extends Model
 			$field->popup_vals = "";
 		}
         $field->save();
+
+		$field->module_obj = $module;
 
         Schema::table($module->name_db, function ($table) use ($field) {
             Module::create_field_schema($table, $field, true);
