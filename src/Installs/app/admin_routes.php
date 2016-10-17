@@ -1,5 +1,19 @@
 <?php
 
+/* ================== Homepage ================== */
+Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
+Route::auth();
+
+/* ================== Access Uploaded Files ================== */
+Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
+
+/*
+|--------------------------------------------------------------------------
+| Admin Application Routes
+|--------------------------------------------------------------------------
+*/
+
 $as = "";
 if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 	$as = config('laraadmin.adminRoute').'.';
