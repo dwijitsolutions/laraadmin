@@ -124,6 +124,7 @@ class ModuleController extends Controller
 	public function destroy($id)
 	{
 		$module = Module::find($id);
+		return redirect()->route(config('laraadmin.adminRoute') . '.modules.index');
 		
 		//Delete from la_menu table
 		$menuItems = Menu::where('name',$module->name)->first();
@@ -355,6 +356,18 @@ class ModuleController extends Controller
 		
 		return response()->json([
 			'status' => 'success'
+		]);
+	}
+
+	public function get_module_files(Request $request, $module_id)
+	{
+		$module = Module::find($module_id);
+		
+		$arr = array();
+		$arr[] = "app/Http/Controllers/LA/".$module->controller.".php";
+		$arr[] = "app/Models/".$module->model.".php";
+		return response()->json([
+			'files' => $arr
 		]);
 	}
 }

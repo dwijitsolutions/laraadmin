@@ -82,7 +82,7 @@ use Dwij\Laraadmin\Models\Module;
 	</div>
 </div>
 
-<!----------confirmation box--------->
+<!-- module deletion confirmation  -->
 <div class="modal" id="module_delete_confirm">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -93,11 +93,15 @@ use Dwij\Laraadmin\Models\Module;
 				<h4 class="modal-title">Module Delete</h4>
 			</div>
 			<div class="modal-body">
-				<p>Do you really want to delete module <></p>
+				<p>Do you really want to delete module <b id="moduleNameStr" class="text-danger"></b> ?</p>
+				<p>Following files will be deleted:</p>
+				<div id="moduleDeleteFiles"></div>
 			</div>
 			<div class="modal-footer">
-				<a id="module_delete" class="btn btn-primary pull-left">Yes</a>
-				<a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" class="btn btn-default pull-right" >No</a>				
+				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.modules.destroy', 0], 'id' => 'module_del_form', 'method' => 'delete', 'style'=>'display:inline']) }}
+					<button class="btn btn-danger btn-delete pull-left" type="submit">Yes</button>
+				{{ Form::close() }}
+				<a data-dismiss="modal" class="btn btn-default pull-right" >No</a>				
 			</div>
 		</div>
 		<!-- /.modal-content -->
@@ -118,6 +122,29 @@ $(function () {
 	$('.delete_module').on("click", function () {
     	var module_id = $(this).attr('module_id');
 		var module_name = $(this).attr('module_name');
+		$("#moduleNameStr").html(module_name);
+		$url = $("#module_del_form").attr("action");
+		$("#module_del_form").attr("action", $url.replace("/0", "/"+module_id));
+		$("#module_delete_confirm").modal('show');
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/get_module_files/') }}/" + module_id,
+			type:"POST",
+			beforeSend: function() {
+				$("#moduleDeleteFiles").html('<center><i class="fa fa-refresh fa-spin"></i></center>');
+			},
+			headers: {
+		    	'X-CSRF-Token': '{{ csrf_token() }}'
+    		},
+			success: function(data) {
+				var files = data.files;
+				var filesList = "<ul>";
+				for ($i = 0; $i < files.length; $i++) { 
+					filesList += "<li>" + files[$i] + "</li>";
+				}
+				filesList += "</ul>";
+				$("#moduleDeleteFiles").html(filesList);
+			}
+		});
 	});
 	
 	$('input[name=icon]').iconpicker();
