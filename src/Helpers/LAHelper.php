@@ -327,4 +327,25 @@ class LAHelper
 		return $name;
 	}
 	
+	// LAHelper::getLineWithString()
+	public static function getLineWithString($fileName, $str) {
+		$lines = file($fileName);
+		foreach ($lines as $lineNumber => $line) {
+			if (strpos($line, $str) !== false) {
+				return $line;
+			}
+		}
+		return -1;
+	}
+
+	// LAHelper::getLineWithString2()
+	private function getLineWithString2($content, $str) {
+		$lines = explode(PHP_EOL, $content);
+		foreach ($lines as $lineNumber => $line) {
+			if (strpos($line, $str) !== false) {
+				return $line;
+			}
+		}
+		return -1;
+	}
 }

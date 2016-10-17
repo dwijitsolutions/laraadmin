@@ -16,6 +16,7 @@ use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
+use Dwij\Laraadmin\Helpers\LAHelper;
 use Artisan;
 use App\Models\Backup;
 
@@ -28,7 +29,7 @@ class BackupsController extends Controller
 	
 	public function __construct() {
 		// Field Access of Listing Columns
-		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+		if(LAHelper::laravel_ver() == 5.3) {
 			$this->middleware(function ($request, $next) {
 				$this->listing_cols = ModuleFields::listingColumnAccessScan('Backups', $this->listing_cols);
 				return $next($request);
@@ -70,8 +71,8 @@ class BackupsController extends Controller
 			$exitCode = Artisan::call('backup:run');
 			$outputStr = Artisan::output();
 			
-			if($this->getLineWithString($outputStr, "Copying ") == -1) {
-				if($this->getLineWithString($outputStr, "mysqldump: No such file or directory") != -1) {
+			if(LAHelper::getLineWithString2($outputStr, "Copying ") == -1) {
+				if(LAHelper::getLineWithString2($outputStr, "mysqldump: No such file or directory") != -1) {
 					return response()->json([
 						'status' => 'failed',
 						'message' => "Configure dump_command_path in config/database.php. Check console for error details.",
@@ -86,7 +87,7 @@ class BackupsController extends Controller
 					'output' => $outputStr
 				]);
 			} else {
-				$dataStr = $this->getLineWithString($outputStr, "Copying ");
+				$dataStr = LAHelper::getLineWithString2($outputStr, "Copying ");
 				$dataStr = str_replace("Copying ", "", $dataStr);
 				$dataStr = substr($dataStr, 0, strpos($dataStr, ")"));
 				
@@ -194,15 +195,5 @@ class BackupsController extends Controller
 				'message' => 'No rights to download Backup.'
 			]);
 		}
-	}
-
-	private function getLineWithString($content, $str) {
-		$lines = explode(PHP_EOL, $content);
-		foreach ($lines as $lineNumber => $line) {
-			if (strpos($line, $str) !== false) {
-				return $line;
-			}
-		}
-		return -1;
 	}
 }
