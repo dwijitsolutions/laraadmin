@@ -296,6 +296,9 @@ class Module extends Model
 					} else {
 						$var = $table->integer($field->colname)->unsigned();
 					}
+					$foreign_table_name = str_replace("@", "", $field->popup_vals);
+					$table->dropForeign($field->colname);
+					$table->foreign($field->colname)->references('id')->on($foreign_table_name);
 				} else if(is_array($popup_vals)) {
 					if($update) {
 						$var = $table->string($field->colname)->change();
