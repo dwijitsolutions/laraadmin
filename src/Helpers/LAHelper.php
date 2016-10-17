@@ -339,7 +339,7 @@ class LAHelper
 	}
 
 	// LAHelper::getLineWithString2()
-	private function getLineWithString2($content, $str) {
+	public static function getLineWithString2($content, $str) {
 		$lines = explode(PHP_EOL, $content);
 		foreach ($lines as $lineNumber => $line) {
 			if (strpos($line, $str) !== false) {
