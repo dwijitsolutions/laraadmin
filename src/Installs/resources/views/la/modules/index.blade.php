@@ -96,6 +96,7 @@ use Dwij\Laraadmin\Models\Module;
 				<p>Do you really want to delete module <b id="moduleNameStr" class="text-danger"></b> ?</p>
 				<p>Following files will be deleted:</p>
 				<div id="moduleDeleteFiles"></div>
+				<p class="text-danger">Note: Migration file will not be deleted but modified.</p>
 			</div>
 			<div class="modal-footer">
 				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.modules.destroy', 0], 'id' => 'module_del_form', 'method' => 'delete', 'style'=>'display:inline']) }}

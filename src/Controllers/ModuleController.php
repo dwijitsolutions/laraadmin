@@ -124,7 +124,6 @@ class ModuleController extends Controller
 	public function destroy($id)
 	{
 		$module = Module::find($id);
-		return redirect()->route(config('laraadmin.adminRoute') . '.modules.index');
 		
 		//Delete from la_menu table
 		$menuItems = Menu::where('name',$module->name)->first();
@@ -366,6 +365,20 @@ class ModuleController extends Controller
 		$arr = array();
 		$arr[] = "app/Http/Controllers/LA/".$module->controller.".php";
 		$arr[] = "app/Models/".$module->model.".php";
+		$views = scandir(resource_path('views/la/'.$module->name_db));
+		foreach ($views as $view) {
+			if($view != "." && $view != "..") {
+				$arr[] = "resources/views/la/".$view;
+			}
+		}
+		// Find existing migration file
+		$mfiles = scandir(base_path('database/migrations/'));
+		$fileExistName = "";
+		foreach ($mfiles as $mfile) {
+			if(str_contains($mfile, "create_".$module->name_db."_table")) {
+				$arr[] = 'database/migrations/' . $mfile;
+			}
+		}
 		return response()->json([
 			'files' => $arr
 		]);
