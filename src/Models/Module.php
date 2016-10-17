@@ -500,6 +500,14 @@ class Module extends Model
 						break;
 					}
 				}
+				if(is_string($field->popup_vals) && starts_with($field->popup_vals, "@")) {
+					if($update) {
+						$var = $table->integer($field->colname)->unsigned()->change();
+					} else {
+						$var = $table->integer($field->colname)->unsigned();
+					}
+					break;
+				}
 				$popup_vals = json_decode($field->popup_vals);
 				if(is_array($popup_vals)) {
 					if($update) {
