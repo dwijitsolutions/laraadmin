@@ -432,21 +432,35 @@ class LAFormMaker
 						$default_val = $row->$field_name;
 					}
 					
-					if($popup_vals != "") {
-						$popup_vals = array_values(json_decode($popup_vals));
-					} else {
-						$popup_vals = array();
-					}
-					$out .= '<div class="radio">';
-					foreach ($popup_vals as $value) {
-						$sel = false;
-						if($default_val != "" && $default_val == $value) {
-							$sel = true;
+					if(starts_with($popup_vals, "@")) {
+						$popup_vals = LAFormMaker::process_values($popup_vals);
+						$out .= '<div class="radio">';
+						foreach ($popup_vals as $key => $value) {
+							$sel = false;
+							if($default_val != "" && $default_val == $value) {
+								$sel = true;
+							}
+							$out .= '<label>'.(Form::radio($field_name, $key, $sel)).' '.$value.' </label>';
 						}
-						$out .= '<label>'.(Form::radio($field_name, $value, $sel)).' '.$value.' </label>';
+						$out .= '</div>';
+						break;
+					} else {
+						if($popup_vals != "") {
+							$popup_vals = array_values(json_decode($popup_vals));
+						} else {
+							$popup_vals = array();
+						}
+						$out .= '<div class="radio">';
+						foreach ($popup_vals as $value) {
+							$sel = false;
+							if($default_val != "" && $default_val == $value) {
+								$sel = true;
+							}
+							$out .= '<label>'.(Form::radio($field_name, $value, $sel)).' '.$value.' </label>';
+						}
+						$out .= '</div>';
+						break;
 					}
-					$out .= '</div>';
-					break;
 				case 'String':
 					$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 					

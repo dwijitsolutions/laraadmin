@@ -34,12 +34,14 @@
 						{{ Form::select("field_type", $ftypes, null, ['class'=>'form-control', 'required' => 'required']) }}
 					</div>
 					
-					<div class="form-group">
-						<label for="unique">Unique:</label>
-						{{ Form::checkbox("unique", "unique") }}
-						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
+					<div id="unique_val">
+						<div class="form-group">
+							<label for="unique">Unique:</label>
+							{{ Form::checkbox("unique", "unique") }}
+							<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
+						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="defaultvalue">Default Value :</label>
 						{{ Form::text("defaultvalue", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
@@ -134,6 +136,11 @@ $(function () {
 		$('#length_div').removeClass("hide");
 		if(ft_val == 2 || ft_val == 4 || ft_val == 5 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 21 || ft_val == 24 ) {
 			$('#length_div').addClass("hide");
+		}
+		
+		$('#unique_val').removeClass("hide");
+		if(ft_val == 1 || ft_val == 2 || ft_val == 3 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 20 || ft_val == 21 || ft_val == 24 ) {
+			$('#unique_val').addClass("hide");
 		}
 	}
 

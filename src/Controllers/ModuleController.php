@@ -169,8 +169,8 @@ class ModuleController extends Controller
 		} else {
 			$file_admin_routes = base_path("/app/Http/admin_routes.php");
 		}
-		while(LAHelper::getLineWithString($file_admin_routes, "LA\\".$module->name."Controller.php") != -1) {
-			$line = LAHelper::getLineWithString($file_admin_routes, "LA\\".$module->name.'Controller.php');
+		while(LAHelper::getLineWithString($file_admin_routes, "LA\\".$module->name."Controller") != -1) {
+			$line = LAHelper::getLineWithString($file_admin_routes, "LA\\".$module->name.'Controller');
 			$fileData = file_get_contents($file_admin_routes);
 			$fileData = str_replace($line, "", $fileData);
 			file_put_contents($file_admin_routes, $fileData);

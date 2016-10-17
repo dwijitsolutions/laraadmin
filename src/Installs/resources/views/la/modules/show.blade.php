@@ -264,11 +264,13 @@ use Dwij\Laraadmin\Models\Module;
 						{{ Form::select("field_type", $ftypes, null, ['class'=>'form-control', 'required' => 'required']) }}
 					</div>
 					
-					<div class="form-group">
-						<label for="unique">Unique:</label>
-						{{ Form::checkbox("unique", "unique", false, []) }}
-						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
-					</div>
+					<div id="unique_val">
+						<div class="form-group">
+							<label for="unique">Unique:</label>
+							{{ Form::checkbox("unique", "unique", false, []) }}
+							<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
+						</div>
+					</div>	
 					
 					<div class="form-group">
 						<label for="defaultvalue">Default Value :</label>
@@ -412,6 +414,11 @@ $(function () {
 		if(ft_val == 2 || ft_val == 4 || ft_val == 5 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 21 || ft_val == 24 ) {
 			$('#length_div').addClass("hide");
 		}
+
+		$('#unique_val').removeClass("hide");
+		if(ft_val == 1 || ft_val == 2 || ft_val == 3 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 20 || ft_val == 21 || ft_val == 24 ) {
+			$('#unique_val').addClass("hide");
+		}
 	}
 
 	$("select[name='field_type']").on("change", function() {
@@ -424,9 +431,9 @@ $(function () {
 		if($("input[name='popup_value_type']:checked").val() == "list") {
 			$("select.popup_vals_list").show();
 			$("select.popup_vals_list").next().show();
-			$("select[name='popup_vals']").hide();
+			$("select[name='popup_vals_table']").hide();
 		} else {
-			$("select[name='popup_vals']").show();
+			$("select[name='popup_vals_table']").show();
 			$("select.popup_vals_list").hide();
 			$("select.popup_vals_list").next().hide();
 		}
