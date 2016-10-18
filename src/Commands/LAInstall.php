@@ -243,6 +243,11 @@ class LAInstall extends Command
 					}
 					$this->copyFile($from."/app/admin_routes.php", $to."/app/Http/admin_routes.php");
 				}
+				
+				// tests
+				$this->line('Generating tests...');
+				$this->copyFolder($from."/tests", $to."/tests");
+				
 				// Utilities 
 				$this->line('Generating Utilities...');
 				// if(!$this->fileContains($to."/gulpfile.js", "admin-lte/AdminLTE.less")) {
