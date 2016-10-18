@@ -4,6 +4,7 @@
 </p>
 
 [![Total Downloads](https://poser.pugx.org/dwij/laraadmin/d/total.svg)](https://packagist.org/packages/dwij/laraadmin)
+[![Build Status](https://travis-ci.org/laraadmin/laraadmin-dev.svg?branch=master)](https://travis-ci.org/laraadmin/laraadmin-dev)
 [![Latest Stable Version](https://poser.pugx.org/dwij/laraadmin/v/stable.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![Latest Unstable Version](https://poser.pugx.org/dwij/laraadmin/v/unstable.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![License](https://poser.pugx.org/dwij/laraadmin/license.svg)](https://packagist.org/packages/dwij/laraadmin)
