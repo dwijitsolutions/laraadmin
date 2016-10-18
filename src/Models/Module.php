@@ -473,9 +473,7 @@ class Module extends Model
 						$var = $table->string($field->colname, $field->maxlength);
 					}
 				}
-				if($field->defaultvalue != "") {
-					$var->default($field->defaultvalue);
-				}
+				$var->default($field->defaultvalue);
 				break;
 			case 'Password':
 				$var = null;
