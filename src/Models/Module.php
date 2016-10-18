@@ -178,7 +178,7 @@ class Module extends Model
 		return $found;
 	}
 	
-	public static function create_field_schema($table, $field, $update = false) {
+	public static function create_field_schema($table, $field, $update = false, $isFieldTypeChange = false) {
 		if(is_numeric($field->field_type)) {
 			$ftypes = ModuleFieldTypes::getFTypes();
 			$field->field_type = array_search($field->field_type, $ftypes);
@@ -690,8 +690,16 @@ class Module extends Model
 		}
 		
 		// set column unique
-		if($field->unique && $var != null && $field->maxlength < 256) {
-			$table->unique($field->colname);
+		if($update) {
+			if($isFieldTypeChange) {
+				if($field->unique && $var != null && $field->maxlength < 256) {
+					$table->unique($field->colname);
+				}
+			}
+		} else {
+			if($field->unique && $var != null && $field->maxlength < 256) {
+				$table->unique($field->colname);
+			}
 		}
 	}
 	

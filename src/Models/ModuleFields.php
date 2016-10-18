@@ -103,11 +103,16 @@ class ModuleFields extends Model
             });
         }
         
+		$isFieldTypeChange = false;
+
         // Update Context in ModuleFields
         $field->colname = $request->colname;
         $field->label = $request->label;
         $field->module = $request->module_id;
         $field->field_type = $request->field_type;
+		if($field->field_type != $request->field_type) {
+			$isFieldTypeChange = true;
+		}
         if($request->unique) {
             $field->unique = true;
         } else {
@@ -149,8 +154,8 @@ class ModuleFields extends Model
 
 		$field->module_obj = $module;
 
-        Schema::table($module->name_db, function ($table) use ($field) {
-            Module::create_field_schema($table, $field, true);
+        Schema::table($module->name_db, function ($table) use ($field, $isFieldTypeChange) {
+            Module::create_field_schema($table, $field, true, $isFieldTypeChange);
         });
     }
 
