@@ -37,7 +37,8 @@ class LaraAdminTest extends TestCase
     public function testExample()
     {
 		$this->visit('/')
-             ->see('LaraAdmin');
+             ->see('LaraAdmin')
+			 ->see('Taylor Otwell');
     }
 
 	/**
@@ -49,5 +50,41 @@ class LaraAdminTest extends TestCase
     {
 		$this->visit('/login')
             ->seePageIs('/');
+    }
+
+	/**
+     * Test Login.
+     *
+     * @return void
+     */
+    public function testLoginRequiredFields()
+    {
+        $this->visit('/logout')
+			->seePageIs('/')
+			->click('Login')
+			->type('', 'email')
+            ->type('', 'password')
+            ->press('Sign In')
+            ->see('The email field is required')
+            ->see('The password field is required');
+    }
+
+	/**
+     * Test Login Page.
+     *
+     * @return void
+     */
+    public function testLogin()
+    {
+		$this->visit('/login')
+            ->seePageIs('/')
+			->visit('/logout')
+			->seePageIs('/')
+			->click('Login')
+			->type('test@example.com', 'email')
+			->type('12345678', 'password')
+			->press('Sign In')
+			->seePageIs('/')
+			->see('Taylor Otwell');
     }
 }

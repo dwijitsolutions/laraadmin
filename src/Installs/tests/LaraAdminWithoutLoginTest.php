@@ -83,5 +83,15 @@ class LaraAdminWithoutLoginTest extends TestCase
 			->see('Dashboard');
     }
 
-
+	/**
+     * Test 404 Error page.
+     *
+     * @return void
+     */
+    public function test404Page()
+    {
+        $this->get('asdasdjlapmnnk')
+            ->seeStatusCode(404)
+            ->see('Record not found');
+    }
 }
