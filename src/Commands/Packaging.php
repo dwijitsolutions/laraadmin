@@ -66,12 +66,17 @@ class Packaging extends Command
         // Routes
         $this->line('Exporting Routes...');
         if(LAHelper::laravel_ver() == 5.3) {
-			$this->copyFile($from."/routes/web.php", $to."/app/routes.php");
+			// $this->copyFile($from."/routes/web.php", $to."/app/routes.php"); // Not needed anymore
 			$this->copyFile($from."/routes/admin_routes.php", $to."/app/admin_routes.php");
 		} else {
-			$this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php");
+			// $this->copyFile($from."/app/Http/routes.php", $to."/app/routes.php"); // Not needed anymore
 			$this->copyFile($from."/app/Http/admin_routes.php", $to."/app/admin_routes.php");
 		}
+
+		// tests
+		$this->line('Exporting tests...');
+		$this->replaceFolder($from."/tests", $to."/tests");
+		unlink($to."/tests/AcachaAdminLTELaravelTest.txt");
         
         // Config
         $this->line('Exporting Config...');
@@ -97,7 +102,7 @@ class Packaging extends Command
         
         // Utilities 
         $this->line('Exporting Utilities...');
-        $this->copyFile($from."/gulpfile.js", $to."/gulpfile.js");
+        // $this->copyFile($from."/gulpfile.js", $to."/gulpfile.js"); // Temporarily Not used.
     }
     
     private function replaceFolder($from, $to) {
