@@ -10,23 +10,20 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="{{ LAConfigs::getByKey('site_description') }}" />
     
-    <!--
-    <meta property="og:url" content="http://demo.adminlte.acacha.org/" />
-    <meta property="og:image" content="http://demo.adminlte.acacha.org/img/AcachaAdminLTE.png" />
-    <meta property="og:image" content="http://demo.adminlte.acacha.org/img/AcachaAdminLTE600x600.png" />
-    <meta property="og:image" content="http://demo.adminlte.acacha.org/img/AcachaAdminLTE600x314.png" />
-    <meta property="og:sitename" content="demo.adminlte.acacha.org" />
-    <meta property="og:url" content="http://demo.adminlte.acacha.org" />
-    -->
+    <meta property="og:url" content="http://laraadmin.com/" />
+    <meta property="og:sitename" content="laraAdmin" />
+	<meta property="og:image" content="http://demo.adminlte.acacha.org/img/LaraAdmin-600x600.jpg" />
     
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@dwijitsolutions" />
-    <meta name="twitter:creator" content="@dwijitsolutions" />
+    <meta name="twitter:site" content="@laraadmin" />
+    <meta name="twitter:creator" content="@laraadmin" />
     
     <title>{{ LAConfigs::getByKey('sitename') }}</title>
     
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('/la-assets/css/bootstrap.css') }}" rel="stylesheet">
+
+	<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
     
     <!-- Custom styles for this template -->
     <link href="{{ asset('/la-assets/css/main.css') }}" rel="stylesheet">
@@ -56,8 +53,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#home" class="smoothScroll">Home</a></li>
-                <li><a href="#desc" class="smoothScroll">Description</a></li>
-                <li><a href="#showcase" class="smoothScroll">Showcase</a></li>
+                <li><a href="#about" class="smoothScroll">About</a></li>
                 <li><a href="#contact" class="smoothScroll">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -84,7 +80,7 @@
             </div>
             <div class="col-lg-2">
                 <h5>Amazing Functionalities</h5>
-                <p>based on Advanced Technologies</p>
+                <p>for Modern Admin Panels</p>
                 <img class="hidden-xs hidden-sm hidden-md" src="{{ asset('/la-assets/img/arrow1.png') }}">
             </div>
             <div class="col-lg-8">
@@ -101,7 +97,7 @@
 </div><!--/ #headerwrap -->
 
 
-<section id="desc" name="desc"></section>
+<section id="about" name="about"></section>
 <!-- INTRO WRAP -->
 <div id="intro">
     <div class="container">
@@ -110,19 +106,19 @@
             <br>
             <br>
             <div class="col-lg-4">
-                <img src="{{ asset('/la-assets/img/intro01.png') }}" alt="">
-                <h3>Communicate</h3>
-                <p>For Proper internal communication.</p>
+                <i class="fa fa-cubes" style="font-size:100px;height:110px;"></i>
+                <h3>Modular</h3>
+                <p>Making Data Management fast and enjoyable.</p>
             </div>
             <div class="col-lg-4">
-                <img src="{{ asset('/la-assets/img/intro02.png') }}" alt="">
-                <h3>Schedule</h3>
-                <p>Schedule your work efficiently.</p>
+                <i class="fa fa-paper-plane" style="font-size:100px;height:110px;"></i>
+                <h3>Easy to Install</h3>
+                <p>With single installation command.</p>
             </div>
             <div class="col-lg-4">
-                <img src="{{ asset('/la-assets/img/intro03.png') }}" alt="">
-                <h3>Monitoring</h3>
-                <p>Monitor your business on the go.</p>
+                <i class="fa fa-cubes" style="font-size:100px;height:110px;"></i>
+                <h3>Customizable</h3>
+                <p>Easy to Manipulation the flows.</p>
             </div>
         </div>
         <br>
@@ -134,127 +130,47 @@
 <div id="features">
     <div class="container">
         <div class="row">
-            <h1 class="centered">What's New?</h1>
-            <br>
-            <br>
-            <div class="col-lg-6 centered">
+            <div class="col-lg-5 centered">
                 <img class="centered" src="{{ asset('/la-assets/img/mobile.png') }}" alt="">
             </div>
 
-            <div class="col-lg-6">
-                <h3>Some Features</h3>
-                <br>
-                <!-- ACCORDION -->
-                <div class="accordion ac" id="accordion2">
-                    <div class="accordion-group">
-                        <div class="accordion-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                                First Class Design
-                            </a>
-                        </div><!-- /accordion-heading -->
-                        <div id="collapseOne" class="accordion-body collapse in">
-                            <div class="accordion-inner">
-                                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div><!-- /accordion-inner -->
-                        </div><!-- /collapse -->
-                    </div><!-- /accordion-group -->
-                    <br>
+            <div class="col-lg-7">
+				<h3 class="feature-title">What is LaraAdmin ?</h3><br>
+				<ol class="features">
+					<li><strong>CMS</strong> (Content Management System) &#8211; Manages Modules &amp; their Data</li>
+					<li>Backend <strong>Admin Panel</strong> &#8211; Data can be used in front end applications with ease.</li>
+					<li>A probable <strong>CRM</strong> System &#8211; Can be evolved into a CRM system like <a target="_blank" href="https://www.sugarcrm.com">SugarCRM</a></li>
+				</ol><br>
 
-                    <div class="accordion-group">
-                        <div class="accordion-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                                Retina Ready Theme
-                            </a>
-                        </div>
-                        <div id="collapseTwo" class="accordion-body collapse">
-                            <div class="accordion-inner">
-                                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div><!-- /accordion-inner -->
-                        </div><!-- /collapse -->
-                    </div><!-- /accordion-group -->
-                    <br>
-
-                    <div class="accordion-group">
-                        <div class="accordion-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                                Awesome Support
-                            </a>
-                        </div>
-                        <div id="collapseThree" class="accordion-body collapse">
-                            <div class="accordion-inner">
-                                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div><!-- /accordion-inner -->
-                        </div><!-- /collapse -->
-                    </div><!-- /accordion-group -->
-                    <br>
-
-                    <div class="accordion-group">
-                        <div class="accordion-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
-                                Responsive Design
-                            </a>
-                        </div>
-                        <div id="collapseFour" class="accordion-body collapse">
-                            <div class="accordion-inner">
-                                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div><!-- /accordion-inner -->
-                        </div><!-- /collapse -->
-                    </div><!-- /accordion-group -->
-                    <br>
-                </div><!-- Accordion -->
+				<h3 class="feature-title">Why LaraAdmin ?</h3><br>
+                <ol class="features">
+					<li><strong>Philosophy:</strong> Inspired by SugarCRM &amp; based on Advanced <strong>Data Types</strong> like Image, HTML, File, Dropdown, TagInput which makes developers job easy. See more in <a target="_blank" href="http://laraadmin.com/features">features</a></li>
+					<li>Superior <strong>CRUD generation</strong> for Modules which generates Migration, Controller, Model and Views with single artisan command and integrates with Routes as as well.</li>
+					<li><strong>Form Maker</strong> helper is provided for generating entire form with single function call with module name as single parameter. It also gives you freedom to customise form for every field by providing method to generate single field with parameters for customisations.</li>
+					<li><b>Upload Manager </b>manages project files &amp; images which are integrated with your Module fields.</li>
+					<li><strong>Menu Manager</strong> creates menu with Modules &amp; Custom Links likes WordPress</li>
+					<li><strong>Online Code Editor</strong> allows developers to customise the generated Module Views &amp; Files.</li>
+				</ol>
             </div>
         </div>
     </div><!--/ .container -->
 </div><!--/ #features -->
 
-
-<section id="showcase" name="showcase"></section>
-<div id="showcase">
-    <div class="container">
-        <div class="row">
-            <h1 class="centered">Some Screenshots</h1>
-            <br>
-            <div class="col-lg-8 col-lg-offset-2">
-                <div id="carousel-example-generic" class="carousel slide">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                    </ol>
-
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active">
-                            <img src="{{ asset('/la-assets/img/item-01.png') }}" alt="">
-                        </div>
-                        <div class="item">
-                            <img src="{{ asset('/la-assets/img/item-02.png') }}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <br>
-        <br>
-    </div><!-- /container -->
-</div>
-
-
 <section id="contact" name="contact"></section>
 <div id="footerwrap">
     <div class="container">
         <div class="col-lg-5">
-            <h3>Contact Us</h3>
-            <b>Office:</b>
+            <h3>Contact Us</h3><br>
             <p>
+				Dwij IT Solutions,<br/>
+				Web Development Company in Pune,<br/>
                 B4, Patang Plaza Phase 5,<br/>
                 Opp. PICT College,<br/>
-                Katraj, Pune<br/>
-                India - 411046.
+                Katraj, Pune, India - 411046
             </p>
-            <div><b style="width:55px;display:inline-block;">Phone: </b>  &nbsp;<a href="tel:+917350558900">+91 7350558900</a></div>
-            <div style="margin-top:10px;"><b style="width:55px;display:inline-block;">Email: </b>  &nbsp;<a href="mailto:ganesh@dwij.in">ganesh@dwij.in</a></div>
+			<div class="contact-link"><i class="fa fa-envelope-o"></i> <a href="mailto:hello@laraadmin.com">hello@laraadmin.com</a></div>
+			<div class="contact-link"><i class="fa fa-cube"></i> <a href="http://laraadmin.com">laraadmin.com</a></div>
+			<div class="contact-link"><i class="fa fa-building"></i> <a href="http://dwijitsolutions.com">dwijitsolutions.com</a></div>
         </div>
 
         <div class="col-lg-7">

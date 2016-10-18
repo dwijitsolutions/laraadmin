@@ -159,3 +159,19 @@ a:after {
 	color: white
 }
 
+h3.feature-title {
+	color: #329ef4;
+}
+ol.features {
+	padding: 0px;
+}
+ol.features li {
+	margin-bottom: 15px;
+	padding-left: 5px;
+}
+.contact-link {
+	margin-bottom: 10px;
+}
+.contact-link i {
+	margin-right: 7px;
+}
