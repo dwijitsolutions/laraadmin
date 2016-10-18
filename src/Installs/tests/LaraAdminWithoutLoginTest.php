@@ -54,6 +54,20 @@ class LaraAdminWithoutLoginTest extends TestCase
     }
 
 	/**
+     * Test required fields on registration page.
+     *
+     * @return void
+     */
+    public function testRequiredFieldsOnRegistrationPage()
+    {
+        $this->visit('/register')
+            ->press('Register')
+            ->see('The name field is required')
+            ->see('The email field is required')
+            ->see('The password field is required');
+    }
+
+	/**
      * Test Registration
      *
      * @return void
@@ -81,6 +95,56 @@ class LaraAdminWithoutLoginTest extends TestCase
 			->click('Taylor Otwell')
 			->seePageIs('/admin')
 			->see('Dashboard');
+    }
+
+	/**
+     * Test Password reset Page.
+     *
+     * @return void
+     */
+    public function testPasswordResetPage()
+    {
+        $this->visit('/password/reset')
+            ->see('Reset Password');
+    }
+
+	/**
+     * Test send password reset.
+     *
+     * @return void
+     */
+    public function testSendPasswordReset()
+    {
+        $user = factory(App\User::class)->create();
+
+        $this->visit('password/reset')
+            ->type($user->email, 'email')
+            ->press('Send Password Reset Link')
+            ->see('We have e-mailed your password reset link!');
+    }
+
+	/**
+     * Test send password reset user not exists.
+     *
+     * @return void
+     */
+    public function testSendPasswordResetUserNotExists()
+    {
+        $this->visit('password/reset')
+            ->type('notexistingemail@gmail.com', 'email')
+            ->press('Send Password Reset Link')
+            ->see('There were some problems with your input');
+    }
+
+	/**
+     * Test home page is only for authorized Users.
+     *
+     * @return void
+     */
+    public function testHomePageForUnauthenticatedUsers()
+    {
+        $this->visit('/admin')
+            ->seePageIs('/register');
     }
 
 	/**

@@ -81,6 +81,7 @@ class LaraAdminTest extends TestCase
 			->visit('/logout')
 			->seePageIs('/')
 			->click('Login')
+			->see('Sign in to start your session')
 			->type('test@example.com', 'email')
 			->type('12345678', 'password')
 			->press('Sign In')

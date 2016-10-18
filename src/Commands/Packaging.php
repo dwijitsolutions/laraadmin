@@ -76,7 +76,6 @@ class Packaging extends Command
 		// tests
 		$this->line('Exporting tests...');
 		$this->replaceFolder($from."/tests", $to."/tests");
-		unlink($to."/tests/AcachaAdminLTELaravelTest.txt");
         
         // Config
         $this->line('Exporting Config...');
