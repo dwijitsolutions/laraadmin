@@ -9,12 +9,12 @@ class LaraAdminModuleTest extends TestCase
 	use DatabaseMigrations;
 
 	/**
-     * Basic setup before testing
-     *
-     * @return void
-     */
-    public function setUp()
-    {
+	 * Basic setup before testing
+	 *
+	 * @return void
+	 */
+	public function setUp()
+	{
 		parent::setUp();
 		// Generate Seeds
 		$this->artisan('db:seed');
@@ -27,19 +27,43 @@ class LaraAdminModuleTest extends TestCase
 			->type('12345678', 'password_confirmation')
 			->press('Register')
 			->seePageIs('/');
-    }
+	}
 
 	/**
-     * Module Creation Test
-     *
-     * @return void
-     */
-    public function testModuleCreation()
-    {
+	 * Module Creation Test Basic
+	 *
+	 * @return void
+	 */
+	public function testModuleCreation()
+	{
 		$this->visit('/admin/modules')
-             ->see('modules listing')
-			 ->type('Students', 'name')
-			 ->type('fa-user-plus', 'icon')
-			 ->press('Submit');
-    }
+			->see('modules listing')
+			->type('Students', 'name')
+			->type('fa-user-plus', 'icon')
+			->press('Submit');
+	}
+
+	/**
+	 * Module Creation Test Full
+	 *
+	 * @return void
+	 */
+	public function testModuleCreationFull()
+	{
+		$this->visit('/admin/modules')
+			->see('modules listing')
+			->type('Students', 'name')
+			->type('fa-user-plus', 'icon')
+			->press('Submit')
+			->see("Model doesn't exists Items")
+			->type('Name', 'label')
+			->type('name', 'colname')
+			->select('16', 'field_type')
+			->check('unique')
+			->type('', 'defaultvalue')
+			->type('10', 'minlength')
+			->type('100', 'maxlength')
+			->check('required')
+			->press('Submit');
+	}
 }
