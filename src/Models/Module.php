@@ -414,6 +414,11 @@ class Module extends Model
 				} else {
 					$var = $table->longText($field->colname);
 				}
+				if($field->defaultvalue != "") {
+					$var->default($field->defaultvalue);
+				} else if($field->required) {
+					$var->default("");
+				}
 				break;
 			case 'Image':
 				if($update) {
