@@ -30,7 +30,13 @@ class LAHelper
 	// $tables = LAHelper::getDBTables([]);
     public static function getDBTables($remove_tables = []) {
         if(env('DB_CONNECTION') == "sqlite") {
-			$tables = DB::select('select * from sqlite_master where type="table"');
+			$tables_sqlite = DB::select('select * from sqlite_master where type="table"');
+			$tables = array();
+			foreach ($tables_sqlite as $table) {
+				if($table->tbl_name != 'sqlite_sequence') {
+					$tables[] = $table->tbl_name;
+				}
+			}
 		} else {
 			$tables = DB::select('SHOW TABLES');
 		}
