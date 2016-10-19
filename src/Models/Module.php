@@ -378,6 +378,8 @@ class Module extends Model
 				}
 				if($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
 					$var->default($field->defaultvalue);
+				} else if($field->required) {
+					$var->default(0);
 				}
 				break;
 			case 'Files':
