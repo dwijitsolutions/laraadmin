@@ -117,10 +117,10 @@ use Dwij\Laraadmin\Models\Module;
 									<td>@if($field['required']) <span class="text-danger">True</span>@endif </td>
 									<td><?php echo LAHelper::parseValues($field['popup_vals']) ?></td>
 									<td>
-										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/edit') }}" class="btn btn-edit-field btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" name="edit_{{ $field['colname'] }}"><i class="fa fa-edit"></i></a>
-										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/delete') }}" class="btn btn-edit-field btn-danger btn-xs" style="display:inline;padding:2px 5px 3px 5px;" name="delete_{{ $field['colname'] }}"><i class="fa fa-trash"></i></a>
+										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/edit') }}" class="btn btn-edit-field btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" id="edit_{{ $field['colname'] }}"><i class="fa fa-edit"></i></a>
+										<a href="{{ url(config('laraadmin.adminRoute') . '/module_fields/'.$field['id'].'/delete') }}" class="btn btn-edit-field btn-danger btn-xs" style="display:inline;padding:2px 5px 3px 5px;" id="delete_{{ $field['colname'] }}"><i class="fa fa-trash"></i></a>
 										@if($field['colname'] != $module->view_col)
-											<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/set_view_col/'.$field['colname']) }}" class="btn btn-edit-field btn-success btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" data-placement="left"><i class="fa fa-eye"></i></a>
+											<a href="{{ url(config('laraadmin.adminRoute') . '/modules/'.$module->id.'/set_view_col/'.$field['colname']) }}" class="btn btn-edit-field btn-success btn-xs" style="display:inline;padding:2px 5px 3px 5px;" id="view_col_{{ $field['colname'] }}"><i class="fa fa-eye"></i></a>
 										@endif
 									</td>
 								</tr>
@@ -307,10 +307,14 @@ use Dwij\Laraadmin\Models\Module;
 							<label>{{ Form::radio("popup_value_type", "table", true) }} From Table</label>
 							<label>{{ Form::radio("popup_value_type", "list", false) }} From List</label>
 						</div>
-						{{ Form::select("popup_vals_table", $tables, "", ['class'=>'form-control', 'rel' => '']) }}
+						{{ Form::select("popup_vals_table", $tables, "", ['id'=>'popup_vals_table', 'class'=>'form-control', 'rel' => '']) }}
 						
-						<select class="form-control popup_vals_list" rel="taginput" multiple="1" data-placeholder="Add Multiple values (Press Enter to add)" name="popup_vals_list[]">
-							
+						<select id="popup_vals_list" class="form-control popup_vals_list" rel="taginput" multiple="1" data-placeholder="Add Multiple values (Press Enter to add)" name="popup_vals_list[]">
+							@if(env('APP_ENV') == "testing")
+								<option>Bloomsbury</option>
+								<option>Marvel</option>
+								<option>Universal</option>
+							@endif
 						</select>
 					</div>
 					
