@@ -241,7 +241,7 @@ class Module extends Model
 				if($field->defaultvalue != "") {
 					$var->default($field->defaultvalue);
 				} else if($field->required) {
-					$var->default("");
+					$var->default("0.0");
 				}
 				break;
 			case 'Date':
@@ -253,7 +253,7 @@ class Module extends Model
 				if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
 					$var->default($field->defaultvalue);
 				} else if($field->required) {
-					$var->default("1970-01-01");
+					$var->default("0000-00-00");
 				}
 				break;
 			case 'Datetime':
@@ -268,7 +268,7 @@ class Module extends Model
 				if(isset($var) && $field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
 					$var->default($field->defaultvalue);
 				} else if($field->required) {
-					$var->default("1970-01-01 00:00:00");
+					$var->default("0000-00-00 00:00:00");
 				}
 				break;
 			case 'Decimal':
