@@ -472,23 +472,22 @@ class Module extends Model
 				} else {
 					$var = $table->string($field->colname, 256);
 				}
-				if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
-					$field->defaultvalue = json_decode($field->defaultvalue);
-				} else if(is_string($field->defaultvalue) && starts_with($field->popup_vals, "@")) {
-					$field->defaultvalue = json_decode($field->defaultvalue);
+				if(is_array($field->defaultvalue)) {
+					$field->defaultvalue = json_encode($field->defaultvalue);
+					$var->default($field->defaultvalue);
+				} else if(is_string($field->defaultvalue) && starts_with($field->defaultvalue, "[")) {
+					$var->default($field->defaultvalue);
+				} else if($field->defaultvalue == "" || $field->defaultvalue == null) {
+					$var->default("[]");
 				} else if(is_string($field->defaultvalue)) {
 					$field->defaultvalue = json_encode([$field->defaultvalue]);
-					$var->default($field->defaultvalue);
-				} else if(is_array($field->defaultvalue)) {
-					$field->defaultvalue = json_encode($field->defaultvalue);
-					//echo "array: ".$field->defaultvalue;
 					$var->default($field->defaultvalue);
 				} else if(is_int($field->defaultvalue)) {
 					$field->defaultvalue = json_encode([$field->defaultvalue]);
 					//echo "int: ".$field->defaultvalue;
 					$var->default($field->defaultvalue);
 				} else if($field->required) {
-					$var->default("");
+					$var->default("[]");
 				}
 				break;
 			case 'Name':
