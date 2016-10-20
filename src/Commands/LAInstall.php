@@ -61,7 +61,7 @@ class LAInstall extends Command
 				}
 				$db_data['db'] = $this->ask('Database Name', 'laraadmin1');
 				$db_data['dbuser'] = $this->ask('Database User', 'root');
-				$db_data['dbpass'] = $this->ask('Database Password', 'root');
+				$db_data['dbpass'] = $this->ask('Database Password', '');
 				
 				if(LAHelper::laravel_ver() == 5.3) {
 					$dbhostline = LAHelper::getLineWithString('.env','DB_HOST=');					
