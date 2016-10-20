@@ -256,7 +256,7 @@ use Dwij\Laraadmin\Models\Module;
 					
 					<div class="form-group">
 						<label for="colname">Column Name :</label>
-						{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
+						{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
 					</div>
 					
 					<div class="form-group">
@@ -534,6 +534,11 @@ $(function () {
 			});
 		}
 	});
+	
+	$.validator.addMethod("data-rule-banned-words", function(value) {
+		return $.inArray(value, ['files']) == -1;
+	}, "Column name not allowed.");
+
 	$("#field-form").validate();
 		
 	/* ================== Tab Selection ================== */
