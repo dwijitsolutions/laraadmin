@@ -96,7 +96,7 @@ class LAInstall extends Command
 				return;
 			}
 			
-			if ($this->confirm("LaraAdmin requires CACHE_DRIVER to be an Array, Set it in .env ?", true)) {
+			if ($this->confirm("LaraAdmin requires 'CACHE_DRIVER' to be an 'array', Set it in .env ?", true)) {
 				$envfile =  $this->openFile('.env');
 				$cachedriverline = LAHelper::getLineWithString('.env','CACHE_DRIVER=');
 				$envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
