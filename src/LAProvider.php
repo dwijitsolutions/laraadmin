@@ -64,6 +64,11 @@ class LAProvider extends ServiceProvider
     public function register()
     {
         include __DIR__.'/routes.php';
+
+		// For LAEditor
+		if(file_exists(__DIR__.'/../../laeditor')) {
+			include __DIR__.'/../../laeditor/src/routes.php';
+		}
         
         /*
         |--------------------------------------------------------------------------
@@ -128,6 +133,7 @@ class LAProvider extends ServiceProvider
         $this->app->make('Dwij\Laraadmin\Controllers\FieldController');
         $this->app->make('Dwij\Laraadmin\Controllers\MenuController');
 		
+		// For LAEditor
 		if(file_exists(__DIR__.'/../../laeditor')) {
 			$this->app->make('Dwij\Laeditor\Controllers\CodeEditorController');
 		}
@@ -197,6 +203,7 @@ class LAProvider extends ServiceProvider
             \Dwij\Laraadmin\Commands\LAInstall::class
         ];
         
+		// For LAEditor
 		if(file_exists(__DIR__.'/../../laeditor')) {
 			$commands[] = \Dwij\Laeditor\Commands\LAEditor::class;
 		}
