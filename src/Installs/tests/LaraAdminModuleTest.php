@@ -146,9 +146,7 @@ class LaraAdminModuleTest extends TestCase
 			->type('Marvel', 'defaultvalue')
 			->check('required')
 			->select('list', 'popup_value_type')
-			->select('Marvel', 'popup_vals_list')
-			->select('Bloomsbury', 'popup_vals_list')
-			->select('Universal', 'popup_vals_list')
+			->select(['Marvel', 'Bloomsbury', 'Universal'], 'popup_vals_list')
 			->press('Submit')
 			->see('Marvel')
 			->see('Bloomsbury')
@@ -234,12 +232,10 @@ class LaraAdminModuleTest extends TestCase
 			->type('Media Type', 'label')
 			->type('media_type', 'colname')
 			->select('15', 'field_type')
-			->type('Bloomsbury', 'defaultvalue')
+			->type('["Bloomsbury","Universal"]', 'defaultvalue')
 			->check('required')
 			->select('list', 'popup_value_type')
-			->select('Marvel', 'popup_vals_list')
-			->select('Bloomsbury', 'popup_vals_list')
-			->select('Universal', 'popup_vals_list')
+			->select(['Marvel', 'Bloomsbury', 'Universal'], 'popup_vals_list')
 			->press('Submit')
 			->see('Media Type');
 		$this->see("StudentsController")
@@ -269,9 +265,7 @@ class LaraAdminModuleTest extends TestCase
 			->type('Bloomsbury', 'defaultvalue')
 			->check('required')
 			->select('list', 'popup_value_type')
-			->select('Marvel', 'popup_vals_list')
-			->select('Bloomsbury', 'popup_vals_list')
-			->select('Universal', 'popup_vals_list')
+			->select(['Marvel', 'Bloomsbury', 'Universal'], 'popup_vals_list')
 			->press('Submit')
 			->see('User Status');
 		$this->see("StudentsController")
@@ -292,9 +286,7 @@ class LaraAdminModuleTest extends TestCase
 			->type('Bloomsbury', 'defaultvalue')
 			->check('required')
 			->select('list', 'popup_value_type')
-			->select('Marvel', 'popup_vals_list')
-			->select('Bloomsbury', 'popup_vals_list')
-			->select('Universal', 'popup_vals_list')
+			->select(['Marvel', 'Bloomsbury', 'Universal'], 'popup_vals_list')
 			->press('Submit')
 			->see('Genre');
 		$this->see("StudentsController")
@@ -344,15 +336,19 @@ class LaraAdminModuleTest extends TestCase
 			->see('Module Generated')
 			->see('Update Module')
 			->see('StudentsController');
-
-		// $response = $this->call('GET', '/admin/students');
-		// $this->assertEquals(200, $response->status());
 		
-		// print_r($response);
+	}
 
-		// $this->visit('/admin/students')
-		// 	->see('Students listing')
-		// 	->see('Add Student');
+	/**
+	 * Module Usage Test Full
+	 *
+	 * @return void
+	 */
+	public function testModuleUsageFull()
+	{
+		$this->visit('/admin/students')
+			->see('Students listing')
+			->see('Add Student');
 	}
 	
 	/**
