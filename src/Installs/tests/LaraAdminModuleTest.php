@@ -8,6 +8,8 @@ class LaraAdminModuleTest extends TestCase
 {
 	use DatabaseMigrations;
 
+	var $probable_module_id = 9;
+
 	/**
 	 * Basic setup before testing
 	 *
@@ -336,8 +338,23 @@ class LaraAdminModuleTest extends TestCase
 			->check('required')
 			->press('Submit')
 			->see('test_files');
-	}
+		$response = $this->call('GET', '/admin/module_generate_migr_crud/'.$this->probable_module_id);
+		$this->assertEquals(200, $response->status());
+		$this->visit('/admin/modules/'.$this->probable_module_id)
+			->see('Module Generated')
+			->see('Update Module')
+			->see('StudentsController');
 
+		// $response = $this->call('GET', '/admin/students');
+		// $this->assertEquals(200, $response->status());
+		
+		// print_r($response);
+
+		// $this->visit('/admin/students')
+		// 	->see('Students listing')
+		// 	->see('Add Student');
+	}
+	
 	/**
 	 * Test Module Field - Name
 	 *

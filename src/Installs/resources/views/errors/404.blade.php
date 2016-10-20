@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Record not found.</title>
+        <title>Page / Record not found.</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet" type="text/css">
 		<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
@@ -51,7 +51,7 @@
                 @if(isset($record_name) && isset($record_id))
 					<div class="title">{{ $record_name }} with id {{ $record_id }} not found</div>
 				@else
-					<div class="title">Record with not found</div>
+					<div class="title">Page not found</div>
 				@endif
 				
 				@if(Auth::guest())
