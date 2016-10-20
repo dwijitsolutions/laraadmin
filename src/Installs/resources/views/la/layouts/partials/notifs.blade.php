@@ -125,7 +125,7 @@
 							@role("SUPER_ADMIN")
 							<li class="user-body">
 								<div class="col-xs-6 text-center mb10">
-									<a href="{{ url(config('laraadmin.adminRoute') . '/laeditor') }}"><i class="fa fa-code"></i> <span>Editor</span></a>
+									<a href="{{ url(config('laraadmin.adminRoute') . '/lacodeeditor') }}"><i class="fa fa-code"></i> <span>Editor</span></a>
 								</div>
 								<div class="col-xs-6 text-center mb10">
 									<a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}"><i class="fa fa-cubes"></i> <span>Modules</span></a>

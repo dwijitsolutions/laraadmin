@@ -26,10 +26,14 @@ Route::group([
 	Route::post(config('laraadmin.adminRoute') . '/get_module_files/{module_id}', 'ModuleController@get_module_files');
 	
 	/* ================== Code Editor ================== */
-	Route::get(config('laraadmin.adminRoute') . '/laeditor', 'CodeEditorController@index');
-	Route::any(config('laraadmin.adminRoute') . '/laeditor_get_dir', 'CodeEditorController@get_dir');
-	Route::post(config('laraadmin.adminRoute') . '/laeditor_get_file', 'CodeEditorController@get_file');
-	Route::post(config('laraadmin.adminRoute') . '/laeditor_save_file', 'CodeEditorController@save_file');
+	Route::get(config('laraadmin.adminRoute') . '/lacodeeditor', function () {
+		if(file_exists(resource_path("views/la/editor/index.blade.php"))) {
+			return redirect(config('laraadmin.adminRoute') . '/laeditor');
+		} else {
+			// show install code editor page
+			return View('la.editor.install');
+		}
+	});
 
 	/* ================== Menu Editor ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/la_menus', 'MenuController');
