@@ -50,7 +50,8 @@ class LAInstall extends Command
 			
 			$this->info('from: '.$from." to: ".$to);
 			
-			if ($this->confirm("Do you wish to set your DB config in the .env file ?", true)) {
+			$this->line("\nDB Assistant:");
+			if ($this->confirm("Want to set your Database config in the .env file ?", true)) {
 				$this->line("DB Assistant Initiated....");
 				$db_data = array();
 				$envfile =  $this->openFile('.env');
@@ -98,7 +99,7 @@ class LAInstall extends Command
 
 				// $this->line(env('DB_USERNAME'));
 				
-				$this->line("\n".'Run "php artisan la:install" again for db-config to take effect.'."\n");
+				$this->line("\n".'Run "php artisan la:install" again for database config to take effect.'."\n");
 				return;
 			}
 			
@@ -152,7 +153,8 @@ class LAInstall extends Command
 					}
 				}
 				
-				//Custom Admin Route
+				// Custom Admin Route
+				/*
 				$this->line("\nDefault admin url route is /admin");
 				if ($this->confirm('Would you like to customize this url ?', false)) {
 					$custom_admin_route = $this->ask('Custom admin route:', 'admin');
@@ -162,7 +164,8 @@ class LAInstall extends Command
 					file_put_contents($to."/config/laraadmin.php", $laconfigfile);
 					config(['laraadmin.adminRoute' => $custom_admin_route]);
 				}
-				
+				*/
+
 				// Generate Uploads / Thumbnails folders in /storage
 				$this->line('Generating Uploads / Thumbnails folders...');
 				if(!file_exists($to."/storage/uploads")) {
@@ -209,7 +212,15 @@ class LAInstall extends Command
 				$this->line('Running migrations...');
 				$this->call('clear-compiled');
 				$this->call('cache:clear');
-				$this->info(exec('composer dump-autoload'));
+				$composer_path = "composer";
+				if(PHP_OS == "Darwin") {
+					$composer_path = "/usr/bin/composer.phar";
+				} else if(PHP_OS == "Linux") {
+					$composer_path = "/usr/bin/composer";
+				} else if(PHP_OS == "Windows") {
+					$composer_path = "composer";
+				}
+				$this->info(exec($composer_path.' dump-autoload'));
 				
 				$this->call('migrate:refresh');
 				// $this->call('migrate:refresh', ['--seed']);
@@ -305,7 +316,7 @@ class LAInstall extends Command
 				$this->info("You can now login from yourdomain.com/".config('laraadmin.adminRoute')." !!!\n");
 				
 			} else {
-				$this->error("Installation aborted. Please try again after backup. Thank you...");
+				$this->error("Installation aborted. Please try again after backup / git. Thank you...");
 			}
 		} catch (Exception $e) {
 			$msg = $e->getMessage();
