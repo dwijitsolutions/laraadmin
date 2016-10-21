@@ -56,12 +56,18 @@ class LAInstall extends Command
 				$envfile =  $this->openFile('.env');
 				
 				if(LAHelper::laravel_ver() == 5.3) {
-					$db_data['dbhost'] = $this->ask('Database Host', 'localhost');
+					$db_data['dbhost'] = $this->ask('Database Host', '127.0.0.1');
 					$db_data['dbport'] = $this->ask('Database Port', '3306');
 				}
 				$db_data['db'] = $this->ask('Database Name', 'laraadmin1');
 				$db_data['dbuser'] = $this->ask('Database User', 'root');
-				$db_data['dbpass'] = $this->ask('Database Password', '');
+				$dbpass = $this->ask('Database Password', false);
+
+				if($dbpass !== FALSE) {
+					$db_data['dbpass'] = $dbpass;
+				} else {
+					$db_data['dbpass'] = "";
+				}
 				
 				if(LAHelper::laravel_ver() == 5.3) {
 					$dbhostline = LAHelper::getLineWithString('.env','DB_HOST=');					
@@ -88,9 +94,9 @@ class LAInstall extends Command
 				config(['env.DB_PASSWORD' => $db_data['dbpass']]);
 				*/
 
-				config(['env.DB_USERNAME' => $db_data['dbuser']]);
+				// config(['env.DB_USERNAME' => $db_data['dbuser']]);
 
-				$this->line(env('DB_USERNAME'));
+				// $this->line(env('DB_USERNAME'));
 				
 				$this->line("\n".'Run "php artisan la:install" again for db-config to take effect.'."\n");
 				return;
