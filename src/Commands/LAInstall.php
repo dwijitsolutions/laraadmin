@@ -156,7 +156,13 @@ class LAInstall extends Command
 					mkdir($to."/app/Models");
 				}
 				foreach($this->modelsInstalled as $model) {
-					if($model == "User" || $model == "Role" || $model == "Permission") {
+					if($model == "User") {
+						if(LAHelper::laravel_ver() == 5.3) {
+							$this->copyFile($from."/app/Models/".$model."5.3.php", $to."/app/".$model.".php");
+						} else {
+							$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
+						}
+					} else if($model == "Role" || $model == "Permission") {
 						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/".$model.".php");
 					} else {
 						$this->copyFile($from."/app/Models/".$model.".php", $to."/app/Models/".$model.".php");
