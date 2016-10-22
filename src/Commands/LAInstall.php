@@ -143,6 +143,11 @@ class LAInstall extends Command
 					$this->copyFile($from."/app/Controllers/Controller.php", $to."/app/Http/Controllers/Controller.php");
 				}
 				$this->copyFile($from."/app/Controllers/HomeController.php", $to."/app/Http/Controllers/HomeController.php");
+
+				// Middleware
+				if(LAHelper::laravel_ver() == 5.3) {
+					$this->copyFile($from."/app/Middleware/RedirectIfAuthenticated.php", $to."/app/Http/Middleware/RedirectIfAuthenticated.php");
+				}
 				
 				
 				// Config
