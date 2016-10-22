@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class User extends Model implements AuthorizableContract, CanResetPasswordContract
+class User extends Authenticatable implements AuthorizableContract, CanResetPasswordContract
 {
     use Notifiable;
     use CanResetPassword;
