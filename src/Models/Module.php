@@ -11,7 +11,7 @@ use DB;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
 class Module extends Model
-{   
+{
 	protected $table = 'modules';
 	
 	protected $fillable = [
@@ -1184,6 +1184,8 @@ class Module extends Model
 	public static function setDefaultRoleAccess($module_id, $role_id, $access_type = "readonly") {
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
+		
+		Log::debug('Module:setDefaultRoleAccess ('.$module_id.', '.$role_id.', '.$access_type.')');
 		
 		$role = DB::table('roles')->where('id', $role_id)->first();
 		
