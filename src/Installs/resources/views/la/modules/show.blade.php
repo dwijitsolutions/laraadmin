@@ -44,6 +44,7 @@ use Dwij\Laraadmin\Models\Module;
 			@if($module->view_col != "")
 				@if(isset($module->is_gen) && $module->is_gen)
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_update" href="#"><i class="fa fa-refresh"></i> Update Module</a></div>
+					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="update_migr" href="#"><i class="fa fa-database"></i> Update Migration</a></div>
 				@else
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration + CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD</a></div>
 					
@@ -472,6 +473,23 @@ $(function () {
     $("#sortable_module_fields").disableSelection();	
 	
 	$("#generate_migr").on("click", function() {
+		var $fa = $(this).find("i");
+		$fa.removeClass("fa-database");
+		$fa.addClass("fa-refresh");
+		$fa.addClass("fa-spin");
+		$.ajax({
+			url: "{{ url(config('laraadmin.adminRoute') . '/module_generate_migr') }}/"+{{ $module->id }},
+			method: 'GET',
+			success: function( data ) {
+				$fa.removeClass("fa-refresh");
+				$fa.removeClass("fa-spin");
+				$fa.addClass("fa-check");
+				console.log(data);
+				location.reload();
+			}
+		});
+	});
+	$("#update_migr").on("click", function() {
 		var $fa = $(this).find("i");
 		$fa.removeClass("fa-database");
 		$fa.addClass("fa-refresh");
