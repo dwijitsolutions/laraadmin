@@ -273,10 +273,13 @@ use Dwij\Laraadmin\Models\Module;
 						</div>
 					</div>	
 					
-					<div class="form-group">
-						<label for="defaultvalue">Default Value :</label>
-						{{ Form::text("defaultvalue", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+					<div id="default_val">
+						<div class="form-group">
+							<label for="defaultvalue">Default Value :</label>
+							{{ Form::text("defaultvalue", null, ['class'=>'form-control', 'placeholder'=>'Default Value']) }}
+						</div>
 					</div>
+
 					<div id="length_div">
 						<div class="form-group">
 							<label for="minlength">Minimum :</label>
@@ -423,6 +426,11 @@ $(function () {
 		$('#unique_val').removeClass("hide");
 		if(ft_val == 1 || ft_val == 2 || ft_val == 3 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 20 || ft_val == 21 || ft_val == 24 ) {
 			$('#unique_val').addClass("hide");
+		}
+
+		$('#default_val').removeClass("hide");
+		if(ft_val == 11) {
+			$('#default_val').addClass("hide");
 		}
 	}
 
