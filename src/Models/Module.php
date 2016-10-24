@@ -417,7 +417,7 @@ class Module extends Model
 				if($field->defaultvalue != "") {
 					$var->default($field->defaultvalue);
 				} else if($field->required) {
-					$var->default("");
+					$var->default(" ");
 				}
 				break;
 			case 'Image':
