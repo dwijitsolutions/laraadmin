@@ -37,6 +37,14 @@ class LAHelper
 					$tables[] = $table->tbl_name;
 				}
 			}
+		} else if(env('DB_CONNECTION') == "pgsql") {
+			$tables_pgsql = DB::select("SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema = 'public' ORDER BY table_name;");
+			$tables = array();
+			foreach ($tables_pgsql as $table) {
+				$tables[] = $table->table_name;
+			}
+		} else if(env('DB_CONNECTION') == "mysql") {
+			$tables = DB::select('SHOW TABLES');
 		} else {
 			$tables = DB::select('SHOW TABLES');
 		}
