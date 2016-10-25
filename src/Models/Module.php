@@ -410,9 +410,14 @@ class Module extends Model
 				break;
 			case 'HTML':
 				if($update) {
-					$var = $table->longText($field->colname)->change();
+					$var = $table->string($field->colname, 10000)->change();
 				} else {
-					$var = $table->longText($field->colname);
+					$var = $table->string($field->colname, 10000);
+				}
+				if($field->defaultvalue != null) {
+					$var->default($field->defaultvalue);
+				} else if($field->required) {
+					$var->default("");
 				}
 				break;
 			case 'Image':
