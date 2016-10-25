@@ -54,7 +54,6 @@ class LAInstall extends Command
 			if ($this->confirm("Want to set your Database config in the .env file ?", true)) {
 				$this->line("DB Assistant Initiated....");
 				$db_data = array();
-				$envfile =  $this->openFile('.env');
 				
 				if(LAHelper::laravel_ver() == 5.3) {
 					$db_data['dbhost'] = $this->ask('Database Host', '127.0.0.1');
@@ -69,51 +68,27 @@ class LAInstall extends Command
 				} else {
 					$db_data['dbpass'] = "";
 				}
+
+				$default_db_conn = env('DB_CONNECTION', 'mysql');
 				
 				if(LAHelper::laravel_ver() == 5.3) {
-					$dbhostline = LAHelper::getLineWithString('.env','DB_HOST=');					
-					$dbportline = LAHelper::getLineWithString('.env','DB_PORT=');
-					$envfile = str_replace($dbhostline, "DB_HOST=".$db_data['dbhost']."\n",$envfile);
-					$envfile = str_replace($dbportline, "DB_PORT=".$db_data['dbport']."\n",$envfile);
-					config(['env.DB_PORT' => $db_data['dbport']]);
+					config(['database.connections.'.$default_db_conn.'.host' => $db_data['host']]);
+					config(['database.connections.'.$default_db_conn.'.port' => $db_data['port']]);
+					LAHelper::setenv("DB_HOST", $db_data['host']);
+					LAHelper::setenv("DB_PORT", $db_data['port']);
 				}
-				$dbline = LAHelper::getLineWithString('.env', 'DB_DATABASE=');
-				$dbuserline = LAHelper::getLineWithString('.env', 'DB_USERNAME=');
-				$dbpassline = LAHelper::getLineWithString('.env', 'DB_PASSWORD=', false);
-				$envfile = str_replace($dbline, "DB_DATABASE=".$db_data['db']."\n",$envfile);
-				$envfile = str_replace($dbuserline, "DB_USERNAME=".$db_data['dbuser']."\n",$envfile);
-				$envfile = str_replace($dbpassline, "DB_PASSWORD=".$db_data['dbpass']."\n",$envfile);
-
-				file_put_contents('.env', $envfile);
 				
-				/*
-				// runtime database setting
-				// @slozano95 Trying to set enviromental variables at runtime, will check that later 
-				config(['env.DB_HOST' => $db_data['dbhost']]);
-				config(['env.DB_DATABASE' => $db_data['db']]);
-				config(['env.DB_USERNAME' => $db_data['dbuser']]);
-				config(['env.DB_PASSWORD' => $db_data['dbpass']]);
-				*/
-
-				// config(['env.DB_USERNAME' => $db_data['dbuser']]);
-
-				// $this->line(env('DB_USERNAME'));
-				
-				$this->line("\n".'Run "php artisan la:install" again for database config to take effect.'."\n");
-				return;
+				config(['database.connections.'.$default_db_conn.'.database' => $db_data['db']]);
+				config(['database.connections.'.$default_db_conn.'.username' => $db_data['dbuser']]);
+				config(['database.connections.'.$default_db_conn.'.password' => $db_data['dbpass']]);
+				LAHelper::setenv("DB_DATABASE", $db_data['db']);
+				LAHelper::setenv("DB_USERNAME", $db_data['dbuser']);
+				LAHelper::setenv("DB_PASSWORD", $db_data['dbpass']);
 			}
 			
-			if ($this->confirm("LaraAdmin requires 'CACHE_DRIVER' to be an 'array', Set it in .env ?", true)) {
-				$envfile =  $this->openFile('.env');
-				$cachedriverline = LAHelper::getLineWithString('.env','CACHE_DRIVER=');
-				$envfile = str_replace($cachedriverline, "CACHE_DRIVER=array\n",$envfile);
-				file_put_contents('.env', $envfile);
-				
-				/*
-				// runtime setting
-				// @slozano95 Trying to set enviromental variables at runtime, will check that later 
-				config(['env.CACHE_DRIVER' => 'array']);
-				*/
+			if(env('CACHE_DRIVER') != "array") {
+				config(['cache.default' => 'array']);
+				LAHelper::setenv("CACHE_DRIVER", "array");
 			}
 			
 			if ($this->confirm("This process may change/append to the following of your existing project files:"
@@ -226,7 +201,7 @@ class LAInstall extends Command
 				$this->copyFolder($from."/resources/views", $to."/resources/views");
 				
 				// Checking database
-				$this->line('Checking database...');
+				$this->line('Checking database connectivity...');
 				DB::connection()->reconnect();
 
 				// Running migrations...
