@@ -374,4 +374,21 @@ class LAHelper
 		}
 		return -1;
 	}
+
+	// LAHelper::setenv("CACHE_DRIVER", "array");
+	public static function setenv($param, $value) {
+
+		$envfile = LAHelper::openFile('.env');
+		$line = LAHelper::getLineWithString('.env', $param.'=');
+		$envfile = str_replace($line, $param . "=" . $value."\n", $envfile);
+		file_put_contents('.env', $envfile);
+
+		$_ENV[$param] = $value;
+		putenv($param . "=" . $value);
+	}
+
+	public static function openFile($from) {
+		$md = file_get_contents($from);
+		return $md;
+	}
 }
