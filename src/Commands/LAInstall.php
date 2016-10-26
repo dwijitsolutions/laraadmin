@@ -56,8 +56,8 @@ class LAInstall extends Command
 				$db_data = array();
 				
 				if(LAHelper::laravel_ver() == 5.3) {
-					$db_data['dbhost'] = $this->ask('Database Host', '127.0.0.1');
-					$db_data['dbport'] = $this->ask('Database Port', '3306');
+					$db_data['host'] = $this->ask('Database Host', '127.0.0.1');
+					$db_data['port'] = $this->ask('Database Port', '3306');
 				}
 				$db_data['db'] = $this->ask('Database Name', 'laraadmin1');
 				$db_data['dbuser'] = $this->ask('Database User', 'root');
