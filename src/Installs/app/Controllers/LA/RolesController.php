@@ -199,7 +199,7 @@ class RolesController extends Controller
 			$request->name = str_replace(" ", "_", strtoupper(trim($request->name)));
 			
 			if($request->name == "SUPER_ADMIN") {
-				$request->parent = 0;
+				$request->parent = 1;
 			}
 			
 			$insert_id = Module::updateRow("Roles", $request, $id);

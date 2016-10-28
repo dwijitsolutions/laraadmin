@@ -288,9 +288,9 @@ class Module extends Model
 				if($field->popup_vals == "") {
 					if(is_int($field->defaultvalue)) {
 						if($update) {
-							$var = $table->integer($field->colname)->unsigned()->change();
+							$var = $table->integer($field->colname)->unsigned()->nullable()->change();
 						} else {
-							$var = $table->integer($field->colname)->unsigned();
+							$var = $table->integer($field->colname)->unsigned()->nullable();
 						}
 						$var->default($field->defaultvalue);
 						break;
@@ -308,22 +308,22 @@ class Module extends Model
 				if(starts_with($field->popup_vals, "@")) {
 					$foreign_table_name = str_replace("@", "", $field->popup_vals);
 					if($update) {
-						$var = $table->integer($field->colname)->unsigned()->change();
+						$var = $table->integer($field->colname)->nullable()->unsigned()->change();
 						if($field->defaultvalue == "" || $field->defaultvalue == "0") {
 							$var->default(1);
 						} else {
 							$var->default($field->defaultvalue);
 						}
 						$table->dropForeign($field->module_obj->name_db."_".$field->colname."_foreign");
-						$table->foreign($field->colname)->references('id')->on($foreign_table_name);
+						$table->foreign($field->colname)->references('id')->on($foreign_table_name)->onUpdate('cascade')->onDelete('cascade');
 					} else {
-						$var = $table->integer($field->colname)->unsigned();
+						$var = $table->integer($field->colname)->nullable()->unsigned();
 						if($field->defaultvalue == "" || $field->defaultvalue == "0") {
 							$var->default(1);
 						} else {
 							$var->default($field->defaultvalue);
 						}
-						$table->foreign($field->colname)->references('id')->on($foreign_table_name);
+						$table->foreign($field->colname)->references('id')->on($foreign_table_name)->onUpdate('cascade')->onDelete('cascade');
 					}
 				} else if(is_array($popup_vals)) {
 					if($update) {
