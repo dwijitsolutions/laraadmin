@@ -391,4 +391,18 @@ class LAHelper
 		$md = file_get_contents($from);
 		return $md;
 	}
+
+	// LAHelper::get_migration_file("students_table");
+	public static function get_migration_file($file_name) {
+		$mfiles = scandir(base_path('database/migrations/'));
+        foreach ($mfiles as $mfile) {
+            if(str_contains($mfile, $file_name)) {
+                $mgr_file = base_path('database/migrations/'.$mfile);
+                if(file_exists($mgr_file)) {
+                    return 'database/migrations/'.$mfile;
+                }
+            }
+        }
+		return "";
+	}
 }
