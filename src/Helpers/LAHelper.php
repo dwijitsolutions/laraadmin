@@ -396,6 +396,13 @@ class LAHelper
 		return $md;
 	}
 
+	// LAHelper::deleteFile();
+	public static function deleteFile($file_path) {
+		if(file_exists($file_path)) {
+			unlink($file_path);
+		}
+	}
+
 	// LAHelper::get_migration_file("students_table");
 	public static function get_migration_file($file_name) {
 		$mfiles = scandir(base_path('database/migrations/'));
