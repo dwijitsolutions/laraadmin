@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://laraadmin.com/img/favicon/android-chrome-96x96.png">
+  <img src="http://laraadmin.com/img/laraadmin-256.png">
   <h1 align="center" style="margin-top:5px;">LaraAdmin 1.0</h1>
 </p>
 
