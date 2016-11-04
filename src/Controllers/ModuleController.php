@@ -219,6 +219,10 @@ class ModuleController extends Controller
 		// Give Default Full Access to Super Admin
 		$role = Role::where("name", "SUPER_ADMIN")->first();
 		Module::setDefaultRoleAccess($module->id, $role->id, "full");
+
+		return response()->json([
+			'status' => 'success'
+		]);
 	}
 	
 	/**
@@ -232,6 +236,10 @@ class ModuleController extends Controller
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
 		CodeGenerator::generateMigration($module->name_db, true);
+
+		return response()->json([
+			'status' => 'success'
+		]);
 	}
 
 	/**
@@ -266,6 +274,10 @@ class ModuleController extends Controller
 		// Give Default Full Access to Super Admin
 		$role = Role::where("name", "SUPER_ADMIN")->first();
 		Module::setDefaultRoleAccess($module->id, $role->id, "full");
+
+		return response()->json([
+			'status' => 'success'
+		]);
 	}
 /**
 	 * Generate Modules Update(migrations and crud) not routes
@@ -293,6 +305,10 @@ class ModuleController extends Controller
 		$module = Module::find($module_id);
 		$module->is_gen='1';
 		$module->save();
+
+		return response()->json([
+			'status' => 'success'
+		]);
 	}
 	
 	/**

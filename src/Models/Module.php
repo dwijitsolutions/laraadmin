@@ -188,8 +188,8 @@ class Module extends Model
 		} else {
 			$defval = $field->defaultvalue;
 		}
-		Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
-				." - ".$defval." - ".$field->maxlength);
+		// Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
+				// ." - ".$defval." - ".$field->maxlength);
 		
 		switch ($field->field_type) {
 			case 'Address':
@@ -1185,7 +1185,7 @@ class Module extends Model
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
 		
-		Log::debug('Module:setDefaultRoleAccess ('.$module_id.', '.$role_id.', '.$access_type.')');
+		// Log::debug('Module:setDefaultRoleAccess ('.$module_id.', '.$role_id.', '.$access_type.')');
 		
 		$role = DB::table('roles')->where('id', $role_id)->first();
 		

@@ -54,21 +54,25 @@ class LAHelper
 			$table = (Array)$table;
 			$tables_out[] = array_values($table)[0];
 		}
-		$remove_tables2 = array(
-			'backups',
-			'la_configs',
-			'la_menus',
-			'migrations',
-			'modules',
-			'module_fields',
-			'module_field_types',
-			'password_resets',
-			'permissions',
-			'permission_role',
-			'role_module',
-			'role_module_fields',
-			'role_user'
-		);
+		if(in_array(-1, $remove_tables)) {
+			$remove_tables2 = array();
+		} else {
+			$remove_tables2 = array(
+				'backups',
+				'la_configs',
+				'la_menus',
+				'migrations',
+				'modules',
+				'module_fields',
+				'module_field_types',
+				'password_resets',
+				'permissions',
+				'permission_role',
+				'role_module',
+				'role_module_fields',
+				'role_user'
+			);
+		}
 		$remove_tables = array_merge($remove_tables, $remove_tables2);
 		$remove_tables = array_unique($remove_tables);
 		$tables_out = array_diff($tables_out, $remove_tables);
@@ -390,5 +394,26 @@ class LAHelper
 	public static function openFile($from) {
 		$md = file_get_contents($from);
 		return $md;
+	}
+
+	// LAHelper::deleteFile();
+	public static function deleteFile($file_path) {
+		if(file_exists($file_path)) {
+			unlink($file_path);
+		}
+	}
+
+	// LAHelper::get_migration_file("students_table");
+	public static function get_migration_file($file_name) {
+		$mfiles = scandir(base_path('database/migrations/'));
+        foreach ($mfiles as $mfile) {
+            if(str_contains($mfile, $file_name)) {
+                $mgr_file = base_path('database/migrations/'.$mfile);
+                if(file_exists($mgr_file)) {
+                    return 'database/migrations/'.$mfile;
+                }
+            }
+        }
+		return "";
 	}
 }

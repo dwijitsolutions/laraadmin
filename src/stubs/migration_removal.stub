@@ -19,11 +19,11 @@ class __migration_class_name__ extends Migration
         // This Module has been deleted.
         // You can remove this file after migrate:reset
         
-		if (Schema::hasTable('__db_table_name__')) {
+        if (Schema::hasTable('__db_table_name__')) {
             Schema::drop('__db_table_name__');
         }
     }
-
+    
     /**
      * Reverse the migrations.
      *
