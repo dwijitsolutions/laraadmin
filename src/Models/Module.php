@@ -246,14 +246,19 @@ class Module extends Model
 				break;
 			case 'Date':
 				if($update) {
-					$var = $table->date($field->colname)->change();
+					$var = $table->date($field->colname)->nullable()->change();
 				} else {
-					$var = $table->date($field->colname);
+					$var = $table->date($field->colname)->nullable();
 				}
-				if($field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
-					$var->default($field->defaultvalue);
+
+				if($field->defaultvalue == NULL || $field->defaultvalue == "" || $field->defaultvalue == "NULL") {
+					$var->default(NULL);
+				} else if($field->defaultvalue == "now()") {
+					$var->default(NULL);
 				} else if($field->required) {
 					$var->default("1970-01-01");
+				} else {
+					$var->default($field->defaultvalue);
 				}
 				break;
 			case 'Datetime':
@@ -262,13 +267,17 @@ class Module extends Model
 					// Error Unknown column type "timestamp" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType()
 					// $var = $table->timestamp($field->colname)->change();
 				} else {
-					$var = $table->timestamp($field->colname);
+					$var = $table->timestamp($field->colname)->nullableTimestamps();
 				}
 				// $table->timestamp('created_at')->useCurrent();
-				if(isset($var) && $field->defaultvalue != "" && !starts_with($field->defaultvalue, "date")) {
-					$var->default($field->defaultvalue);
+				if($field->defaultvalue == NULL || $field->defaultvalue == "" || $field->defaultvalue == "NULL") {
+					$var->default(NULL);
+				} else if($field->defaultvalue == "now()") {
+					$var->default(DB::raw('CURRENT_TIMESTAMP'));
 				} else if($field->required) {
 					$var->default("1970-01-01 01:01:01");
+				} else {
+					$var->default($field->defaultvalue);
 				}
 				break;
 			case 'Decimal':
