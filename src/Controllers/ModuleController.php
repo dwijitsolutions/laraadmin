@@ -183,7 +183,9 @@ class ModuleController extends Controller
 		}
 		
 		// Delete Table
-		Schema::drop($module->name_db);
+		if (Schema::hasTable($module->name_db)) {
+			Schema::drop($module->name_db);
+		}
 		
 		// Delete Module
 		$module->delete();
