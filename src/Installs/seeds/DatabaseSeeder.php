@@ -156,5 +156,8 @@ class DatabaseSeeder extends Seeder
 			$module->is_gen=true;
 			$module->save();	
 		}
+
+		/* ================ Call Other Seeders ================ */
+		
 	}
 }

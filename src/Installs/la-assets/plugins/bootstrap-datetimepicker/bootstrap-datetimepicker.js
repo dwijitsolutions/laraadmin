@@ -2303,7 +2303,7 @@
         } else {
             input = element.find(options.datepickerInput);
             if (input.size() === 0) {
-                input = element.find('input');
+                input = element.find('input[type=text]');
             } else if (!input.is('input')) {
                 throw new Error('CSS class "' + options.datepickerInput + '" cannot be applied to non input element');
             }
@@ -2312,7 +2312,7 @@
         if (element.hasClass('input-group')) {
             // in case there is more then one 'input-group-addon' Issue #48
             if (element.find('.datepickerbutton').size() === 0) {
-                component = element.find('.input-group-addon');
+                component = element.find('.input-group-addon.input_dt');
             } else {
                 component = element.find('.datepickerbutton');
             }

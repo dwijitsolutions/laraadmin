@@ -134,7 +134,11 @@ class LAFormMaker
 						$default_val = $row->$field_name;
 					}
 					$dval = $default_val;
-					if($default_val != "") {
+					$is_null = "";
+					if($default_val == "NULL") {
+						$is_null = " checked";
+						$params['readonly'] = "";
+					} else if($default_val != "") {
 						$dval = date("d/m/Y", strtotime($default_val));
 					}
 					
@@ -143,13 +147,17 @@ class LAFormMaker
 					
 					$out .= "<div class='input-group date'>";
 					$out .= Form::text($field_name, $dval, $params);
-					$out .= "<span class='input-group-addon'><span class='fa fa-calendar'></span></span></div>";
+					$out .= "<span class='input-group-addon input_dt'><span class='fa fa-calendar'></span></span><span class='input-group-addon null_date'><input class='cb_null_date' type='checkbox' name='null_date_".$field_name."' $is_null value='true'> Null ?</span></div>";
 					// $out .= Form::date($field_name, $default_val, $params);
 					break;
 				case 'Datetime':
 					$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 					
-					if($default_val == null) {
+					$is_null = "";
+					if($default_val == "NULL") {
+						$is_null = " checked";
+						$params['readonly'] = "";
+					} else if($default_val == null) {
 						$default_val = $defaultvalue;
 					}
 					// Override the edit value
@@ -164,7 +172,7 @@ class LAFormMaker
 					}
 					$out .= "<div class='input-group datetime'>";
 					$out .= Form::text($field_name, $dval, $params);
-					$out .= "<span class='input-group-addon'><span class='fa fa-calendar'></span></span></div>";
+					$out .= "<span class='input-group-addon input_dt'><span class='fa fa-calendar'></span></span><span class='input-group-addon null_date'><input class='cb_null_date' type='checkbox' name='null_date_".$field_name."' $is_null value='true'> Null ?</span></div>";
 					break;
 				case 'Decimal':
 					$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';

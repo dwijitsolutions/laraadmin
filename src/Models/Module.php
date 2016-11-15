@@ -947,19 +947,28 @@ class Module extends Model
 						}
 						break;
 					case 'Date':
-						if($request->{$field['colname']} != "") {
+						$null_date = $request->{"null_date_".$field['colname']};
+						if(isset($null_date) && $null_date == "true") {
+							$request->{$field['colname']} = NULL;
+						} else if($request->{$field['colname']} != "") {
 							$date = $request->{$field['colname']};
 							$d2 = date_parse_from_format("d/m/Y",$date);
 							$request->{$field['colname']} = date("Y-m-d", strtotime($d2['year']."-".$d2['month']."-".$d2['day']));
+						} else {
+							$request->{$field['colname']} = date("Y-m-d");
 						}
 						$row->{$field['colname']} = $request->{$field['colname']};
 						break;
 					case 'Datetime':
-						#TODO: Bug fix
-						if($request->{$field['colname']} != "") {
+						$null_date = $request->{"null_date_".$field['colname']};
+						if(isset($null_date) && $null_date == "true") {
+							$request->{$field['colname']} = NULL;
+						} else if($request->{$field['colname']} != "") {
 							$date = $request->{$field['colname']};
 							$d2 = date_parse_from_format("d/m/Y h:i A",$date);
 							$request->{$field['colname']} = date("Y-m-d H:i:s", strtotime($d2['year']."-".$d2['month']."-".$d2['day']." ".substr($date, 11)));
+						} else {
+							$request->{$field['colname']} = date("Y-m-d H:i:s");
 						}
 						$row->{$field['colname']} = $request->{$field['colname']};
 						break;
