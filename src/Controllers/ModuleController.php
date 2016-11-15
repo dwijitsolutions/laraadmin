@@ -110,9 +110,22 @@ class ModuleController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request)
 	{
-		//
+		$module = Module::find($request->id);
+        if(isset($module->id))
+		{
+			$module->label = ucfirst($request->label);
+			$module->fa_icon = $request->icon;
+			$module->save();		
+
+			$menu = Menu::where('url', strtolower($module->name))->where('type', 'module')->first();
+			if(isset($menu->id)) {
+				$menu->name = ucfirst($request->label);
+				$menu->icon = $request->icon;
+				$menu->save();
+			}
+		}
 	}
 
 	/**

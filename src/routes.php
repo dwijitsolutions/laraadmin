@@ -24,6 +24,7 @@ Route::group([
 	Route::post(config('laraadmin.adminRoute') . '/check_unique_val/{field_id}', 'FieldController@check_unique_val');
 	Route::get(config('laraadmin.adminRoute') . '/module_fields/{id}/delete', 'FieldController@destroy');
 	Route::post(config('laraadmin.adminRoute') . '/get_module_files/{module_id}', 'ModuleController@get_module_files');
+	Route::post(config('laraadmin.adminRoute'). '/module_update', 'ModuleController@update');
 	
 	/* ================== Code Editor ================== */
 	Route::get(config('laraadmin.adminRoute') . '/lacodeeditor', function () {
