@@ -19,8 +19,9 @@ return [
     | Uploads Configuration
     |--------------------------------------------------------------------------
     |
-    | private_uploads: Show that uploaded file remains private and can be seen by respective owners only
-    | default_uploads_security: public / private
+    | private_uploads: Uploaded file remains private and can be seen by respective owners + Super Admin only
+    | default_public: Will make default uploads public / private
+	| allow_filename_change: allows user to modify filenames after upload. Changes will be only in Database not on actual files.
     | 
     */
     'uploads' => [
