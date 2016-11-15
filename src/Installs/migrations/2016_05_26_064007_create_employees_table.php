@@ -29,9 +29,9 @@ class CreateEmployeesTable extends Migration
             ["city", "City", "String", false, "", 0, 50, false],
             ["address", "Address", "Address", false, "", 0, 1000, false],
             ["about", "About", "String", false, "", 0, 0, false],
-            ["date_birth", "Date of Birth", "Date", false, "1990-01-01", 0, 0, false],
-            ["date_hire", "Hiring Date", "Date", false, "date('Y-m-d')", 0, 0, false],
-            ["date_left", "Resignation Date", "Date", false, "1990-01-01", 0, 0, false],
+            ["date_birth", "Date of Birth", "Date", false, "NULL", 0, 0, false],
+            ["date_hire", "Hiring Date", "Date", false, "NULL", 0, 0, false],
+            ["date_left", "Resignation Date", "Date", false, "NULL", 0, 0, false],
             ["salary_cur", "Current Salary", "Decimal", false, "0.0", 0, 2, false],
         ]);
 		
@@ -44,8 +44,8 @@ class CreateEmployeesTable extends Migration
             ["address",     "Address",      "Address",  false, "",          0,  1000,   true],
             ["restricted",  "Restricted",   "Checkbox", false, false,       0,  0,      false],
             ["price",       "Price",        "Currency", false, 0.0,         0,  0,      true],
-            ["date_release", "Date of Release", "Date", false, "date('Y-m-d')", 0, 0,   false],
-            ["time_started", "Start Time",  "Datetime", false, "date('Y-m-d H:i:s')", 0, 0, false],
+            ["date_release", "Date of Release", "Date", false, "NULL", 0, 0,   false],
+            ["time_started", "Start Time",  "Datetime", false, "NOW()", 0, 0, false],
             ["weight",      "Weight",       "Decimal",  false, 0.0,         0,  20,     true],
             ["publisher",   "Publisher",    "Dropdown", false, "Marvel",    0,  0,      false, ["Bloomsbury","Marvel","Universal"]],
             ["publisher",   "Publisher",    "Dropdown", false, 3,           0,  0,      false, "@publishers"],
