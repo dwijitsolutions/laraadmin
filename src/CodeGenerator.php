@@ -267,6 +267,14 @@ class CodeGenerator
                 if($fileExists) {
 					LAHelper::log("info", "Replacing old migration file: ".$fileExistName, $comm);
                     $migrationFileName = $fileExistName;
+                } else {
+                    // If migration not exists in migrations table
+                    if(\DB::table('migrations')->where('migration', 'like', '%'.$migrationName.'%')->count() == 0) {
+                        \DB::table('migrations')->insert([
+                            'migration' => $migrationFileName,
+                            'batch' => 1
+                        ]);
+                    }
                 }
             } else {
 				LAHelper::log("error", "Module ".$moduleName." doesn't exists; Cannot generate !!!", $comm);
