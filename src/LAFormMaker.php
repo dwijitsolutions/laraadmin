@@ -585,8 +585,12 @@ class LAFormMaker
 			} else {
 				// Search Table if no module found
 				if (Schema::hasTable($table_name)) {
-					$model = "App\\".ucfirst(str_singular($table_name));
-					$result = $model::all();
+					if(file_exists(resource_path('app/Models/'.ucfirst(str_singular($table_name).".php")))) {
+						$model = "App\\Models\\".ucfirst(str_singular($table_name));
+						$result = $model::all();
+					} else {
+						$result = \DB::table($table_name)->get();
+					}
 					// find view column name
 					$view_col = "";
 					// Check if atleast one record exists
