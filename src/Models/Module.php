@@ -348,9 +348,9 @@ class Module extends Model
 				} else if(is_object($popup_vals)) {
 					// ############### Remaining
 					if($update) {
-						$var = $table->integer($field->colname)->unsigned()->change();
+						$var = $table->integer($field->colname)->nullable()->unsigned()->change();
 					} else {
-						$var = $table->integer($field->colname)->unsigned();
+						$var = $table->integer($field->colname)->nullable()->unsigned();
 					}
 					// if(is_int($field->defaultvalue)) {
 					//     $var->default($field->defaultvalue);
@@ -935,7 +935,7 @@ class Module extends Model
 		$ftypes = ModuleFieldTypes::getFTypes2();
 
 		foreach ($module->fields as $field) {
-			if(isset($request->{$field['colname']}) || isset($request->{$field['colname']."_hidden"})) {
+			if(isset($request->{$field['colname']}) || isset($request->{$field['colname']."_hidden"}) || isset($request->{"null_dd_".$field['colname']})) {
 				
 				switch ($ftypes[$field['field_type']]) {
 					case 'Checkbox':
@@ -969,6 +969,17 @@ class Module extends Model
 							$request->{$field['colname']} = date("Y-m-d H:i:s", strtotime($d2['year']."-".$d2['month']."-".$d2['day']." ".substr($date, 11)));
 						} else {
 							$request->{$field['colname']} = date("Y-m-d H:i:s");
+						}
+						$row->{$field['colname']} = $request->{$field['colname']};
+						break;
+					case 'Dropdown':
+						$null_dd = $request->{"null_dd_".$field['colname']};
+						if(isset($null_dd) && $null_dd == "true") {
+							if(starts_with($field['popup_vals'], "@")) {
+								$request->{$field['colname']} = DB::raw('NULL');
+							} else if(starts_with($field['popup_vals'], "[")) {
+								$request->{$field['colname']} = "";
+							}
 						}
 						$row->{$field['colname']} = $request->{$field['colname']};
 						break;
