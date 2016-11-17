@@ -203,6 +203,9 @@ class LAFormMaker
 					// Override the edit value
 					if(isset($row)) {
 						$default_val = $row->$field_name;
+					} else if($default_val == "" || $default_val == NULL || $default_val == "NULL") {
+						// When Adding Record if we dont have default value let's not show NULL By Default
+						$default_val = "0";
 					}
 
 					$is_null = "";
@@ -219,8 +222,8 @@ class LAFormMaker
 					}
 					
 					if(!$required) {
-						$out .= "<span class='row'><span class='col-md-10 p0'>".Form::select($field_name, $popup_vals, $default_val, $params)."</span>";
-						$out .= "<span class='checkbox col-md-2 m0 p0'><label class='pt5 null_dd'><input class='cb_null_dd' type='checkbox' name='null_dd_".$field_name."' $is_null value='true'> Null ?</label></span>";
+						$out .= "<span class='row'><span class='col-md-10 col-sm-8 col-xs-6 p0'>".Form::select($field_name, $popup_vals, $default_val, $params)."</span>";
+						$out .= "<span class='checkbox col-md-2 col-sm-4 col-xs-6 m0 p0'><label class='pt5 null_dd'><input class='cb_null_dd' type='checkbox' name='null_dd_".$field_name."' $is_null value='true'> Null ?</label></span>";
 						$out .= "</span>";
 					} else {
 						$out .= Form::select($field_name, $popup_vals, $default_val, $params);
@@ -666,7 +669,7 @@ class LAFormMaker
 	**/
 	public static function display($module, $field_name, $class = 'form-control')
 	{
-		// Check Field View Aceess
+		// Check Field View Access
 		if(Module::hasFieldAccess($module->id, $module->fields[$field_name]['id'], $access_type = "view")) {
 			
 			$fieldObj = $module->fields[$field_name];

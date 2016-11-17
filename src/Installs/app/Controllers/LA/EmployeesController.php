@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller genrated using LaraAdmin
+ * Controller generated using LaraAdmin
  * Help: http://laraadmin.com
  */
 
