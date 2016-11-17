@@ -63,7 +63,7 @@ class CreateEmployeesTable extends Migration
             ["password",    "Password",     "Password", false, "",          6,  250,    true],
             ["status",      "Status",       "Radio",    false, "Published", 0,  0,      false, ["Draft","Published","Unpublished"]],
             ["author",      "Author",       "String",   false, "JRR Tolkien", 0, 250,   true],
-            ["genre",       "Genre",        "Taginput", false, ["Fantacy","Adventure"], 0, 0, false],
+            ["genre",       "Genre",        "Taginput", false, ["Fantasy","Adventure"], 0, 0, false],
             ["description", "Description",  "Textarea", false, "",          0,  1000,   false],
             ["short_intro", "Introduction", "TextField",false, "",          5,  250,    true],
             ["website",     "Website",      "URL",      false, "http://dwij.in", 0, 0,  false],
