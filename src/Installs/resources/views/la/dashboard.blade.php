@@ -2,7 +2,7 @@
 
 @section('htmlheader_title') Dashboard @endsection
 @section('contentheader_title') Dashboard @endsection
-@section('contentheader_description') Organisation Overview @endsection
+@section('contentheader_description') Organization Overview @endsection
 
 @section('main-content')
 <!-- Main content -->
