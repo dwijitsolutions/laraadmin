@@ -1,6 +1,6 @@
 <?php
 /**
- * Config genrated using LaraAdmin
+ * Config generated using LaraAdmin
  * Help: http://laraadmin.com
  */
 

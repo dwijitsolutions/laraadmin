@@ -666,7 +666,7 @@ class LAFormMaker
 	**/
 	public static function display($module, $field_name, $class = 'form-control')
 	{
-		// Check Field View Aceess
+		// Check Field View Access
 		if(Module::hasFieldAccess($module->id, $module->fields[$field_name]['id'], $access_type = "view")) {
 			
 			$fieldObj = $module->fields[$field_name];
