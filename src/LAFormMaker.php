@@ -222,8 +222,8 @@ class LAFormMaker
 					}
 					
 					if(!$required) {
-						$out .= "<span class='row'><span class='col-md-10 p0'>".Form::select($field_name, $popup_vals, $default_val, $params)."</span>";
-						$out .= "<span class='checkbox col-md-2 m0 p0'><label class='pt5 null_dd'><input class='cb_null_dd' type='checkbox' name='null_dd_".$field_name."' $is_null value='true'> Null ?</label></span>";
+						$out .= "<span class='row'><span class='col-md-10 col-sm-8 col-xs-6 p0'>".Form::select($field_name, $popup_vals, $default_val, $params)."</span>";
+						$out .= "<span class='checkbox col-md-2 col-sm-4 col-xs-6 m0 p0'><label class='pt5 null_dd'><input class='cb_null_dd' type='checkbox' name='null_dd_".$field_name."' $is_null value='true'> Null ?</label></span>";
 						$out .= "</span>";
 					} else {
 						$out .= Form::select($field_name, $popup_vals, $default_val, $params);
