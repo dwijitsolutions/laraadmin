@@ -99,7 +99,7 @@ use Dwij\Laraadmin\Models\Module;
 							<th>Min</th>
 							<th>Max</th>
 							<th>Required</th>
-							<th>Values</th>
+							<th style="max-width:300px;">Values</th>
 							<th><i class="fa fa-cogs"></i></th>
 						</tr>
 						</thead>
