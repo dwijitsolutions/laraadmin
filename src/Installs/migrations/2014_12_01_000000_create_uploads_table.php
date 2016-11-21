@@ -27,7 +27,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 5,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "path",
                 "label" => "Path",
@@ -37,7 +37,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "extension",
                 "label" => "Extension",
@@ -47,7 +47,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 20,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "caption",
                 "label" => "Caption",
@@ -57,7 +57,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "user_id",
                 "label" => "Owner",
@@ -67,7 +67,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true,
+                "listing_col" => true,
                 "popup_vals" => "@users",
             ], [
                 "colname" => "hash",
@@ -78,7 +78,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "public",
                 "label" => "Is Public",
@@ -88,7 +88,7 @@ class CreateUploadsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ]
         ]);
         
@@ -105,7 +105,7 @@ class CreateUploadsTable extends Migration
             "minlength" => 5,
             "maxlength" => 100,
             "required" => true,
-            "browse" => true,
+            "listing_col" => true,
             "popup_vals" => ["Employee", "Client"]
         ]
         # Format Details: Check http://laraadmin.com/docs/migrations_cruds#schema-ui-types
@@ -117,7 +117,7 @@ class CreateUploadsTable extends Migration
         minlength: Minimum Length of value in integer.
         maxlength: Maximum Length of value in integer.
         required: Is this mandatory field in Add / Edit forms. Value in true / false
-        browse: Is allowed to show in index page datatable.
+        listing_col: Is allowed to show in index page datatable.
         popup_vals: These are values for MultiSelect, TagInput and Radio Columns. Either connecting @tables or to list []
         */
     }

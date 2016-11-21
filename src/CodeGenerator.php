@@ -241,9 +241,9 @@ class CodeGenerator
                     if($field['required']) {
                         $required = "true";
                     }
-					$browse = "false";
-                    if($field['browse']) {
-                        $browse = "true";
+					$listing_col = "false";
+                    if($field['listing_col']) {
+                        $listing_col = "true";
                     }
                     $values = "";
                     if($field['popup_vals'] != "") {
@@ -265,10 +265,10 @@ class CodeGenerator
 						"\n                \"required\" => ".$required.",";
 						
 						if($values != "") {
-							$generateData .= "\n                \"browse\" => ".$browse.",";
+							$generateData .= "\n                \"listing_col\" => ".$listing_col.",";
 							$generateData .= "\n                \"popup_vals\" => ".$values.",";
 						} else {
-							$generateData .= "\n                \"browse\" => ".$browse."";
+							$generateData .= "\n                \"listing_col\" => ".$listing_col."";
 						}
 						$generateData .= "\n            ], ";
                 }

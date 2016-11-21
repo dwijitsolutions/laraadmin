@@ -27,7 +27,7 @@ class CreateRolesTable extends Migration
                 "minlength" => 1,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "display_name",
                 "label" => "Display Name",
@@ -37,7 +37,7 @@ class CreateRolesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "description",
                 "label" => "Description",
@@ -47,7 +47,7 @@ class CreateRolesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "parent",
                 "label" => "Parent Role",
@@ -57,7 +57,7 @@ class CreateRolesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true,
+                "listing_col" => true,
                 "popup_vals" => "@roles",
             ], [
                 "colname" => "dept",
@@ -68,7 +68,7 @@ class CreateRolesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true,
+                "listing_col" => true,
                 "popup_vals" => "@departments",
             ]
         ]);
@@ -86,7 +86,7 @@ class CreateRolesTable extends Migration
             "minlength" => 5,
             "maxlength" => 100,
             "required" => true,
-            "browse" => true,
+            "listing_col" => true,
             "popup_vals" => ["Employee", "Client"]
         ]
         # Format Details: Check http://laraadmin.com/docs/migrations_cruds#schema-ui-types
@@ -98,7 +98,7 @@ class CreateRolesTable extends Migration
         minlength: Minimum Length of value in integer.
         maxlength: Maximum Length of value in integer.
         required: Is this mandatory field in Add / Edit forms. Value in true / false
-        browse: Is allowed to show in index page datatable.
+        listing_col: Is allowed to show in index page datatable.
         popup_vals: These are values for MultiSelect, TagInput and Radio Columns. Either connecting @tables or to list []
         */
     }

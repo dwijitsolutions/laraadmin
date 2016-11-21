@@ -32,7 +32,7 @@ class CreateModuleFieldsTable extends Migration
             $table->boolean('required')->default(false);
             $table->text('popup_vals');
             $table->integer('sort')->unsigned()->default(0);
-			$table->boolean('browse')->default(true);
+			$table->boolean('listing_col')->default(true);
             $table->timestamps();
         });
     }

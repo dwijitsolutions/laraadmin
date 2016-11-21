@@ -14,7 +14,7 @@ class ModuleFields extends Model
     protected $table = 'module_fields';
     
     protected $fillable = [
-        "colname", "label", "module", "field_type", "unique", "defaultvalue", "minlength", "maxlength", "required", "browse", "popup_vals"
+        "colname", "label", "module", "field_type", "unique", "defaultvalue", "minlength", "maxlength", "required", "listing_col", "popup_vals"
     ];
     
     protected $hidden = [
@@ -59,10 +59,10 @@ class ModuleFields extends Model
             } else {
                 $field->required = false;
             }
-            if($request->browse) {
-                $field->browse = true;
+            if($request->listing_col) {
+                $field->listing_col = true;
             } else {
-                $field->browse = false;
+                $field->listing_col = false;
             }
             if($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {
                 if($request->popup_value_type == "table") {
@@ -145,10 +145,10 @@ class ModuleFields extends Model
         } else {
             $field->required = false;
         }
-        if($request->browse) {
-            $field->browse = true;
+        if($request->listing_col) {
+            $field->listing_col = true;
         } else {
-            $field->browse = false;
+            $field->listing_col = false;
         }
 
         if($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {

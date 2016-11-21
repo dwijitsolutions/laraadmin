@@ -66,8 +66,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="browse">Show in Browse:</label>
-						{{ Form::checkbox("browse", "browse") }}
+						<label for="listing_col">Show in Index Listing:</label>
+						{{ Form::checkbox("listing_col", "listing_col") }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
 					

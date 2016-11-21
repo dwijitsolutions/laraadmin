@@ -27,7 +27,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 5,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "designation",
                 "label" => "Designation",
@@ -37,7 +37,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 50,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "gender",
                 "label" => "Gender",
@@ -47,7 +47,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => true,
-                "browse" => true,
+                "listing_col" => true,
                 "popup_vals" => ["Male","Female"],
             ], [
                 "colname" => "mobile",
@@ -58,7 +58,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 10,
                 "maxlength" => 20,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "mobile2",
                 "label" => "Alternative Mobile",
@@ -68,7 +68,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 10,
                 "maxlength" => 20,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "email",
                 "label" => "Email",
@@ -78,7 +78,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 5,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "dept",
                 "label" => "Department",
@@ -88,7 +88,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => true,
-                "browse" => true,
+                "listing_col" => true,
                 "popup_vals" => "@departments",
             ], [
                 "colname" => "city",
@@ -99,7 +99,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 50,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "address",
                 "label" => "Address",
@@ -109,7 +109,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "about",
                 "label" => "About",
@@ -119,7 +119,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "date_birth",
                 "label" => "Date of Birth",
@@ -129,7 +129,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "date_hire",
                 "label" => "Hiring Date",
@@ -139,7 +139,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "date_left",
                 "label" => "Resignation Date",
@@ -149,7 +149,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "salary_cur",
                 "label" => "Current Salary",
@@ -159,7 +159,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 2,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ]
         ]);
         
@@ -176,7 +176,7 @@ class CreateEmployeesTable extends Migration
             "minlength" => 5,
             "maxlength" => 100,
             "required" => true,
-            "browse" => true,
+            "listing_col" => true,
             "popup_vals" => ["Employee", "Client"]
         ]
         # Format Details: Check http://laraadmin.com/docs/migrations_cruds#schema-ui-types
@@ -188,7 +188,7 @@ class CreateEmployeesTable extends Migration
         minlength: Minimum Length of value in integer.
         maxlength: Maximum Length of value in integer.
         required: Is this mandatory field in Add / Edit forms. Value in true / false
-        browse: Is allowed to show in index page datatable.
+        listing_col: Is allowed to show in index page datatable.
         popup_vals: These are values for MultiSelect, TagInput and Radio Columns. Either connecting @tables or to list []
         */
     }

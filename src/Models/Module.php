@@ -132,7 +132,7 @@ class Module extends Model
 							'minlength' => $field->minlength,
 							'maxlength' => $field->maxlength,
 							'required' => $field->required,
-							'browse' => $field->browse,
+							'listing_col' => $field->listing_col,
 							'popup_vals' => $pvalues
 						]);
 						$field->id = $field_obj->id;
@@ -754,13 +754,13 @@ class Module extends Model
 				if(!isset($obj->required)) {
 					$obj->required = 0;
 				}
-				if(!isset($obj->browse)) {
-					$obj->browse = 1;
+				if(!isset($obj->listing_col)) {
+					$obj->listing_col = 1;
 				} else {
-					if($obj->browse == true) {
-						$obj->browse = 1;
+					if($obj->listing_col == true) {
+						$obj->listing_col = 1;
 					} else {
-						$obj->browse = 0;
+						$obj->listing_col = 0;
 					}
 				}
 				
@@ -811,7 +811,7 @@ class Module extends Model
 				} else {
 					$obj->required = $field[7];
 				}
-				$obj->browse = 1;
+				$obj->listing_col = 1;
 
 				if(!isset($field[8])) {
 					$obj->popup_vals = "";
@@ -1349,6 +1349,24 @@ class Module extends Model
 			DB::insert('insert into role_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field->id, $access_fields, $now, $now]);
 		} else {
 			DB::table('role_module_fields')->where('role_id', $role->id)->where('field_id', $field->id)->update(['access' => $access_fields]);
+		}
+	}
+
+	public static function getListingColumns($module_id) {
+		$role_module_fields = DB::table('role_module_fields')->where('access', '!=', "invisible")->where('role_id', $role_id)->get();
+		$data = array();
+		foreach ($role_module_fields as $row) {
+			if(isset($row->id)) {
+				$data2 =  DB::table('module_fields')->where('id', $row->id)->where('module', $module_id)->where('listing_col', true)->get();
+				foreach ($data2 as $row1) {
+					if(isset($row1->id)) {
+						$data[$row1->id] = $data2;
+					}
+				}
+				return $data;
+			} else {
+				return 0;
+			}
 		}
 	}
 }

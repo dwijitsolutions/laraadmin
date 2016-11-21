@@ -27,7 +27,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 5,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "email",
                 "label" => "Email",
@@ -37,7 +37,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "phone",
                 "label" => "Phone",
@@ -47,7 +47,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 20,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "website",
                 "label" => "Website",
@@ -57,7 +57,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "assigned_to",
                 "label" => "Assigned to",
@@ -67,7 +67,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true,
+                "listing_col" => true,
                 "popup_vals" => "@employees",
             ], [
                 "colname" => "connected_since",
@@ -78,7 +78,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "address",
                 "label" => "Address",
@@ -88,7 +88,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "city",
                 "label" => "City",
@@ -98,7 +98,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => true,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "description",
                 "label" => "Description",
@@ -108,7 +108,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "profile_image",
                 "label" => "Profile Image",
@@ -118,7 +118,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ], [
                 "colname" => "profile",
                 "label" => "Company Profile",
@@ -128,7 +128,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "browse" => true
+                "listing_col" => true
             ]
         ]);
         
@@ -145,7 +145,7 @@ class CreateOrganizationsTable extends Migration
             "minlength" => 5,
             "maxlength" => 100,
             "required" => true,
-            "browse" => true,
+            "listing_col" => true,
             "popup_vals" => ["Employee", "Client"]
         ]
         # Format Details: Check http://laraadmin.com/docs/migrations_cruds#schema-ui-types
@@ -157,7 +157,7 @@ class CreateOrganizationsTable extends Migration
         minlength: Minimum Length of value in integer.
         maxlength: Maximum Length of value in integer.
         required: Is this mandatory field in Add / Edit forms. Value in true / false
-        browse: Is allowed to show in index page datatable.
+        listing_col: Is allowed to show in index page datatable.
         popup_vals: These are values for MultiSelect, TagInput and Radio Columns. Either connecting @tables or to list []
         */
     }
