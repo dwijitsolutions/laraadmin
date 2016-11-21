@@ -64,6 +64,12 @@
 						{{ Form::checkbox("required", "required") }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
+
+					<div class="form-group">
+						<label for="browse">Show in Browse:</label>
+						{{ Form::checkbox("browse", "browse") }}
+						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
+					</div>
 					
 					<div class="form-group values">
 						<label for="popup_vals">Values :</label>

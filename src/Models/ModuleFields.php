@@ -59,6 +59,11 @@ class ModuleFields extends Model
             } else {
                 $field->required = false;
             }
+            if($request->browse) {
+                $field->browse = true;
+            } else {
+                $field->browse = false;
+            }
             if($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {
                 if($request->popup_value_type == "table") {
                     $field->popup_vals = "@".$request->popup_vals_table;
@@ -140,6 +145,12 @@ class ModuleFields extends Model
         } else {
             $field->required = false;
         }
+        if($request->browse) {
+            $field->browse = true;
+        } else {
+            $field->browse = false;
+        }
+
         if($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {
             if($request->popup_value_type == "table") {
                 $field->popup_vals = "@".$request->popup_vals_table;
