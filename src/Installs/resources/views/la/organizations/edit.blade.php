@@ -1,14 +1,14 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title")
-	<a href="{{ url(config('laraadmin.adminRoute') . '/organizations') }}">Organizations</a> :
+	<a href="{{ url(config('laraadmin.adminRoute') . '/organizations') }}">Organization</a> :
 @endsection
 @section("contentheader_description", $organization->$view_col)
 @section("section", "Organizations")
 @section("section_url", url(config('laraadmin.adminRoute') . '/organizations'))
 @section("sub_section", "Edit")
 
-@section("htmlheader_title", "Organization Edit : ".$organization->$view_col)
+@section("htmlheader_title", "Organizations Edit : ".$organization->$view_col)
 
 @section("main-content")
 
@@ -38,7 +38,7 @@
 					@la_input($module, 'phone')
 					@la_input($module, 'website')
 					@la_input($module, 'assigned_to')
-					@la_input($module, 'connect_since')
+					@la_input($module, 'connected_since')
 					@la_input($module, 'address')
 					@la_input($module, 'city')
 					@la_input($module, 'description')

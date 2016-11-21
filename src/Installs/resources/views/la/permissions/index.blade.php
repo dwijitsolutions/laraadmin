@@ -1,7 +1,7 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title", "Permissions")
-@section("contentheader_description", "permissions listing")
+@section("contentheader_description", "Permissions listing")
 @section("section", "Permissions")
 @section("sub_section", "Listing")
 @section("htmlheader_title", "Permissions Listing")

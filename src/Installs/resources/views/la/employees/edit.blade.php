@@ -1,14 +1,14 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title")
-	<a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}">Employees</a> :
+	<a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}">Employee</a> :
 @endsection
 @section("contentheader_description", $employee->$view_col)
 @section("section", "Employees")
 @section("section_url", url(config('laraadmin.adminRoute') . '/employees'))
 @section("sub_section", "Edit")
 
-@section("htmlheader_title", "Employee Edit : ".$employee->$view_col)
+@section("htmlheader_title", "Employees Edit : ".$employee->$view_col)
 
 @section("main-content")
 
@@ -48,7 +48,7 @@
 					@la_input($module, 'date_left')
 					@la_input($module, 'salary_cur')
 					--}}
-                    <div class="form-group">
+					<div class="form-group">
 						<label for="role">Role* :</label>
 						<select class="form-control" required="1" data-placeholder="Select Role" rel="select2" name="role">
 							<?php $roles = App\Role::all(); ?>
@@ -63,12 +63,11 @@
 							@endforeach
 						</select>
 					</div>
-					<br>
+                    <br>
 					<div class="form-group">
 						{!! Form::submit( 'Update', ['class'=>'btn btn-success']) !!} <a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}" class="btn btn-default pull-right">Cancel</a>
 					</div>
 				{!! Form::close() !!}
-				
 			</div>
 		</div>
 	</div>

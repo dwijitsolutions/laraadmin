@@ -112,7 +112,7 @@
 						@la_display($module, 'phone')
 						@la_display($module, 'website')
 						@la_display($module, 'assigned_to')
-						@la_display($module, 'connect_since')
+						@la_display($module, 'connected_since')
 						@la_display($module, 'address')
 						@la_display($module, 'city')
 						@la_display($module, 'description')

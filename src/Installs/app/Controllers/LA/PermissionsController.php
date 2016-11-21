@@ -25,20 +25,6 @@ use App\Role;
 class PermissionsController extends Controller
 {
 	public $show_action = true;
-	public $view_col = 'name';
-	public $listing_cols = ['id', 'name', 'display_name'];
-	
-	public function __construct() {
-		// Field Access of Listing Columns
-		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
-			$this->middleware(function ($request, $next) {
-				$this->listing_cols = ModuleFields::listingColumnAccessScan('Permissions', $this->listing_cols);
-				return $next($request);
-			});
-		} else {
-			$this->listing_cols = ModuleFields::listingColumnAccessScan('Permissions', $this->listing_cols);
-		}
-	}
 	
 	/**
 	 * Display a listing of the Permissions.
@@ -52,7 +38,7 @@ class PermissionsController extends Controller
 		if(Module::hasAccess($module->id)) {
 			return View('la.permissions.index', [
 				'show_actions' => $this->show_action,
-				'listing_cols' => $this->listing_cols,
+				'listing_cols' => Module::getListingColumns('Permissions'),
 				'module' => $module
 			]);
 		} else {
@@ -113,10 +99,10 @@ class PermissionsController extends Controller
 				$module->row = $permission;
 				
 				$roles = Role::all();
-				
+
 				return view('la.permissions.show', [
 					'module' => $module,
-					'view_col' => $this->view_col,
+					'view_col' => $module->view_col,
 					'no_header' => true,
 					'no_padding' => "no-padding",
 					'roles' => $roles
@@ -140,15 +126,16 @@ class PermissionsController extends Controller
 	 */
 	public function edit($id)
 	{
-		if(Module::hasAccess("Permissions", "edit")) {
+		if(Module::hasAccess("Permissions", "edit")) {			
 			$permission = Permission::find($id);
-			if(isset($permission->id)) {
-				$module = Module::get('Permissions');				
+			if(isset($permission->id)) {	
+				$module = Module::get('Permissions');
+				
 				$module->row = $permission;
 				
 				return view('la.permissions.edit', [
 					'module' => $module,
-					'view_col' => $this->view_col,
+					'view_col' => $module->view_col,
 				])->with('permission', $permission);
 			} else {
 				return view('errors.404', [
@@ -214,19 +201,22 @@ class PermissionsController extends Controller
 	 */
 	public function dtajax()
 	{
-		$values = DB::table('permissions')->select($this->listing_cols)->whereNull('deleted_at');
+		$module = Module::get('Permissions');
+		$listing_cols = Module::getListingColumns('Permissions');
+
+		$values = DB::table('permissions')->select($listing_cols)->whereNull('deleted_at');
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();
 
 		$fields_popup = ModuleFields::getModuleFields('Permissions');
 		
 		for($i=0; $i < count($data->data); $i++) {
-			for ($j=0; $j < count($this->listing_cols); $j++) { 
-				$col = $this->listing_cols[$j];
+			for ($j=0; $j < count($listing_cols); $j++) { 
+				$col = $listing_cols[$j];
 				if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
 					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
 				}
-				if($col == $this->view_col) {
+				if($col == $module->view_col) {
 					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/permissions/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
 				}
 				// else if($col == "author") {
@@ -251,7 +241,7 @@ class PermissionsController extends Controller
 		$out->setData($data);
 		return $out;
 	}
-	
+
 	/**
 	 * Save the  permissions for role in permission view.
 	 *

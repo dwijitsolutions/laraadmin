@@ -1,7 +1,7 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title", "Backups")
-@section("contentheader_description", "backups listing")
+@section("contentheader_description", "Backups listing")
 @section("section", "Backups")
 @section("sub_section", "Listing")
 @section("htmlheader_title", "Backups Listing")
