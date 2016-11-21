@@ -153,6 +153,15 @@ class LAFormMaker
 				case 'Datetime':
 					$out .= '<label for="'.$field_name.'">'.$label.$required_ast.' :</label>';
 					
+					if($default_val == null) {
+						$default_val = $defaultvalue;
+					}
+
+					// Override the edit value
+					if(isset($row) && isset($row->$field_name)) {
+						$default_val = $row->$field_name;
+					}
+
 					$is_null = "";
 					if($default_val == "NULL") {
 						$is_null = " checked";
@@ -160,14 +169,12 @@ class LAFormMaker
 					} else if($default_val == null) {
 						$default_val = $defaultvalue;
 					}
-					// Override the edit value
-					if(isset($row) && isset($row->$field_name)) {
-						$default_val = $row->$field_name;
-					}
 					
 					// ############### Remaining
 					$dval = $default_val;
-					if($default_val != "") {
+					if($default_val == "now()") {
+						$dval = date("d/m/Y h:i A");
+					} else if($default_val != NULL && $default_val != "" &&  $default_val != "NULL") {
 						$dval = date("d/m/Y h:i A", strtotime($default_val));
 					}
 					$out .= "<div class='input-group datetime'>";
@@ -708,8 +715,12 @@ class LAFormMaker
 					$value = date("d M Y", $dt);
 					break;
 				case 'Datetime':
-					$dt = strtotime($value);
-					$value = date("d M Y, h:i A", $dt);
+					if($value == null) {
+						$value = "Not Available";
+					} else {
+						$dt = strtotime($value);
+						$value = date("d M Y, h:i A", $dt);
+					}
 					break;
 				case 'Decimal':
 					
@@ -733,16 +744,16 @@ class LAFormMaker
 					$value = '<a href="mailto:'.$value.'">'.$value.'</a>';
 					break;
 				case 'File':
-					if($value != 0) {
+					if($value != 0 && $value != "0") {
 						$upload = \App\Models\Upload::find($value);
 						if(isset($upload->id)) {
 							$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'">
 							<span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> '.$upload->name.'</a>';
 						} else {
-							$value = 'Uplaoded file not found.';
+							$value = 'Uploaded file not found.';
 						}
 					} else {
-						$value = 'No file.';
+						$value = 'No file';
 					}
 					break;
 				case 'Files':
@@ -776,13 +787,15 @@ class LAFormMaker
 				case 'HTML':
 					break;
 				case 'Image':
-					if($value != 0) {
+					if($value != 0 && $value != "0") {
 						$upload = \App\Models\Upload::find($value);
-					}
-					if(isset($upload->id)) {
-						$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'"><img src="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=150").'"></a>';
+						if(isset($upload->id)) {
+							$value = '<a class="preview" target="_blank" href="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name).'"><img src="'.url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name."?s=150").'"></a>';
+						} else {
+							$value = 'Uploaded image not found.';
+						}
 					} else {
-						$value = 'Uplaoded image not found.';
+						$value = 'No Image';
 					}
 					break;
 				case 'Integer':

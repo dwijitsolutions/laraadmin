@@ -21,7 +21,7 @@ class Module extends Model
 	protected $hidden = [
 		
 	];
-	
+
 	public static function generateBase($module_name, $icon) {
 		
 		$names = LAHelper::generateModuleNames($module_name,$icon);
@@ -55,7 +55,7 @@ class Module extends Model
 	public static function generate($module_name, $module_name_db, $view_col, $faIcon = "fa-cube", $fields) {
 		
 		$names = LAHelper::generateModuleNames($module_name, $faIcon);
-		$fields = Module::format_fields($fields);
+		$fields = Module::format_fields($module_name, $fields);
 		
 		if(substr_count($view_col, " ") || substr_count($view_col, ".")) {
 			throw new Exception("Unable to generate migration for ".($names->module)." : Invalid view_column_name. 'This should be database friendly lowercase name.'", 1);
@@ -132,6 +132,7 @@ class Module extends Model
 							'minlength' => $field->minlength,
 							'maxlength' => $field->maxlength,
 							'required' => $field->required,
+							'browse' => $field->browse,
 							'popup_vals' => $pvalues
 						]);
 						$field->id = $field_obj->id;
@@ -267,7 +268,7 @@ class Module extends Model
 					// Error Unknown column type "timestamp" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType()
 					// $var = $table->timestamp($field->colname)->change();
 				} else {
-					$var = $table->timestamp($field->colname)->nullableTimestamps();
+					$var = $table->timestamp($field->colname)->nullable()->nullableTimestamps();
 				}
 				// $table->timestamp('created_at')->useCurrent();
 				if($field->defaultvalue == NULL || $field->defaultvalue == "" || $field->defaultvalue == "NULL") {
@@ -718,54 +719,111 @@ class Module extends Model
 		}
 	}
 	
-	public static function format_fields($fields) {
+	public static function format_fields($module_name, $fields) {
 		$out = array();
 		foreach ($fields as $field) {
-			$obj = (Object)array();
-			$obj->colname = $field[0];
-			$obj->label = $field[1];
-			$obj->field_type = $field[2];
-			
-			if(!isset($field[3])) {
-				$obj->unique = 0;
-			} else {
-				$obj->unique = $field[3];
-			}
-			if(!isset($field[4])) {
-				$obj->defaultvalue = '';
-			} else {
-				$obj->defaultvalue = $field[4];
-			}
-			if(!isset($field[5])) {
-				$obj->minlength = 0;
-			} else {
-				$obj->minlength = $field[5];
-			}
-			if(!isset($field[6])) {
-				$obj->maxlength = 0;
-			} else {
-				// Because maxlength above 256 will not be supported by Unique
-				if($obj->unique) {
-					$obj->maxlength = 250;
-				} else {
-					$obj->maxlength = $field[6];
+			if(LAHelper::is_assoc_array($field)) {
+				$obj = (object)$field;
+				
+				if(!isset($obj->colname)) {
+					throw new Exception("Migration ".$module_name." -  Field does not have colname", 1);
+				} else if(!isset($obj->label)) {
+					throw new Exception("Migration ".$module_name." -  Field does not have label", 1);
+				} else if(!isset($obj->field_type)) {
+					throw new Exception("Migration ".$module_name." -  Field does not have field_type", 1);
 				}
-			}
-			if(!isset($field[7])) {
-				$obj->required = 0;
-			} else {
-				$obj->required = $field[7];
-			}
-			if(!isset($field[8])) {
-				$obj->popup_vals = "";
-			} else {
-				if(is_array($field[8])) {
-					$obj->popup_vals = json_encode($field[8]);
-				} else {
-					$obj->popup_vals = $field[8];
+				if(!isset($obj->unique)) {
+					$obj->unique = 0;
 				}
+				if(!isset($obj->defaultvalue)) {
+					$obj->defaultvalue = '';
+				}
+				if(!isset($obj->minlength)) {
+					$obj->minlength = 0;
+				}
+				if(!isset($obj->maxlength)) {
+					$obj->maxlength = 0;
+				} else {
+					// Because maxlength above 256 will not be supported by Unique
+					if($obj->unique) {
+						$obj->maxlength = 250;
+					} else {
+						$obj->maxlength = $obj->maxlength;
+					}
+				}
+				if(!isset($obj->required)) {
+					$obj->required = 0;
+				}
+				if(!isset($obj->browse)) {
+					$obj->browse = 1;
+				} else {
+					if($obj->browse == true) {
+						$obj->browse = 1;
+					} else {
+						$obj->browse = 0;
+					}
+				}
+				
+				if(!isset($obj->popup_vals)) {
+					$obj->popup_vals = "";
+				} else {
+					if(is_array($obj->popup_vals)) {
+						$obj->popup_vals = json_encode($obj->popup_vals);
+					} else {
+						$obj->popup_vals = $obj->popup_vals;
+					}
+				}
+				// var_dump($obj);
+				$out[] = $obj;
+			} else {
+				$obj = (Object)array();
+				$obj->colname = $field[0];
+				$obj->label = $field[1];
+				$obj->field_type = $field[2];
+				
+				if(!isset($field[3])) {
+					$obj->unique = 0;
+				} else {
+					$obj->unique = $field[3];
+				}
+				if(!isset($field[4])) {
+					$obj->defaultvalue = '';
+				} else {
+					$obj->defaultvalue = $field[4];
+				}
+				if(!isset($field[5])) {
+					$obj->minlength = 0;
+				} else {
+					$obj->minlength = $field[5];
+				}
+				if(!isset($field[6])) {
+					$obj->maxlength = 0;
+				} else {
+					// Because maxlength above 256 will not be supported by Unique
+					if($obj->unique) {
+						$obj->maxlength = 250;
+					} else {
+						$obj->maxlength = $field[6];
+					}
+				}
+				if(!isset($field[7])) {
+					$obj->required = 0;
+				} else {
+					$obj->required = $field[7];
+				}
+				$obj->browse = 1;
+
+				if(!isset($field[8])) {
+					$obj->popup_vals = "";
+				} else {
+					if(is_array($field[8])) {
+						$obj->popup_vals = json_encode($field[8]);
+					} else {
+						$obj->popup_vals = $field[8];
+					}
+				}
+				$out[] = $obj;
 			}
-			$out[] = $obj;
 		}
 		return $out;
 	}

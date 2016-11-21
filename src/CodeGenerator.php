@@ -10,7 +10,7 @@ use Dwij\Laraadmin\Models\Menu;
 
 class CodeGenerator
 {
-    /**
+	/**
 	* Generate Controller file
     * if $generate is true then create file from module info from DB
     * $comm is command Object from Migration command
@@ -241,17 +241,38 @@ class CodeGenerator
                     if($field['required']) {
                         $required = "true";
                     }
+					$browse = "false";
+                    if($field['browse']) {
+                        $browse = "true";
+                    }
                     $values = "";
                     if($field['popup_vals'] != "") {
                         if(starts_with($field['popup_vals'], "[")) {
-                            $values = ', '.$field['popup_vals'];
+                            $values = $field['popup_vals'];
                         } else {
-                            $values = ', "'.$field['popup_vals'].'"';
+                            $values = '"'.$field['popup_vals'].'"';
                         }
                     }
-                    $generateData .= '["'.$field['colname'].'", "'.$field['label'].'", "'.$ftype.'", '.$unique.', '.$dvalue.', '.$minlength.', '.$maxlength.', '.$required.''.$values.'],'."\n            ";
+                    // $generateData .= '["'.$field['colname'].'", "'.$field['label'].'", "'.$ftype.'", '.$unique.', '.$dvalue.', '.$minlength.', '.$maxlength.', '.$required.''.$values.'],'."\n            ";
+					$generateData .= "[".
+						"\n                \"colname\" => \"".$field['colname']."\",".
+						"\n                \"label\" => \"".$field['label']."\",".
+						"\n                \"field_type\" => \"".$ftype."\",".
+						"\n                \"unique\" => ".$unique.",".
+						"\n                \"defaultvalue\" => ".$dvalue.",".
+						"\n                \"minlength\" => ".$minlength.",".
+						"\n                \"maxlength\" => ".$maxlength.",".
+						"\n                \"required\" => ".$required.",";
+						
+						if($values != "") {
+							$generateData .= "\n                \"browse\" => ".$browse.",";
+							$generateData .= "\n                \"popup_vals\" => ".$values.",";
+						} else {
+							$generateData .= "\n                \"browse\" => ".$browse."";
+						}
+						$generateData .= "\n            ], ";
                 }
-                $generateData = trim($generateData);
+                $generateData = trim($generateData, ", ");
 
                 // Find existing migration file
                 $mfiles = scandir(base_path('database/migrations/'));

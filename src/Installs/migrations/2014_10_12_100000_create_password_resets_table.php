@@ -1,4 +1,8 @@
 <?php
+/**
+ * Migration generated using LaraAdmin
+ * Help: http://laraadmin.com
+ */
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
