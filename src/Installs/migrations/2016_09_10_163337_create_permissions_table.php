@@ -47,7 +47,7 @@ class CreatePermissionsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ]
         ]);
         

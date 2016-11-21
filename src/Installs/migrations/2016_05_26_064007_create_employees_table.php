@@ -47,7 +47,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => true,
-                "listing_col" => true,
+                "listing_col" => false,
                 "popup_vals" => ["Male","Female"],
             ], [
                 "colname" => "mobile",
@@ -68,7 +68,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 10,
                 "maxlength" => 20,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "email",
                 "label" => "Email",
@@ -99,7 +99,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 50,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "address",
                 "label" => "Address",
@@ -109,7 +109,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "about",
                 "label" => "About",
@@ -119,7 +119,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "date_birth",
                 "label" => "Date of Birth",
@@ -129,7 +129,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "date_hire",
                 "label" => "Hiring Date",
@@ -139,7 +139,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "date_left",
                 "label" => "Resignation Date",
@@ -149,7 +149,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "salary_cur",
                 "label" => "Current Salary",
@@ -159,7 +159,7 @@ class CreateEmployeesTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 2,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ]
         ]);
         

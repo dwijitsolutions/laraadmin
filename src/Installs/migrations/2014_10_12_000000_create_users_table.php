@@ -37,7 +37,7 @@ class CreateUsersTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "email",
                 "label" => "Email",
@@ -57,7 +57,7 @@ class CreateUsersTable extends Migration
                 "minlength" => 6,
                 "maxlength" => 250,
                 "required" => true,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "type",
                 "label" => "User Type",

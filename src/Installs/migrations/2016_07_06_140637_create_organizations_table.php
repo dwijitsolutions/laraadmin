@@ -78,7 +78,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "address",
                 "label" => "Address",
@@ -88,7 +88,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "city",
                 "label" => "City",
@@ -108,7 +108,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 1000,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "profile_image",
                 "label" => "Profile Image",
@@ -128,7 +128,7 @@ class CreateOrganizationsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 250,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ]
         ]);
         

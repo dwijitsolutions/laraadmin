@@ -37,7 +37,7 @@ class CreateDepartmentsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => true
+                "listing_col" => false
             ], [
                 "colname" => "color",
                 "label" => "Color",

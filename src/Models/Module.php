@@ -1367,7 +1367,7 @@ class Module extends Model
 		}
 		$listing_cols = ModuleFields::where('module', $module->id)->where('listing_col', 1)->orderBy('sort', 'asc')->get()->toArray();
 
-		$listing_cols_temp = array();
+		$listing_cols_temp = array('id');
 		foreach ($listing_cols as $col) {
 			if($col['colname'] == 'id') {
 				$listing_cols_temp[] = $col['colname'];

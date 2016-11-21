@@ -47,7 +47,7 @@ class CreateBackupsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 10,
                 "required" => true,
-                "listing_col" => true
+                "listing_col" => false
             ]
         ]);
         
