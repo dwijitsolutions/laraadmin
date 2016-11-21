@@ -137,8 +137,6 @@ class OrganizationsController extends Controller
 		if(Module::hasAccess("Organizations", "edit")) {
 			$organization = Organization::find($id);
 			if(isset($organization->id)) {
-				$organization = Organization::find($id);
-				
 				$module = Module::get('Organizations');
 				
 				$module->row = $organization;
