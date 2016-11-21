@@ -1352,21 +1352,29 @@ class Module extends Model
 		}
 	}
 
-	public static function getListingColumns($module_id) {
-		$role_module_fields = DB::table('role_module_fields')->where('access', '!=', "invisible")->where('role_id', $role_id)->get();
-		$data = array();
-		foreach ($role_module_fields as $row) {
-			if(isset($row->id)) {
-				$data2 =  DB::table('module_fields')->where('id', $row->id)->where('module', $module_id)->where('listing_col', true)->get();
-				foreach ($data2 as $row1) {
-					if(isset($row1->id)) {
-						$data[$row1->id] = $data2;
-					}
-				}
-				return $data;
-			} else {
-				return 0;
+	/**
+	* Get list of Columns to display in Index Page for a perticular Module
+	* Filter the column with Access control
+	* 
+	* ModuleFields::getModuleFields('Employees')
+	**/
+	public static function getListingColumns($module_id_name) {
+		$module = null;
+		if(is_int($module_id_name)) {
+			$module = Module::get($module_id_name);
+		} else {
+			$module = Module::where('name', $module_id_name)->first();
+		}
+		$listing_cols = ModuleFields::where('module', $module->id)->where('listing_col', 1)->orderBy('sort', 'asc')->get()->toArray();
+
+		$listing_cols_temp = array();
+		foreach ($listing_cols as $col) {
+			if($col['colname'] == 'id') {
+				$listing_cols_temp[] = $col['colname'];
+			} else if(Module::hasFieldAccess($module->id, $col['id'])) {
+				$listing_cols_temp[] = $col['colname'];
 			}
 		}
+		return $listing_cols_temp;
 	}
 }
