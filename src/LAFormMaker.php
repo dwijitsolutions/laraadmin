@@ -711,11 +711,15 @@ class LAFormMaker
 					
 					break;
 				case 'Date':
-					$dt = strtotime($value);
-					$value = date("d M Y", $dt);
+					if($value == NULL) {
+						$value = "Not Available";
+					} else {
+						$dt = strtotime($value);
+						$value = date("d M Y", $dt);
+					}
 					break;
 				case 'Datetime':
-					if($value == null) {
+					if($value == NULL) {
 						$value = "Not Available";
 					} else {
 						$dt = strtotime($value);
