@@ -127,7 +127,7 @@ class LaraAdminModuleTest extends TestCase
 			->select('5', 'field_type')
 			->uncheck('unique')
 			->type('', 'defaultvalue')
-			->check('required')
+			->uncheck('required')
 			->press('Submit');
 		$this->see("StudentsController")
 			->type('Weight', 'label')
