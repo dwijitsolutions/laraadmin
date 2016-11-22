@@ -49,6 +49,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function uploads()
     {
-        return $this->hasMany('App\Upload');
+        return $this->hasMany('App\Models\Upload');
     }
 }
