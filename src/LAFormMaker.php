@@ -690,7 +690,7 @@ class LAFormMaker
 			}
 			
 			$out = '<div class="form-group">';
-			$out .= '<label for="'.$field_name.'" class="col-md-2">'.$label.' :</label>';
+			$out .= '<label for="'.$field_name.'" class="col-md-4 col-sm-6 col-xs-6">'.$label.' :</label>';
 			
 			$value = $row->$field_name;
 			
@@ -880,7 +880,7 @@ class LAFormMaker
 					break;
 			}
 			
-			$out .= '<div class="col-md-10 fvalue">'.$value.'</div>';
+			$out .= '<div class="col-md-8 col-sm-6 col-xs-6 fvalue">'.$value.'</div>';
 			$out .= '</div>';
 			return $out;
 		} else {
