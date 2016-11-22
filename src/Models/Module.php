@@ -1358,7 +1358,7 @@ class Module extends Model
 	* 
 	* ModuleFields::getModuleFields('Employees')
 	**/
-	public static function getListingColumns($module_id_name) {
+	public static function getListingColumns($module_id_name, $isObjects = false) {
 		$module = null;
 		if(is_int($module_id_name)) {
 			$module = Module::get($module_id_name);
@@ -1367,12 +1367,19 @@ class Module extends Model
 		}
 		$listing_cols = ModuleFields::where('module', $module->id)->where('listing_col', 1)->orderBy('sort', 'asc')->get()->toArray();
 
-		$listing_cols_temp = array('id');
+		if($isObjects) {
+			$id_col = array('label' => 'id', 'colname' => 'id');
+		} else {
+			$id_col = 'id';
+		}
+		$listing_cols_temp = array($id_col);
 		foreach ($listing_cols as $col) {
-			if($col['colname'] == 'id') {
-				$listing_cols_temp[] = $col['colname'];
-			} else if(Module::hasFieldAccess($module->id, $col['id'])) {
-				$listing_cols_temp[] = $col['colname'];
+			if(Module::hasFieldAccess($module->id, $col['id'])) {
+				if($isObjects) {
+					$listing_cols_temp[] = $col;
+				} else {
+					$listing_cols_temp[] = $col['colname'];
+				}
 			}
 		}
 		return $listing_cols_temp;
