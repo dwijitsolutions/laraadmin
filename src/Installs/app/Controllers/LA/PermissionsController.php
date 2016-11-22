@@ -199,7 +199,7 @@ class PermissionsController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Permissions');
 		$listing_cols = Module::getListingColumns('Permissions');

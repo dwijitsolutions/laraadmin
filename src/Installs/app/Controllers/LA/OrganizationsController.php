@@ -193,7 +193,7 @@ class OrganizationsController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Organizations');
 		$listing_cols = Module::getListingColumns('Organizations');

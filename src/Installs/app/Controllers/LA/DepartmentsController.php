@@ -193,7 +193,7 @@ class DepartmentsController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Departments');
 		$listing_cols = Module::getListingColumns('Departments');

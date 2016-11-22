@@ -219,7 +219,7 @@ class RolesController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Roles');
 		$listing_cols = Module::getListingColumns('Roles');

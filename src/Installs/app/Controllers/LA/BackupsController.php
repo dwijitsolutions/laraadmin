@@ -131,7 +131,7 @@ class BackupsController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Backups');
 		$listing_cols = Module::getListingColumns('Backups');

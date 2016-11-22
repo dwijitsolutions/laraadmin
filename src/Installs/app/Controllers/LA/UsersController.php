@@ -75,7 +75,7 @@ class UsersController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Users');
 		$listing_cols = Module::getListingColumns('Users');

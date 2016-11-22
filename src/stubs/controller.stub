@@ -193,7 +193,7 @@ class __controller_class_name__ extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('__module_name__');
 		$listing_cols = Module::getListingColumns('__module_name__');

@@ -245,7 +245,7 @@ class EmployeesController extends Controller
 	 *
 	 * @return
 	 */
-	public function dtajax()
+	public function dtajax(Request $request)
 	{
 		$module = Module::get('Employees');
 		$listing_cols = Module::getListingColumns('Employees');
