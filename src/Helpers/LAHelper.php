@@ -196,7 +196,7 @@ class LAHelper
 
 	// LAHelper::img($upload_id);
     public static function img($upload_id) {
-        $upload = \App\Upload::find($upload_id);
+        $upload = \App\Models\Upload::find($upload_id);
         if(isset($upload->id)) {
             return url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name);
         } else {

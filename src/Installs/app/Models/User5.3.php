@@ -50,6 +50,6 @@ class User extends Authenticatable implements AuthorizableContract, CanResetPass
      */
     public function uploads()
     {
-        return $this->hasMany('App\Upload');
+        return $this->hasMany('App\Models\Upload');
     }
 }
