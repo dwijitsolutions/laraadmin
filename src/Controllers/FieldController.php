@@ -167,4 +167,22 @@ class FieldController extends Controller
 		
 		return response()->json(['exists' => $valExists]);
 	}
+
+	// save column for listing view
+	public function module_field_listing_show_ajax(Request $request) {
+		if($request->state == "true") {
+			$state = 1;
+		} else {
+			$state = 0;
+		}
+		$module_field = ModuleFields::find($request->listid);
+		if(isset($module_field->id)) {
+			$module_field->listing_col = $state;
+			$module_field->save();
+			
+			return response()->json(['status' => 'success', 'message' => "Module field listing visibility saved to ".$state]);
+		} else {
+			return response()->json(['status' => 'failed', 'message' => "Module field not found"]);
+		}
+	}
 }

@@ -25,6 +25,7 @@ Route::group([
 	Route::get(config('laraadmin.adminRoute') . '/module_fields/{id}/delete', 'FieldController@destroy');
 	Route::post(config('laraadmin.adminRoute') . '/get_module_files/{module_id}', 'ModuleController@get_module_files');
 	Route::post(config('laraadmin.adminRoute'). '/module_update', 'ModuleController@update');
+	Route::post(config('laraadmin.adminRoute'). '/module_field_listing_show', 'FieldController@module_field_listing_show_ajax');
 	
 	/* ================== Code Editor ================== */
 	Route::get(config('laraadmin.adminRoute') . '/lacodeeditor', function () {
