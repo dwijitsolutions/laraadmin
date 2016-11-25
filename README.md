@@ -58,7 +58,7 @@ If you come across any issue/bug please [report them here](https://github.com/dw
 
 ### License
 
-LaraAdmin is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT) built by Dwij IT Solutions.
+LaraAdmin is open-sourced software built by Dwij IT Solutions and contributors and licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
 ### Credits:
 - Ganesh Bhosale https://github.com/gdbhosale
