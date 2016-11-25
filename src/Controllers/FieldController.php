@@ -28,34 +28,8 @@ use Dwij\Laraadmin\Helpers\LAHelper;
  */
 class FieldController extends Controller
 {
-	
-	public function __construct() {
-		// for authentication (optional)
-		// $this->middleware('auth');
-	}
-	
 	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
+	 * Store a newly created Module Field via "Module Manager"
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
@@ -74,30 +48,12 @@ class FieldController extends Controller
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		// $ftypes = ModuleFieldTypes::getFTypes2();
-		// $module = Module::find($id);
-		// $module = Module::get($module->name);
-		// return view('la.modules.show', [
-		//     'no_header' => true,
-		//     'no_padding' => "no-padding",
-		//     'ftypes' => $ftypes
-		// ])->with('module', $module);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Show the form for editing of Module Field via "Module Manager"
+     *
+     * @param $id Field's ID to be Edited
+     * @return $this
+     */
 	public function edit($id)
 	{
 		$field = ModuleFields::find($id);
@@ -114,13 +70,13 @@ class FieldController extends Controller
 		])->with('field', $field);
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Update the specified Module Field via "Module Manager"
+     *
+     * @param Request $request
+     * @param $id Field's ID to be Updated
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function update(Request $request, $id)
 	{
 		$module_id = $request->module_id;
@@ -130,12 +86,12 @@ class FieldController extends Controller
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Remove the specified Module Field from Database Context + Table
+     *
+     * @param $id Field's ID to be Destroyed
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function destroy($id)
 	{
 		// Get Context
@@ -151,13 +107,14 @@ class FieldController extends Controller
 		$field->delete();
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module->id]);
 	}
-	
-	/**
-	 * Check unique values for perticular field
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+
+    /**
+     * Check unique values for particular field
+     *
+     * @param Request $request
+     * @param $field_id Field ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function check_unique_val(Request $request, $field_id)
 	{
 		$valExists = false;
@@ -177,7 +134,12 @@ class FieldController extends Controller
 		return response()->json(['exists' => $valExists]);
 	}
 
-	// save column for listing view
+    /**
+     * Save column visibility in listing/index view
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function module_field_listing_show_ajax(Request $request) {
 		if($request->state == "true") {
 			$state = 1;

@@ -21,22 +21,28 @@ use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
+/**
+ * Class MenuController
+ * @package Dwij\Laraadmin\Controllers
+ *
+ * Works after managing Menus and their hierarchy
+ */
 class MenuController extends Controller
 {
-    
     public function __construct() {
         // for authentication (optional)
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     
     /**
-     * Display a listing of the resource.
+     * Display a listing of Menus
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $modules = Module::all();
+        // Send Menus with No Parent to Views
         $menuItems = Menu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
         
         return View('la.menus.index', [
@@ -46,17 +52,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created Menu in Database
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -99,24 +95,6 @@ class MenuController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        // $ftypes = ModuleFieldTypes::getFTypes2();
-        // $module = Module::find($id);
-        // $module = Module::get($module->name);
-        // return view('la.modules.show', [
-        //     'no_header' => true,
-        //     'no_padding' => "no-padding",
-        //     'ftypes' => $ftypes
-        // ])->with('module', $module);
-    }
-
-    /**
      * Update Custom Menu
      *
      * @param  \Illuminate\Http\Request  $request
@@ -140,7 +118,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Menu from database
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -156,7 +134,7 @@ class MenuController extends Controller
     /**
      * Update Menu Hierarchy
      *
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function update_hierarchy()
     {
@@ -170,6 +148,13 @@ class MenuController extends Controller
         return $parents;
     }
 
+    /**
+     * Save Menu hierarchy Recursively
+     *
+     * @param $menuItem Menu Item Array
+     * @param $num Hierarchy number
+     * @param $parent_id Parent ID
+     */
     function apply_hierarchy($menuItem, $num, $parent_id)
     {
         // echo "apply_hierarchy: ".json_encode($menuItem)." - ".$num." - ".$parent_id."  <br><br>\n\n";
@@ -178,6 +163,7 @@ class MenuController extends Controller
         $menu->hierarchy = $num;
         $menu->save();
 
+        // apply hierarchy to children if exists
         if(isset($menuItem['children'])) {
             for ($i=0; $i < count($menuItem['children']); $i++) {
                 $this->apply_hierarchy($menuItem['children'][$i], $i+1, $menuItem['id']);

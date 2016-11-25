@@ -106,7 +106,8 @@ class Module extends Model
 					$is_gen = true;
 				}
 			}
-			
+
+			// Create Module if not exists
 			$module = Module::where('name', $names->module)->first();
 			if(!isset($module->id)) {
 				$module = Module::create([
@@ -126,6 +127,7 @@ class Module extends Model
 			//print_r($module);
 			//print_r($fields);
 			
+			// Create Database Schema for table
 			Schema::create($names->table, function (Blueprint $table) use ($fields, $module, $ftypes) {
 				$table->increments('id');
 				foreach ($fields as $field) {
@@ -156,7 +158,8 @@ class Module extends Model
 						if(is_array($field->popup_vals) || is_object($field->popup_vals)) {
 							$pvalues = json_encode($field->popup_vals);
 						}
-						
+
+						// Create Module field Metadata / Context
 						$field_obj = ModuleFields::create([
 							'module' => $module->id,
 							'colname' => $field->colname,
@@ -174,8 +177,7 @@ class Module extends Model
 						$field->module_obj = $module;
 					}
 					
-					// Schema::dropIfExists($names->table);
-					
+					// Create Module field schema in database
 					Module::create_field_schema($table, $field);
 				}
 				
@@ -202,7 +204,14 @@ class Module extends Model
 			});
 		}
 	}
-	
+
+    /**
+     * Validates if given view_column_name exists in fields array
+     *
+     * @param $fields Array of fields from migration file
+     * @param $view_col View Column Name
+     * @return bool returns true if view_column_name found in fields otherwise false
+     */
 	public static function validate_view_column($fields, $view_col) {
 		$found = false;
 		foreach ($fields as $field) {
@@ -213,7 +222,14 @@ class Module extends Model
 		}
 		return $found;
 	}
-	
+
+    /**
+     * Method creates database table field via $table variable from Schema
+     * @param $table
+     * @param $field
+     * @param bool $update
+     * @param bool $isFieldTypeChange
+     */
 	public static function create_field_schema($table, $field, $update = false, $isFieldTypeChange = false) {
 		if(is_numeric($field->field_type)) {
 			$ftypes = ModuleFieldTypes::getFTypes();
@@ -226,7 +242,8 @@ class Module extends Model
 		}
 		// Log::debug('Module:create_field_schema ('.$update.') - '.$field->colname." - ".$field->field_type
 				// ." - ".$defval." - ".$field->maxlength);
-		
+
+        // Create Field in Database for respective Field Type
 		switch ($field->field_type) {
 			case 'Address':
 				$var = null;
@@ -753,10 +770,25 @@ class Module extends Model
 			}
 		}
 	}
-	
+
+    /**
+     * This method process and alters user created migration fields array to fit into standard field Context / Metedata
+     *
+     * Note: field array type change
+     * Earlier we were taking sequential array for fields, but from version 1.1 we are using different format
+     * with associative array. It also supports old sequential array. This step is taken to accommodate "listing_col"
+     * which allows field to be listed in index/listing table. This step will also allow us to take more Metadata about
+     * field.
+     *
+     * @param $module_name Module Name
+     * @param $fields Fields Array
+     * @return array Returns Array of Field Objects
+     * @throws Exception Throws exception if field missing any details like colname, label, field_type
+     */
 	public static function format_fields($module_name, $fields) {
 		$out = array();
 		foreach ($fields as $field) {
+		    // Check if field format is New
 			if(LAHelper::is_assoc_array($field)) {
 				$obj = (object)$field;
 				
@@ -811,6 +843,7 @@ class Module extends Model
 				// var_dump($obj);
 				$out[] = $obj;
 			} else {
+			    // Handle Old field format - Sequential Array
 				$obj = (Object)array();
 				$obj->colname = $field[0];
 				$obj->label = $field[1];
@@ -862,11 +895,16 @@ class Module extends Model
 		}
 		return $out;
 	}
-	
-	/**
-	* Get Module by module name
-	* $module = Module::get($module_name);
-	**/
+
+    /**
+     * Get Module Object by passing Module Name / id
+     * It also includes array of Module fields
+     *
+     * $module = Module::get($module_name);
+     *
+     * @param $module_name Module Name / Id
+     * @return null|object Returns Module Object if found or NULL
+     */
 	public static function get($module_name) {
 		$module = null;
 		if(is_int($module_name)) {
@@ -874,7 +912,8 @@ class Module extends Model
 		} else {
 			$module = Module::where('name', $module_name)->first();
 		}
-		
+
+		// If Module is found in database also attach its field array to it.
 		if(isset($module)) {
 			$module = $module->toArray();
 			$fields = ModuleFields::where('module', $module['id'])->orderBy('sort', 'asc')->get()->toArray();
@@ -888,11 +927,15 @@ class Module extends Model
 			return null;
 		}
 	}
-	
-	/**
-	* Get Module by table name
-	* $module = Module::getByTable($table_name);
-	**/
+
+    /**
+     * Get Module by table name
+     *
+     * $module = Module::getByTable($table_name);
+     *
+     * @param $table_name table name in lowercase
+     * @return null|object Returns Module Object if found or NULL
+     */
 	public static function getByTable($table_name) {
 		$module = Module::where('name_db', $table_name)->first();
 		if(isset($module)) {
@@ -902,11 +945,15 @@ class Module extends Model
 			return null;
 		}
 	}
-	
-	/**
-	* Get Array for Dropdown, Multiselect, Taginput, Radio from Module getByTable
-	* $array = Module::getDDArray($module_name);
-	**/
+
+    /**
+     * Get Array of Values for Dropdown, Multiselect, Taginput, Radio from Module
+     *
+     * $array = Module::getDDArray($module_name);
+     *
+     * @param $module_name Module Name
+     * @return array Returns Array of View Column Values for Given Module
+     */
 	public static function getDDArray($module_name) {
 		$module = Module::where('name', $module_name)->first();
 		if(isset($module)) {
@@ -928,7 +975,18 @@ class Module extends Model
 			return array();
 		}
 	}
-	
+
+    /**
+     * Create Validations rules array for Laravel Validations using Module Field Context / Metadata
+     * Used in LaraAdmin generated Controllers for store and update.
+     * This generates array of validation rules for whole Module
+     *
+     *
+     * @param $module_name Module Name
+     * @param $request \Illuminate\Http\Request Object
+     * @param bool $isEdit Is this a Update or Store Request
+     * @return array Returns Array to validate given Request
+     */
 	public static function validateRules($module_name, $request, $isEdit = false) {
 		$module = Module::get($module_name);
 		$rules = [];
@@ -969,7 +1027,14 @@ class Module extends Model
 			return $rules;
 		}
 	}
-	
+
+    /**
+     * This method saves data from Request to Database.
+     *
+     * @param $module_name Module Name
+     * @param $request \Illuminate\Http\Request Object
+     * @return null/int Returns inserted row id or NULL
+     */
 	public static function insert($module_name, $request) {
 		$module = Module::get($module_name);
 		if(isset($module)) {
@@ -1004,7 +1069,15 @@ class Module extends Model
 			return null;
 		}
 	}
-	
+
+    /**
+     * This method updates data from Request to Database for given Module and Row Id
+     *
+     * @param $module_name Module Name
+     * @param $request \Illuminate\Http\Request Object
+     * @param $id int
+     * @return null/int Returns updated row id or NULL
+     */
 	public static function updateRow($module_name, $request, $id) {
 		$module = Module::get($module_name);
 		if(isset($module)) {
@@ -1023,7 +1096,16 @@ class Module extends Model
 			return null;
 		}
 	}
-	
+
+    /**
+     * Process Row Data According to its Field Type & Context / Metadata
+     * Helps to save and update database records
+     *
+     * @param $module Module Name
+     * @param $request \Illuminate\Http\Request Object
+     * @param $row Database table row to be updated/stored
+     * @return object Returns Updated row
+     */
 	public static function processDBRow($module, $request, $row) {
 		$ftypes = ModuleFieldTypes::getFTypes2();
 
@@ -1032,7 +1114,6 @@ class Module extends Model
 				
 				switch ($ftypes[$field['field_type']]) {
 					case 'Checkbox':
-						#TODO: Bug fix
 						if(isset($request->{$field['colname']})) {
 							$row->{$field['colname']} = true;
 						} else if(isset($request->{$field['colname']."_hidden"})) {
@@ -1077,14 +1158,14 @@ class Module extends Model
 						$row->{$field['colname']} = $request->{$field['colname']};
 						break;
 					case 'Multiselect':
-						#TODO: Bug fix
+						// TODO: Bug fix
 						$row->{$field['colname']} = json_encode($request->{$field['colname']});
 						break;
 					case 'Password':
 						$row->{$field['colname']} = bcrypt($request->{$field['colname']});
 						break;
 					case 'Taginput':
-						#TODO: Bug fix
+						// TODO: Bug fix
 						$row->{$field['colname']} = json_encode($request->{$field['colname']});
 						break;
 					case 'Files':
@@ -1103,7 +1184,13 @@ class Module extends Model
 		}
 		return $row;
 	}
-	
+
+    /**
+     * Count Number of rows in Table of given Module
+     *
+     * @param $module_name Module Name
+     * @return int Number of rows in Module Table. -1 if Module doesn't exists.
+     */
 	public static function itemCount($module_name) {
 		$module = Module::get($module_name);
 		if(isset($module)) {
@@ -1113,26 +1200,30 @@ class Module extends Model
 					$model = "App\\".$model_name;
 					return $model::count();
 				} else {
-					return "Model doesn't exists";
+					return -1;
 				}
 			} else {
 				if(file_exists(base_path('app/Models/'.$model_name.".php"))) {
 					$model = "App\\Models\\".$model_name;
 					return $model::count();
 				} else {
-					return "Model doesn't exists";
+					return -1;
 				}
 			}
-			
 		} else {
-			return 0;
+            return -1;
 		}
 	}
-	
-	/**
-	* Get Module Access for all roles
-	* $roles = Module::getRoleAccess($id);
-	**/
+
+    /**
+     * Get Module Access for all roles or specific role
+     *
+     * $role_accesses = Module::getRoleAccess($id);
+     *
+     * @param $module_id Module ID
+     * @param int $specific_role Specific role id
+     * @return array Array of Roles with accesses
+     */
 	public static function getRoleAccess($module_id, $specific_role = 0) {
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
@@ -1186,11 +1277,17 @@ class Module extends Model
 		}
 		return $roles;
 	}
-	
-	/**
-	* Get Module Access for role and access type
-	* Module::hasAccess($module_id, $access_type, $user_id);
-	**/
+
+    /**
+     * Get Specific Module Access for login user or specific user ($user_id)
+     *
+     * Module::hasAccess($module_id, $access_type, $user_id);
+     *
+     * @param $module_id Module ID / Name
+     * @param string $access_type Access Type - view / create / edit / delete
+     * @param int $user_id User id for which Access will be checked
+     * @return bool Returns true if access is there or false
+     */
 	public static function hasAccess($module_id, $access_type = "view", $user_id = 0) {
 		$roles = array();
 		
@@ -1225,11 +1322,18 @@ class Module extends Model
 		}
 		return false;
 	}
-	
-	/**
-	* Get Module Field Access for role and access type
-	* Module::hasFieldAccess($module_id, $field_id, $access_type, $user_id);
-	**/
+
+    /**
+     * Get Module Field Access for role and access type
+     *
+     * Module::hasFieldAccess($module_id, $field_id, $access_type, $user_id);
+     *
+     * @param $module_id Module ID / Name
+     * @param $field_id Field ID / Name
+     * @param string $access_type Access Type - view / write
+     * @param int $user_id User id for which Access will be checked
+     * @return bool Returns true if access is there or false
+     */
 	public static function hasFieldAccess($module_id, $field_id, $access_type = "view", $user_id = 0) {
 		$roles = array();
 		
@@ -1298,11 +1402,17 @@ class Module extends Model
 		}
 		return false;
 	}
-	
-	/**
-	* Get Module Access for all roles
-	* Module::setDefaultRoleAccess($module_id, $role_id);
-	**/
+
+    /**
+     * Set Default Access for given Module and Role
+     * Helps to set Full Module Access for Super Admin
+     *
+     * Module::setDefaultRoleAccess($module_id, $role_id);
+     *
+     * @param $module_id Module ID
+     * @param $role_id Role ID
+     * @param string $access_type Access Type - full / readonly
+     */
 	public static function setDefaultRoleAccess($module_id, $role_id, $access_type = "readonly") {
 		$module = Module::find($module_id);
 		$module = Module::get($module->name);
@@ -1356,11 +1466,17 @@ class Module extends Model
 			}
 		}
 	}
-	
-	/**
-	* Get Module Access for all roles
-	* Module::setDefaultFieldRoleAccess($field_id, $role_id);
-	**/
+
+    /**
+     * Set Default Access for given Module Field and Role
+     * Helps to set Full Module Access for Super Admin when new field is created
+     *
+     * Module::setDefaultFieldRoleAccess($field_id, $role_id);
+     *
+     * @param $field_id Field ID
+     * @param $role_id Role ID
+     * @param string $access_type Access Type - full / readonly
+     */
 	public static function setDefaultFieldRoleAccess($field_id, $role_id, $access_type = "readonly") {
 		$field = ModuleFields::find($field_id);
 		$module = Module::get($field->module);
@@ -1387,12 +1503,16 @@ class Module extends Model
 		}
 	}
 
-	/**
-	* Get list of Columns to display in Index Page for a perticular Module
-	* Filter the column with Access control
-	* 
-	* ModuleFields::getModuleFields('Employees')
-	**/
+    /**
+     * Get list of Columns to display in Index Page for a particular Module
+     * Also Filters the columns for Access control
+     *
+     * Module::getListingColumns('Employees')
+     *
+     * @param $module_id_name Module Name / ID
+     * @param bool $isObjects Whether you want just Names of Columns or Column Field Objects
+     * @return array Array of Columns Names/Objects
+     */
 	public static function getListingColumns($module_id_name, $isObjects = false) {
 		$module = null;
 		if(is_int($module_id_name)) {

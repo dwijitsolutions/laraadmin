@@ -16,6 +16,13 @@ use DB;
 
 use Dwij\Laraadmin\Models\Module;
 
+/**
+ * Class ModuleFields
+ * @package Dwij\Laraadmin\Models
+ *
+ * Module Fields Model which works for create / update of fields via "Module Manager"
+ * This uses "Module::create_field_schema" method to actually create database schema
+ */
 class ModuleFields extends Model
 {
     protected $table = 'module_fields';
@@ -27,7 +34,14 @@ class ModuleFields extends Model
     protected $hidden = [
         
     ];
-    
+
+    /**
+     * Create Module Field by $request
+     * Method used in "Module Manager" via FieldController
+     *
+     * @param $request \Illuminate\Http\Request Object
+     * @return int Returns field id after creation
+     */
     public static function createField($request) {
         $module = Module::find($request->module_id);
         $module_id = $request->module_id;
@@ -101,6 +115,13 @@ class ModuleFields extends Model
         return $field->id;
     }
 
+    /**
+     * Update Module Field Context / Metadata
+     * Method used in "Module Manager" via FieldController
+     *
+     * @param $id Field ID
+     * @param $request \Illuminate\Http\Request Object
+     */
     public static function updateField($id, $request) {
         $module_id = $request->module_id;
         
@@ -177,6 +198,12 @@ class ModuleFields extends Model
         });
     }
 
+    /**
+     * Get Array of Fields for given Module
+     *
+     * @param $moduleName Module Name
+     * @return array Array of Field Objects
+     */
 	public static function getModuleFields($moduleName) {
         $module = Module::where('name', $moduleName)->first();
         $fields = DB::table('module_fields')->where('module', $module->id)->get();
@@ -184,18 +211,27 @@ class ModuleFields extends Model
 		
 		$fields_popup = array();
         $fields_popup['id'] = null;
-        
-		foreach($fields as $f) {
+
+        // Set field type (e.g. Dropdown/Taginput) in String Format to field Object
+        foreach($fields as $f) {
 			$f->field_type_str = array_search($f->field_type, $ftypes);
             $fields_popup [ $f->colname ] = $f;
         }
 		return $fields_popup;
     }
 
-	public static function getFieldValue($field, $value) {
+    /**
+     * Get Field Value when its associated with another Module / Table via "@"
+     * e.g. "@employees"
+     *
+     * @param $field Module Field Object
+     * @param $value_id This is a ID for which we wanted the Value from another table
+     * @return mixed Returns Value found in table or Value id itself
+     */
+	public static function getFieldValue($field, $value_id) {
         $external_table_name = substr($field->popup_vals, 1);
 		if(Schema::hasTable($external_table_name)) {
-			$external_value = DB::table($external_table_name)->where('id', $value)->get();
+			$external_value = DB::table($external_table_name)->where('id', $value_id)->get();
 			if(isset($external_value[0])) {
                 $external_module = DB::table('modules')->where('name_db', $external_table_name)->first();
                 if(isset($external_module->view_col)) {
@@ -209,13 +245,21 @@ class ModuleFields extends Model
                     }
                 }
 			} else {
-				return $value;
+				return $value_id;
 			}
 		} else {
-			return $value;
+			return $value_id;
 		}
     }
-	
+
+    /**
+     * Exclude the Columns form given list ($listing_cols) if don't have field View Access
+     * and return remaining Columns
+     *
+     * @param $module_name Module Name
+     * @param $listing_cols Array Listing Column Names
+     * @return array Excluded array of Listing Column Names
+     */
 	public static function listingColumnAccessScan($module_name, $listing_cols) {
         $module = Module::get($module_name);
 		$listing_cols_temp = array();
