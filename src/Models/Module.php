@@ -1,4 +1,11 @@
 <?php
+/**
+ * Code generated using LaraAdmin
+ * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
+ */
 
 namespace Dwij\Laraadmin\Models;
 
@@ -10,6 +17,14 @@ use Log;
 use DB;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
+/**
+ * Class Module
+ * @package Dwij\Laraadmin\Models
+ *
+ * Most important Model of LaraAdmin which looks after Module, ModuleField Generation.
+ * It also handles Module migrations via "generate" method to create Module Schema in Database.
+ *
+ */
 class Module extends Model
 {
 	protected $table = 'modules';
@@ -22,6 +37,15 @@ class Module extends Model
 		
 	];
 
+    /**
+     * Generates Module Base by taking Module Name and Module FontAwesome Icon
+     * It firstly checks if Module is already generated or not then
+     * it Creates Module into Database and return Module ID.
+     *
+     * @param $module_name Module name
+     * @param $icon Module FontAwesome Icon e.g. "fa-cube"
+     * @return mixed Returns Module ID
+     */
 	public static function generateBase($module_name, $icon) {
 		
 		$names = LAHelper::generateModuleNames($module_name,$icon);
@@ -51,7 +75,18 @@ class Module extends Model
 		}
 		return $module->id;
 	}
-	
+
+    /**
+     * This function handles Module Migration via "Module::generate()" call from migrations file.
+     * This creates all given Module fields into database.
+     *
+     * @param $module_name Module Name
+     * @param $module_name_db Module Database name in lowercase and concatenated by underscore.
+     * @param $view_col View Column of Module for Index Anchor purpose.
+     * @param string $faIcon Module FontAwesome Icon "fa-cube"
+     * @param $fields Array of Module fields
+     * @throws Exception Throws exceptions if Invalid view_column_name provided.
+     */
 	public static function generate($module_name, $module_name_db, $view_col, $faIcon = "fa-cube", $fields) {
 		
 		$names = LAHelper::generateModuleNames($module_name, $faIcon);

@@ -1,7 +1,10 @@
 <?php
 /**
- * Command for LaraAdmin Package Development
+ * Code generated using LaraAdmin
  * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
  */
 
 namespace Dwij\Laraadmin\Commands;
@@ -10,6 +13,13 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
+/**
+ * Class Packaging
+ * @package Dwij\Laraadmin\Commands
+ *
+ * Command to put latest development and changes of project into LaraAdmin package.
+ * [For LaraAdmin Developer's Only]
+ */
 class Packaging extends Command
 {
     /**
@@ -32,7 +42,7 @@ class Packaging extends Command
     var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization", "Backup"];
     
     /**
-     * Generate a CRUD files inclusing Controller, Model and Routes
+     * Copy Project changes into LaraAdmin package.
      *
      * @return mixed
      */
@@ -103,7 +113,13 @@ class Packaging extends Command
         $this->line('Exporting Utilities...');
         // $this->copyFile($from."/gulpfile.js", $to."/gulpfile.js"); // Temporarily Not used.
     }
-    
+
+    /**
+     * Replace Folder contents by deleting content of to folder first
+     *
+     * @param $from from folder
+     * @param $to to folder
+     */
     private function replaceFolder($from, $to) {
         $this->info("replaceFolder: ($from, $to)");
         if(file_exists($to)) {
@@ -111,7 +127,13 @@ class Packaging extends Command
         }
         LAHelper::recurse_copy($from, $to);
     }
-    
+
+    /**
+     * Copy file contents. If file not exists create it.
+     *
+     * @param $from from file
+     * @param $to to file
+     */
     private function copyFile($from, $to) {
         $this->info("copyFile: ($from, $to)");
         //LAHelper::recurse_copy($from, $to);

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Code generated using LaraAdmin
+ * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
+ */
 
 namespace Dwij\Laraadmin\Helpers;
 
@@ -7,9 +14,23 @@ use Log;
 
 use Dwij\Laraadmin\Models\Module;
 
+/**
+ * Class LAHelper
+ * @package Dwij\Laraadmin\Helpers
+ *
+ * This is LaraAdmin Helper class contains methods required for Admin Panel functionality.
+ */
 class LAHelper
 {
-	// $names = LAHelper::generateModuleNames($module_name);
+    /**
+     * Gives various names of Module in Object like label, table, model, controller, singular
+     *
+     * $names = LAHelper::generateModuleNames($module_name);
+     *
+     * @param $module_name module name
+     * @param $icon module icon in FontAwesome
+     * @return object
+     */
     public static function generateModuleNames($module_name, $icon) {
 		$array = array();
 		$module_name = trim($module_name);
@@ -26,8 +47,21 @@ class LAHelper
 		
 		return (object) $array;
 	}
-	
-	// $tables = LAHelper::getDBTables([]);
+
+    /**
+     * Get list of Database tables excluding LaraAdmin Context tables like
+     * backups, la_configs, la_menus, migrations, modules, module_fields, module_field_types
+     * password_resets, permissions, permission_role, role_module, role_module_fields, role_user
+     *
+     * Method currently supports MySQL and SQLite databases
+     *
+     * You can exclude additional tables by $$remove_tables
+     *
+     * $tables = LAHelper::getDBTables([]);
+     *
+     * @param array $remove_tables exclude additional tables
+     * @return array
+     */
     public static function getDBTables($remove_tables = []) {
         if(env('DB_CONNECTION') == "sqlite") {
 			$tables_sqlite = DB::select('select * from sqlite_master where type="table"');
@@ -84,8 +118,15 @@ class LAHelper
 		
 		return $tables_out2;
     }
-	
-	// $modules = LAHelper::getModuleNames([]);
+
+    /**
+     * Get Array of All Modules
+     *
+     * $modules = LAHelper::getModuleNames([]);
+     *
+     * @param array $remove_modules to exclude certain modules.
+     * @return array Array of Modules
+     */
     public static function getModuleNames($remove_modules = []) {
         $modules = Module::all();
 		
@@ -102,8 +143,19 @@ class LAHelper
 		
 		return $modules_out2;
     }
-	
-	// LAHelper::parseValues($field['popup_vals']);
+
+    /**
+     * Method to parse the dropdown, Multiselect, Taginput and radio values which are linked with
+     * either other tables via "@" e.g. "@employees" or string array of values
+     *
+     * This function parse the either case and gives output in html labels.
+     * Used only in show.blade.php of modules
+     *
+     * LAHelper::parseValues($field['popup_vals']);
+     *
+     * @param $value value source for column e.g. @employees / ["Marvel","Universal"]
+     * @return string html labeled values
+     */
     public static function parseValues($value) {
 		// return $value;
 		$valueOut = "";
@@ -126,8 +178,16 @@ class LAHelper
 		}
 		return $valueOut;
 	}
-	
-	// LAHelper::log("info", "", $commandObject);
+
+    /**
+     * Log method to log either in command line or in Log file depending on $type.
+     *
+     * LAHelper::log("info", "", $commandObject);
+     *
+     * @param $type where to put log - error / info / debug
+     * @param $text text to put in log
+     * @param $commandObject command object if log is to be put on commandline
+     */
 	public static function log($type, $text, $commandObject) {
 		if($commandObject) {
 			$commandObject->$type($text);
@@ -138,8 +198,15 @@ class LAHelper
 			Log::$type($text);
 		}
 	}
-	
-	// LAHelper::recurse_copy("", "");
+
+    /**
+     * Method copies folder recursively into another
+     *
+     * LAHelper::recurse_copy("", "");
+     *
+     * @param $src source folder
+     * @param $dst destination folder
+     */
 	public static function recurse_copy($src,$dst) { 
 		$dir = opendir($src); 
 		@mkdir($dst, 0777, true);
@@ -158,8 +225,14 @@ class LAHelper
 		}
 		closedir($dir); 
 	}
-	
-	// LAHelper::recurse_delete("");
+
+    /**
+     * Method deletes folder and its content
+     *
+     * LAHelper::recurse_delete("");
+     *
+     * @param $dir directory name
+     */
 	public static function recurse_delete($dir) {
 		if (is_dir($dir)) {
 			$objects = scandir($dir); 
@@ -175,8 +248,18 @@ class LAHelper
 		}
 	}
 	
-	// Generate Random Password
-	// $password = LAHelper::gen_password();
+	/**
+     * Generate Random Password
+     *
+     * $password = LAHelper::gen_password();
+     *
+     * @param int $chars_min minimum characters
+     * @param int $chars_max maximum characters
+     * @param bool $use_upper_case allowed uppercase characters
+     * @param bool $include_numbers includes numbers or not
+     * @param bool $include_special_chars include special charactors or not
+     * @return string random password according to configuration
+     */
 	public static function gen_password($chars_min=6, $chars_max=8, $use_upper_case=false, $include_numbers=false, $include_special_chars=false) {
 		$length = rand($chars_min, $chars_max);
 		$selection = 'aeuoyibcdfghjklmnpqrstvwxz';
@@ -194,7 +277,14 @@ class LAHelper
 		return $password;
 	}
 
-	// LAHelper::img($upload_id);
+    /**
+     * Get url of image by using $upload_id
+     *
+     * LAHelper::img($upload_id);
+     *
+     * @param $upload_id upload id of image / file
+     * @return string file / image url
+     */
     public static function img($upload_id) {
         $upload = \App\Models\Upload::find($upload_id);
         if(isset($upload->id)) {
@@ -203,8 +293,19 @@ class LAHelper
 			return "";
 		}
     }
-	
-	// LAHelper::createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height);
+
+    /**
+     * Get Thumbnail image path of Uploaded image
+     *
+     * LAHelper::createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height);
+     *
+     * @param $filepath file path
+     * @param $thumbpath thumbnail path
+     * @param $thumbnail_width thumbnail width
+     * @param $thumbnail_height thumbnail height
+     * @param bool $background background color - default transparent
+     * @return bool/string Returns Thumbnail path
+     */
 	public static function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background=false) {
 	    list($original_width, $original_height, $original_type) = getimagesize($filepath);
 	    if ($original_width > $original_height) {
@@ -246,7 +347,15 @@ class LAHelper
 	    return file_exists($thumbpath);
 	}
 
-	// LAHelper::print_menu_editor($menu)
+    /**
+     * Print the menu editor view.
+     * This needs to be done recursively
+     *
+     * LAHelper::print_menu_editor($menu)
+     *
+     * @param $menu menu array from database
+     * @return string menu editor html string
+     */
 	public static function print_menu_editor($menu) {
 		$editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute').'.la_menus.destroy', $menu->id], 'method' => 'delete', 'style'=>'display:inline']);
 		$editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
@@ -278,7 +387,15 @@ class LAHelper
 		return $str;
 	}
 
-	// LAHelper::print_menu($menu)
+	/**
+     * Print the sidebar menu view.
+     * This needs to be done recursively
+     *
+     * LAHelper::print_menu($menu)
+     *
+     * @param $menu menu array from database
+     * @return string menu in html string
+     */
 	public static function print_menu($menu, $active = false) {
 		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
 
@@ -306,7 +423,16 @@ class LAHelper
 		return $str;
 	}
 
-	// LAHelper::print_menu_topnav($menu)
+    /**
+     * Print the top navbar menu view.
+     * This needs to be done recursively
+     *
+     * LAHelper::print_menu_topnav($menu)
+     *
+     * @param $menu menu array from database
+     * @param bool $active is this menu active or not
+     * @return string menu in html string
+     */
 	public static function print_menu_topnav($menu, $active = false) {
 		$childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
 
@@ -336,7 +462,13 @@ class LAHelper
 		return $str;
 	}
 
-	// LAHelper::laravel_ver()
+    /**
+     * Get laravel version. very important in installation and handling Laravel 5.3 changes.
+     *
+     * LAHelper::laravel_ver()
+     *
+     * @return float|string laravel version
+     */
 	public static function laravel_ver() {
 		$var = \App::VERSION();
 		
@@ -352,12 +484,26 @@ class LAHelper
 		}
 	}
 
+    /**
+     * Get real Module name by replacing underscores within name
+     *
+     * @param $name Module Name with whitespace filled by underscores
+     * @return mixed return Module Name
+     */
 	public static function real_module_name($name){
 		$name = str_replace('_', ' ', $name);
 		return $name;
 	}
 	
-	// LAHelper::getLineWithString()
+	/**
+     * Get complete line within file by comparing passed substring $str
+     *
+     * LAHelper::getLineWithString()
+     *
+     * @param $fileName file name to be scanned
+     * @param $str substring to be checked for line match
+     * @return int/string return -1 if failed to find otherwise complete line in string format
+     */
 	public static function getLineWithString($fileName, $str) {
 		$lines = file($fileName);
 		foreach ($lines as $lineNumber => $line) {
@@ -368,7 +514,15 @@ class LAHelper
 		return -1;
 	}
 
-	// LAHelper::getLineWithString2()
+    /**
+     * Get complete line within given file contents by comparing passed substring $str
+     *
+     * LAHelper::getLineWithString2()
+     *
+     * @param $content content to be scanned
+     * @param $str substring to be checked for line match
+     * @return int/string return -1 if failed to find otherwise complete line in string format
+     */
 	public static function getLineWithString2($content, $str) {
 		$lines = explode(PHP_EOL, $content);
 		foreach ($lines as $lineNumber => $line) {
@@ -379,7 +533,14 @@ class LAHelper
 		return -1;
 	}
 
-	// LAHelper::setenv("CACHE_DRIVER", "array");
+    /**
+     * Method sets parameter in ".env" file as well as into php environment.
+     *
+     * LAHelper::setenv("CACHE_DRIVER", "array");
+     *
+     * @param $param parameter name
+     * @param $value parameter value
+     */
 	public static function setenv($param, $value) {
 
 		$envfile = LAHelper::openFile('.env');
@@ -391,19 +552,38 @@ class LAHelper
 		putenv($param . "=" . $value);
 	}
 
+    /**
+     * Get file contents
+     *
+     * @param $from file path
+     * @return string file contents in String
+     */
 	public static function openFile($from) {
 		$md = file_get_contents($from);
 		return $md;
 	}
 
-	// LAHelper::deleteFile();
+    /**
+     * Delete file
+     *
+     * LAHelper::deleteFile();
+     *
+     * @param $file_path file's path to be deleted
+     */
 	public static function deleteFile($file_path) {
 		if(file_exists($file_path)) {
 			unlink($file_path);
 		}
 	}
 
-	// LAHelper::get_migration_file("students_table");
+    /**
+     * Get Migration file name by passing matching table name
+     *
+     * LAHelper::get_migration_file("students_table");
+     *
+     * @param $file_name matching table name like 'create_employees_table'
+     * @return string returns migration file name if found else blank string
+     */
 	public static function get_migration_file($file_name) {
 		$mfiles = scandir(base_path('database/migrations/'));
         foreach ($mfiles as $mfile) {
@@ -417,7 +597,12 @@ class LAHelper
 		return "";
 	}
 
-	// Check if array is associative
+    /**
+     * Check if passed array is associative
+     *
+     * @param array $array array to be checked associative or not
+     * @return bool true if associative
+     */
 	public static function is_assoc_array(array $array) {
 		// Keys of the array
 		$keys = array_keys($array);

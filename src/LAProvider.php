@@ -1,4 +1,11 @@
 <?php
+/**
+ * Code generated using LaraAdmin
+ * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
+ */
 
 namespace Dwij\Laraadmin;
 
@@ -9,6 +16,13 @@ use Illuminate\Support\ServiceProvider;
 
 use Dwij\Laraadmin\Helpers\LAHelper;
 
+/**
+ * Class LAProvider
+ * @package Dwij\Laraadmin
+ *
+ * This is LaraAdmin Service Provider which looks after managing aliases, other required providers, blade directives
+ * and Commands.
+ */
 class LAProvider extends ServiceProvider
 {
     /**
@@ -57,7 +71,8 @@ class LAProvider extends ServiceProvider
     }
 
     /**
-     * Register the application services.
+     * Register the application services including routes, Required Providers, Alias, Controllers, Blade Directives
+     * and Commands.
      *
      * @return void
      */

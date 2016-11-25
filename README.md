@@ -58,7 +58,7 @@ If you come across any issue/bug please [report them here](https://github.com/dw
 
 ### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+LaraAdmin is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT) built by Dwij IT Solutions.
 
 ### Credits:
 - Ganesh Bhosale https://github.com/gdbhosale

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Code generated using LaraAdmin
+ * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
+ */
+
 namespace Dwij\Laraadmin;
 
 use Schema;
@@ -6,12 +14,29 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 
+/**
+ * Class LAFormMaker
+ * @package Dwij\Laraadmin
+ *
+ * This class is blade directive implementation for Form Elements in Module as well as other utilities
+ * for Access Control. It also has method process_values which processes fields data from its context.
+ *
+ */
 class LAFormMaker
 {
-	
-	/**
-	* Print input field enclosed within form-group
-	**/
+    /**
+     * Print input field enclosed within form.
+     *
+     * Uses blade syntax @la_input('name')
+     *
+     * @param $module Module Object
+     * @param $field_name Field Name for which input has be created
+     * @param null $default_val Default Value of Field. This will override default value from context.
+     * @param null $required2 Is this field mandatory.
+     * @param string $class Custom css class. Default would be bootstrap 'form-control' class
+     * @param array $params Additional Parameters for Customization
+     * @return string This return html string with field inputs
+     */
 	public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control', $params = [])
 	{
 		// Check Field Write Aceess
@@ -672,8 +697,15 @@ class LAFormMaker
 	}
 	
 	/**
-	* Display field using blade directive @la_display
-	**/
+     * Display field is CRUDs View show.blade.php with Label
+     *
+     * Uses blade syntax @la_display('name')
+     *
+     * @param $module Module Object
+     * @param $field_name Field Name for which display has be created
+     * @param string $class Custom css class. Default would be bootstrap 'form-control' class
+     * @return string This return html string with field display with Label
+     */
 	public static function display($module, $field_name, $class = 'form-control')
 	{
 		// Check Field View Access
@@ -889,8 +921,14 @@ class LAFormMaker
 	}
 	
 	/**
-	* Print form using blade directive @la_form
-	**/
+     * Print complete add/edit form for Module
+     *
+     * Uses blade syntax @la_form($employee_module_object)
+     *
+     * @param $module Module for which add/edit form has to be created.
+     * @param array $fields List of Module Field Names to customize Selective Fields for Form
+     * @return string returns HTML for complete Module Add/Edit Form
+     */
 	public static function form($module, $fields = [])
 	{
 		if(count($fields) == 0) {
@@ -898,24 +936,41 @@ class LAFormMaker
 		}
 		$out = "";
 		foreach ($fields as $field) {
+		    // Use input method of this class to generate all Module fields
 			$out .= LAFormMaker::input($module, $field);
 		}
 		return $out;
 	}
-	
-	/**
-	* Check Whether User has Module Access
-	**/
+
+    /**
+     * Check Whether User has Module Access
+     * Work like @if blade directive of Laravel
+     *
+     * @param $module_id Module Id for which Access will be checked
+     * @param string $access_type Access type like - view / create / edit / delete
+     * @param int $user_id User id for which access is checked. By default it takes logged-in user
+     * @return bool return whether access for this Module is true / false
+     */
 	public static function la_access($module_id, $access_type = "view", $user_id = 0)
 	{
+	    // Check Module access by hasAccess method
 		return Module::hasAccess($module_id, $access_type, $user_id);
 	}
-	
-	/**
-	* Check Whether User has Module Field Access
-	**/
+
+    /**
+     * Check Whether User has Module Field Access
+     *
+     * Work like @if blade directive of Laravel
+     *
+     * @param $module_id Module Id for which Access will be checked
+     * @param $field_id Field Id / Name for which Access will be checked
+     * @param string $access_type Field Access type like - view / write
+     * @param int $user_id User id for which access is checked. By default it takes logged-in user
+     * @return bool return whether access for this Module Field is true / false
+     */
 	public static function la_field_access($module_id, $field_id, $access_type = "view", $user_id = 0)
 	{
+        // Check Module Field access by hasFieldAccess method
 		return Module::hasFieldAccess($module_id, $field_id, $access_type, $user_id);
 	}
 }

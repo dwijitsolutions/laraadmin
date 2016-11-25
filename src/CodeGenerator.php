@@ -1,4 +1,12 @@
 <?php
+/**
+ * Code generated using LaraAdmin
+ * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
+ */
+
 namespace Dwij\Laraadmin;
 
 use Exception;
@@ -8,14 +16,22 @@ use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Helpers\LAHelper;
 use Dwij\Laraadmin\Models\Menu;
 
+/**
+ * Class CodeGenerator
+ * @package Dwij\Laraadmin
+ *
+ * This class performs the Code Generation for Controller, Model, CRUDs Views, Routes, Menu and Migrations.
+ * This also generates the naming config which contains names for controllers, tables and everything required
+ * to generate CRUDs.
+ */
 class CodeGenerator
 {
 	/**
-	* Generate Controller file
-    * if $generate is true then create file from module info from DB
-    * $comm is command Object from Migration command
-	* CodeGenerator::generateMigration($table, $generateFromTable);
-	**/
+     * Generate Controller file
+     *
+     * @param $config config object storing the Module Names
+     * @param null $comm command Object
+     */
 	public static function createController($config, $comm = null) {
 
         $templateDirectory = __DIR__.'/stubs';
@@ -44,6 +60,12 @@ class CodeGenerator
         file_put_contents(base_path('app/Http/Controllers/LA/'.$config->controllerName.".php"), $md);
     }
 
+    /**
+     * Generate Model file
+     *
+     * @param $config config object storing the Module Names
+     * @param null $comm command Object
+     */
     public static function createModel($config, $comm = null) {
 
         $templateDirectory = __DIR__.'/stubs';
@@ -57,6 +79,12 @@ class CodeGenerator
         file_put_contents(base_path('app/Models/'.$config->modelName.".php"), $md);
     }
 
+    /**
+     * Generate Views for CRUD
+     *
+     * @param $config config object storing the Module Names
+     * @param null $comm command Object
+     */
     public static function createViews($config, $comm = null) {
 
         $templateDirectory = __DIR__.'/stubs';
@@ -125,6 +153,12 @@ class CodeGenerator
         file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/show.blade.php'), $md);
     }
 
+    /**
+     * Append module controller routes to admin_routes.php
+     *
+     * @param $config config object storing the Module Names
+     * @param null $comm command Object
+     */
     public static function appendRoutes($config, $comm = null) {
 
         $templateDirectory = __DIR__.'/stubs';
@@ -151,6 +185,12 @@ class CodeGenerator
         file_put_contents($routesFile, $md, FILE_APPEND);
     }
 
+    /**
+     * Add Module to Menu
+     *
+     * @param $config config object storing the Module Names
+     * @param null $comm command Object
+     */
     public static function addMenu($config, $comm = null) {
 
         // $templateDirectory = __DIR__.'/stubs';
@@ -174,11 +214,15 @@ class CodeGenerator
     }
 
 	/**
-	* Generate migration file
-    * if $generate is true then create file from module info from DB
-    * $comm is command Object from Migration command
-	* CodeGenerator::generateMigration($table, $generateFromTable);
-	**/
+     * Generate migration file
+     *
+     * CodeGenerator::generateMigration($table, $generateFromTable);
+     *
+     * @param $table table name
+     * @param bool $generate true then create file from module info from DB
+     * @param null $comm command Object
+     * @throws Exception
+     */
 	public static function generateMigration($table, $generate = false, $comm = null)
 	{
 		$filesystem = new Filesystem();
@@ -324,7 +368,17 @@ class CodeGenerator
         LAHelper::log("info", "Migration done: ".$migrationFileName."\n", $comm);
 	}
 
-    // $config = CodeGenerator::generateConfig($module_name);
+    /**
+     * Generate naming configuration for passed module required to generate
+     * CRUDs, Model, Controller and Migration files
+     *
+     * $config = CodeGenerator::generateConfig($module_name);
+     *
+     * @param $module Module table in lowercase
+     * @param $icon Module icon - FontAwesome
+     * @return object Config Object with different names of Module
+     * @throws Exception When Migration for this Module is not done
+     */
     public static function generateConfig($module, $icon)
     {
         $config = array();

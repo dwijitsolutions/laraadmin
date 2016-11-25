@@ -1,7 +1,10 @@
 <?php
 /**
- * Controller generated using LaraAdmin
+ * Code generated using LaraAdmin
  * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
  */
 
 namespace Dwij\Laraadmin\Controllers;
@@ -17,6 +20,12 @@ use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Dwij\Laraadmin\Helpers\LAHelper;
 
+/**
+ * Class FieldController
+ * @package Dwij\Laraadmin\Controllers
+ *
+ * Controller looks after
+ */
 class FieldController extends Controller
 {
 	

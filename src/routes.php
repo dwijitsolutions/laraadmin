@@ -5,6 +5,10 @@ if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 	$as = config('laraadmin.adminRoute').'.';
 }
 
+/**
+ * Connect routes with ADMIN_PANEL permission(for security) and 'Dwij\Laraadmin\Controllers' namespace
+ * and '/admin' url.
+ */
 Route::group([
     'namespace'  => 'Dwij\Laraadmin\Controllers',
 	'as' => $as,

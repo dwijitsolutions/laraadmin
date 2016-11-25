@@ -1,7 +1,10 @@
 <?php
 /**
- * Command for LaraAdmin Installation
+ * Code generated using LaraAdmin
  * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
  */
 
 namespace Dwij\Laraadmin\Commands;
@@ -13,7 +16,12 @@ use Dwij\Laraadmin\Helpers\LAHelper;
 use Eloquent;
 use DB;
 
-
+/**
+ * Class LAInstall
+ * @package Dwij\Laraadmin\Commands
+ *
+ * Command to install LaraAdmin package into project which moves lot of file from 'src/Installs' directory to Project
+ */
 class LAInstall extends Command
 {
 	/**
@@ -34,12 +42,13 @@ class LAInstall extends Command
 	protected $to;
 
 	var $modelsInstalled = ["User", "Role", "Permission", "Employee", "Department", "Upload", "Organization", "Backup"];
-	
-	/**
-	 * Generate Whole structure for /admin
-	 *
-	 * @return mixed
-	 */
+
+    /**
+     * Generates and Moves files to install LaraAdmin package.
+     * At the end runs migrations and ask to create Super Admin in order to complete the installation.
+     *
+     * @throws Exception
+     */
 	public function handle()
 	{
 		try {
@@ -330,22 +339,46 @@ class LAInstall extends Command
 			}
 		}
 	}
-	
-	private function openFile($from) {
+
+    /**
+     * Get file contents
+     *
+     * @param $from file name
+     * @return string file contents in string
+     */
+    private function openFile($from) {
 		$md = file_get_contents($from);
 		return $md;
 	}
-	
+
+    /**
+     * Copy contents from one file to another
+     *
+     * @param $from content to be copied from this file
+     * @param $to content will be written to this file
+     */
 	private function writeFile($from, $to) {
 		$md = file_get_contents($from);
 		file_put_contents($to, $md);
 	}
-	
-	private function copyFolder($from, $to) {
+
+    /**
+     * Copy Folder contents
+     *
+     * @param $from from folder
+     * @param $to to folder
+     */
+    private function copyFolder($from, $to) {
 		// $this->info("copyFolder: ($from, $to)");
 		LAHelper::recurse_copy($from, $to);
 	}
-	
+
+    /**
+     * Replace Folder contents by deleting content of to folder first
+     *
+     * @param $from from folder
+     * @param $to to folder
+     */
 	private function replaceFolder($from, $to) {
 		// $this->info("replaceFolder: ($from, $to)");
 		if(file_exists($to)) {
@@ -353,7 +386,13 @@ class LAInstall extends Command
 		}
 		LAHelper::recurse_copy($from, $to);
 	}
-	
+
+    /**
+     * Copy file contents. If file not exists create it.
+     *
+     * @param $from from file
+     * @param $to to file
+     */
 	private function copyFile($from, $to) {
 		// $this->info("copyFile: ($from, $to)");
 		if(!file_exists(dirname($to))) {
@@ -362,7 +401,13 @@ class LAInstall extends Command
 		}
 		copy($from, $to);
 	}
-	
+
+    /**
+     * Append content of 'from' file to 'to' file
+     *
+     * @param $from from file
+     * @param $to to file
+     */
 	private function appendFile($from, $to) {
 		// $this->info("appendFile: ($from, $to)");
 		
@@ -370,9 +415,17 @@ class LAInstall extends Command
 		
 		file_put_contents($to, $md, FILE_APPEND);
 	}
-	
-	// TODO:Method not working properly
+
+	/**
+     * does file contains given text
+     *
+     * @param $filePath file to search text for
+     * @param $text text to be searched in file
+     * @return bool return true if text found in given file
+     */
 	private function fileContains($filePath, $text) {
+        // TODO: Method not working properly
+
 		$fileData = file_get_contents($filePath);
 		if (strpos($fileData, $text) === false ) {
 			return true;

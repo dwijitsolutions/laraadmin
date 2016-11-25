@@ -1,4 +1,11 @@
 <?php
+/**
+ * Code generated using LaraAdmin
+ * Help: http://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: http://dwijitsolutions.com
+ */
 
 namespace Dwij\Laraadmin\Commands;
 
@@ -10,6 +17,12 @@ use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\CodeGenerator;
 
+/**
+ * Class Crud
+ * @package Dwij\Laraadmin\Commands
+ *
+ * Command that generates CRUD's for a Module. Takes Module name as input.
+ */
 class Crud extends Command
 {
     /**
@@ -24,7 +37,7 @@ class Crud extends Command
      *
      * @var string
      */
-    protected $description = 'Generate CRUD Methods for given Module.';
+    protected $description = 'Generate CRUD\'s, Controller, Model, Routes and Menu for given Module.';
     
     /* ================ Config ================ */
     var $module = null;
@@ -36,9 +49,9 @@ class Crud extends Command
     var $singularCapitalVar = "";
     
     /**
-     * Generate a CRUD files inclusing Controller, Model and Routes
+     * Generate a CRUD files including Controller, Model, Views, Routes and Menu
      *
-     * @return mixed
+     * @throws Exception
      */
     public function handle()
     {
