@@ -22,16 +22,21 @@ use App\Role;
 use Schema;
 use Dwij\Laraadmin\Models\Menu;
 
+/**
+ * Class ModuleController
+ * @package Dwij\Laraadmin\Controllers
+ *
+ */
 class ModuleController extends Controller
 {
 	
 	public function __construct() {
 		// for authentication (optional)
-		$this->middleware('auth');
+		// $this->middleware('auth');
 	}
 	
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of the Module
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -44,22 +49,12 @@ class ModuleController extends Controller
 		]);
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Store a newly created Module
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function store(Request $request)
 	{
 		$module_id = Module::generateBase($request->name, $request->icon);
@@ -67,12 +62,12 @@ class ModuleController extends Controller
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Display the specified Module
+     *
+     * @param $id Module ID
+     * @return \Illuminate\Http\Response
+     */
 	public function show($id)
 	{
 		$ftypes = ModuleFieldTypes::getFTypes2();
@@ -95,24 +90,11 @@ class ModuleController extends Controller
 		])->with('module', $module);
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Update the specified Module
+     *
+     * @param \Illuminate\Http\Request $request
+     */
 	public function update(Request $request)
 	{
 		$module = Module::find($request->id);
@@ -131,12 +113,13 @@ class ModuleController extends Controller
 		}
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Remove the specified Module Including Module Schema, DB Table,
+     * Controller, Model, Views directory, routes and modifies the migration file.
+     *
+     * @param $id Module ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function destroy($id)
 	{
 		$module = Module::find($id);
@@ -211,11 +194,11 @@ class ModuleController extends Controller
 	}
 	
 	/**
-	 * Generate Modules CRUD + Model
-	 *
-	 * @param  int  $module_id
-	 * @return \Illuminate\Http\Response
-	 */
+     * Generate Modules CRUDs Views, Controller, Model, Routes, Menu and Set Default Full Access for Super Admin
+     *
+     * @param $module_id Module ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function generate_crud($module_id)
 	{
 		$module = Module::find($module_id);
@@ -242,13 +225,13 @@ class ModuleController extends Controller
 			'status' => 'success'
 		]);
 	}
-	
-	/**
-	 * Generate Modules Migrations
-	 *
-	 * @param  int  $module_id
-	 * @return \Illuminate\Http\Response
-	 */
+
+    /**
+     * Generate Module Migrations
+     *
+     * @param $module_id Module ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function generate_migr($module_id)
 	{
 		$module = Module::find($module_id);
@@ -260,12 +243,13 @@ class ModuleController extends Controller
 		]);
 	}
 
-	/**
-	 * Generate Modules Migrations and CRUD Model
-	 *
-	 * @param  int  $module_id
-	 * @return \Illuminate\Http\Response
-	 */
+    /**
+     * Generate Modules Migrations and CRUDs Views, Controller, Model, Routes, Menu and Set Default Full Access
+     * for Super Admin
+     *
+     * @param $module_id Module ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function generate_migr_crud($module_id)
 	{
 		$module = Module::find($module_id);
@@ -297,12 +281,13 @@ class ModuleController extends Controller
 			'status' => 'success'
 		]);
 	}
-/**
-	 * Generate Modules Update(migrations and crud) not routes
-	 *
-	 * @param  int  $module_id
-	 * @return \Illuminate\Http\Response
-	 */
+
+    /**
+     * Updates Modules all files except routes
+     *
+     * @param $module_id Module ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function generate_update($module_id)
 	{
 		$module = Module::find($module_id);
@@ -328,14 +313,14 @@ class ModuleController extends Controller
 			'status' => 'success'
 		]);
 	}
-	
-	/**
-	 * Set the model view_column
-	 *
-	 * @param  int  $module_id
-	 * @param string $column_name
-	 * @return \Illuminate\Http\Response
-	 */
+
+    /**
+     * Set the Modules view_column_name
+     *
+     * @param $module_id Module ID
+     * @param $column_name Module's View Column Name
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function set_view_col($module_id, $column_name){
 		$module = Module::find($module_id);
 		$module->view_col=$column_name;
@@ -343,7 +328,14 @@ class ModuleController extends Controller
 
 		return redirect()->route(config('laraadmin.adminRoute') . '.modules.show', [$module_id]);
 	}
-	
+
+    /**
+     * Save Module-Role Permissions including Module Fields
+     *
+     * @param Request $request
+     * @param $id Module ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function save_role_module_permissions(Request $request, $id)
 	{
 		$module = Module::find($id);
@@ -417,7 +409,14 @@ class ModuleController extends Controller
 		}
         return redirect(config('laraadmin.adminRoute') . '/modules/'.$id."#access");
 	}
-	
+
+    /**
+     * Update Module Field's Sorting Numbers
+     *
+     * @param Request $request
+     * @param $id Module ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function save_module_field_sort(Request $request, $id)
 	{
 		$sort_array = $request->sort_array;
@@ -431,6 +430,13 @@ class ModuleController extends Controller
 		]);
 	}
 
+    /**
+     * Get Array of all Module Files generated by LaraAdmin
+     *
+     * @param Request $request
+     * @param $module_id Module ID
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function get_module_files(Request $request, $module_id)
 	{
 		$module = Module::find($module_id);
