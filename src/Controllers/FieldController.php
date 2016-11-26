@@ -32,7 +32,7 @@ class FieldController extends Controller
      * Store a newly created Module Field via "Module Manager"
      *
      * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {

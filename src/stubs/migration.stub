@@ -14,7 +14,7 @@ use Dwij\Laraadmin\Models\Module;
 class __migration_class_name__ extends Migration
 {
     /**
-     * Run the migrations.
+     * Migration generate Module Table Schema by LaraAdmin
      *
      * @return void
      */
@@ -41,6 +41,7 @@ class __migration_class_name__ extends Migration
             "popup_vals" => ["Employee", "Client"]
         ]
         # Format Details: Check http://laraadmin.com/docs/migrations_cruds#schema-ui-types
+        
         colname: Database column name. lowercase, words concatenated by underscore (_)
         label: Label of Column e.g. Name, Cost, Is Public
         field_type: It defines type of Column in more General way.
@@ -53,7 +54,7 @@ class __migration_class_name__ extends Migration
         popup_vals: These are values for MultiSelect, TagInput and Radio Columns. Either connecting @tables or to list []
         */
     }
-
+    
     /**
      * Reverse the migrations.
      *
@@ -61,7 +62,7 @@ class __migration_class_name__ extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('__db_table_name__')) {
+        if(Schema::hasTable('__db_table_name__')) {
             Schema::drop('__db_table_name__');
         }
     }
