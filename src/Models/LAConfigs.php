@@ -25,17 +25,17 @@ use Dwij\Laraadmin\Helpers\LAHelper;
  * Check details on http://laraadmin.com/docs
  */
 class LAConfigs extends Model
-{   
-	protected $table = 'la_configs';
-	
-	protected $fillable = [
-		"key", "value"
-	];
-	
-	protected $hidden = [
-		
-	];
-
+{
+    protected $table = 'la_configs';
+    
+    protected $fillable = [
+        "key", "value"
+    ];
+    
+    protected $hidden = [
+    
+    ];
+    
     /**
      * Get configuration string value by using key such as 'sitename'
      *
@@ -44,15 +44,16 @@ class LAConfigs extends Model
      * @param $key key string of configuration
      * @return bool value of configuration
      */
-	public static function getByKey($key) {
-		$row = LAConfigs::where('key',$key)->first();
-		if(isset($row->value)) {
-			return $row->value;
-		} else {
-			return false;
-		}
-	}
-
+    public static function getByKey($key)
+    {
+        $row = LAConfigs::where('key', $key)->first();
+        if(isset($row->value)) {
+            return $row->value;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Get all configuration as object
      *
@@ -60,12 +61,13 @@ class LAConfigs extends Model
      *
      * @return object
      */
-	public static function getAll() {
-		$configs = array();
-		$configs_db = LAConfigs::all();
-		foreach ($configs_db as $row) {
-			$configs[$row->key] = $row->value;
-		}
-		return (object) $configs;
-	}
+    public static function getAll()
+    {
+        $configs = array();
+        $configs_db = LAConfigs::all();
+        foreach($configs_db as $row) {
+            $configs[$row->key] = $row->value;
+        }
+        return (object)$configs;
+    }
 }

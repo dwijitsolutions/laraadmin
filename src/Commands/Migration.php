@@ -22,20 +22,12 @@ use Dwij\Laraadmin\CodeGenerator;
  */
 class Migration extends Command
 {
-    /**
-     * The command signature.
-     *
-     * @var string
-     */
+    // The command signature.
     protected $signature = 'la:migration {table} {--generate}';
-
-    /**
-     * The command description.
-     *
-     * @var string
-     */
-    protected $description = 'Genrate Migrations for LaraAdmin';
-
+    
+    // The command description.
+    protected $description = 'Generate Migrations for LaraAdmin';
+    
     /**
      * Generate a Migration file either sample or from DB Context
      *

@@ -25,21 +25,7 @@ use Dwij\Laraadmin\CodeGenerator;
  */
 class Crud extends Command
 {
-    /**
-     * The command signature.
-     *
-     * @var string
-     */
-    protected $signature = 'la:crud {module}';
-
-    /**
-     * The command description.
-     *
-     * @var string
-     */
-    protected $description = 'Generate CRUD\'s, Controller, Model, Routes and Menu for given Module.';
-    
-    /* ================ Config ================ */
+    // ================ CRUD Config ================
     var $module = null;
     var $controllerName = "";
     var $modelName = "";
@@ -47,6 +33,12 @@ class Crud extends Command
     var $dbTableName = "";
     var $singularVar = "";
     var $singularCapitalVar = "";
+    
+    // The command signature.
+    protected $signature = 'la:crud {module}';
+    
+    // The command description.
+    protected $description = 'Generate CRUD\'s, Controller, Model, Routes and Menu for given Module.';
     
     /**
      * Generate a CRUD files including Controller, Model, Views, Routes and Menu
@@ -67,10 +59,10 @@ class Crud extends Command
             CodeGenerator::appendRoutes($config, $this);
             CodeGenerator::addMenu($config, $this);
             
-        } catch (Exception $e) {
-            $this->error("Crud::handle exception: ".$e);
-            throw new Exception("Unable to generate migration for ".($module)." : ".$e->getMessage(), 1);
+        } catch(Exception $e) {
+            $this->error("Crud::handle exception: " . $e);
+            throw new Exception("Unable to generate migration for " . ($module) . " : " . $e->getMessage(), 1);
         }
-        $this->info("\nCRUD successfully generated for ".($module)."\n");
+        $this->info("\nCRUD successfully generated for " . ($module) . "\n");
     }
 }

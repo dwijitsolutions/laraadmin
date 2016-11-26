@@ -29,7 +29,8 @@ use Dwij\Laraadmin\Helpers\LAHelper;
  */
 class MenuController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         // for authentication (optional)
         // $this->middleware('auth');
     }
@@ -50,11 +51,11 @@ class MenuController extends Controller
             'modules' => $modules
         ]);
     }
-
+    
     /**
      * Store a newly created Menu in Database
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -63,7 +64,7 @@ class MenuController extends Controller
         $url = Input::get('url');
         $icon = Input::get('icon');
         $type = Input::get('type');
-
+        
         if($type == "module") {
             $module_id = Input::get('module_id');
             $module = Module::find($module_id);
@@ -90,15 +91,15 @@ class MenuController extends Controller
                 "status" => "success"
             ], 200);
         } else {
-            return redirect(config('laraadmin.adminRoute').'/la_menus');
+            return redirect(config('laraadmin.adminRoute') . '/la_menus');
         }
     }
-
+    
     /**
      * Update Custom Menu
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -107,30 +108,30 @@ class MenuController extends Controller
         $url = Input::get('url');
         $icon = Input::get('icon');
         $type = Input::get('type');
-
+        
         $menu = Menu::find($id);
         $menu->name = $name;
         $menu->url = $url;
         $menu->icon = $icon;
         $menu->save();
-
-        return redirect(config('laraadmin.adminRoute').'/la_menus');
+        
+        return redirect(config('laraadmin.adminRoute') . '/la_menus');
     }
-
+    
     /**
      * Remove the specified Menu from database
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         Menu::find($id)->delete();
-
+        
         // Redirecting to index() method for Listing
-        return redirect()->route(config('laraadmin.adminRoute').'.la_menus.index');
+        return redirect()->route(config('laraadmin.adminRoute') . '.la_menus.index');
     }
-
+    
     /**
      * Update Menu Hierarchy
      *
@@ -140,14 +141,14 @@ class MenuController extends Controller
     {
         $parents = Input::get('jsonData');
         $parent_id = 0;
-
-        for ($i=0; $i < count($parents); $i++) {
-            $this->apply_hierarchy($parents[$i], $i+1, $parent_id);
+        
+        for($i = 0; $i < count($parents); $i++) {
+            $this->apply_hierarchy($parents[$i], $i + 1, $parent_id);
         }
-
+        
         return $parents;
     }
-
+    
     /**
      * Save Menu hierarchy Recursively
      *
@@ -162,11 +163,11 @@ class MenuController extends Controller
         $menu->parent = $parent_id;
         $menu->hierarchy = $num;
         $menu->save();
-
+        
         // apply hierarchy to children if exists
         if(isset($menuItem['children'])) {
-            for ($i=0; $i < count($menuItem['children']); $i++) {
-                $this->apply_hierarchy($menuItem['children'][$i], $i+1, $menuItem['id']);
+            for($i = 0; $i < count($menuItem['children']); $i++) {
+                $this->apply_hierarchy($menuItem['children'][$i], $i + 1, $menuItem['id']);
             }
         }
     }
