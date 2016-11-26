@@ -341,7 +341,7 @@ class CodeGenerator
                     // If migration not exists in migrations table
                     if(\DB::table('migrations')->where('migration', 'like', '%' . $migrationName . '%')->count() == 0) {
                         \DB::table('migrations')->insert([
-                            'migration' => $migrationFileName,
+                            'migration' => str_replace(".php", "", $migrationFileName),
                             'batch' => 1
                         ]);
                     }
@@ -366,6 +366,9 @@ class CodeGenerator
             $migrationData = str_replace("__generated__", $generateData, $migrationData);
             
             file_put_contents(base_path('database/migrations/' . $migrationFileName), $migrationData);
+
+            // Load newly generated migration into environment. Needs in testing mode.
+            require_once base_path('database/migrations/'.$migrationFileName);
             
         } catch(Exception $e) {
             throw new Exception("Unable to generate migration for " . $table . " : " . $e->getMessage(), 1);
