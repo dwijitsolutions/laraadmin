@@ -44,9 +44,11 @@ class ModuleController extends Controller
     public function index()
     {
         $modules = Module::all();
+        $tables = LAHelper::getDBTables([]);
         
         return View('la.modules.index', [
-            'modules' => $modules
+            'modules' => $modules,
+            'tables' => $tables
         ]);
     }
     

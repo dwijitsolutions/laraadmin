@@ -4,6 +4,7 @@
 
 <?php
 use Dwij\Laraadmin\Models\Module;
+use Dwij\Laraadmin\Models\ModuleFields;
 ?>
 
 @section('main-content')
@@ -266,7 +267,29 @@ use Dwij\Laraadmin\Models\Module;
 					
 					<div class="form-group">
 						<label for="colname">Column Name :</label>
-						{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
+						<?php
+						$columns = Schema::getColumnListing($module->name_db);
+						
+						$col_list = array();
+						foreach($columns as $col) {
+							// check if this column exists in Module
+							$field = ModuleFields::where('colname', $col)->where('module', $module->id)->first();
+							if($col != 'id' && $col != 'deleted_at' && $col != 'created_at' && $col != 'updated_at' && !isset($field->id)) {
+								$column = DB::connection()->getDoctrineColumn($module->name_db, $col);
+								if($column->getDefault() == '') {
+									$default = "None";
+								} else {
+									$default = $column->getDefault();
+								}									
+								$col_list[$col] = $col." - ".$column->getType().' - '.$column->getLength().' - '.$default; 
+							}
+						}
+
+						if($module->is_gen == 0 && count($col_list) > 0) { ?>
+							{{ Form::select("colname", $col_list, $col_list, ['class'=>'form-control', 'required' => 'required']) }}
+						<?php } else { ?>
+							{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
+						<?php }	?>
 					</div>
 					
 					<div class="form-group">

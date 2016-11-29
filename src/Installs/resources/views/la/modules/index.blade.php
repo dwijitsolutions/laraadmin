@@ -11,7 +11,8 @@ use Dwij\Laraadmin\Models\Module;
 @section("htmlheader_title", "Modules Listing")
 
 @section("headerElems")
-<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Module</button>
+<button class="btn btn-success btn-sm pull-right " data-toggle="modal" data-target="#AddExistModal">Module from Existing Table</button>
+<button class="btn btn-success btn-sm pull-right " style="margin-right:5px;" data-toggle="modal" data-target="#AddModal">Add Module</button>
 @endsection
 
 @section("main-content")
@@ -47,6 +48,52 @@ use Dwij\Laraadmin\Models\Module;
 			@endforeach
 		</tbody>
 		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="AddExistModal" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Module Of Exist Table</h4>
+			</div>
+			{!! Form::open(['route' => config('laraadmin.adminRoute') . '.modules.store', 'id' => 'module-add-form']) !!}
+			<div class="modal-body">
+				<div class="box-body">
+					<!--<div class="form-group">
+						<label for="name">Module Name :</label>
+						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
+					</div>-->				
+					<div class="form-group">
+						<label for="table">Table</label>
+						<?php
+						$default_val ='';
+						$table_module = array();
+						foreach($tables as $table) {
+							$modItems = Module::where('name_db', $table)->first();
+							if(!isset($modItems)) {
+								$table_module[$table] = $table;
+							}
+						}
+						?>
+						{{ Form::select("name", $table_module, $default_val, ['class'=>'form-control', 'rel' => '']) }}
+					</div>
+					<div class="form-group">
+						<label for="icon">Icon</label>
+						<div class="input-group">
+							<input class="form-control" placeholder="FontAwesome Icon" name="icon" type="text" value="fa-cube"  data-rule-minlength="1" required>
+							<span class="input-group-addon"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				{!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
+			</div>
+			{!! Form::close() !!}
+		</div>
 	</div>
 </div>
 

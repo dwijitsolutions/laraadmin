@@ -106,12 +106,15 @@ class ModuleFields extends Model
                     $table->timestamps();
                 });
             }
-            Schema::table($module->name_db, function ($table) use ($field, $module) {
-                // $table->string($field->colname);
-                // createUpdateFieldSchema()
-                $field->module_obj = $module;
-                Module::create_field_schema($table, $field, false);
-            });
+
+            if(!Schema::hasColumn($module->name_db, $field->colname)) {
+                Schema::table($module->name_db, function ($table) use ($field, $module) {
+                    // $table->string($field->colname);
+                    // createUpdateFieldSchema()
+                    $field->module_obj = $module;
+                    Module::create_field_schema($table, $field, false);
+                });
+            }
         }
         return $field->id;
     }
