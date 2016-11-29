@@ -97,16 +97,26 @@ class ModuleFields extends Model
                 $field->popup_vals = "";
             }
             $field->save();
+
+            // Get number of Module fields
+            $modulefields = ModuleFields::where('module', $module_id)->get();
             
-            // Create Schema for Module Field
+            // Create Schema for Module Field when table is not exist
             if(!Schema::hasTable($module->name_db)) {
                 Schema::create($module->name_db, function ($table) {
                     $table->increments('id');
                     $table->softDeletes();
                     $table->timestamps();
                 });
+            } else if(Schema::hasTable($module->name_db) && count($modulefields) == 0) {
+                // create SoftDeletes + Timestamps for module with existing table
+                Schema::table($module->name_db, function ($table) {
+                    $table->softDeletes();
+                    $table->timestamps();
+                });
             }
 
+            // Create Schema for Module Field when table is exist
             if(!Schema::hasColumn($module->name_db, $field->colname)) {
                 Schema::table($module->name_db, function ($table) use ($field, $module) {
                     // $table->string($field->colname);
