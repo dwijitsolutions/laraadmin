@@ -916,7 +916,7 @@ class Module extends Model
         if(is_int($module_name)) {
             $module = Module::find($module_name);
         } else {
-            $module = Module::where('name', $module_name)->first();
+            $module = Module::where('name', $module_name)->orWhere('name_db', $module_name)->first();
         }
         
         // If Module is found in database also attach its field array to it.

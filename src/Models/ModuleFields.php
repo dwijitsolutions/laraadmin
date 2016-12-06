@@ -95,8 +95,7 @@ class ModuleFields extends Model
                 }
             } else {
                 $field->popup_vals = "";
-            }
-            $field->save();
+            }          
 
             // Get number of Module fields
             $modulefields = ModuleFields::where('module', $module_id)->get();
@@ -126,6 +125,8 @@ class ModuleFields extends Model
                 });
             }
         }
+        $field->save();
+        
         return $field->id;
     }
     
