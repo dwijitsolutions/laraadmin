@@ -496,6 +496,8 @@ class Module extends Model
                     $var->default($field->defaultvalue);
                 } else if($field->required) {
                     $var->default(1);
+                } else {
+                    $var->default(0);
                 }
                 break;
             case 'Integer':
