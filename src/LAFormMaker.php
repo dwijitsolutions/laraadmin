@@ -72,10 +72,10 @@ class LAFormMaker
             if(!isset($params['placeholder'])) {
                 $params['placeholder'] = 'Enter ' . $label;
             }
-            if($minlength) {
+            if(isset($minlength)) {
                 $params['data-rule-minlength'] = $minlength;
             }
-            if($maxlength) {
+            if(isset($maxlength)) {
                 $params['data-rule-maxlength'] = $maxlength;
             }
             if($unique && !isset($params['unique'])) {
