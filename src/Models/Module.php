@@ -761,32 +761,6 @@ class Module extends Model
                     $var->default("");
                 }
                 break;
-            case 'Location':
-                $var = null;
-                if($update) {
-                    $var = $table->string($field->colname, 30)->nullable()->change();
-                } else {
-                    $var = $table->string($field->colname, 30)->nullable();
-                }
-                if($field->defaultvalue != "" && str_contains($field->defaultvalue, ",")) {
-                    $var->default($field->defaultvalue);
-                } else if($field->required) {
-                    $var->default("0.0,0.0");
-                }
-                break;
-            case 'Color':
-                $var = null;
-                if($update) {
-                    $var = $table->string($field->colname, 25)->nullable()->change();
-                } else {
-                    $var = $table->string($field->colname, 25)->nullable();
-                }
-                if($field->defaultvalue != "") {
-                    $var->default($field->defaultvalue);
-                } else if($field->required) {
-                    $var->default("#000");
-                }
-                break;
         }
         
         // set column unique
