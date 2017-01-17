@@ -882,7 +882,11 @@ class LAFormMaker
                             $valueSel = json_decode($value);
                             foreach($values as $key => $val) {
                                 if(in_array($key, $valueSel)) {
-                                    $valueOut .= "<a href='" . url(config("laraadmin.adminRoute") . "/" . $moduleVal->name_db . "/" . $key) . "' class='label label-primary'>" . $val . "</a> ";
+                                    $module_link = "";
+                                    if(isset($moduleVal->id)) {
+                                        $module_link = "href='" . url(config("laraadmin.adminRoute") . "/" . $moduleVal->name_db . "/" . $key) . "'";
+                                    }
+                                    $valueOut .= "<a $module_link class='label label-primary'>" . $val . "</a> ";
                                 }
                             }
                         } else {
