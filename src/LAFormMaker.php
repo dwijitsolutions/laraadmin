@@ -143,7 +143,16 @@ class LAFormMaker
                         $default_val = $row->$field_name;
                     }
                     
+                    if($params['data-rule-maxlength'] != "" && $params['data-rule-maxlength'] != 0) {
+                        $params['max'] = $params['data-rule-maxlength'];
+                    }
+                    if($params['data-rule-minlength'] != "" && $params['data-rule-minlength'] != 0) {
+                        $params['min'] = $params['data-rule-minlength'];
+                    }
+
+                    unset($params['data-rule-minlength']);
                     unset($params['data-rule-maxlength']);
+                    
                     $params['data-rule-currency'] = "true";
                     $params['min'] = "0";
                     $out .= Form::number($field_name, $default_val, $params);
@@ -217,12 +226,21 @@ class LAFormMaker
                         $default_val = $row->$field_name;
                     }
                     
+                    if($params['data-rule-maxlength'] != "" && $params['data-rule-maxlength'] != 0) {
+                        $params['max'] = $params['data-rule-maxlength'];
+                    }
+                    if($params['data-rule-minlength'] != "" && $params['data-rule-minlength'] != 0) {
+                        $params['min'] = $params['data-rule-minlength'];
+                    }
+
+                    unset($params['data-rule-minlength']);
                     unset($params['data-rule-maxlength']);
+
                     $out .= Form::number($field_name, $default_val, $params);
                     break;
                 case 'Dropdown':
                     $out .= '<label for="' . $field_name . '">' . $label . $required_ast . ' :</label>';
-                    
+
                     unset($params['data-rule-maxlength']);
                     $params['data-placeholder'] = $params['placeholder'];
                     unset($params['placeholder']);
@@ -233,20 +251,19 @@ class LAFormMaker
                         $default_val = $defaultvalue;
                     }
                     // Override the edit value
-                    if(isset($row)) {
+                    if(isset($row) && $row->$field_name) {
                         $default_val = $row->$field_name;
-                    } else if($default_val == "" || $default_val == NULL || $default_val == "NULL") {
+                    } else if($default_val == NULL || $default_val == "" || $default_val == "NULL") {
                         // When Adding Record if we dont have default value let's not show NULL By Default
                         $default_val = "0";
                     }
                     
-                    $is_null = "";
                     // Bug here - NULL value Item still shows Not null in Form
                     if($default_val == NULL) {
-                        $is_null = " checked";
                         $params['disabled'] = "";
                     }
                     
+                    $popup_vals_str = $popup_vals;
                     if($popup_vals != "") {
                         $popup_vals = LAFormMaker::process_values($popup_vals);
                     } else {
@@ -254,12 +271,9 @@ class LAFormMaker
                     }
                     
                     if(!$required) {
-                        $out .= "<span class='row'><span class='col-md-10 col-sm-8 col-xs-6 p0'>" . Form::select($field_name, $popup_vals, $default_val, $params) . "</span>";
-                        $out .= "<span class='checkbox col-md-2 col-sm-4 col-xs-6 m0 p0'><label class='pt5 null_dd'><input class='cb_null_dd' type='checkbox' name='null_dd_" . $field_name . "' $is_null value='true'> Null ?</label></span>";
-                        $out .= "</span>";
-                    } else {
-                        $out .= Form::select($field_name, $popup_vals, $default_val, $params);
+                        array_unshift($popup_vals, "None");
                     }
+                    $out .= Form::select($field_name, $popup_vals, $default_val, $params);
                     
                     break;
                 case 'Email':
@@ -296,10 +310,10 @@ class LAFormMaker
                     }
                     if(isset($upload->id)) {
                         $out .= "<a class='btn btn-default btn_upload_file hide' file_type='file' selecter='" . $field_name . "'>Upload <i class='fa fa-cloud-upload'></i></a>
-							<a class='uploaded_file' target='_blank' href='" . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . "'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
+                            <a class='uploaded_file' target='_blank' href='" . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . "'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
                     } else {
                         $out .= "<a class='btn btn-default btn_upload_file' file_type='file' selecter='" . $field_name . "'>Upload <i class='fa fa-cloud-upload'></i></a>
-							<a class='uploaded_file hide' target='_blank'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
+                            <a class='uploaded_file hide' target='_blank'><i class='fa fa-file-o'></i><i title='Remove File' class='fa fa-times'></i></a>";
                     }
                     break;
                 
@@ -358,7 +372,16 @@ class LAFormMaker
                         $default_val = $row->$field_name;
                     }
                     
+                    if($params['data-rule-maxlength'] != "" && $params['data-rule-maxlength'] != 0) {
+                        $params['max'] = $params['data-rule-maxlength'];
+                    }
+                    if($params['data-rule-minlength'] != "" && $params['data-rule-minlength'] != 0) {
+                        $params['min'] = $params['data-rule-minlength'];
+                    }
+
+                    unset($params['data-rule-minlength']);
                     unset($params['data-rule-maxlength']);
+
                     $out .= Form::number($field_name, $default_val, $params);
                     break;
                 case 'HTML':
@@ -394,17 +417,26 @@ class LAFormMaker
                     }
                     if(isset($upload->id)) {
                         $out .= "<a class='btn btn-default btn_upload_image hide' file_type='image' selecter='" . $field_name . "'>Upload <i class='fa fa-cloud-upload'></i></a>
-							<div class='uploaded_image'><img src='" . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name . "?s=150") . "'><i title='Remove Image' class='fa fa-times'></i></div>";
+                            <div class='uploaded_image'><img src='" . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name . "?s=150") . "'><i title='Remove Image' class='fa fa-times'></i></div>";
                     } else {
                         $out .= "<a class='btn btn-default btn_upload_image' file_type='image' selecter='" . $field_name . "'>Upload <i class='fa fa-cloud-upload'></i></a>
-							<div class='uploaded_image hide'><img src=''><i title='Remove Image' class='fa fa-times'></i></div>";
+                            <div class='uploaded_image hide'><img src=''><i title='Remove Image' class='fa fa-times'></i></div>";
                     }
                     
                     break;
                 case 'Integer':
                     $out .= '<label for="' . $field_name . '">' . $label . $required_ast . ' :</label>';
                     
+                    if($params['data-rule-maxlength'] != "" && $params['data-rule-maxlength'] != 0) {
+                        $params['max'] = $params['data-rule-maxlength'];
+                    }
+                    if($params['data-rule-minlength'] != "" && $params['data-rule-minlength'] != 0) {
+                        $params['min'] = $params['data-rule-minlength'];
+                    }
+
+                    unset($params['data-rule-minlength']);
                     unset($params['data-rule-maxlength']);
+                    
                     if($default_val == null) {
                         $default_val = $defaultvalue;
                     }
@@ -785,7 +817,7 @@ class LAFormMaker
                         $upload = \App\Models\Upload::find($value);
                         if(isset($upload->id)) {
                             $value = '<a class="preview" target="_blank" href="' . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . '">
-							<span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> ' . $upload->name . '</a>';
+                            <span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> ' . $upload->name . '</a>';
                         } else {
                             $value = 'Uploaded file not found.';
                         }
@@ -810,7 +842,7 @@ class LAFormMaker
                                 }
                                 // $uploadImages .= "<a class='uploaded_file2' upload_id='".$upload->id."' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
                                 $uploads_html .= '<a class="preview" target="_blank" href="' . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . '" data-toggle="tooltip" data-placement="top" data-container="body" style="display:inline-block;margin-right:5px;" title="' . $upload->name . '">
-										' . $fileImage . '</a>';
+                                        ' . $fileImage . '</a>';
                             }
                         }
                         $value = $uploads_html;
