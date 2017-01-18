@@ -241,6 +241,7 @@ class LAFormMaker
                 case 'Dropdown':
                     $out .= '<label for="' . $field_name . '">' . $label . $required_ast . ' :</label>';
 
+                    unset($params['data-rule-minlength']);
                     unset($params['data-rule-maxlength']);
                     $params['data-placeholder'] = $params['placeholder'];
                     unset($params['placeholder']);
