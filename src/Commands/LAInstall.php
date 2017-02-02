@@ -60,7 +60,7 @@ class LAInstall extends Command
                 $this->line("DB Assistant Initiated....");
                 $db_data = array();
                 
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     $db_data['host'] = $this->ask('Database Host', '127.0.0.1');
                     $db_data['port'] = $this->ask('Database Port', '3306');
                 }
@@ -76,7 +76,7 @@ class LAInstall extends Command
                 
                 $default_db_conn = env('DB_CONNECTION', 'mysql');
                 
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     config(['database.connections.' . $default_db_conn . '.host' => $db_data['host']]);
                     config(['database.connections.' . $default_db_conn . '.port' => $db_data['port']]);
                     LAHelper::setenv("DB_HOST", $db_data['host']);
@@ -107,7 +107,7 @@ class LAInstall extends Command
                 // Controllers
                 $this->line("\n" . 'Generating Controllers...');
                 $this->copyFolder($from . "/app/Controllers/Auth", $to . "/app/Http/Controllers/Auth");
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     // Delete Redundant Controllers
                     unlink($to . "/app/Http/Controllers/Auth/PasswordController.php");
                     unlink($to . "/app/Http/Controllers/Auth/AuthController.php");
@@ -118,7 +118,7 @@ class LAInstall extends Command
                     unlink($to . "/app/Http/Controllers/Auth/ResetPasswordController.php");
                 }
                 $this->replaceFolder($from . "/app/Controllers/LA", $to . "/app/Http/Controllers/LA");
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     $this->copyFile($from . "/app/Controllers/Controller.5.3.php", $to . "/app/Http/Controllers/Controller.php");
                 } else {
                     $this->copyFile($from . "/app/Controllers/Controller.php", $to . "/app/Http/Controllers/Controller.php");
@@ -126,7 +126,7 @@ class LAInstall extends Command
                 $this->copyFile($from . "/app/Controllers/HomeController.php", $to . "/app/Http/Controllers/HomeController.php");
                 
                 // Middleware
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     $this->copyFile($from . "/app/Middleware/RedirectIfAuthenticated.php", $to . "/app/Http/Middleware/RedirectIfAuthenticated.php");
                 }
                 
@@ -143,7 +143,7 @@ class LAInstall extends Command
                 }
                 foreach($this->modelsInstalled as $model) {
                     if($model == "User") {
-                        if(LAHelper::laravel_ver() == 5.3) {
+                        if(LAHelper::laravel_ver() >= 5.3) {
                             $this->copyFile($from . "/app/Models/" . $model . "5.3.php", $to . "/app/" . $model . ".php");
                         } else {
                             $this->copyFile($from . "/app/Models/" . $model . ".php", $to . "/app/" . $model . ".php");
@@ -251,7 +251,7 @@ class LAInstall extends Command
                 // Routes
                 $this->line('Appending routes...');
                 //if(!$this->fileContains($to."/app/Http/routes.php", "laraadmin.adminRoute")) {
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     if(LAHelper::getLineWithString($to . "/routes/web.php", "require __DIR__.'/admin_routes.php';") == -1) {
                         $this->appendFile($from . "/app/routes.php", $to . "/routes/web.php");
                     }
@@ -266,7 +266,7 @@ class LAInstall extends Command
                 // tests
                 $this->line('Generating tests...');
                 $this->copyFolder($from . "/tests", $to . "/tests");
-                if(LAHelper::laravel_ver() == 5.3) {
+                if(LAHelper::laravel_ver() >= 5.3) {
                     unlink($to . '/tests/TestCase.php');
                     rename($to . '/tests/TestCase5.3.php', $to . '/tests/TestCase.php');
                 } else {
