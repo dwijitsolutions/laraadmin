@@ -15,7 +15,7 @@ Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
 */
 
 $as = "";
-if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() >= 5.3) {
+if(\Dwij\Laraadmin\Helpers\LAHelper::is_recent_laravel_version()) {
 	$as = config('laraadmin.adminRoute').'.';
 	
 	// Routes for Laravel 5.3
