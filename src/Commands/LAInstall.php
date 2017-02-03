@@ -6,16 +6,13 @@
  * Developed by: Dwij IT Solutions
  * Developer Website: http://dwijitsolutions.com
  */
-
 namespace Dwij\Laraadmin\Commands;
-
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Helpers\LAHelper;
 use Eloquent;
 use DB;
-
 /**
  * Class LAInstall
  * @package Dwij\Laraadmin\Commands
@@ -56,7 +53,7 @@ class LAInstall extends Command
             $this->info('from: ' . $from . " to: " . $to);
 
             $this->line("\nDB Assistant:");
-            if($this->confirm("Want to set your Database config in the .env file ?", true)) {
+            if($this->confirm("Want to set your Database config in the .env file?", true)) {
                 $this->line("DB Assistant Initiated....");
                 $db_data = array();
 
@@ -95,11 +92,10 @@ class LAInstall extends Command
                 config(['cache.default' => 'array']);
                 LAHelper::setenv("CACHE_DRIVER", "array");
             }
-
             $mix_file = 'gulpfile.js';
-             +            if (LAHelper::laravel_ver() > 5.3) {
-             +                $mix_file = 'webpack.mix.js';
-             +            }
+            if (LAHelper::laravel_ver() > 5.3) {
+                $mix_file = 'webpack.mix.js';
+            }
             if($this->confirm("This process may change/append to the following of your existing project files:"
                 . "\n\n\t app/Http/routes.php"
                 . "\n\t app/User.php"
@@ -148,7 +144,7 @@ class LAInstall extends Command
                 foreach($this->modelsInstalled as $model) {
                     if($model == "User") {
                         if(LAHelper::is_recent_laravel_version()) {
-                            $this->copyFile($from . "/app/Models/" . $model . "5.3.php", $to . "/app/" . $model . ".php");
+                            $this->copyFile($from . "/app/Models/" . $model . ".php", $to . "/app/" . $model . ".php");
                         } else {
                             $this->copyFile($from . "/app/Models/Legacy." . $model . ".php", $to . "/app/" . $model . ".php");
                         }
