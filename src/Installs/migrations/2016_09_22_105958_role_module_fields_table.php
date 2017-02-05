@@ -23,9 +23,9 @@ class RoleModuleFieldsTable extends Migration
         Schema::create('role_module_fields', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('role_id')->unsigned();
+			$table->unsignedInteger('role_id')->nullable();
 			$table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
-			$table->integer('field_id')->unsigned();
+			$table->unsignedInteger('field_id')->nullable();
 			$table->foreign('field_id')->references('id')->on('module_fields')->onUpdate('cascade')->onDelete('cascade');
             $table->enum('access', ['invisible', 'readonly', 'write']);
 			$table->timestamps();

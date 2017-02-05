@@ -23,9 +23,9 @@ class RoleModuleTable extends Migration
         Schema::create('role_module', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('role_id')->unsigned();
+			$table->unsignedInteger('role_id')->nullable();
 			$table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
-			$table->integer('module_id')->unsigned();
+			$table->unsignedInteger('module_id')->nullable();
 			$table->foreign('module_id')->references('id')->on('modules')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('acc_view');
             $table->boolean('acc_create');
