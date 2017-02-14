@@ -31,7 +31,11 @@
         <thead>
         <tr class="success">
             @foreach( $listing_cols as $col )
-            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+                @if ($col === 'id')
+                    <th>{{ $module->fields[$col]['label'] or __(ucfirst($col)) }}</th>
+                @else
+                    <th>{{ __($module->fields[$col]['label']) }}</th>
+                @endif
             @endforeach
             @if($show_actions)
             <th>Actions</th>
@@ -39,7 +43,7 @@
         </tr>
         </thead>
         <tbody>
-            
+
         </tbody>
         </table>
     </div>
@@ -57,7 +61,7 @@
             <div class="modal-body">
                 <div class="box-body">
                     @la_form($module)
-                    
+
                     {{--
                     __input_fields__
                     --}}
@@ -97,7 +101,7 @@ $(function () {
         @endif
     });
     $("#__singular_var__-add-form").validate({
-        
+
     });
 });
 </script>
