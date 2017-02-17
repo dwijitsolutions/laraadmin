@@ -218,9 +218,7 @@ class __controller_class_name__ extends Controller
                     switch($field_type->name) {
                         case 'Multiselect':
                             $multiValues = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
-                            $multiValues = str_replace("[", "", $multiValues);
-                            $multiValues = str_replace("]", "", $multiValues);
-                            $multiValues = str_replace('"', "", $multiValues);
+                            $multiValues = str_replace(['[', ']', '"'], '', $multiValues);
                             $multiValues = explode(",", $multiValues);
                             $value = '';
                             foreach($multiValues as $multiValue) {
