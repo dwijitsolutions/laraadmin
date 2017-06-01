@@ -51,7 +51,7 @@ class LAProvider extends ServiceProvider
         | Blade Directives for Entrust not working in Laravel 5.3
         |--------------------------------------------------------------------------
         */
-        if(LAHelper::is_recent_laravel_version()) {
+        if(LAHelper::laravel_ver() == 5.3) {
             
             // Call to Entrust::hasRole
             Blade::directive('role', function ($expression) {
@@ -161,7 +161,7 @@ class LAProvider extends ServiceProvider
         
         // LAForm Input Maker
         Blade::directive('la_input', function ($expression) {
-            if(LAHelper::is_recent_laravel_version()) {
+            if(LAHelper::laravel_ver() == 5.3) {
                 $expression = "(" . $expression . ")";
             }
             return "<?php echo LAFormMaker::input$expression; ?>";
@@ -169,7 +169,7 @@ class LAProvider extends ServiceProvider
         
         // LAForm Form Maker
         Blade::directive('la_form', function ($expression) {
-            if(LAHelper::is_recent_laravel_version()) {
+            if(LAHelper::laravel_ver() == 5.3) {
                 $expression = "(" . $expression . ")";
             }
             return "<?php echo LAFormMaker::form$expression; ?>";
@@ -177,7 +177,7 @@ class LAProvider extends ServiceProvider
         
         // LAForm Maker - Display Values
         Blade::directive('la_display', function ($expression) {
-            if(LAHelper::is_recent_laravel_version()) {
+            if(LAHelper::laravel_ver() == 5.3) {
                 $expression = "(" . $expression . ")";
             }
             return "<?php echo LAFormMaker::display$expression; ?>";
@@ -185,7 +185,7 @@ class LAProvider extends ServiceProvider
         
         // LAForm Maker - Check Whether User has Module Access
         Blade::directive('la_access', function ($expression) {
-            if(LAHelper::is_recent_laravel_version()) {
+            if(LAHelper::laravel_ver() == 5.3) {
                 $expression = "(" . $expression . ")";
             }
             return "<?php if(LAFormMaker::la_access$expression) { ?>";
@@ -196,7 +196,7 @@ class LAProvider extends ServiceProvider
         
         // LAForm Maker - Check Whether User has Module Field Access
         Blade::directive('la_field_access', function ($expression) {
-            if(LAHelper::is_recent_laravel_version()) {
+            if(LAHelper::laravel_ver() == 5.3) {
                 $expression = "(" . $expression . ")";
             }
             return "<?php if(LAFormMaker::la_field_access$expression) { ?>";

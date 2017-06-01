@@ -22,8 +22,6 @@ use Dwij\Laraadmin\Models\Module;
  */
 class LAHelper
 {
-
-    const RECENT_LARAVEL = 5.3;
     /**
      * Gives various names of Module in Object like label, table, model, controller, singular
      *
@@ -478,12 +476,8 @@ class LAHelper
         $str .= '</li>';
         return $str;
     }
-
-    public static function is_recent_laravel_version()
-    {
-        return self::laravel_ver() >= self::RECENT_LARAVEL;
-    }
-        /**
+    
+    /**
      * Get laravel version. very important in installation and handling Laravel 5.3 changes.
      *
      * LAHelper::laravel_ver()
@@ -498,8 +492,6 @@ class LAHelper
             return 5.2;
         } else if(starts_with($var, "5.3")) {
             return 5.3;
-        } else if(starts_with($var, "5.4")) {
-            return 5.4;
         } else if(substr_count($var, ".") == 3) {
             $var = substr($var, 0, strrpos($var, "."));
             return $var . "-str";
