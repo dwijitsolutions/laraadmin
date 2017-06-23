@@ -40,7 +40,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 				@endif
 			</div>
 		</div>
-		
+
 		<div class="col-md-4">
 			@if($module->view_col != "")
 				@if(isset($module->is_gen) && $module->is_gen)
@@ -48,14 +48,14 @@ use Dwij\Laraadmin\Models\ModuleFields;
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Update Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="update_migr" href="#"><i class="fa fa-database"></i> Update Migration</a></div>
 				@else
 					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration + CRUD + Module" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr_crud" href="#"><i class="fa fa-cube"></i> Generate Migration + CRUD</a></div>
-					
+
  					<div class="dats1 text-center"><a data-toggle="tooltip" data-placement="left" title="Generate Migration File" class="btn btn-sm btn-success" style="border-color:#FFF;" id="generate_migr" href="#"><i class="fa fa-database"></i> Generate Migration</a></div>
 				@endif
 			@else
 				<div class="dats1 text-center">To generate Migration or CRUD, set the view column using the <i class='fa fa-eye'></i> icon next to a column</div>
 			@endif
 		</div>
-		
+
 		<div class="col-md-1 actions">
 			<button module_name="{{ $module->name }}" module_id="{{ $module->id }}" class="btn btn-default btn-delete btn-xs delete_module"><i class="fa fa-times"></i></button>
 		</div>
@@ -63,19 +63,19 @@ use Dwij\Laraadmin\Models\ModuleFields;
 
 	<ul id="module-tabs" data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
 		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/modules') }}" data-toggle="tooltip" data-placement="right" title="Back to Modules"> <i class="fa fa-chevron-left"></i>&nbsp;</a></li>
-		
+
 		<li class="tab-pane" id="fields">
 			<a id="tab_fields" role="tab" data-toggle="tab" class="tab_info" href="#fields" data-target="#tab-info"><i class="fa fa-bars"></i> Module Fields</a>
 		</li>
-		
+
 		<li class="tab-pane" id="access">
 			<a id="tab_access" role="tab" data-toggle="tab"  class="tab_info " href="#access" data-target="#tab-access"><i class="fa fa-key"></i> Access</a>
 		</li>
-		
+
 		<li class="tab-pane" id="sort">
 			<a id="tab_sort" role="tab" data-toggle="tab"  class="tab_info " href="#sort" data-target="#tab-sort"><i class="fa fa-sort"></i> Sort</a>
 		</li>
-		
+
 		<a data-toggle="modal" data-target="#AddFieldModal" class="btn btn-success btn-sm pull-right btn-add-field" style="margin-top:10px;margin-right:10px;">Add Field</a>
 	</ul>
 
@@ -105,7 +105,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 							<th style="min-width:60px;"><i class="fa fa-cogs"></i></th>
 						</tr>
 						</thead>
-						<tbody>														
+						<tbody>
 							@foreach ($module->fields as $field)
 								<tr>
 									<td style="display:none;">{{ $field['sort'] }}</td>
@@ -173,7 +173,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 					@foreach($roles as $role)
 						<tr class="tr-access-basic" role_id="{{ $role->id }}">
 							<td><input class="role_checkb" type="checkbox" name="module_{{ $role->id }}" id="module_{{ $role->id }}" checked="checked"> {{ $role->name }}</td>
-							
+
 							<td><input class="view_checkb" type="checkbox" name="module_view_{{$role->id}}" id="module_view_{{$role->id}}" <?php if($role->view == 1) { echo 'checked="checked"'; } ?> ></td>
 							<td><input class="create_checkb" type="checkbox" name="module_create_{{$role->id}}" id="module_create_{{$role->id}}" <?php if($role->create == 1) { echo 'checked="checked"'; } ?> ></td>
 							<td><input class="edit_checkb" type="checkbox" name="module_edit_{{$role->id}}" id="module_edit_{{$role->id}}" <?php if($role->edit == 1) { echo 'checked="checked"'; } ?> ></td>
@@ -241,7 +241,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.modules.destroy', 0], 'id' => 'module_del_form', 'method' => 'delete', 'style'=>'display:inline']) }}
 					<button class="btn btn-danger btn-delete pull-left" type="submit">Yes</button>
 				{{ Form::close() }}
-				<a data-dismiss="modal" class="btn btn-default pull-right" >No</a>				
+				<a data-dismiss="modal" class="btn btn-default pull-right" >No</a>
 			</div>
 		</div>
 		<!-- /.modal-content -->
@@ -262,9 +262,9 @@ use Dwij\Laraadmin\Models\ModuleFields;
 				<div class="box-body">
 					<div class="form-group">
 						<label for="label">Field Label :</label>
-						{{ Form::text("label", null, ['class'=>'form-control', 'placeholder'=>'Field Label', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
+						{{ Form::text("label", null, ['class'=>'form-control', 'placeholder'=>'Field Label', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>30, 'required' => 'required']) }}
 					</div>
-					
+
 					<div class="form-group">
 						<label for="colname">Column Name :</label>
 						<?php
@@ -280,31 +280,31 @@ use Dwij\Laraadmin\Models\ModuleFields;
 									$default = "None";
 								} else {
 									$default = $column->getDefault();
-								}									
-								$col_list[$col] = $col." - ".$column->getType().' - '.$column->getLength().' - '.$default; 
+								}
+								$col_list[$col] = $col." - ".$column->getType().' - '.$column->getLength().' - '.$default;
 							}
 						}
 
 						if($module->is_gen == 0 && count($col_list) > 0) { ?>
 							{{ Form::select("colname", $col_list, $col_list, ['class'=>'form-control', 'required' => 'required']) }}
 						<?php } else { ?>
-							{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
+							{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>30, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
 						<?php }	?>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field_type">UI Type:</label>
 						{{ Form::select("field_type", $ftypes, null, ['class'=>'form-control', 'required' => 'required']) }}
 					</div>
-					
+
 					<div id="unique_val">
 						<div class="form-group">
 							<label for="unique">Unique:</label>
 							{{ Form::checkbox("unique", "unique", false, []) }}
 							<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 						</div>
-					</div>	
-					
+					</div>
+
 					<div id="default_val">
 						<div class="form-group">
 							<label for="defaultvalue">Default Value :</label>
@@ -317,19 +317,19 @@ use Dwij\Laraadmin\Models\ModuleFields;
 							<label for="minlength">Minimum :</label>
 							{{ Form::number("minlength", null, ['class'=>'form-control', 'placeholder'=>'Minimum Value']) }}
 						</div>
-						
+
 						<div class="form-group">
 							<label for="maxlength">Maximum :</label>
 							{{ Form::number("maxlength", null, ['class'=>'form-control', 'placeholder'=>'Maximum Value']) }}
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="required">Required:</label>
 						{{ Form::checkbox("required", "required", false, []) }}
 						<div class="Switch Round Off" style="vertical-align:top;margin-left:10px;"><div class="Toggle"></div></div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="listing_col">Show in Index Listing:</label>
 						{{ Form::checkbox("listing_col", "listing_col", false, []) }}
@@ -341,7 +341,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 						{{-- Form::text("popup_vals", null, ['class'=>'form-control', 'placeholder'=>'Popup Values (Only for Radio, Dropdown, Multiselect, Taginput)']) --}}
 					</div>
 					-->
-					
+
 					<div class="form-group values">
 						<label for="popup_vals">Values :</label>
 						<div class="radio" style="margin-bottom:20px;">
@@ -349,7 +349,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 							<label>{{ Form::radio("popup_value_type", "list", false) }} From List</label>
 						</div>
 						{{ Form::select("popup_vals_table", $tables, "", ['id'=>'popup_vals_table', 'class'=>'form-control', 'rel' => '']) }}
-						
+
 						<select id="popup_vals_list" class="form-control popup_vals_list" rel="taginput" multiple="1" data-placeholder="Add Multiple values (Press Enter to add)" name="popup_vals_list[]">
 							@if(env('APP_ENV') == "testing")
 								<option>Bloomsbury</option>
@@ -358,7 +358,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 							@endif
 						</select>
 					</div>
-					
+
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -414,7 +414,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 <script>
 
 $(function () {
-	
+
 	$("select.popup_vals_list").show();
 	$("select.popup_vals_list").next().show();
 	$("select[name='popup_vals']").hide();
@@ -438,7 +438,7 @@ $(function () {
 			success: function(data) {
 				var files = data.files;
 				var filesList = "<ul>";
-				for ($i = 0; $i < files.length; $i++) { 
+				for ($i = 0; $i < files.length; $i++) {
 					filesList += "<li>" + files[$i] + "</li>";
 				}
 				filesList += "</ul>";
@@ -446,7 +446,7 @@ $(function () {
 			}
 		});
 	});
-	
+
 	function showValuesSection() {
 		var ft_val = $("select[name='field_type']").val();
 		if(ft_val == 7 || ft_val == 15 || ft_val == 18 || ft_val == 20) {
@@ -454,7 +454,7 @@ $(function () {
 		} else {
 			$(".form-group.values").hide();
 		}
-				
+
 		$('#length_div').removeClass("hide");
 		if(ft_val == 2 || ft_val == 4 || ft_val == 5 || ft_val == 7 || ft_val == 9 || ft_val == 11 || ft_val == 12 || ft_val == 15 || ft_val == 18 || ft_val == 21 || ft_val == 24 ) {
 			$('#length_div').addClass("hide");
@@ -488,7 +488,7 @@ $(function () {
 			$("select.popup_vals_list").next().hide();
 		}
 	}
-	
+
 	$("input[name='popup_value_type']").on("change", function() {
 		showValuesTypes();
 	});
@@ -504,7 +504,7 @@ $(function () {
 					array.push(field_id);
 				}
 			});
-			
+
 			$.ajax({
 				url: "{{ url(config('laraadmin.adminRoute') . '/save_module_field_sort') }}/"+{{ $module->id }},
 				data : {'sort_array': array},
@@ -515,8 +515,8 @@ $(function () {
 			});
         },
 	});
-    $("#sortable_module_fields").disableSelection();	
-	
+    $("#sortable_module_fields").disableSelection();
+
 	$("#generate_migr").on("click", function() {
 		var $fa = $(this).find("i");
 		$fa.removeClass("fa-database");
@@ -568,7 +568,7 @@ $(function () {
 			}
 		});
 	});
-	
+
 	$("#generate_migr_crud").on("click", function() {
 		var $fa = $(this).find("i");
 		$fa.removeClass("fa-cube");
@@ -597,30 +597,30 @@ $(function () {
 			});
 		}
 	});
-	
+
 	$.validator.addMethod("data-rule-banned-words", function(value) {
 		return $.inArray(value, ['files']) == -1;
 	}, "Column name not allowed.");
 
 	$("#field-form").validate();
-		
+
 	/* ================== Tab Selection ================== */
-	
+
 	var $tabs = $('#module-tabs').tabs();
-	
+
 	var url = window.location.href;
 	var activeTab = url.substring(url.indexOf("#") + 1);
-	
+
 	if(!activeTab.includes("http") && activeTab.length > 1) {
 		$('#module-tabs #'+activeTab+' a').tab('show');
 	} else {
 		$('#module-tabs #fields a').tab('show');
 	}
-	
+
 	/* ================== Access Control ================== */
-	
+
 	$('.slider').slider();
-	
+
 	$(".slider.slider-horizontal").each(function(index) {
 		var field = $(this).next().attr("name");
 		var value = $(this).next().val();
@@ -643,7 +643,7 @@ $(function () {
 				break;
 		}
 	});
-	
+
 	$('.slider').bind('slideStop', function(event) {
 		if($(this).next().attr("name")) {
 			var field = $(this).next().attr("name");
@@ -675,9 +675,9 @@ $(function () {
 		$("#view_all").prop('checked', this.checked);
 		$("#create_all").prop('checked', this.checked);
 		$("#edit_all").prop('checked', this.checked);
-		$("#delete_all").prop('checked', this.checked);		
+		$("#delete_all").prop('checked', this.checked);
 	});
-	
+
 	$("#create_all").on("change", function() {
 		$(".create_checkb").prop('checked', this.checked);
 		if($('#create_all').is(':checked')){
@@ -687,7 +687,7 @@ $(function () {
 			$("#view_all").prop('checked', this.checked);
 		}
 	});
-	
+
 	$("#edit_all").on("change", function() {
 		$(".edit_checkb").prop('checked', this.checked);
 		if($('#edit_all').is(':checked')){
@@ -697,7 +697,7 @@ $(function () {
 			$("#view_all").prop('checked', this.checked);
 		}
 	});
-	
+
 	$("#delete_all").on("change", function() {
 		$(".delete_checkb").prop('checked', this.checked);
 		if($('#delete_all').is(':checked')){
@@ -707,8 +707,8 @@ $(function () {
 			$("#view_all").prop('checked', this.checked);
 		}
 	});
-	
-	$(".hide_row").on("click", function() { 
+
+	$(".hide_row").on("click", function() {
 		var val = $(this).attr( "role_id" );
 		var $icon = $(".hide_row[role_id="+val+"] > i");
 		if($('.module_fields_'+val).hasClass('hide')) {

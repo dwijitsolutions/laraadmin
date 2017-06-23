@@ -369,9 +369,11 @@ class LAHelper
      */
     public static function print_menu_editor($menu)
     {
+
         $editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute') . '.la_menus.destroy', $menu->id], 'method' => 'delete', 'style' => 'display:inline']);
         $editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
         $editing .= \Collective\Html\FormFacade::close();
+
         if($menu->type != "module") {
             $info = (object)array();
             $info->id = $menu->id;
@@ -381,6 +383,7 @@ class LAHelper
             $info->icon = $menu->icon;
 
             $editing .= '<a class="editMenuBtn btn btn-xs btn-success pull-right" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
+            // dd($editing);
         }
         $str = '<li class="dd-item dd3-item" data-id="' . $menu->id . '">
 			<div class="dd-handle dd3-handle"></div>
@@ -396,6 +399,7 @@ class LAHelper
             $str .= '</ol>';
         }
         $str .= '</li>';
+
         return $str;
     }
 

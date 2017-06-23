@@ -30,7 +30,7 @@ use Dwij\Laraadmin\Models\Module;
 			<th>Actions</th>
 		</tr>
 		</thead>
-		<tbody>	
+		<tbody>
 
 			@foreach ($modules as $module)
 				<tr>
@@ -63,8 +63,8 @@ use Dwij\Laraadmin\Models\Module;
 				<div class="box-body">
 					<!--<div class="form-group">
 						<label for="name">Module Name :</label>
-						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
-					</div>-->				
+						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>30, 'required' => 'required']) }}
+					</div>-->
 					<div class="form-group">
 						<label for="table">Table</label>
 						<?php
@@ -109,7 +109,7 @@ use Dwij\Laraadmin\Models\Module;
 				<div class="box-body">
 					<div class="form-group">
 						<label for="name">Module Name :</label>
-						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
+						{{ Form::text("name", null, ['class'=>'form-control', 'placeholder'=>'Module Name', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>30, 'required' => 'required']) }}
 					</div>
 					<div class="form-group">
 						<label for="icon">Icon</label>
@@ -149,7 +149,7 @@ use Dwij\Laraadmin\Models\Module;
 				{{ Form::open(['route' => [config('laraadmin.adminRoute') . '.modules.destroy', 0], 'id' => 'module_del_form', 'method' => 'delete', 'style'=>'display:inline']) }}
 					<button class="btn btn-danger btn-delete pull-left" type="submit">Yes</button>
 				{{ Form::close() }}
-				<a data-dismiss="modal" class="btn btn-default pull-right" >No</a>				
+				<a data-dismiss="modal" class="btn btn-default pull-right" >No</a>
 			</div>
 		</div>
 		<!-- /.modal-content -->
@@ -221,7 +221,7 @@ $(function () {
 			success: function(data) {
 				var files = data.files;
 				var filesList = "<ul>";
-				for ($i = 0; $i < files.length; $i++) { 
+				for ($i = 0; $i < files.length; $i++) {
 					filesList += "<li>" + files[$i] + "</li>";
 				}
 				filesList += "</ul>";
@@ -231,11 +231,11 @@ $(function () {
 	});
 
 	$('.update_module').on("click", function () {
-    	var module_id = $(this).attr('module_id');	 
+    	var module_id = $(this).attr('module_id');
 		var module_label = $(this).attr('module_label');
 		var module_icon = $(this).attr('module_icon');
 		$(".module_label_edit").val(module_label);
-		$(".module_icon_edit").val(module_icon);		
+		$(".module_icon_edit").val(module_icon);
 		$("#module_update").modal('show');
 		$(".update-icon").html('<center><i class="fa '+module_icon+'"></i></center>');
 
@@ -252,13 +252,13 @@ $(function () {
 			});
 		});
 	});
-	
+
 	$('input[name=icon]').iconpicker();
 	$("#dt_modules").DataTable({
-		
+
 	});
 	$("#module-add-form").validate({
-		
+
 	});
 });
 </script>

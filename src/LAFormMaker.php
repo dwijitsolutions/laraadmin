@@ -730,6 +730,249 @@ class LAFormMaker
         return $out;
     }
 
+
+        /**
+         * Display field is CRUDs View show.blade.php with Label
+         *
+         * Uses blade syntax @la_displayField('name')
+         *
+         * @param $module Module Object
+         * @param $field_name Field Name for which display has be created
+         * @param string $class Custom css class. Default would be bootstrap 'form-control' class
+         * @return string This return html string with field display with Label
+         */
+        public static function displayField($module, $field_name, $module_name, $noformat = 'false', $class = 'form-control')
+        {
+            // Check Field View Access
+            // dd($module);
+            $submodule = Module::get($module_name);
+            $submodule->row = $module;
+            $module = $submodule;
+            // if ($module_name == 'Contacts'){
+            //
+            // }else {
+            //     echo 'test'.$module_name;
+            //     dd($module);
+            // }
+
+            if(Module::hasFieldAccess($module->id, $module->fields[$field_name]['id'], $access_type = "view")) {
+
+                $fieldObj = $module->fields[$field_name];
+                $label = $module->fields[$field_name]['label'];
+                $field_type = $module->fields[$field_name]['field_type'];
+                $field_type = ModuleFieldTypes::find($field_type);
+
+                $row = null;
+                if(isset($module->row)) {
+                    $row = $module->row;
+                }
+
+                $out = '<div class="form-group">';
+                // $out .= '<label for="' . $field_name . '" class="col-md-4 col-sm-6 col-xs-6">' . $label . ' :</label>';
+
+                $value = $row->$field_name;
+
+                switch($field_type->name) {
+                    case 'Address':
+                        if($value != "") {
+                            $value = $value . '<a target="_blank" class="pull-right btn btn-xs btn-primary btn-circle" href="http://maps.google.com/?q=' . $value . '" data-toggle="tooltip" data-placement="left" title="Check location on Map"><i class="fa fa-map-marker"></i></a>';
+                        }
+                        break;
+                    case 'Checkbox':
+                        if($value == 0) {
+                            $value = "<div class='label label-danger'>False</div>";
+                        } else {
+                            $value = "<div class='label label-success'>True</div>";
+                        }
+                        break;
+                    case 'Currency':
+
+                        break;
+                    case 'Date':
+                        if($value == NULL) {
+                            $value = "Not Available";
+                        } else {
+                            $dt = strtotime($value);
+                            $value = date("d M Y", $dt);
+                        }
+                        break;
+                    case 'Datetime':
+                        if($value == NULL) {
+                            $value = "Not Available";
+                        } else {
+                            $dt = strtotime($value);
+                            $value = date("d M Y, h:i A", $dt);
+                        }
+                        break;
+                    case 'Decimal':
+
+                        break;
+                    case 'Dropdown':
+                        $values = LAFormMaker::process_values($fieldObj['popup_vals']);
+                        if(starts_with($fieldObj['popup_vals'], "@")) {
+                            if($value != 0) {
+                                if ($noformat == 'true'){
+                                    return $values[$value];
+                                }
+                                $moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+                                if(isset($moduleVal->id)) {
+                                    $value = "<a href='" . url(config("laraadmin.adminRoute") . "/" . $moduleVal->name_db . "/" . $value) . "' class='label label-primary'>" . $values[$value] . "</a> ";
+                                } else {
+                                    $value = "<a class='label label-primary'>" . $values[$value] . "</a> ";
+                                }
+                            } else {
+                                $value = "";
+                            }
+                        }
+                        break;
+                    case 'Email':
+                        $value = '<a href="mailto:' . $value . '">' . $value . '</a>';
+                        break;
+                    case 'File':
+                        if($value != 0 && $value != "0") {
+                            $upload = \App\Models\Upload::find($value);
+                            if(isset($upload->id)) {
+                                $value = '<a class="preview" target="_blank" href="' . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . '">
+                                <span class="fa-stack fa-lg"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-file-o fa-stack-1x fa-inverse"></i></span> ' . $upload->name . '</a>';
+                            } else {
+                                $value = 'Uploaded file not found.';
+                            }
+                        } else {
+                            $value = 'No file';
+                        }
+                        break;
+                    case 'Files':
+                        if($value != "" && $value != "[]" && $value != "null" && starts_with($value, "[")) {
+                            $uploads = json_decode($value);
+                            $uploads_html = "";
+
+                            foreach($uploads as $uploadId) {
+                                $upload = \App\Models\Upload::find($uploadId);
+                                if(isset($upload->id)) {
+                                    $uploadIds[] = $upload->id;
+                                    $fileImage = "";
+                                    if(in_array($upload->extension, ["jpg", "png", "gif", "jpeg"])) {
+                                        $fileImage = "<img src='" . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name . "?s=90") . "'>";
+                                    } else {
+                                        $fileImage = "<i class='fa fa-file-o'></i>";
+                                    }
+                                    // $uploadImages .= "<a class='uploaded_file2' upload_id='".$upload->id."' target='_blank' href='".url("files/".$upload->hash.DIRECTORY_SEPARATOR.$upload->name)."'>".$fileImage."<i title='Remove File' class='fa fa-times'></i></a>";
+                                    $uploads_html .= '<a class="preview" target="_blank" href="' . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . '" data-toggle="tooltip" data-placement="top" data-container="body" style="display:inline-block;margin-right:5px;" title="' . $upload->name . '">
+                                            ' . $fileImage . '</a>';
+                                }
+                            }
+                            $value = $uploads_html;
+                        } else {
+                            $value = 'No files found.';
+                        }
+                        break;
+                    case 'Float':
+
+                        break;
+                    case 'HTML':
+                        break;
+                    case 'Image':
+                        if($value != 0 && $value != "0") {
+                            $upload = \App\Models\Upload::find($value);
+                            if(isset($upload->id)) {
+                                $value = '<a class="preview" target="_blank" href="' . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name) . '"><img src="' . url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name . "?s=150") . '"></a>';
+                            } else {
+                                $value = 'Uploaded image not found.';
+                            }
+                        } else {
+                            $value = 'No Image';
+                        }
+                        break;
+                    case 'Integer':
+
+                        break;
+                    case 'Mobile':
+                        $value = '<a target="_blank" href="tel:' . $value . '">' . $value . '</a>';
+                        break;
+                    case 'Multiselect':
+                        $valueOut = "";
+                        $values = LAFormMaker::process_values($fieldObj['popup_vals']);
+                        if(count($values)) {
+                            if(starts_with($fieldObj['popup_vals'], "@")) {
+                                $moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+                                $valueSel = json_decode($value);
+                                foreach($values as $key => $val) {
+                                    if(in_array($key, $valueSel)) {
+                                        $module_link = "";
+                                        if(isset($moduleVal->id)) {
+                                            $module_link = "href='" . url(config("laraadmin.adminRoute") . "/" . $moduleVal->name_db . "/" . $key) . "'";
+                                        }
+                                        $valueOut .= "<a $module_link class='label label-primary'>" . $val . "</a> ";
+                                    }
+                                }
+                            } else {
+                                $valueSel = json_decode($value);
+                                foreach($values as $key => $val) {
+                                    if(in_array($key, $valueSel)) {
+                                        $valueOut .= "<span class='label label-primary'>" . $val . "</span> ";
+                                    }
+                                }
+                            }
+                        }
+                        $value = $valueOut;
+                        break;
+                    case 'Name':
+
+                        break;
+                    case 'Password':
+                        $value = '<a href="#" data-toggle="tooltip" data-placement="top" data-container="body" title="Cannot be declassified !!!">********</a>';
+                        break;
+                    case 'Radio':
+
+                        break;
+                    case 'String':
+
+                        break;
+                    case 'Taginput':
+                        $valueOut = "";
+                        $values = LAFormMaker::process_values($fieldObj['popup_vals']);
+                        if(count($values)) {
+                            if(starts_with($fieldObj['popup_vals'], "@")) {
+                                $moduleVal = Module::getByTable(str_replace("@", "", $fieldObj['popup_vals']));
+                                $valueSel = json_decode($value);
+                                foreach($values as $key => $val) {
+                                    if(in_array($key, $valueSel)) {
+                                        $valueOut .= "<a href='" . url(config("laraadmin.adminRoute") . "/" . $moduleVal->name_db . "/" . $key) . "' class='label label-primary'>" . $val . "</a> ";
+                                    }
+                                }
+                            } else {
+                                $valueSel = json_decode($value);
+                                foreach($valueSel as $key => $val) {
+                                    $valueOut .= "<span class='label label-primary'>" . $val . "</span> ";
+                                }
+                            }
+                        } else {
+                            $valueSel = json_decode($value);
+                            foreach($valueSel as $key => $val) {
+                                $valueOut .= "<span class='label label-primary'>" . $val . "</span> ";
+                            }
+                        }
+                        $value = $valueOut;
+                        break;
+                    case 'Textarea':
+
+                        break;
+                    case 'TextField':
+
+                        break;
+                    case 'URL':
+                        $value = '<a target="_blank" href="' . $value . '">' . $value . '</a>';
+                        break;
+                }
+
+                $out .= '<div class="col-md-8 col-sm-6 col-xs-6 fvalue">' . $value . '</div>';
+                $out .= '</div>';
+                return $value;
+            } else {
+                return "";
+            }
+        }
+
     /**
      * Display field is CRUDs View show.blade.php with Label
      *
@@ -972,6 +1215,32 @@ class LAFormMaker
         if(count($fields) == 0) {
             $fields = array_keys($module->fields);
         }
+
+        $out = "";
+        foreach($fields as $field) {
+            // Use input method of this class to generate all Module fields
+            $out .= LAFormMaker::input($module, $field);
+        }
+        return $out;
+    }
+
+    /**
+     * Print complete add/edit form for Module
+     *
+     * Uses blade syntax @la_form($employee_module_object)
+     *
+     * @param $module Module for which add/edit form has to be created.
+     * @param array $fields List of Module Field Names to customize Selective Fields for Form
+     * @return string returns HTML for complete Module Add/Edit Form
+     */
+    public static function formMultiple($module_name, $fields = [])
+    {
+        $module = Module::get($module_name);
+        //dd($module);
+        if(count($fields) == 0) {
+            $fields = array_keys($module->fields);
+        }
+
         $out = "";
         foreach($fields as $field) {
             // Use input method of this class to generate all Module fields
