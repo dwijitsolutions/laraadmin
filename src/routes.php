@@ -12,7 +12,7 @@ if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 Route::group([
     'namespace' => 'Dwij\Laraadmin\Controllers',
     'as' => $as,
-    'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL', 'role:SUPER_ADMIN']
+    'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL']
 ], function () {
     
     /* ================== Modules ================== */
