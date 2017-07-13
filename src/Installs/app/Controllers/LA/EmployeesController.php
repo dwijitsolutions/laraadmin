@@ -319,7 +319,7 @@ class EmployeesController extends Controller
 			// Send mail to User his new Password
 			Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
 				$m->from(LAConfigs::getByKey('default_email'), LAConfigs::getByKey('sitename'));
-				$m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials chnaged');
+				$m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials changed');
 			});
 		} else {
 			Log::info("User change_password: username: ".$user->email." Password: ".$request->password);
