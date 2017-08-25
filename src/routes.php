@@ -12,9 +12,9 @@ if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 Route::group([
     'namespace' => 'Dwij\Laraadmin\Controllers',
     'as' => $as,
-    'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL', 'role:SUPER_ADMIN']
+    'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL']
 ], function () {
-    
+
     /* ================== Modules ================== */
     Route::resource(config('laraadmin.adminRoute') . '/modules', 'ModuleController');
     Route::resource(config('laraadmin.adminRoute') . '/module_fields', 'FieldController');
@@ -30,7 +30,7 @@ Route::group([
     Route::post(config('laraadmin.adminRoute') . '/get_module_files/{module_id}', 'ModuleController@get_module_files');
     Route::post(config('laraadmin.adminRoute') . '/module_update', 'ModuleController@update');
     Route::post(config('laraadmin.adminRoute') . '/module_field_listing_show', 'FieldController@module_field_listing_show_ajax');
-    
+
     /* ================== Code Editor ================== */
     Route::get(config('laraadmin.adminRoute') . '/lacodeeditor', function () {
         if(file_exists(resource_path("views/la/editor/index.blade.php"))) {
@@ -40,14 +40,14 @@ Route::group([
             return View('la.editor.install');
         }
     });
-    
+
     /* ================== Menu Editor ================== */
     Route::resource(config('laraadmin.adminRoute') . '/la_menus', 'MenuController');
     Route::post(config('laraadmin.adminRoute') . '/la_menus/update_hierarchy', 'MenuController@update_hierarchy');
-    
+
     /* ================== Configuration ================== */
     Route::resource(config('laraadmin.adminRoute') . '/la_configs', '\App\Http\Controllers\LA\LAConfigController');
-    
+
     Route::group([
         'middleware' => 'role'
     ], function () {
