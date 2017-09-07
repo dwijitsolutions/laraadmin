@@ -1212,7 +1212,7 @@ class Module extends Model
         }
 
         $model_name = ucfirst(str_singular($module_name));
-        if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
+        if(in_array($model_name, ["User", "Role", "Permission"])) {
             if(!file_exists(base_path('app/' . $model_name . ".php"))) {
                 return -1;
             }
