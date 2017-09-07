@@ -1210,23 +1210,23 @@ class Module extends Model
         if(!isset($module)) {
             return -1;
         }
-            $model_name = ucfirst(str_singular($module_name));
-            if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
-                if(!file_exists(base_path('app/' . $model_name . ".php"))) {
-                    return -1;
-                }
-                    $model = "App\\" . $model_name;
-                    return $model::count();
 
+        $model_name = ucfirst(str_singular($module_name));
+        if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
+            if(!file_exists(base_path('app/' . $model_name . ".php"))) {
+                return -1;
             }
-                if(!file_exists(base_path('app/Models/' . $model_name . ".php"))) {
-                    return -1;
-                }
-                    $model = "App\\Models\\" . $model_name;
-                    return $model::count();
+            $model = "App\\" . $model_name;
+            return $model::count();
 
+        }
 
+        if(!file_exists(base_path('app/Models/' . $model_name . ".php"))) {
+            return -1;
+        }
 
+        $model = "App\\Models\\" . $model_name;
+        return $model::count();
     }
     
     /**
