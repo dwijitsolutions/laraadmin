@@ -1207,25 +1207,25 @@ class Module extends Model
     public static function itemCount($module_name)
     {
         $module = Module::get($module_name);
-        if(isset($module)) {
+        if(!isset($module)) {
+            return -1;
+        } else {
             $model_name = ucfirst(str_singular($module_name));
             if($model_name == "User" || $model_name == "Role" || $model_name == "Permission") {
-                if(file_exists(base_path('app/' . $model_name . ".php"))) {
+                if(!file_exists(base_path('app/' . $model_name . ".php"))) {
+                    return -1;
+                } else {
                     $model = "App\\" . $model_name;
                     return $model::count();
-                } else {
-                    return -1;
                 }
             } else {
-                if(file_exists(base_path('app/Models/' . $model_name . ".php"))) {
+                if(!file_exists(base_path('app/Models/' . $model_name . ".php"))) {
+                    return -1;
+                } else {
                     $model = "App\\Models\\" . $model_name;
                     return $model::count();
-                } else {
-                    return -1;
                 }
             }
-        } else {
-            return -1;
         }
     }
     
