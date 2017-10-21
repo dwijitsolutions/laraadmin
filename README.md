@@ -13,6 +13,7 @@
 LaraAdmin is a Open source CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and Workflows.
 ##### Website: [laraadmin.com](http://laraadmin.com)
 ##### Creator: [@gdbhosale](https://github.com/gdbhosale), [Dwij IT Solutions](https://github.com/dwijitsolutions)
+
 --------
 
 ### Features:
@@ -31,14 +32,14 @@ Easy user Management with features like Employees, Roles, Groups, Departments an
 
 CRUD Model Listing & Add:
 
-![LaraAdmin CRUD Model Add] (http://laraadmin.com/img/laraadmin/laraadmin-row-listing-add.jpg)
+![LaraAdmin CRUD Model Add](http://laraadmin.com/img/laraadmin/laraadmin-row-listing-add.jpg)
 
 CRUD Model View:
 
-![LaraAdmin CRUD Model View] (http://laraadmin.com/img/laraadmin/laraadmin-row-view.jpg)
+![LaraAdmin CRUD Model View](http://laraadmin.com/img/laraadmin/laraadmin-row-view.jpg)
 
 Online Code Editor:
-![Online Code Editor] (http://laraadmin.com/img/laraadmin/laraadmin-online-code-editor.jpg)
+![Online Code Editor](http://laraadmin.com/img/laraadmin/laraadmin-online-code-editor.jpg)
 
 ### Installation & Documentation
 
