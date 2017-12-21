@@ -272,7 +272,7 @@ class LAFormMaker
                     }
                     
                     if(!$required) {
-                        array_unshift($popup_vals, "None");
+                        $popup_vals[0] = "None";ksort($popup_vals);
                     }
                     $out .= Form::select($field_name, $popup_vals, $default_val, $params);
                     
