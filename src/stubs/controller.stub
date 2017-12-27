@@ -19,13 +19,14 @@ use Datatables;
 use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
+use Dwij\Laraadmin\Models\ModuleFieldTypes;
 
 use App\Models\__model_name__;
 
 class __controller_class_name__ extends Controller
 {
     public $show_action = true;
-    
+
     /**
      * Display a listing of the __module_name__.
      *
@@ -34,7 +35,7 @@ class __controller_class_name__ extends Controller
     public function index()
     {
         $module = Module::get('__module_name__');
-        
+
         if(Module::hasAccess($module->id)) {
             return View('la.__view_folder__.index', [
                 'show_actions' => $this->show_action,
@@ -45,7 +46,7 @@ class __controller_class_name__ extends Controller
             return redirect(config('laraadmin.adminRoute') . "/");
         }
     }
-    
+
     /**
      * Show the form for creating a new __singular_var__.
      *
@@ -55,7 +56,7 @@ class __controller_class_name__ extends Controller
     {
         //
     }
-    
+
     /**
      * Store a newly created __singular_var__ in database.
      *
@@ -65,24 +66,24 @@ class __controller_class_name__ extends Controller
     public function store(Request $request)
     {
         if(Module::hasAccess("__module_name__", "create")) {
-            
+
             $rules = Module::validateRules("__module_name__", $request);
-            
+
             $validator = Validator::make($request->all(), $rules);
-            
+
             if($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-            
+
             $insert_id = Module::insert("__module_name__", $request);
-            
+
             return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
-            
+
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
         }
     }
-    
+
     /**
      * Display the specified __singular_var__.
      *
@@ -92,12 +93,12 @@ class __controller_class_name__ extends Controller
     public function show($id)
     {
         if(Module::hasAccess("__module_name__", "view")) {
-            
+
             $__singular_var__ = __model_name__::find($id);
             if(isset($__singular_var__->id)) {
                 $module = Module::get('__module_name__');
                 $module->row = $__singular_var__;
-                
+
                 return view('la.__view_folder__.show', [
                     'module' => $module,
                     'view_col' => $module->view_col,
@@ -114,7 +115,7 @@ class __controller_class_name__ extends Controller
             return redirect(config('laraadmin.adminRoute') . "/");
         }
     }
-    
+
     /**
      * Show the form for editing the specified __singular_var__.
      *
@@ -127,9 +128,9 @@ class __controller_class_name__ extends Controller
             $__singular_var__ = __model_name__::find($id);
             if(isset($__singular_var__->id)) {
                 $module = Module::get('__module_name__');
-                
+
                 $module->row = $__singular_var__;
-                
+
                 return view('la.__view_folder__.edit', [
                     'module' => $module,
                     'view_col' => $module->view_col,
@@ -144,7 +145,7 @@ class __controller_class_name__ extends Controller
             return redirect(config('laraadmin.adminRoute') . "/");
         }
     }
-    
+
     /**
      * Update the specified __singular_var__ in storage.
      *
@@ -155,24 +156,24 @@ class __controller_class_name__ extends Controller
     public function update(Request $request, $id)
     {
         if(Module::hasAccess("__module_name__", "edit")) {
-            
+
             $rules = Module::validateRules("__module_name__", $request, true);
-            
+
             $validator = Validator::make($request->all(), $rules);
-            
+
             if($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();;
             }
-            
+
             $insert_id = Module::updateRow("__module_name__", $request, $id);
-            
+
             return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
-            
+
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
         }
     }
-    
+
     /**
      * Remove the specified __singular_var__ from storage.
      *
@@ -183,14 +184,14 @@ class __controller_class_name__ extends Controller
     {
         if(Module::hasAccess("__module_name__", "delete")) {
             __model_name__::find($id)->delete();
-            
+
             // Redirecting to index() method
             return redirect()->route(config('laraadmin.adminRoute') . '.__route_resource__.index');
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
         }
     }
-    
+
     /**
      * Server side Datatable fetch via Ajax
      *
@@ -201,18 +202,35 @@ class __controller_class_name__ extends Controller
     {
         $module = Module::get('__module_name__');
         $listing_cols = Module::getListingColumns('__module_name__');
-        
+
         $values = DB::table('__db_table_name__')->select($listing_cols)->whereNull('deleted_at');
         $out = Datatables::of($values)->make();
         $data = $out->getData();
-        
+
         $fields_popup = ModuleFields::getModuleFields('__module_name__');
-        
+
         for($i = 0; $i < count($data->data); $i++) {
             for($j = 0; $j < count($listing_cols); $j++) {
                 $col = $listing_cols[$j];
                 if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
-                    $data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                    //slam_modifie_start
+                    $field_type = ModuleFieldTypes::find($fields_popup[$col]->field_type);
+                    switch($field_type->name) {
+                        case 'Multiselect':
+                            $multiValues = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                            $multiValues = str_replace(['[', ']', '"'], '', $multiValues);
+                            $multiValues = explode(",", $multiValues);
+                            $value = '';
+                            foreach($multiValues as $multiValue) {
+                                $value .= " <span class = 'label label-default'>".ModuleFields::getFieldValue($fields_popup[$col], $multiValue)."</span>";
+                            }
+
+                            $data->data[$i][$j] = $value;
+                            break;
+                        default:
+                            $data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                    }
+                    //slam_modifie_stop
                 }
                 if($col == $module->view_col) {
                     $data->data[$i][$j] = '<a href="' . url(config('laraadmin.adminRoute') . '/__route_resource__/' . $data->data[$i][0]) . '">' . $data->data[$i][$j] . '</a>';
@@ -221,13 +239,13 @@ class __controller_class_name__ extends Controller
                 //    $data->data[$i][$j];
                 // }
             }
-            
+
             if($this->show_action) {
                 $output = '';
                 if(Module::hasAccess("__module_name__", "edit")) {
                     $output .= '<a href="' . url(config('laraadmin.adminRoute') . '/__route_resource__/' . $data->data[$i][0] . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
                 }
-                
+
                 if(Module::hasAccess("__module_name__", "delete")) {
                     $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.__route_resource__.destroy', $data->data[$i][0]], 'method' => 'delete', 'style' => 'display:inline']);
                     $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';

@@ -22,6 +22,8 @@ use Dwij\Laraadmin\Models\Module;
  */
 class LAHelper
 {
+
+    const RECENT_LARAVEL = 5.3;
     /**
      * Gives various names of Module in Object like label, table, model, controller, singular
      *
@@ -36,7 +38,7 @@ class LAHelper
         $array = array();
         $module_name = trim($module_name);
         $module_name = str_replace(" ", "_", $module_name);
-        
+
         $array['module'] = ucfirst(str_plural($module_name));
         $array['label'] = ucfirst(str_plural($module_name));
         $array['table'] = strtolower(str_plural($module_name));
@@ -45,10 +47,10 @@ class LAHelper
         $array['controller'] = $array['module'] . "Controller";
         $array['singular_l'] = strtolower(str_singular($module_name));
         $array['singular_c'] = ucfirst(str_singular($module_name));
-        
+
         return (object)$array;
     }
-    
+
     /**
      * Get list of Database tables excluding LaraAdmin Context tables like
      * backups, la_configs, la_menus, migrations, modules, module_fields, module_field_types
@@ -84,7 +86,7 @@ class LAHelper
         } else {
             $tables = DB::select('SHOW TABLES');
         }
-        
+
         $tables_out = array();
         foreach($tables as $table) {
             $table = (Array)$table;
@@ -112,15 +114,15 @@ class LAHelper
         $remove_tables = array_merge($remove_tables, $remove_tables2);
         $remove_tables = array_unique($remove_tables);
         $tables_out = array_diff($tables_out, $remove_tables);
-        
+
         $tables_out2 = array();
         foreach($tables_out as $table) {
             $tables_out2[$table] = $table;
         }
-        
+
         return $tables_out2;
     }
-    
+
     /**
      * Get Array of All Modules
      *
@@ -132,21 +134,21 @@ class LAHelper
     public static function getModuleNames($remove_modules = [])
     {
         $modules = Module::all();
-        
+
         $modules_out = array();
         foreach($modules as $module) {
             $modules_out[] = $module->name;
         }
         $modules_out = array_diff($modules_out, $remove_modules);
-        
+
         $modules_out2 = array();
         foreach($modules_out as $module) {
             $modules_out2[$module] = $module;
         }
-        
+
         return $modules_out2;
     }
-    
+
     /**
      * Method to parse the dropdown, Multiselect, Taginput and radio values which are linked with
      * either other tables via "@" e.g. "@employees" or string array of values
@@ -182,7 +184,7 @@ class LAHelper
         }
         return $valueOut;
     }
-    
+
     /**
      * Log method to log either in command line or in Log file depending on $type.
      *
@@ -203,7 +205,7 @@ class LAHelper
             Log::$type($text);
         }
     }
-    
+
     /**
      * Method copies folder recursively into another
      *
@@ -230,7 +232,7 @@ class LAHelper
         }
         closedir($dir);
     }
-    
+
     /**
      * Method deletes folder and its content
      *
@@ -253,7 +255,7 @@ class LAHelper
             rmdir($dir);
         }
     }
-    
+
     /**
      * Generate Random Password
      *
@@ -283,7 +285,7 @@ class LAHelper
         }
         return $password;
     }
-    
+
     /**
      * Get url of image by using $upload_id
      *
@@ -301,7 +303,7 @@ class LAHelper
             return "";
         }
     }
-    
+
     /**
      * Get Thumbnail image path of Uploaded image
      *
@@ -355,7 +357,7 @@ class LAHelper
         $imgt($new_image, $thumbpath);
         return file_exists($thumbpath);
     }
-    
+
     /**
      * Print the menu editor view.
      * This needs to be done recursively
@@ -367,9 +369,11 @@ class LAHelper
      */
     public static function print_menu_editor($menu)
     {
+
         $editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute') . '.la_menus.destroy', $menu->id], 'method' => 'delete', 'style' => 'display:inline']);
         $editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
         $editing .= \Collective\Html\FormFacade::close();
+
         if($menu->type != "module") {
             $info = (object)array();
             $info->id = $menu->id;
@@ -377,15 +381,16 @@ class LAHelper
             $info->url = $menu->url;
             $info->type = $menu->type;
             $info->icon = $menu->icon;
-            
+
             $editing .= '<a class="editMenuBtn btn btn-xs btn-success pull-right" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
+            // dd($editing);
         }
         $str = '<li class="dd-item dd3-item" data-id="' . $menu->id . '">
 			<div class="dd-handle dd3-handle"></div>
 			<div class="dd3-content"><i class="fa ' . $menu->icon . '"></i> ' . $menu->name . ' ' . $editing . '</div>';
-        
+
         $childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
-        
+
         if(count($childrens) > 0) {
             $str .= '<ol class="dd-list">';
             foreach($childrens as $children) {
@@ -394,9 +399,10 @@ class LAHelper
             $str .= '</ol>';
         }
         $str .= '</li>';
+
         return $str;
     }
-    
+
     /**
      * Print the sidebar menu view.
      * This needs to be done recursively
@@ -420,9 +426,9 @@ class LAHelper
         if($active) {
             $active_str = 'class="active"';
         }
-        
+
         $str = '<li' . $treeview . ' ' . $active_str . '><a href="' . url(config("laraadmin.adminRoute") . '/' . $menu->url) . '"><i class="fa ' . $menu->icon . '"></i> <span>' . LAHelper::real_module_name($menu->name) . '</span> ' . $subviewSign . '</a>';
-        
+
         if(count($childrens)) {
             $str .= '<ul class="treeview-menu">';
             foreach($childrens as $children) {
@@ -436,7 +442,7 @@ class LAHelper
         $str .= '</li>';
         return $str;
     }
-    
+
     /**
      * Print the top navbar menu view.
      * This needs to be done recursively
@@ -450,7 +456,7 @@ class LAHelper
     public static function print_menu_topnav($menu, $active = false)
     {
         $childrens = \Dwij\Laraadmin\Models\Menu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
-        
+
         $treeview = "";
         $treeview2 = "";
         $subviewSign = "";
@@ -463,9 +469,9 @@ class LAHelper
         if($active) {
             $active_str = 'class="active"';
         }
-        
+
         $str = '<li ' . $treeview . '' . $active_str . '><a ' . $treeview2 . ' href="' . url(config("laraadmin.adminRoute") . '/' . $menu->url) . '">' . LAHelper::real_module_name($menu->name) . $subviewSign . '</a>';
-        
+
         if(count($childrens)) {
             $str .= '<ul class="dropdown-menu" role="menu">';
             foreach($childrens as $children) {
@@ -476,8 +482,11 @@ class LAHelper
         $str .= '</li>';
         return $str;
     }
-    
-    /**
+    public static function is_recent_laravel_version()
+    {
+        return self::laravel_ver() >= self::RECENT_LARAVEL;
+    }
+     /**
      * Get laravel version. very important in installation and handling Laravel 5.3 changes.
      *
      * LAHelper::laravel_ver()
@@ -487,19 +496,22 @@ class LAHelper
     public static function laravel_ver()
     {
         $var = \App::VERSION();
-        
+
         if(starts_with($var, "5.2")) {
             return 5.2;
         } else if(starts_with($var, "5.3")) {
             return 5.3;
-        } else if(substr_count($var, ".") == 3) {
+        } else if(starts_with($var, "5.4")) {
+            return 5.4;
+        }
+        else if(substr_count($var, ".") == 3) {
             $var = substr($var, 0, strrpos($var, "."));
             return $var . "-str";
         } else {
             return floatval($var);
         }
     }
-    
+
     /**
      * Get real Module name by replacing underscores within name
      *
@@ -511,7 +523,7 @@ class LAHelper
         $name = str_replace('_', ' ', $name);
         return $name;
     }
-    
+
     /**
      * Get complete line within file by comparing passed substring $str
      *
@@ -531,7 +543,7 @@ class LAHelper
         }
         return -1;
     }
-    
+
     /**
      * Get complete line within given file contents by comparing passed substring $str
      *
@@ -551,7 +563,7 @@ class LAHelper
         }
         return -1;
     }
-    
+
     /**
      * Method sets parameter in ".env" file as well as into php environment.
      *
@@ -562,16 +574,16 @@ class LAHelper
      */
     public static function setenv($param, $value)
     {
-        
+
         $envfile = LAHelper::openFile('.env');
         $line = LAHelper::getLineWithString('.env', $param . '=');
         $envfile = str_replace($line, $param . "=" . $value . "\n", $envfile);
         file_put_contents('.env', $envfile);
-        
+
         $_ENV[$param] = $value;
         putenv($param . "=" . $value);
     }
-    
+
     /**
      * Get file contents
      *
@@ -583,7 +595,7 @@ class LAHelper
         $md = file_get_contents($from);
         return $md;
     }
-    
+
     /**
      * Delete file
      *
@@ -597,7 +609,7 @@ class LAHelper
             unlink($file_path);
         }
     }
-    
+
     /**
      * Get Migration file name by passing matching table name
      *
@@ -619,7 +631,7 @@ class LAHelper
         }
         return "";
     }
-    
+
     /**
      * Check if passed array is associative
      *
@@ -630,7 +642,7 @@ class LAHelper
     {
         // Keys of the array
         $keys = array_keys($array);
-        
+
         // If the array keys of the keys match the keys, then the array must
         // not be associative (e.g. the keys array looked like {0:0, 1:1...}).
         return array_keys($keys) !== $keys;

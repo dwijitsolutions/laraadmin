@@ -8,7 +8,7 @@
 
 @section("headerElems")
 @la_access("__module_name__", "create")
-    <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add __singular_cap_var__</button>
+    <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">{{ __('Add __singular_cap_var__') }}</button>
 @endla_access
 @endsection
 
@@ -31,15 +31,19 @@
         <thead>
         <tr class="success">
             @foreach( $listing_cols as $col )
-            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+                @if ($col === 'id')
+                    <th>{{ $module->fields[$col]['label'] or __(ucfirst($col)) }}</th>
+                @else
+                    <th>{{ __($module->fields[$col]['label']) }}</th>
+                @endif
             @endforeach
             @if($show_actions)
-            <th>Actions</th>
+            <th>{{ __('Actions') }}</th>
             @endif
         </tr>
         </thead>
         <tbody>
-            
+
         </tbody>
         </table>
     </div>
@@ -51,20 +55,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add __singular_cap_var__</h4>
+                <h4 class="modal-title" id="myModalLabel">{{ __('Add __singular_cap_var__') }}</h4>
             </div>
             {!! Form::open(['action' => 'LA\__controller_class_name__@store', 'id' => '__singular_var__-add-form']) !!}
             <div class="modal-body">
                 <div class="box-body">
                     @la_form($module)
-                    
+
                     {{--
                     __input_fields__
                     --}}
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
                 {!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
             </div>
             {!! Form::close() !!}
@@ -97,7 +101,7 @@ $(function () {
         @endif
     });
     $("#__singular_var__-add-form").validate({
-        
+
     });
 });
 </script>
