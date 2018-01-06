@@ -84,6 +84,7 @@
 <script>
 $(function () {
     $("#example1").DataTable({
+        autoWidth: false,
         processing: true,
         serverSide: true,
         ajax: "{{ url(config('laraadmin.adminRoute') . '/__singular_var___dt_ajax') }}",
