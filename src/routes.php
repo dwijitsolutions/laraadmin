@@ -1,7 +1,9 @@
 <?php
 
+use Dwij\Laraadmin\Helpers\LAHelper;
+
 $as = "";
-if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+if(LAHelper::laravel_ver() == 5.3 || LAHelper::laravel_ver() == 5.4) {
     $as = config('laraadmin.adminRoute') . '.';
 }
 
