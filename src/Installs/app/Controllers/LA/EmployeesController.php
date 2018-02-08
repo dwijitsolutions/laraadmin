@@ -102,7 +102,7 @@ class EmployeesController extends Controller
 			if(env('MAIL_USERNAME') != null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "") {
 				// Send mail to User his Password
 				Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {
-					$m->from('hello@laraadmin.com', 'LaraAdmin');
+					$m->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
 					$m->to($user->email, $user->name)->subject('LaraAdmin - Your Login Credentials');
 				});
 			} else {
