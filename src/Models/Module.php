@@ -1020,7 +1020,7 @@ class Module extends Model
                         }
                     }
                     if($field['unique'] && !$isEdit) {
-                        $col .= "unique:" . $module->name_db . ",deleted_at,NULL";
+                        $col .= "unique:" . $module->name_db . "," . $field['colname'] . ",NULL";
                     }
                     // 'name' => 'required|unique|min:5|max:256',
                     // 'author' => 'required|max:50',
