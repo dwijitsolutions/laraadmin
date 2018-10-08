@@ -51,7 +51,7 @@ Thank you for considering contributing to the LaraAdmin. Please read [features d
 
 ### Bugs, improvements & Security Vulnerabilities
 
-If you discover a bug or security vulnerability within LaraAdmin, please send an e-mail to Ganesh Bhosale at ganesh@dwij.in. All requests will beaddressed promptly.
+If you discover a bug or security vulnerability within LaraAdmin, please send an e-mail to Ganesh Bhosale at ganesh@dwij.in. All requests will be addressed promptly.
 
 ### Issues
 
