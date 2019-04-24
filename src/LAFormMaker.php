@@ -486,6 +486,14 @@ class LAFormMaker
                     } else {
                         $popup_vals = array();
                     }
+                    $d_val = [];
+                    $i=0;
+                    foreach($default_val as $val)
+                    {
+                        $d_val[$i] = (int)$val;
+                        $i++;
+                    }
+                    $default_val = $d_val;
                     $out .= Form::select($field_name . "[]", $popup_vals, $default_val, $params);
                     break;
                 case 'Name':
