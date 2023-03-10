@@ -9,6 +9,7 @@
 
 namespace Dwij\Laraadmin\Commands;
 
+// some of the file were called but it is not used any were
 use Config;
 use Artisan;
 use Exception;
@@ -16,6 +17,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\CodeGenerator;
+
 
 /**
  * Class Crud
