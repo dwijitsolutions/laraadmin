@@ -1,0 +1,2 @@
+\App\Models\__model_class_name__::observe(\App\Observers\__model_class_name__Observer::class);
+        // End of Boot - Please do not edit this line.

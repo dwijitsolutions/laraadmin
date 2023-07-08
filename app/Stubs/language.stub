@@ -1,0 +1,18 @@
+<?php
+/**
+ * Language generated using LaraAdmin
+ * Help: https://laraadmin.com
+ * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: https://dwijitsolutions.com
+ */
+
+return [
+    '__singular_lower_var__' => '__singular_cap_var__',
+    '__db_table_name__' => '__module_name_2__',
+    '__singular_lower_var___listing' => '__singular_cap_var__ Listing',
+    '__singular_lower_var___add' => 'Add __singular_cap_var__',
+    'back_to___db_table_name__' => 'Back to __module_name_2__',
+    '__singular_lower_var___view' => '__singular_cap_var__ View',
+    '__singular_lower_var___edit' => '__singular_cap_var__ Edit',
+];

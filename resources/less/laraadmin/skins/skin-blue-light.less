@@ -1,0 +1,89 @@
+/*
+ * Skin: Blue
+ * ----------
+ */
+@import "../../bootstrap/mixins.less";
+@import "../../bootstrap/variables.less";
+@import "../variables.less";
+@import "../mixins.less";
+
+@light-blue-skin: #33a1e0;
+@skin-color: @light-blue-skin;
+
+.skin-blue-light {
+    //Navbar
+    .main-header {
+        .navbar {
+            .navbar-variant(@skin-color; #fff);
+            .sidebar-toggle {
+                color: #fff;
+                &:hover {
+                    background-color: darken(@skin-color, 5%);
+                }
+            }
+            @media (max-width: @screen-header-collapse) {
+                .dropdown-menu {
+                    li {
+                        &.divider {
+                            background-color: rgba(255, 255, 255, 0.1);
+                        }
+                        a {
+                            color: #fff;
+                            &:hover {
+                                background: darken(@skin-color, 5%);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //Logo
+        .logo {
+            .logo-variant(@skin-color);
+        }
+
+        li.user-header {
+            background-color: @skin-color;
+        }
+    }
+
+    //Content Header
+    .content-header {
+        background: transparent;
+    }
+
+    //Create the sidebar skin
+    .skin-light-sidebar(@skin-color);
+    .main-footer {
+        border-top-color: @gray;
+    }
+
+    // Navbar Search Form
+    .navbar-search-form {
+        .tt-menu {
+            h3 {
+                background: lighten(@skin-color, 40%);
+            }
+            .tt-suggestion:hover {
+                background-color: @skin-color
+            }
+            .tt-suggestion.tt-cursor {
+                background-color: @skin-color
+            }
+        }
+    }
+
+    // Message User Widget Header
+    #msg-userinfo {
+        .widget-user {
+            .widget-user-header {
+                background-color: darken(@skin-color, 5%);
+                color: #FFF;
+            }
+        }
+    }
+}
+
+.skin-blue.layout-top-nav .main-header > .logo {
+    .logo-variant(@skin-color);
+}

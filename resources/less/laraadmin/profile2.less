@@ -1,0 +1,173 @@
+/* ============================= Page: Profile Design 2 ============================= */
+
+.profile2 {
+    .profile-image {
+        border-radius: 50%;
+        margin-top: 20px;
+        width: 70px;
+        height: 70px;
+        float: left;
+    }
+    .profile-icon {
+        border-radius: 50%;
+        margin-top: 20px;
+        width: 70px;
+        height: 70px;
+        float: left;
+        background: #FFF;
+        text-align: center;
+        text-shadow: 0px 0px 8px lighten(@brand-primary, 20%);
+        margin-bottom: 10px;
+    }
+    .profile-icon i {
+        font-size: 42px;
+        margin-top: 14px;
+        text-align: center;
+    }
+    .name {
+        display: block;
+        width: 100%;
+        margin-top: 16px;
+        font-weight: bold;
+    }
+    .desc {
+        margin-top: 6px;
+    }
+    .row.stats {
+        display: block;
+    }
+    .row.stats .stat {
+        font-size: 18px;
+    }
+    .row.stats .stat i {
+        font-size: 18px;
+        width: 15px;
+        text-align: center;
+        margin-right: 3px;
+    }
+    .dats1 {
+        padding: 6px 10px;
+        font-size: 16px;
+    }
+    .dats1 i.fa {
+        width: 20px;
+        text-align: center;
+        margin-right: 3px;
+    }
+    .label2 {
+        display: inline-block;
+        padding: 0px 7px 1px 7px;
+        background: #FFF;
+        color: #7D7D7D;
+        font-size: 14px;
+        border-radius: 3px;
+        margin-left: 3px;
+        cursor: pointer;
+    }
+    .label2.danger {
+        background: @red;
+        color: #FFF;
+    }
+    .label2.success {
+        background: @green;
+        color: #FFF;
+    }
+    .teamview {
+        display: block;
+        text-align: center;
+        padding: 9px;
+        .face {
+            display: inline-block;
+            max-height: 40px;
+        }
+        .face img {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            margin-right: 3px;
+            margin-bottom: 7px;
+            border: 1px solid #FFF;
+        }
+        .face i.status-online {
+            width: 12px;
+            height: 12px;
+            display: block;
+            position: absolute;
+            margin-top: -21px;
+            margin-left: 27px;
+            background: #10c469;
+            border: solid 1px #FFF;
+            border-radius: 50%;
+        }
+    }
+    .dats1.pb {
+        padding: 3px 10px;
+        .progress {
+            margin-bottom: 0px;
+        }
+        .clearfix span {
+            font-size: 12px;
+        }
+    }
+    .actions {
+        text-align: center;
+        padding: 18px;
+        .btn {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            padding-top: 3px;
+            text-align: center;
+            margin-bottom: 5px;
+            border: 0px;
+            transition: all .3s ease;
+        }
+        .btn.btn-edit {
+            color: @blue;
+        }
+        .btn.btn-edit:hover {
+            background: @blue;
+            color: #FFF;
+        }
+        .btn.btn-delete {
+            padding-top: 1px;
+            color: @red;
+            font-size: 17px;
+            margin-left: 0;
+            padding-left: 4px;
+        }
+        .btn.btn-delete:hover {
+            background: @red;
+            color: #FFF;
+        }
+    }
+}
+
+/* ============================= Page: Profile Design 2 - Info List ============================= */
+
+.panel.infolist {
+    .form-group {
+        border-bottom: 1px dashed #e2e4e8;
+        padding-bottom: 9px;
+        min-height: 35px;
+        display: block;
+        height: auto;
+        overflow-y: auto;
+        .fvalue {
+            padding: 0px 10px 5px 10px;
+        }
+    }
+    .form-group:last-child {
+        border-bottom: 0px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    .form-group:first-child {
+        margin-top: 10px;
+    }
+    .form-group.config-input {
+        border-bottom: 0px;
+        overflow-y: visible;
+    }
+}

@@ -1,0 +1,8 @@
+        // __module_name__
+        '__module_name__' => [
+            '__singular_var_upper___CREATED' => ["name" => "__singular_cap_var__ Created", "is_notif" => "false", "code" => "__singular_var_upper___CREATED", "module" => "__module_name__"],
+            '__singular_var_upper___UPDATED' => ["name" => "__singular_cap_var__ Updated", "is_notif" => "false", "code" => "__singular_var_upper___UPDATED", "module" => "__module_name__"],
+            '__singular_var_upper___DELETED' => ["name" => "__singular_cap_var__ Deleted", "is_notif" => "false", "code" => "__singular_var_upper___DELETED", "module" => "__module_name__"],
+        ],
+
+        // More LALogs Configurations - Do not edit this line

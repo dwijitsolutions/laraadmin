@@ -1,5 +1,16 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-	"editor.tabSize": 4,
-	"editor.insertSpaces": true
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 4,
+    "files.exclude": {
+        "**/*.git": true,
+        "**/*.DS_Store": true,
+        "bootstrap/**": true,
+        "node_modules/**": true
+    },
+    "git.mergeEditor": false
 }

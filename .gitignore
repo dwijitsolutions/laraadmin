@@ -1,2 +1,13 @@
 .DS_Store
-src/Installs/resources/views/welcome.blade.php
+.env
+.idea/
+.phpunit.cache
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+node_modules/
+npm-debug.log
+storage/*.key
+storage/thumbnails
+vendor/
+yarn-error.log

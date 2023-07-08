@@ -1,0 +1,113 @@
+/*
+ * Skin: Black
+ * -----------
+ */
+@import "../../bootstrap/mixins.less";
+@import "../../bootstrap/variables.less";
+@import "../variables.less";
+@import "../mixins.less";
+
+@skin-color: #666;
+
+/* skin-black navbar */
+.skin-black {
+    //Navbar & Logo
+    .main-header {
+        .box-shadow(0px 1px 1px rgba(0, 0, 0, 0.05));
+        .navbar-toggle {
+            color: #333;
+        }
+        .navbar-brand {
+            color: #333;
+            border-right: 1px solid #eee;
+        }
+        .navbar {
+            .navbar-variant(#fff; #333; #999; #fff);
+            > .sidebar-toggle {
+                color: #333;
+                border-right: 1px solid #eee;
+            }
+            .navbar-nav {
+                > li > a {
+                    border-right: 1px solid #eee;
+                }
+            }
+            .navbar-custom-menu .navbar-nav,
+            .navbar-right {
+                > li {
+                    > a {
+                        border-left: 1px solid #eee;
+                        border-right-width: 0;
+                    }
+                }
+            }
+        }
+        > .logo {
+            .logo-variant(#fff; #333);
+            border-right: 1px solid #eee;
+            @media (max-width: @screen-header-collapse) {
+                .logo-variant(#222; #fff);
+                border-right: none;
+            }
+        }
+
+        li.user-header {
+            background-color: #222;
+        }
+    }
+
+    //Content Header
+    .content-header {
+        background: transparent;
+        box-shadow: none;
+    }
+    //Create the sidebar skin
+    .skin-dark-sidebar(#fff);
+
+    .pace {
+        .pace-progress {
+            background: #222;
+        }
+        .pace-activity {
+            border-top-color: #222;
+            border-left-color: #222;
+        }
+    }
+
+    // Navbar Search Form
+    .navbar-search-form {
+        .tt-menu {
+            h3 {
+                background: lighten(#444, 40%);
+            }
+            .tt-suggestion:hover {
+                background-color: #444
+            }
+            .tt-suggestion.tt-cursor {
+                background-color: #444
+            }
+        }
+        .typeahead, .tt-query, .tt-hint {
+            color: #444;
+        }
+        .typeahead::-webkit-input-placeholder {
+            color: #888;
+        }
+        .typeahead::-moz-input-placeholder {
+            color: #888;
+        }
+        .typeahead::-ms-input-placeholder {
+            color: #888;
+        }
+    }
+
+    // Message User Widget Header
+    #msg-userinfo {
+        .widget-user {
+            .widget-user-header {
+                background-color: darken(@skin-color, 5%);
+                color: #FFF;
+            }
+        }
+    }
+}

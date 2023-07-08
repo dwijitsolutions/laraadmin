@@ -1,0 +1,53 @@
+/*
+ * Page: Login & Register
+ * ----------------------
+ */
+
+ @login-image-path: "../../img/bg-login.jpg";
+
+.login-page, .register-page {
+    .bg-image {
+        width: 100vw;
+        height: 100vh;
+        background: url('@{login-image-path}');
+        background-size: cover;
+        position: absolute;
+    }
+
+    .login-box, .register-box {
+        width: 450px;
+        height: 100vh;
+        position: absolute;
+        background: #FFF;
+        right: 0px;
+        padding: 40px;
+    }
+    .login-logo, .register-logo {
+        font-size: 35px;
+        text-align: left;
+        margin-bottom: 25px;
+        font-weight: 300;
+    }
+    .login-box-msg, .register-box-msg {
+        margin: 0;
+        text-align: left;
+        padding: 0 20px 20px 0px;
+        color: grey;
+    }
+
+    .login-box-footer, .register-box-footer {
+        position: absolute;
+        bottom: 0px;
+        padding: 20px 30px 20px 10px;
+    }
+    @media (max-width: 768px) {
+        .login-box, .register-box {
+            width: 100%;
+        }
+
+        .login-box-footer, .register-box-footer {
+            position: relative;
+            padding-top: 30px;
+        }
+    }
+}

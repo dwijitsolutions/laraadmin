@@ -1,5 +1,7 @@
- {
-    "name": "dwij/laraadmin",
+{
+    "name": "dwijitsolutions/laraadmin",
+    "version": "1.1.0",
+    "type": "project",
     "description": "LaraAdmin is a Open source Laravel Admin Panel / CMS which can be used as Admin Backend, Data Management Tool or CRM boilerplate for Laravel with features like CRUD Generation, Module Manager, Media, Menus, Backups and much more",
     "keywords": ["php", "laravel", "crm", "admin", "cms", "administrator"],
     "license": "MIT",
@@ -8,32 +10,81 @@
         "issues": "https://github.com/dwijitsolutions/laraadmin/issues",
         "source": "https://github.com/dwijitsolutions/laraadmin"
     },
-    "version": "1.0.41",
     "require": {
-        "illuminate/support": "5.*",
-        "laravelcollective/html": "^5.2|^5.1",
-        "illuminate/container": "^5.2|^5.1",
-        "yajra/laravel-datatables-oracle": "~6.0",
-        "creativeorange/gravatar": "^1.0",
-        "doctrine/dbal": "~2.3",
-        "zizaco/entrust": "1.7.0",
-        "spatie/laravel-backup": "^3.0.0"
+        "php": "^7.3|^8.0",
+        "doctrine/dbal": "^3.5",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laraadmin/entrust": "6.0.3",
+        "laravel/framework": "^8.75",
+        "laravel/sanctum": "^2.11",
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.4",
+        "laravelcollective/html": "^6.3",
+        "spatie/laravel-backup": "^6.16",
+        "yajra/laravel-datatables-oracle": "^9.21"
+    },
+    "require-dev": {
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^5.10",
+        "phpunit/phpunit": "^9.5.10"
     },
     "authors": [
         {
             "name": "Ganesh Bhosale",
             "email": "ganesh@dwij.in"
+        },
+        {
+            "name": "Ganesh Khade",
+            "email": "moraya.re@gmail.com"
         }
     ],
-    "classmap": [
-        "src/Controllers",
-        "src/Models"
+    "repositories": [
+        {
+            "url": "https://github.com/laraadmin/entrust.git",
+            "type": "git"
+        }
     ],
     "autoload": {
         "psr-4": {
-            "Dwij\\Laraadmin\\": "src/"
-        },
-        "files": [
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

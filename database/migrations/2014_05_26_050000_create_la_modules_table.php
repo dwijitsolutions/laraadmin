@@ -1,0 +1,46 @@
+<?php
+/**
+ * Migration generated using LaraAdmin
+ * Help: https://laraadmin.com
+ * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: https://dwijitsolutions.com
+ */
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateLAModulesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('la_modules', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50);
+            $table->string('label', 100);
+            $table->string('name_db', 50);
+            $table->string('view_col', 50);
+            $table->string('model', 50);
+            $table->string('controller', 100);
+            $table->string('fa_icon', 30)->default("fa-cube");
+            $table->boolean('is_gen');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('la_modules');
+    }
+}
