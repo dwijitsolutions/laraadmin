@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://laraadmin.com/img/laraadmin-256.png">
+  <img src="https://laraadmin.com/img/laraadmin-256.png">
   <h1 align="center" style="margin-top:5px;">LaraAdmin 1.1</h1>
 </p>
 
@@ -8,8 +8,14 @@
 [![Code Triagers Badge](https://www.codetriage.com/dwijitsolutions/laraadmin/badges/users.svg)](https://www.codetriage.com/dwijitsolutions/laraadmin)
 
 LaraAdmin is a Open source CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and Workflows.
-##### Website: [laraadmin.com](http://laraadmin.com)
-##### Creator: [@gdbhosale](https://github.com/gdbhosale), [Dwij IT Solutions](https://github.com/dwijitsolutions)
+
+> **Warning**
+> LaraAdmin 1.1 is not a package anymore.
+> Now it's a template.
+
+*Website: [LaraAdmin.com](https://laraadmin.com)*
+
+*Creator: [@gdbhosale](https://github.com/gdbhosale), [Dwij IT Solutions](https://github.com/dwijitsolutions)*
 
 --------
 
@@ -56,7 +62,7 @@ If you come across any issue/bug please [report them here](https://github.com/dw
 
 ### License
 
-LaraAdmin is open-sourced software built by Dwij IT Solutions and contributors and licensed under the [MIT license](http://opensource.org/licenses/MIT).
+LaraAdmin is open-sourced software built by Dwij IT Solutions and contributors and licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ### Credits:
 - Ganesh Bhosale https://github.com/gdbhosale
@@ -69,7 +75,7 @@ LaraAdmin is open-sourced software built by Dwij IT Solutions and contributors a
 <p align="center">
   <br>
   Brought to you by<br>
-  <a href="http://dwijitsolutions.com">
-  <img src="http://dwijitsolutions.com/wp-content/uploads/2016/01/dwij-it-solutions.png">
+  <a href="https://dwijitsolutions.com">
+  <img src="https://dwijitsolutions.com/wp-content/uploads/2016/01/dwij-it-solutions.png">
   </a>
 </p>
