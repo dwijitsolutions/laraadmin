@@ -1,36 +1,30 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Http\Controllers\LA;
 
+use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use Illuminate\Support\Facades\DB;
-use Schema;
-
 use App\Models\LAModule;
 use App\Models\LAModuleField;
 use App\Models\LAModuleFieldType;
-use App\Helpers\LAHelper;
 use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-/**
- * Class LAModuleFieldController
- * @package App\Http\Controllers\LA
- *
- * Controller looks after
+/***
+ * LaraAdmin Module Field Controller
  */
 class LAModuleFieldController extends Controller
 {
     /**
-     * Store a newly created Module Field via "Module Manager"
+     * Store a newly created Module Field via "Module Manager".
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -43,14 +37,14 @@ class LAModuleFieldController extends Controller
         $field_id = LAModuleField::createField($request);
 
         // Give Default Full Access to Super Admin
-        $role = Role::where("name", "SUPER_ADMIN")->first();
-        LAModule::setDefaultFieldRoleAccess($field_id, $role->id, "full");
+        $role = Role::where('name', 'SUPER_ADMIN')->first();
+        LAModule::setDefaultFieldRoleAccess($field_id, $role->id, 'full');
 
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.show', [$module_id]);
+        return redirect()->route(config('laraadmin.adminRoute').'.la_modules.show', [$module_id]);
     }
 
     /**
-     * Show the form for editing of Module Field via "Module Manager"
+     * Show the form for editing of Module Field via "Module Manager".
      *
      * @param $id Field's ID to be Edited
      * @return $this
@@ -72,7 +66,7 @@ class LAModuleFieldController extends Controller
     }
 
     /**
-     * Update the specified Module Field via "Module Manager"
+     * Update the specified Module Field via "Module Manager".
      *
      * @param Request $request
      * @param $id Field's ID to be Updated
@@ -84,11 +78,11 @@ class LAModuleFieldController extends Controller
 
         LAModuleField::updateField($id, $request);
 
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.show', [$module_id]);
+        return redirect()->route(config('laraadmin.adminRoute').'.la_modules.show', [$module_id]);
     }
 
     /**
-     * Remove the specified Module Field from Database Context + Table
+     * Remove the specified Module Field from Database Context + Table.
      *
      * @param $id Field's ID to be Destroyed
      * @return \Illuminate\Http\RedirectResponse
@@ -102,11 +96,11 @@ class LAModuleFieldController extends Controller
         // Delete Field
         LAModuleField::deleteField($module->name, $field->colname);
 
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.show', [$module->id]);
+        return redirect()->route(config('laraadmin.adminRoute').'.la_modules.show', [$module->id]);
     }
 
     /**
-     * Check unique values for particular field
+     * Check unique values for particular field.
      *
      * @param Request $request
      * @param $field_id Field ID
@@ -122,7 +116,7 @@ class LAModuleFieldController extends Controller
         $module = LAModule::find($field->module);
 
         // echo $module->name_db." ".$field->colname." ".$request->field_value;
-        $rowCount = DB::table($module->name_db)->where($field->colname, $request->field_value)->where("id", "!=", $request->row_id)->whereNull('deleted_at')->count();
+        $rowCount = DB::table($module->name_db)->where($field->colname, $request->field_value)->where('id', '!=', $request->row_id)->whereNull('deleted_at')->count();
 
         if ($rowCount > 0) {
             $valExists = true;
@@ -132,14 +126,14 @@ class LAModuleFieldController extends Controller
     }
 
     /**
-     * Save column visibility in listing/index view
+     * Save column visibility in listing/index view.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function module_field_listing_show_ajax(Request $request)
     {
-        if ($request->state == "true") {
+        if ($request->state == 'true') {
             $state = 1;
         } else {
             $state = 0;
@@ -149,9 +143,9 @@ class LAModuleFieldController extends Controller
             $module_field->listing_col = $state;
             $module_field->save();
 
-            return response()->json(['status' => 'success', 'message' => "Module field listing visibility saved to " . $state]);
+            return response()->json(['status' => 'success', 'message' => 'Module field listing visibility saved to '.$state]);
         } else {
-            return response()->json(['status' => 'failed', 'message' => "Module field not found"]);
+            return response()->json(['status' => 'failed', 'message' => 'Module field not found']);
         }
     }
 }

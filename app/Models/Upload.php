@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -27,33 +27,35 @@ class Upload extends Model
 
     protected $dates = ['deleted_at'];
 
-    public static function add($filename, $caption = "", $user_id = null, $is_public = true)
+    public static function add($filename, $caption = '', $user_id = null, $is_public = true)
     {
-        $img = Upload::create([
+        $img = self::create([
             'name' => $filename,
-            'path' =>  storage_path('uploads/' . $filename),
+            'path' =>  storage_path('uploads/'.$filename),
             'extension' => pathinfo($filename, PATHINFO_EXTENSION),
             'caption' => $caption,
             'user_id' => $user_id,
             'hash' => strtolower(Str::random(20)),
             'public' => $is_public
         ]);
+
         return $img;
     }
 
     public static function update_local_upload_paths()
     {
-        $uploads = Upload::all();
+        $uploads = self::all();
         $storage_local_path = storage_path('');
-        $path = "";
+        $path = '';
         foreach ($uploads as $upload) {
             $path = $upload->path;
-            $path = substr($path, strpos($path, "uploads"));
-            $path = $storage_local_path."/".$path;
+            $path = substr($path, strpos($path, 'uploads'));
+            $path = $storage_local_path.'/'.$path;
             $upload->path = $path;
             $upload->save();
         }
-        return redirect(config('laraadmin.adminRoute') . '/uploads');
+
+        return redirect(config('laraadmin.adminRoute').'/uploads');
     }
 
     /**
@@ -65,10 +67,10 @@ class Upload extends Model
     }
 
     /**
-     * Get File URL
+     * Get File URL.
      */
     public function url()
     {
-        return url("files/".$this->hash."/".$this->name);
+        return url('files/'.$this->hash.'/'.$this->name);
     }
 }

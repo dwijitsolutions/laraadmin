@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -11,8 +11,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-use App\Models\LAModule;
 
 class LALog extends Model
 {
@@ -39,22 +37,23 @@ class LALog extends Model
     }
 
     /**
-     * Get mapping array by key
+     * Get mapping array by key.
      *
      * @return array
      */
-    public static function arr($key = "id")
+    public static function arr($key = 'id')
     {
-        $results = LALog::all();
-        $arr = array();
+        $results = self::all();
+        $arr = [];
         foreach ($results as $result) {
             $arr[$result->$key] = $result;
         }
+
         return $arr;
     }
 
     /**
-     * Get all events happened on Module
+     * Get all events happened on Module.
      *
      * @return mixed
      */
@@ -62,7 +61,8 @@ class LALog extends Model
     {
         $moduleConfigs = config('laraadmin.log.LA_logs');
         $moduleConfigsArr = array_keys($moduleConfigs);
-        return LALog::where("context_id", $this->id)->whereIn("type", $moduleConfigsArr)->orderBy("created_at", "desc")->get();
+
+        return self::where('context_id', $this->id)->whereIn('type', $moduleConfigsArr)->orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -72,6 +72,7 @@ class LALog extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
+
     /**
      * @return mixed
      */
@@ -83,20 +84,20 @@ class LALog extends Model
     public static function make($log_type, $log)
     {
         // log_type starts with "laraadmin.log.". Then we should append that to get config
-        if (!str_starts_with($log_type, "laraadmin.log.")) {
-            $log_type = "laraadmin.log.".$log_type;
+        if (! str_starts_with($log_type, 'laraadmin.log.')) {
+            $log_type = 'laraadmin.log.'.$log_type;
         }
 
         // Check if log_type really exists in config file.
         // If not then skip adding LALog
         if (null !== config($log_type.'.name')) {
             // Get Title if not present in parameters
-            if (!isset($log['title'])) {
+            if (! isset($log['title'])) {
                 $log['title'] = config($log_type.'.name');
             }
 
             // Get Type if not present in parameters
-            if (!isset($log['type'])) {
+            if (! isset($log['type'])) {
                 $log['type'] = config($log_type.'.code');
             }
 
@@ -112,7 +113,7 @@ class LALog extends Model
             }
 
             // Check Type of Log "content"
-            $content = "{}";
+            $content = '{}';
             if (is_string($log['content'])) {
                 $content = $log['content'];
             } elseif (is_object($log['content'])) {
@@ -126,7 +127,7 @@ class LALog extends Model
                 $old = json_decode(json_encode($old));
                 $new = json_decode(json_encode($new));
 
-                $diff = (object) array();
+                $diff = (object) [];
                 foreach ($new as $key => $value) {
                     if (isset($old->{$key})) {
                         if ($old->{$key} != $new->{$key}) {
@@ -145,7 +146,7 @@ class LALog extends Model
                     }
                 }
                 $content = json_encode($diff);
-                if ($content == "{}") {
+                if ($content == '{}') {
                     return;
                 }
             }
@@ -156,7 +157,7 @@ class LALog extends Model
             unset($log['notify_to']);
 
             // Create LALogs
-            $log = LALog::create($log);
+            $log = self::create($log);
         }
     }
 }

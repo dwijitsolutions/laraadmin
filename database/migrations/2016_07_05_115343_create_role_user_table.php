@@ -1,15 +1,15 @@
 <?php
-/**
+/***
  * Migration generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRoleUserTable extends Migration
 {

@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Migration generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -20,47 +20,47 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        LAModule::generate("Users", 'users', 'name', 'fa-group', [
+        LAModule::generate('Users', 'users', 'name', 'fa-group', [
             [
-                "colname" => "name",
-                "label" => "Name",
-                "field_type" => "Name",
-                "unique" => false,
-                "defaultvalue" => "",
-                "minlength" => 5,
-                "maxlength" => 250,
-                "required" => true,
-                "listing_col" => true
+                'colname' => 'name',
+                'label' => 'Name',
+                'field_type' => 'Name',
+                'unique' => false,
+                'defaultvalue' => '',
+                'minlength' => 5,
+                'maxlength' => 250,
+                'required' => true,
+                'listing_col' => true
             ], [
-                "colname" => "context_id",
-                "label" => "Context",
-                "field_type" => "Integer",
-                "unique" => false,
-                "defaultvalue" => "0",
-                "minlength" => 0,
-                "maxlength" => 0,
-                "required" => false,
-                "listing_col" => false
+                'colname' => 'context_id',
+                'label' => 'Context',
+                'field_type' => 'Integer',
+                'unique' => false,
+                'defaultvalue' => '0',
+                'minlength' => 0,
+                'maxlength' => 0,
+                'required' => false,
+                'listing_col' => false
             ], [
-                "colname" => "email",
-                "label" => "Email",
-                "field_type" => "Email",
-                "unique" => true,
-                "defaultvalue" => "",
-                "minlength" => 0,
-                "maxlength" => 250,
-                "required" => false,
-                "listing_col" => true
+                'colname' => 'email',
+                'label' => 'Email',
+                'field_type' => 'Email',
+                'unique' => true,
+                'defaultvalue' => '',
+                'minlength' => 0,
+                'maxlength' => 250,
+                'required' => false,
+                'listing_col' => true
             ], [
-                "colname" => "password",
-                "label" => "Password",
-                "field_type" => "Password",
-                "unique" => false,
-                "defaultvalue" => "",
-                "minlength" => 6,
-                "maxlength" => 250,
-                "required" => true,
-                "listing_col" => false
+                'colname' => 'password',
+                'label' => 'Password',
+                'field_type' => 'Password',
+                'unique' => false,
+                'defaultvalue' => '',
+                'minlength' => 6,
+                'maxlength' => 250,
+                'required' => true,
+                'listing_col' => false
             ]
         ]);
 

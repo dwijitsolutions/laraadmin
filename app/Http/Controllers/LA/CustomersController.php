@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -11,7 +11,6 @@ namespace App\Http\Controllers\LA;
 
 use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\LALog;
 use App\Models\LAModule;
@@ -42,7 +41,7 @@ class CustomersController extends Controller
         $module = LAModule::get('Customers');
 
         if (LAModule::hasAccess($module->id)) {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 // TODO: Implement good Query Builder
                 return Customer::all();
             } else {
@@ -53,13 +52,13 @@ class CustomersController extends Controller
                 ]);
             }
         } else {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -82,11 +81,11 @@ class CustomersController extends Controller
      */
     public function store(Request $request)
     {
-        if (LAModule::hasAccess("Customers", "create")) {
-            if ($request->ajax() && !isset($request->quick_add)) {
-                $request->merge((array)json_decode($request->getContent()));
+        if (LAModule::hasAccess('Customers', 'create')) {
+            if ($request->ajax() && ! isset($request->quick_add)) {
+                $request->merge((array) json_decode($request->getContent()));
             }
-            $rules = LAModule::validateRules("Customers", $request);
+            $rules = LAModule::validateRules('Customers', $request);
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -95,31 +94,30 @@ class CustomersController extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
-                    , 400]);
+                        'errors' => $validator->errors(), 400]);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
             }
 
-            $insert_id = LAModule::insert("Customers", $request);
+            $insert_id = LAModule::insert('Customers', $request);
 
             $customer = Customer::find($insert_id);
 
             // Add LALog
-            LALog::make("Customers.CUSTOMER_CREATED", [
-                'title' => "Customer ".$customer->name." Created",
+            LALog::make('Customers.CUSTOMER_CREATED', [
+                'title' => 'Customer '.$customer->name.' Created',
                 'module_id' => 'Customers',
                 'context_id' => $customer->id,
                 'content' => $customer,
                 'user_id' => Auth::user()->id,
-                'notify_to' => "[]"
+                'notify_to' => '[]'
             ]);
 
             // Create User
             if (isset($request->create_user)) {
                 // Check if User Already Present
-                if (User::where("email", $request->email_primary)->first()) {
+                if (User::where('email', $request->email_primary)->first()) {
                     // generate password
                     $password = LAHelper::gen_password();
 
@@ -131,17 +129,17 @@ class CustomersController extends Controller
                     ]);
 
                     // attach customer role
-                    $role = Role::where("name", "CUSTOMER")->first();
+                    $role = Role::where('name', 'CUSTOMER')->first();
                     $user->attachRole($role);
 
                     // Add LALog
-                    LALog::make("Users.USER_CREATED", [
-                        'title' => "User/Customer ".$user->name." Created",
+                    LALog::make('Users.USER_CREATED', [
+                        'title' => 'User/Customer '.$user->name.' Created',
                         'module_id' => 'Users',
                         'context_id' => $user->id,
                         'content' => $user,
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
 
                     if (LAHelper::is_mail()) {
@@ -151,7 +149,7 @@ class CustomersController extends Controller
                             $m->to($user->email, $user->name)->subject('LaraAdmin - Your Login Credentials');
                         });
                     } else {
-                        Log::info("User created: username: ".$user->email." Password: ".$password);
+                        Log::info('User created: username: '.$user->email.' Password: '.$password);
                     }
                 }
             }
@@ -161,10 +159,10 @@ class CustomersController extends Controller
                     'status' => 'success',
                     'object' => $customer,
                     'message' => 'Customer updated successfully!',
-                    'redirect' => url(config('laraadmin.adminRoute') . '/customers')
+                    'redirect' => url(config('laraadmin.adminRoute').'/customers')
                 ], 201);
             } else {
-                return redirect()->route(config('laraadmin.adminRoute') . '.customers.index');
+                return redirect()->route(config('laraadmin.adminRoute').'.customers.index');
             }
         } else {
             if ($request->ajax() || isset($request->quick_add)) {
@@ -173,7 +171,7 @@ class CustomersController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -187,10 +185,10 @@ class CustomersController extends Controller
      */
     public function show(Request $request, $id)
     {
-        if (LAModule::hasAccess("Customers", "view")) {
+        if (LAModule::hasAccess('Customers', 'view')) {
             $customer = Customer::find($id);
             if (isset($customer->id)) {
-                if ($request->ajax() && !isset($request->_pjax)) {
+                if ($request->ajax() && ! isset($request->_pjax)) {
                     return $customer;
                 } else {
                     $module = LAModule::get('Customers');
@@ -200,11 +198,11 @@ class CustomersController extends Controller
                         'module' => $module,
                         'view_col' => $module->view_col,
                         'no_header' => true,
-                        'no_padding' => "no-padding"
+                        'no_padding' => 'no-padding'
                     ])->with('customer', $customer);
                 }
             } else {
-                if ($request->ajax() && !isset($request->_pjax)) {
+                if ($request->ajax() && ! isset($request->_pjax)) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Record not found'
@@ -212,18 +210,18 @@ class CustomersController extends Controller
                 } else {
                     return view('errors.404', [
                         'record_id' => $id,
-                        'record_name' => ucfirst("customer"),
+                        'record_name' => ucfirst('customer'),
                     ]);
                 }
             }
         } else {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -236,7 +234,7 @@ class CustomersController extends Controller
      */
     public function edit($id)
     {
-        if (LAModule::hasAccess("Customers", "edit")) {
+        if (LAModule::hasAccess('Customers', 'edit')) {
             $customer = Customer::find($id);
             if (isset($customer->id)) {
                 $module = LAModule::get('Customers');
@@ -250,11 +248,11 @@ class CustomersController extends Controller
             } else {
                 return view('errors.404', [
                     'record_id' => $id,
-                    'record_name' => ucfirst("customer"),
+                    'record_name' => ucfirst('customer'),
                 ]);
             }
         } else {
-            return redirect(config('laraadmin.adminRoute') . "/");
+            return redirect(config('laraadmin.adminRoute').'/');
         }
     }
 
@@ -267,11 +265,11 @@ class CustomersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (LAModule::hasAccess("Customers", "edit")) {
+        if (LAModule::hasAccess('Customers', 'edit')) {
             if ($request->ajax()) {
-                $request->merge((array)json_decode($request->getContent()));
+                $request->merge((array) json_decode($request->getContent()));
             }
-            $rules = LAModule::validateRules("Customers", $request, true);
+            $rules = LAModule::validateRules('Customers', $request, true);
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -280,7 +278,7 @@ class CustomersController extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
+                        'errors' => $validator->errors()
                     ], 400);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
@@ -291,13 +289,13 @@ class CustomersController extends Controller
 
             if (isset($customer_old->id)) {
                 // Update Data
-                LAModule::updateRow("Customers", $request, $id);
+                LAModule::updateRow('Customers', $request, $id);
 
                 $customer_new = Customer::find($id);
 
                 // Add LALog
-                LALog::make("Customers.CUSTOMER_UPDATED", [
-                    'title' => "Customer ".$customer_new->name." Updated",
+                LALog::make('Customers.CUSTOMER_UPDATED', [
+                    'title' => 'Customer '.$customer_new->name.' Updated',
                     'module_id' => 'Customers',
                     'context_id' => $customer_new->id,
                     'content' => [
@@ -305,12 +303,12 @@ class CustomersController extends Controller
                         'new' => $customer_new
                     ],
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 // Update User
-                $user_old = User::get($id, "Customer");
-                $user = User::get($id, "Customer");
+                $user_old = User::get($id, 'Customer');
+                $user = User::get($id, 'Customer');
 
                 if (isset($user_old->id)) {
                     $user->name = $request->name;
@@ -318,8 +316,8 @@ class CustomersController extends Controller
                     $user->save();
 
                     // Add LALog
-                    LALog::make("Users.USER_UPDATED", [
-                        'title' => "User/Customer ".$user->name." Updated",
+                    LALog::make('Users.USER_UPDATED', [
+                        'title' => 'User/Customer '.$user->name.' Updated',
                         'module_id' => 'Users',
                         'context_id' => $user->id,
                         'content' => [
@@ -327,7 +325,7 @@ class CustomersController extends Controller
                             'new' => $user
                         ],
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
                 }
 
@@ -336,10 +334,10 @@ class CustomersController extends Controller
                         'status' => 'success',
                         'object' => $customer_new,
                         'message' => 'Customer updated successfully!',
-                        'redirect' => url(config('laraadmin.adminRoute') . '/customers')
+                        'redirect' => url(config('laraadmin.adminRoute').'/customers')
                     ], 200);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.customers.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.customers.index');
                 }
             } else {
                 if ($request->ajax()) {
@@ -350,7 +348,7 @@ class CustomersController extends Controller
                 } else {
                     return view('errors.404', [
                         'record_id' => $id,
-                        'record_name' => ucfirst("customer"),
+                        'record_name' => ucfirst('customer'),
                     ]);
                 }
             }
@@ -361,7 +359,7 @@ class CustomersController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -375,34 +373,34 @@ class CustomersController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        if (LAModule::hasAccess("Customers", "delete")) {
+        if (LAModule::hasAccess('Customers', 'delete')) {
             $customer = Customer::find($id);
             if (isset($customer->id)) {
                 $customer->delete();
 
                 // Add LALog
-                LALog::make("Customers.CUSTOMER_DELETED", [
-                    'title' => "Customer ".$customer->name." Deleted",
+                LALog::make('Customers.CUSTOMER_DELETED', [
+                    'title' => 'Customer '.$customer->name.' Deleted',
                     'module_id' => 'Customers',
                     'context_id' => $customer->id,
                     'content' => $customer,
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 // Delete User
-                $user = User::get($id, "Customer");
+                $user = User::get($id, 'Customer');
                 if (isset($user->id)) {
                     $user->delete();
 
                     // Add LALog
-                    LALog::make("Users.USER_DELETED", [
-                        'title' => "User/Customer ".$user->name." Deleted",
+                    LALog::make('Users.USER_DELETED', [
+                        'title' => 'User/Customer '.$user->name.' Deleted',
                         'module_id' => 'Users',
                         'context_id' => $user->id,
                         'content' => $user,
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
                 }
 
@@ -410,10 +408,10 @@ class CustomersController extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Record Deleted successfully!',
-                        'redirect' => url(config('laraadmin.adminRoute') . '/customers')
+                        'redirect' => url(config('laraadmin.adminRoute').'/customers')
                     ], 204);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.customers.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.customers.index');
                 }
             } else {
                 if ($request->ajax()) {
@@ -422,7 +420,7 @@ class CustomersController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.customers.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.customers.index');
                 }
             }
         } else {
@@ -432,13 +430,13 @@ class CustomersController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
 
     /**
-     * Server side Datatable fetch via Ajax
+     * Server side Datatable fetch via Ajax.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -459,7 +457,7 @@ class CustomersController extends Controller
 
             for ($j = 0; $j < count($listing_cols); $j++) {
                 $col = $listing_cols[$j];
-                if (isset($fields_popup[$col]) && str_starts_with($fields_popup[$col]->popup_vals, "@")) {
+                if (isset($fields_popup[$col]) && str_starts_with($fields_popup[$col]->popup_vals, '@')) {
                     if ($col == $module->view_col) {
                         $data->data[$i]->$col = LAModuleField::getFieldValue($fields_popup[$col], $data->data[$i]->$col);
                     } else {
@@ -467,7 +465,7 @@ class CustomersController extends Controller
                     }
                 }
                 if ($col == $module->view_col) {
-                    $data->data[$i]->$col = '<a '.config('laraadmin.ajaxload').' href="' . url(config('laraadmin.adminRoute') . '/customers/' . $data->data[$i]->id) . '">' . $data->data[$i]->$col . '</a>';
+                    $data->data[$i]->$col = '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/customers/'.$data->data[$i]->id).'">'.$data->data[$i]->$col.'</a>';
                 }
                 // else if($col == "author") {
                 //    $data->data[$i]->$col;
@@ -476,19 +474,20 @@ class CustomersController extends Controller
 
             if ($this->show_action) {
                 $output = '';
-                if (LAModule::hasAccess("Customers", "edit")) {
-                    $output .= '<a '.config('laraadmin.ajaxload').' href="' . url(config('laraadmin.adminRoute') . '/customers/' . $data->data[$i]->id . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>';
+                if (LAModule::hasAccess('Customers', 'edit')) {
+                    $output .= '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/customers/'.$data->data[$i]->id.'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>';
                 }
 
-                if (LAModule::hasAccess("Customers", "delete")) {
-                    $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.customers.destroy', $data->data[$i]->id], 'method' => 'delete', 'style' => 'display:inline']);
+                if (LAModule::hasAccess('Customers', 'delete')) {
+                    $output .= Form::open(['route' => [config('laraadmin.adminRoute').'.customers.destroy', $data->data[$i]->id], 'method' => 'delete', 'style' => 'display:inline']);
                     $output .= ' <button class="btn btn-danger btn-xs" type="submit" data-toggle="tooltip" title="Delete"><i class="fa fa-times"></i></button>';
                     $output .= Form::close();
                 }
-                $data->data[$i]->dt_action = (string)$output;
+                $data->data[$i]->dt_action = (string) $output;
             }
         }
         $out->setData($data);
+
         return $out;
     }
 }

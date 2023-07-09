@@ -1,17 +1,15 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Http\Controllers\LA;
 
-use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
 use App\Models\LALog;
 use App\Models\LAModule;
 use App\Models\LAModuleField;
@@ -21,8 +19,6 @@ use Collective\Html\FormFacade as Form;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Laraadmin\Entrust\EntrustFacade as Entrust;
 use Yajra\DataTables\DataTables;
@@ -42,7 +38,7 @@ class RolesController extends Controller
         $module = LAModule::get('Roles');
 
         if (LAModule::hasAccess($module->id)) {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 // TODO: Implement good Query Builder
                 return Role::all();
             } else {
@@ -53,13 +49,13 @@ class RolesController extends Controller
                 ]);
             }
         } else {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -82,12 +78,12 @@ class RolesController extends Controller
                 'parent_roles' => $parent_roles
             ]);
         } else {
-            return redirect(config('laraadmin.adminRoute') . "/");
+            return redirect(config('laraadmin.adminRoute').'/');
         }
     }
 
     /**
-     * Update Menu Hierarchy
+     * Update Menu Hierarchy.
      *
      * @return mixed
      */
@@ -104,7 +100,7 @@ class RolesController extends Controller
     }
 
     /**
-     * Save role hierarchy Recursively
+     * Save role hierarchy Recursively.
      *
      * @param $roleItem role Item Array
      * @param $num Hierarchy number
@@ -143,11 +139,11 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        if (LAModule::hasAccess("Roles", "create")) {
-            if ($request->ajax() && !isset($request->quick_add)) {
-                $request->merge((array)json_decode($request->getContent()));
+        if (LAModule::hasAccess('Roles', 'create')) {
+            if ($request->ajax() && ! isset($request->quick_add)) {
+                $request->merge((array) json_decode($request->getContent()));
             }
-            $rules = LAModule::validateRules("Roles", $request);
+            $rules = LAModule::validateRules('Roles', $request);
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -156,36 +152,35 @@ class RolesController extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
-                    , 400]);
+                        'errors' => $validator->errors(), 400]);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
             }
 
             $request->merge([
-                'name' => str_replace(" ", "_", strtoupper(trim($request->name)))
+                'name' => str_replace(' ', '_', strtoupper(trim($request->name)))
             ]);
 
-            $insert_id = LAModule::insert("Roles", $request);
+            $insert_id = LAModule::insert('Roles', $request);
 
             $modules = LAModule::all();
             foreach ($modules as $module) {
-                LAModule::setDefaultRoleAccess($module->id, $insert_id, "readonly");
+                LAModule::setDefaultRoleAccess($module->id, $insert_id, 'readonly');
             }
 
             $role = Role::find($insert_id);
-            $perm = Permission::where("name", "ADMIN_PANEL")->first();
+            $perm = Permission::where('name', 'ADMIN_PANEL')->first();
             $role->attachPermission($perm);
 
             // Add LALog
-            LALog::make("Roles.ROLE_CREATED", [
-                'title' => "Role Created",
+            LALog::make('Roles.ROLE_CREATED', [
+                'title' => 'Role Created',
                 'module_id' => 'Roles',
                 'context_id' => $role->id,
                 'content' => $role,
                 'user_id' => Auth::user()->id,
-                'notify_to' => "[]"
+                'notify_to' => '[]'
             ]);
 
             if ($request->ajax() || isset($request->quick_add)) {
@@ -193,10 +188,10 @@ class RolesController extends Controller
                     'status' => 'success',
                     'object' => $role,
                     'message' => 'Role updated successfully!',
-                    'redirect' => url(config('laraadmin.adminRoute') . '/roles')
+                    'redirect' => url(config('laraadmin.adminRoute').'/roles')
                 ], 201);
             } else {
-                return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+                return redirect()->route(config('laraadmin.adminRoute').'.roles.index');
             }
         } else {
             if ($request->ajax() || isset($request->quick_add)) {
@@ -205,7 +200,7 @@ class RolesController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -219,32 +214,33 @@ class RolesController extends Controller
      */
     public function show(Request $request, $id)
     {
-        if (LAModule::hasAccess("Roles", "view")) {
+        if (LAModule::hasAccess('Roles', 'view')) {
             $role = Role::find($id);
             if (isset($role->id)) {
-                if ($request->ajax() && !isset($request->_pjax)) {
+                if ($request->ajax() && ! isset($request->_pjax)) {
                     return $role;
                 } else {
                     $module = LAModule::get('Roles');
                     $module->row = $role;
 
                     $modules_arr = DB::table('la_modules')->get();
-                    $modules_access = array();
+                    $modules_access = [];
                     foreach ($modules_arr as $module_obj) {
                         $module_obj->accesses = LAModule::getRoleAccess($module_obj->id, $id)[0];
                         $modules_access[] = $module_obj;
                     }
+
                     return view('la.roles.show', [
                         'module' => $module,
                         'module_users' => LAModule::get('Users'),
                         'view_col' => $module->view_col,
                         'no_header' => true,
-                        'no_padding' => "no-padding",
+                        'no_padding' => 'no-padding',
                         'modules_access' => $modules_access
                     ])->with('role', $role);
                 }
             } else {
-                if ($request->ajax() && !isset($request->_pjax)) {
+                if ($request->ajax() && ! isset($request->_pjax)) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Record not found'
@@ -252,18 +248,18 @@ class RolesController extends Controller
                 } else {
                     return view('errors.404', [
                         'record_id' => $id,
-                        'record_name' => ucfirst("role"),
+                        'record_name' => ucfirst('role'),
                     ]);
                 }
             }
         } else {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -276,7 +272,7 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        if (LAModule::hasAccess("Roles", "edit")) {
+        if (LAModule::hasAccess('Roles', 'edit')) {
             $role = Role::find($id);
             if (isset($role->id)) {
                 $module = LAModule::get('Roles');
@@ -290,11 +286,11 @@ class RolesController extends Controller
             } else {
                 return view('errors.404', [
                     'record_id' => $id,
-                    'record_name' => ucfirst("role"),
+                    'record_name' => ucfirst('role'),
                 ]);
             }
         } else {
-            return redirect(config('laraadmin.adminRoute') . "/");
+            return redirect(config('laraadmin.adminRoute').'/');
         }
     }
 
@@ -307,11 +303,11 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (LAModule::hasAccess("Roles", "edit")) {
+        if (LAModule::hasAccess('Roles', 'edit')) {
             if ($request->ajax()) {
-                $request->merge((array)json_decode($request->getContent()));
+                $request->merge((array) json_decode($request->getContent()));
             }
-            $rules = LAModule::validateRules("Roles", $request, true);
+            $rules = LAModule::validateRules('Roles', $request, true);
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -320,7 +316,7 @@ class RolesController extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
+                        'errors' => $validator->errors()
                     ], 400);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
@@ -328,10 +324,10 @@ class RolesController extends Controller
             }
 
             $request->merge([
-                'name' => str_replace(" ", "_", strtoupper(trim($request->name)))
+                'name' => str_replace(' ', '_', strtoupper(trim($request->name)))
             ]);
 
-            if ($request->name == "SUPER_ADMIN") {
+            if ($request->name == 'SUPER_ADMIN') {
                 $request->merge([
                     'parent' => 1
                 ]);
@@ -341,13 +337,13 @@ class RolesController extends Controller
 
             if (isset($role_old->id)) {
                 // Update Data
-                LAModule::updateRow("Roles", $request, $id);
+                LAModule::updateRow('Roles', $request, $id);
 
                 $role_new = Role::find($id);
 
                 // Add LALog
-                LALog::make("Roles.ROLE_UPDATED", [
-                    'title' => "Role Updated",
+                LALog::make('Roles.ROLE_UPDATED', [
+                    'title' => 'Role Updated',
                     'module_id' => 'Roles',
                     'context_id' => $role_new->id,
                     'content' => [
@@ -355,7 +351,7 @@ class RolesController extends Controller
                         'new' => $role_new
                     ],
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 if ($request->ajax()) {
@@ -363,10 +359,10 @@ class RolesController extends Controller
                         'status' => 'success',
                         'object' => $role_new,
                         'message' => 'Role updated successfully!',
-                        'redirect' => url(config('laraadmin.adminRoute') . '/roles')
+                        'redirect' => url(config('laraadmin.adminRoute').'/roles')
                     ], 200);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.roles.index');
                 }
             } else {
                 if ($request->ajax()) {
@@ -377,7 +373,7 @@ class RolesController extends Controller
                 } else {
                     return view('errors.404', [
                         'record_id' => $id,
-                        'record_name' => ucfirst("role"),
+                        'record_name' => ucfirst('role'),
                     ]);
                 }
             }
@@ -388,7 +384,7 @@ class RolesController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -402,29 +398,29 @@ class RolesController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        if (LAModule::hasAccess("Roles", "delete")) {
+        if (LAModule::hasAccess('Roles', 'delete')) {
             $role = Role::find($id);
             if (isset($role->id)) {
                 $role->delete();
 
                 // Add LALog
-                LALog::make("Roles.ROLE_DELETED", [
-                    'title' => "Role Deleted",
+                LALog::make('Roles.ROLE_DELETED', [
+                    'title' => 'Role Deleted',
                     'module_id' => 'Roles',
                     'context_id' => $role->id,
                     'content' => $role,
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 if ($request->ajax()) {
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Record Deleted successfully!',
-                        'redirect' => url(config('laraadmin.adminRoute') . '/roles')
+                        'redirect' => url(config('laraadmin.adminRoute').'/roles')
                     ], 204);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.roles.index');
                 }
             } else {
                 if ($request->ajax()) {
@@ -433,7 +429,7 @@ class RolesController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.roles.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.roles.index');
                 }
             }
         } else {
@@ -443,13 +439,13 @@ class RolesController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
 
     /**
-     * Server side Datatable fetch via Ajax
+     * Server side Datatable fetch via Ajax.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -470,7 +466,7 @@ class RolesController extends Controller
 
             for ($j = 0; $j < count($listing_cols); $j++) {
                 $col = $listing_cols[$j];
-                if (isset($fields_popup[$col]) && str_starts_with($fields_popup[$col]->popup_vals, "@")) {
+                if (isset($fields_popup[$col]) && str_starts_with($fields_popup[$col]->popup_vals, '@')) {
                     if ($col == $module->view_col) {
                         $data->data[$i]->$col = LAModuleField::getFieldValue($fields_popup[$col], $data->data[$i]->$col);
                     } else {
@@ -478,7 +474,7 @@ class RolesController extends Controller
                     }
                 }
                 if ($col == $module->view_col) {
-                    $data->data[$i]->$col = '<a '.config('laraadmin.ajaxload').' href="' . url(config('laraadmin.adminRoute') . '/roles/' . $data->data[$i]->id) . '">' . $data->data[$i]->$col . '</a>';
+                    $data->data[$i]->$col = '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/roles/'.$data->data[$i]->id).'">'.$data->data[$i]->$col.'</a>';
                 }
                 // else if($col == "author") {
                 //    $data->data[$i]->$col;
@@ -487,19 +483,20 @@ class RolesController extends Controller
 
             if ($this->show_action) {
                 $output = '';
-                if (LAModule::hasAccess("Roles", "edit")) {
-                    $output .= '<a '.config('laraadmin.ajaxload').' href="' . url(config('laraadmin.adminRoute') . '/roles/' . $data->data[$i]->id . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>';
+                if (LAModule::hasAccess('Roles', 'edit')) {
+                    $output .= '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/roles/'.$data->data[$i]->id.'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>';
                 }
 
-                if (LAModule::hasAccess("Roles", "delete")) {
-                    $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.roles.destroy', $data->data[$i]->id], 'method' => 'delete', 'style' => 'display:inline']);
+                if (LAModule::hasAccess('Roles', 'delete')) {
+                    $output .= Form::open(['route' => [config('laraadmin.adminRoute').'.roles.destroy', $data->data[$i]->id], 'method' => 'delete', 'style' => 'display:inline']);
                     $output .= ' <button class="btn btn-danger btn-xs" type="submit" data-toggle="tooltip" title="Delete"><i class="fa fa-times"></i></button>';
                     $output .= Form::close();
                 }
-                $data->data[$i]->dt_action = (string)$output;
+                $data->data[$i]->dt_action = (string) $output;
             }
         }
         $out->setData($data);
+
         return $out;
     }
 
@@ -511,13 +508,13 @@ class RolesController extends Controller
             $module->row = $role;
 
             $modules_arr = DB::table('la_modules')->get();
-            $modules_access = array();
+            $modules_access = [];
             foreach ($modules_arr as $module_obj) {
                 $module_obj->accesses = LAModule::getRoleAccess($module_obj->id, $id)[0];
                 $modules_access[] = $module_obj;
             }
 
-            $now = date("Y-m-d H:i:s");
+            $now = date('Y-m-d H:i:s');
 
             foreach ($modules_access as $module) {
                 /* =============== role_la_module_fields =============== */
@@ -580,9 +577,10 @@ class RolesController extends Controller
                     DB::table('role_la_module')->where('role_id', $id)->where('module_id', $module->id)->update(['acc_view' => 0, 'acc_create' => 0, 'acc_edit' => 0, 'acc_delete' => 0]);
                 }
             }
-            return redirect(config('laraadmin.adminRoute') . '/roles/'.$id.'#tab-access');
+
+            return redirect(config('laraadmin.adminRoute').'/roles/'.$id.'#tab-access');
         } else {
-            return redirect(config('laraadmin.adminRoute')."/");
+            return redirect(config('laraadmin.adminRoute').'/');
         }
     }
 }

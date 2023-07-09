@@ -1,24 +1,22 @@
 <?php
 
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Console\Commands;
 
+use App\Helpers\CodeGenerator;
 use Illuminate\Console\Command;
 
-use App\Helpers\CodeGenerator;
-
-/**
- * Class Migration
- * @package App\Console\Commands
+/***
+ * Migration Command
  *
- * Command to generation new sample migration file or complete migration file from DB Context
+ * Command to generation new sample migration file or complete migration file from DB Context.
  * if '--generate' parameter is used after command, it generate migration from database.
  */
 class Migration extends Command
@@ -30,7 +28,7 @@ class Migration extends Command
     protected $description = 'Generate Migrations for LaraAdmin';
 
     /**
-     * Generate a Migration file either sample or from DB Context
+     * Generate a Migration file either sample or from DB Context.
      *
      * @return mixed
      */

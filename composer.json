@@ -3,7 +3,14 @@
     "version": "1.1.0",
     "type": "project",
     "description": "LaraAdmin is a Open source Laravel Admin Panel / CMS which can be used as Admin Backend, Data Management Tool or CRM boilerplate for Laravel with features like CRUD Generation, Module Manager, Media, Menus, Backups and much more",
-    "keywords": ["php", "laravel", "crm", "admin", "cms", "administrator"],
+    "keywords": [
+        "php",
+        "laravel",
+        "crm",
+        "admin",
+        "cms",
+        "administrator"
+    ],
     "license": "MIT",
     "homepage": "http://laraadmin.com",
     "support": {
@@ -27,6 +34,7 @@
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
+        "friendsofphp/php-cs-fixer": "^3.14",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
@@ -73,6 +81,12 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "sniff": [
+            "./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots"
+        ],
+        "lint": [
+            "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
         ]
     },
     "extra": {

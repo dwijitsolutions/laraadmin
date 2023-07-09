@@ -1,5 +1,12 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "[php]": {
+        "editor.defaultFormatter": "junstyle.php-cs-fixer"
+    },
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter",
+        "editor.tabSize": 2
+    },
     "diffEditor.ignoreTrimWhitespace": true,
     "editor.detectIndentation": false,
     "editor.formatOnSave": true,

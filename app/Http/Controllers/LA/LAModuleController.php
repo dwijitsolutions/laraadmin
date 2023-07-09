@@ -1,32 +1,29 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Http\Controllers\LA;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use Illuminate\Support\Facades\DB;
-use App\Helpers\LAHelper;
+use App\Helpers\CodeGenerator;
 use App\Helpers\LAFormMaker;
+use App\Helpers\LAHelper;
+use App\Http\Controllers\Controller;
+use App\Models\LAMenu;
 use App\Models\LAModule;
 use App\Models\LAModuleField;
 use App\Models\LAModuleFieldType;
-use App\Helpers\CodeGenerator;
 use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Schema;
-use App\Models\LAMenu;
 
-/**
- * Class LAModuleController
- * @package App\Http\Controllers\LA
- *
+/***
+ * LaraAdmin Module Controller
  */
 class LAModuleController extends Controller
 {
@@ -37,7 +34,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Display a listing of the Module
+     * Display a listing of the Module.
      *
      * @return \Illuminate\Http\Response
      */
@@ -53,7 +50,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Store a newly created Module
+     * Store a newly created Module.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -68,11 +65,11 @@ class LAModuleController extends Controller
         // Migration Entry into Database
         DB::insert('insert into migrations (migration, batch) values (?, ?)', [$migrationFileName, 1]);
 
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.show', [$module_id]);
+        return redirect()->route(config('laraadmin.adminRoute').'.la_modules.show', [$module_id]);
     }
 
     /**
-     * Display the specified Module
+     * Display the specified Module.
      *
      * @param $id Module ID
      * @return \Illuminate\Http\Response
@@ -91,7 +88,7 @@ class LAModuleController extends Controller
 
         return view('la.la_modules.show', [
             'no_header' => true,
-            'no_padding' => "no-padding",
+            'no_padding' => 'no-padding',
             'ftypes' => $ftypes,
             'tables' => $tables,
             'modules' => $modules,
@@ -100,7 +97,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Update the specified Module
+     * Update the specified Module.
      *
      * @param \Illuminate\Http\Request $request
      */
@@ -133,11 +130,11 @@ class LAModuleController extends Controller
         // Delete Module
         $data = LAModule::deleteModule($id, true);
 
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.index', ['modules' => $data['modules'],'msg' => $data['msg'], 'err_module' => $data['err_module'] ]);
+        return redirect()->route(config('laraadmin.adminRoute').'.la_modules.index', ['modules' => $data['modules'], 'msg' => $data['msg'], 'err_module' => $data['err_module']]);
     }
 
     /**
-     * Generate Modules CRUDs Views, Controller, Model, Routes, Menu and Set Default Full Access for Super Admin
+     * Generate Modules CRUDs Views, Controller, Model, Routes, Menu and Set Default Full Access for Super Admin.
      *
      * @param $module_id Module ID
      * @return \Illuminate\Http\JsonResponse
@@ -164,8 +161,8 @@ class LAModuleController extends Controller
         $module->save();
 
         // Give Default Full Access to Super Admin
-        $role = Role::where("name", "SUPER_ADMIN")->first();
-        LAModule::setDefaultRoleAccess($module->id, $role->id, "full");
+        $role = Role::where('name', 'SUPER_ADMIN')->first();
+        LAModule::setDefaultRoleAccess($module->id, $role->id, 'full');
 
         return response()->json([
             'status' => 'success'
@@ -173,7 +170,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Generate Module Migrations
+     * Generate Module Migrations.
      *
      * @param $module_id Module ID
      * @return \Illuminate\Http\JsonResponse
@@ -192,7 +189,7 @@ class LAModuleController extends Controller
 
     /**
      * Generate Modules Migrations and CRUDs Views, Controller, Model, Routes, Menu and Set Default Full Access
-     * for Super Admin
+     * for Super Admin.
      *
      * @param $module_id Module ID
      * @return \Illuminate\Http\JsonResponse
@@ -224,17 +221,17 @@ class LAModuleController extends Controller
         $module->save();
 
         // Give Default Full Access to Super Admin
-        $role = Role::where("name", "SUPER_ADMIN")->first();
-        LAModule::setDefaultRoleAccess($module->id, $role->id, "full");
+        $role = Role::where('name', 'SUPER_ADMIN')->first();
+        LAModule::setDefaultRoleAccess($module->id, $role->id, 'full');
 
         // Give Default Full Access to all
-        $menu = LAMenu::where("name", $config->moduleName)->first();
+        $menu = LAMenu::where('name', $config->moduleName)->first();
         $roles = Role::all();
         foreach ($roles as $role) {
             // Set Full Access For all - Menu
             $menu->roles()->attach($role->id);
             // Set Full Access For all Role
-            LAModule::setDefaultRoleAccess($module->id, $role->id, "full");
+            LAModule::setDefaultRoleAccess($module->id, $role->id, 'full');
         }
 
         return response()->json([
@@ -243,7 +240,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Updates Modules all files except routes
+     * Updates Modules all files except routes.
      *
      * @param $module_id Module ID
      * @return \Illuminate\Http\JsonResponse
@@ -277,7 +274,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Set the Modules view_column_name
+     * Set the Modules view_column_name.
      *
      * @param $module_id Module ID
      * @param $column_name Module's View Column Name
@@ -289,11 +286,11 @@ class LAModuleController extends Controller
         $module->view_col = $column_name;
         $module->save();
 
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.show', [$module_id]);
+        return redirect()->route(config('laraadmin.adminRoute').'.la_modules.show', [$module_id]);
     }
 
     /**
-     * Save Module-Role Permissions including Module Fields
+     * Save Module-Role Permissions including Module Fields.
      *
      * @param Request $request
      * @param $id Module ID
@@ -308,13 +305,13 @@ class LAModuleController extends Controller
         $modules = LAHelper::getModuleNames([]);
         $roles = Role::all();
 
-        $now = date("Y-m-d H:i:s");
+        $now = date('Y-m-d H:i:s');
 
         foreach ($roles as $role) {
             /* =============== role_la_module_fields =============== */
 
             foreach ($module->fields as $field) {
-                $field_name = $field['colname'] . '_' . $role->id;
+                $field_name = $field['colname'].'_'.$role->id;
                 $field_value = $request->$field_name;
                 if ($field_value == 0) {
                     $access = 'invisible';
@@ -334,12 +331,12 @@ class LAModuleController extends Controller
 
             /* =============== role_la_module =============== */
 
-            $module_name = 'module_' . $role->id;
+            $module_name = 'module_'.$role->id;
             if (isset($request->$module_name)) {
-                $view = 'module_view_' . $role->id;
-                $create = 'module_create_' . $role->id;
-                $edit = 'module_edit_' . $role->id;
-                $delete = 'module_delete_' . $role->id;
+                $view = 'module_view_'.$role->id;
+                $create = 'module_create_'.$role->id;
+                $edit = 'module_edit_'.$role->id;
+                $delete = 'module_delete_'.$role->id;
                 if (isset($request->$view)) {
                     $view = 1;
                 } else {
@@ -369,11 +366,12 @@ class LAModuleController extends Controller
                 }
             }
         }
-        return redirect(config('laraadmin.adminRoute') . '/la_modules/' . $id . "#access");
+
+        return redirect(config('laraadmin.adminRoute').'/la_modules/'.$id.'#access');
     }
 
     /**
-     * Update Module Field's Sorting Numbers
+     * Update Module Field's Sorting Numbers.
      *
      * @param Request $request
      * @param $id Module ID
@@ -393,7 +391,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Get Array of all Module Files generated by LaraAdmin
+     * Get Array of all Module Files generated by LaraAdmin.
      *
      * @param Request $request
      * @param $module_id Module ID
@@ -403,117 +401,118 @@ class LAModuleController extends Controller
     {
         $module = LAModule::find($module_id);
         $config = CodeGenerator::generateConfig($module->name, $module->fa_icon, false);
-        $correct_file_perms = "0644";
-        $correct_dir_perms = "0755";
+        $correct_file_perms = '0644';
+        $correct_dir_perms = '0755';
 
-        $arr = array();
+        $arr = [];
 
-        //Routes
+        // Routes
         if (LAHelper::laravel_ver() >= 5.3) {
-            $file_admin_routes = base_path("routes/admin_routes.php");
+            $file_admin_routes = base_path('routes/admin_routes.php');
         } else {
-            $file_admin_routes = base_path("app/Http/admin_routes.php");
+            $file_admin_routes = base_path('app/Http/admin_routes.php');
         }
         if (file_exists($file_admin_routes)) {
-            $class = "";
+            $class = '';
             $perms = LAHelper::fileperms($file_admin_routes);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                $class = "text-red";
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                $class = 'text-red';
             }
         }
-        $arr[] = ["name" => $file_admin_routes, "perms" => $perms, "class" => $class];
+        $arr[] = ['name' => $file_admin_routes, 'perms' => $perms, 'class' => $class];
 
         // Controller
-        $file = "app/Http/Controllers/LA/" . $module->controller . ".php";
+        $file = 'app/Http/Controllers/LA/'.$module->controller.'.php';
         if (file_exists(base_path($file))) {
             $perms = LAHelper::fileperms(base_path($file));
-            $class = "";
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                $class = "text-red";
+            $class = '';
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                $class = 'text-red';
             }
-            $arr[] = ["name" => $file, "perms" => $perms, "class" => $class];
+            $arr[] = ['name' => $file, 'perms' => $perms, 'class' => $class];
         }
 
         // Model
-        $file = "app/Models/" . $module->model . ".php";
+        $file = 'app/Models/'.$module->model.'.php';
         if (file_exists(base_path($file))) {
             $perms = LAHelper::fileperms(base_path($file));
-            $class = "";
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                $class = "text-red";
+            $class = '';
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                $class = 'text-red';
             }
-            $arr[] = ["name" => $file, "perms" => $perms, "class" => $class];
+            $arr[] = ['name' => $file, 'perms' => $perms, 'class' => $class];
         }
 
         // views
-        $views_dir = resource_path('views/la/' . $module->name_db);
+        $views_dir = resource_path('views/la/'.$module->name_db);
         if (file_exists($views_dir)) {
             // Directory
             $perms = LAHelper::fileperms($views_dir);
-            $class = "";
-            if (!LAHelper::fileperms_cmp($perms, $correct_dir_perms)) {
-                $class = "text-red";
+            $class = '';
+            if (! LAHelper::fileperms_cmp($perms, $correct_dir_perms)) {
+                $class = 'text-red';
             }
-            $arr[] = ["name" => $views_dir, "perms" => $perms, "class" => $class];
+            $arr[] = ['name' => $views_dir, 'perms' => $perms, 'class' => $class];
 
             // Directory Files
             $views = scandir($views_dir);
             foreach ($views as $view) {
-                if ($view != "." && $view != "..") {
-                    $file = $views_dir ."/" . $view;
+                if ($view != '.' && $view != '..') {
+                    $file = $views_dir.'/'.$view;
                     $perms = LAHelper::fileperms($file);
-                    $class = "";
-                    if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                        $class = "text-red";
+                    $class = '';
+                    if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                        $class = 'text-red';
                     }
-                    $arr[] = ["name" => $file, "perms" => $perms, "class" => $class];
+                    $arr[] = ['name' => $file, 'perms' => $perms, 'class' => $class];
                 }
             }
         }
 
         // lang
-        $file = resource_path('lang/en/' . $config->langFile) . ".php";
+        $file = resource_path('lang/en/'.$config->langFile).'.php';
         if (file_exists($file)) {
             $perms = LAHelper::fileperms($file);
-            $class = "";
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                $class = "text-red";
+            $class = '';
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                $class = 'text-red';
             }
-            $arr[] = ["name" => $file, "perms" => $perms, "class" => $class];
+            $arr[] = ['name' => $file, 'perms' => $perms, 'class' => $class];
         }
 
         // Observer
-        $file = base_path('app/Observers/' . $module->model . 'Observer.php');
+        $file = base_path('app/Observers/'.$module->model.'Observer.php');
         if (file_exists($file)) {
             $perms = LAHelper::fileperms($file);
-            $class = "";
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                $class = "text-red";
+            $class = '';
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                $class = 'text-red';
             }
-            $arr[] = ["name" => $file, "perms" => $perms, "class" => $class];
+            $arr[] = ['name' => $file, 'perms' => $perms, 'class' => $class];
         }
 
         // Find existing migration file
         $mfiles = scandir(base_path('database/migrations/'));
-        $fileExistName = "";
+        $fileExistName = '';
         foreach ($mfiles as $mfile) {
-            if (str_contains($mfile, "create_" . $module->name_db . "_table")) {
-                $file = 'database/migrations/' . $mfile;
+            if (str_contains($mfile, 'create_'.$module->name_db.'_table')) {
+                $file = 'database/migrations/'.$mfile;
                 $perms = LAHelper::fileperms(base_path($file));
-                $class = "";
-                if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
-                    $class = "text-red";
+                $class = '';
+                if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                    $class = 'text-red';
                 }
-                $arr[] = ["name" => $file, "perms" => $perms, "class" => $class];
+                $arr[] = ['name' => $file, 'perms' => $perms, 'class' => $class];
             }
         }
+
         return response()->json([
             'files' => $arr
         ]);
     }
 
     /**
-     * Get Quick Add Form
+     * Get Quick Add Form.
      *
      * @param Request $request
      * @param $module_id Module ID
@@ -521,7 +520,7 @@ class LAModuleController extends Controller
      */
     public function quick_add_form(Request $request, $module_id)
     {
-        $fields_req = array();
+        $fields_req = [];
 
         $module = LAModule::get((int) $module_id);
         $module->quick_add_form = true;
@@ -530,6 +529,7 @@ class LAModuleController extends Controller
                 $fields_req[] = $field_name;
             }
         }
+
         return view('la.la_modules.quick_add_form', [
             'module_id' => $module_id,
             'field_name' => $request->field_name,
@@ -539,7 +539,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * Submit Quick Add Form
+     * Submit Quick Add Form.
      *
      * @param Request $request
      * @param $module_id Module ID
@@ -549,14 +549,14 @@ class LAModuleController extends Controller
     {
         $module = LAModule::get((int) $module_id);
 
-        if (LAModule::hasAccess($module->name, "create")) {
+        if (LAModule::hasAccess($module->name, 'create')) {
             $request->quick_add = true;
 
             $response = app('App\Http\Controllers\LA\\'.$module->controller)->store($request);
 
             $response = $response->getData();
 
-            if (isset($response->status) && $response->status == "success" && isset($response->insert_id)) {
+            if (isset($response->status) && $response->status == 'success' && isset($response->insert_id)) {
                 $popup_vals = LAFormMaker::process_values($request->popup_vals);
 
                 return response()->json([
@@ -579,7 +579,7 @@ class LAModuleController extends Controller
     }
 
     /**
-     * update list in show.blade.php
+     * update list in show.blade.php.
      *
      * @param Request $request
      * @param $module_id Module ID
@@ -592,8 +592,8 @@ class LAModuleController extends Controller
         $field = LAModuleField::find($request->module_field_id);
         $colname = $field->colname;
         $checklists = json_decode($row->$colname);
-        $list = array();
-        $i=0;
+        $list = [];
+        $i = 0;
         foreach ($checklists as $checklist) {
             $list[$i]['checked'] = $checklist->checked;
             $list[$i]['title'] = $checklist->title;

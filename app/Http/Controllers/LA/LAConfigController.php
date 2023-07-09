@@ -1,20 +1,19 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Http\Controllers\LA;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Helpers\LAHelper;
-
+use App\Http\Controllers\Controller;
 use App\Models\LAConfig;
 use App\Models\LAModuleFieldType;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,7 +33,6 @@ class LAConfigController extends Controller
         'Red Light Skin' => 'skin-red-light',
         'Yellow Light Skin' => 'skin-yellow-light'
 
-
     ];
 
     public $layout_array = [
@@ -48,7 +46,7 @@ class LAConfigController extends Controller
     ];
 
     /**
-     * Display a listing of configurations
+     * Display a listing of configurations.
      *
      * @return \Illuminate\Http\Response
      */
@@ -59,7 +57,7 @@ class LAConfigController extends Controller
         $tables = LAHelper::getDBTables([]);
 
         $sections = LAConfig::select('section')->groupBy('section')->get();
-        $sections_arr = array();
+        $sections_arr = [];
         foreach ($sections as $section) {
             $keys = LAConfig::select('key')->where('section', $section->section)->get();
             $section->keys = $keys;
@@ -90,7 +88,7 @@ class LAConfigController extends Controller
         }
 
         $config = LAConfig::where('key', $request->key)->first();
-        if (!isset($config->id)) {
+        if (! isset($config->id)) {
             if (isset($request->required)) {
                 $required = true;
             } else {
@@ -112,7 +110,7 @@ class LAConfigController extends Controller
                 if ($request->popup_value_type == 'table') {
                     $popup_vals = '@'.$request->popup_vals_table;
                 } elseif ($request->popup_value_type == 'list') {
-                    $popup_vals = array();
+                    $popup_vals = [];
                     $json = $request->popup_vals_list;
                     if (is_string($json)) {
                         $array = json_decode($json);
@@ -135,20 +133,20 @@ class LAConfigController extends Controller
             }
 
             LAConfig::create([
-                "label" => $request->label,
-                "key" => $request->key,
-                "section" => ucfirst($request->section),
-                "value" => null,
-                "field_type" => $request->field_type,
-                "minlength" => $minlength,
-                "maxlength" => $maxlength,
-                "required" => $required,
-                "popup_vals" => $popup_vals
+                'label' => $request->label,
+                'key' => $request->key,
+                'section' => ucfirst($request->section),
+                'value' => null,
+                'field_type' => $request->field_type,
+                'minlength' => $minlength,
+                'maxlength' => $maxlength,
+                'required' => $required,
+                'popup_vals' => $popup_vals
             ]);
 
-            return redirect(config('laraadmin.adminRoute')."/la_configs");
+            return redirect(config('laraadmin.adminRoute').'/la_configs');
         } else {
-            return redirect(config('laraadmin.adminRoute')."/la_configs");
+            return redirect(config('laraadmin.adminRoute').'/la_configs');
         }
     }
 
@@ -171,40 +169,40 @@ class LAConfigController extends Controller
                 case 'Checkbox':
                     if (isset($request->$key)) {
                         $value = true;
-                    } elseif (isset($request->{$key . "_hidden"})) {
+                    } elseif (isset($request->{$key.'_hidden'})) {
                         $value = false;
                     }
                     break;
                 case 'Date':
-                    $null_date = $request->{"null_date_" . $key};
-                    if (isset($null_date) && $null_date == "true") {
+                    $null_date = $request->{'null_date_'.$key};
+                    if (isset($null_date) && $null_date == 'true') {
                         $value = null;
-                    } elseif ($request->$key != "") {
+                    } elseif ($request->$key != '') {
                         $date = $request->$key;
-                        $d2 = date_parse_from_format("d/m/Y", $date);
-                        $value = date("Y-m-d", strtotime($d2['year'] . "-" . $d2['month'] . "-" . $d2['day']));
+                        $d2 = date_parse_from_format('d/m/Y', $date);
+                        $value = date('Y-m-d', strtotime($d2['year'].'-'.$d2['month'].'-'.$d2['day']));
                     } else {
-                        $value = date("Y-m-d");
+                        $value = date('Y-m-d');
                     }
                     break;
                 case 'Datetime':
-                    $null_date = $request->{"null_date_" . $key};
-                    if (isset($null_date) && $null_date == "true") {
+                    $null_date = $request->{'null_date_'.$key};
+                    if (isset($null_date) && $null_date == 'true') {
                         $value = null;
-                    } elseif ($request->$key != "") {
+                    } elseif ($request->$key != '') {
                         $date = $request->$key;
-                        $d2 = date_parse_from_format("d/m/Y h:i A", $date);
-                        $value = date("Y-m-d H:i:s", strtotime($d2['year'] . "-" . $d2['month'] . "-" . $d2['day'] . " " . substr($date, 11)));
+                        $d2 = date_parse_from_format('d/m/Y h:i A', $date);
+                        $value = date('Y-m-d H:i:s', strtotime($d2['year'].'-'.$d2['month'].'-'.$d2['day'].' '.substr($date, 11)));
                     } else {
-                        $value = date("Y-m-d H:i:s");
+                        $value = date('Y-m-d H:i:s');
                     }
                     break;
                 case 'Dropdown':
                     if ($request->$key == 0) {
-                        if (str_starts_with($config['popup_vals'], "@")) {
+                        if (str_starts_with($config['popup_vals'], '@')) {
                             $value = DB::raw('NULL');
-                        } elseif (str_starts_with($config['popup_vals'], "[")) {
-                            $value = "";
+                        } elseif (str_starts_with($config['popup_vals'], '[')) {
+                            $value = '';
                         }
                     }
                     $value = $request->$key;
@@ -222,32 +220,32 @@ class LAConfigController extends Controller
                     break;
                 case 'Files':
                     $files = json_decode($request->$key);
-                    $files2 = array();
+                    $files2 = [];
                     foreach ($files as $file) {
-                        $files2[] = "" . $file;
+                        $files2[] = ''.$file;
                     }
                     $value = json_encode($files2);
                     break;
                 case 'Time':
                     $time = $request->$key;
                     if (strlen($time) >= 7) {
-                        $arr = explode(" ", $time);
-                        $arr2 = explode(":", $arr[0]);
+                        $arr = explode(' ', $time);
+                        $arr2 = explode(':', $arr[0]);
                         $hour = intval($arr2[0]);
                         $minute = intval($arr2[1]);
                         $ampm = trim($arr[1]);
-                        if ($ampm == "PM" && $hour < 12) {
+                        if ($ampm == 'PM' && $hour < 12) {
                             $hour = $hour + 12;
-                        } elseif ($ampm == "AM" && $hour == 12) {
+                        } elseif ($ampm == 'AM' && $hour == 12) {
                             $hour = 0;
                         }
 
                         // Prepend 0
                         if ($hour < 10) {
-                            $hour = "0".$hour;
+                            $hour = '0'.$hour;
                         }
                         if ($minute < 10) {
-                            $minute = "0".$minute;
+                            $minute = '0'.$minute;
                         }
                         $time24 = $hour.$minute;
                         $value = $time24;
@@ -259,11 +257,12 @@ class LAConfigController extends Controller
             }
             LAConfig::where('key', $key)->update(['value' => $value]);
         }
-        return redirect(config('laraadmin.adminRoute')."/la_configs");
+
+        return redirect(config('laraadmin.adminRoute').'/la_configs');
     }
 
     /**
-     * Remove the specified config from Database
+     * Remove the specified config from Database.
      *
      * @param  int  $key
      * @return \Illuminate\Http\Response
@@ -274,11 +273,12 @@ class LAConfigController extends Controller
         if (isset($config->id)) {
             $config->delete();
         }
-        return redirect(config('laraadmin.adminRoute')."/la_configs");
+
+        return redirect(config('laraadmin.adminRoute').'/la_configs');
     }
 
     /**
-     * Remove the specified config from Database
+     * Remove the specified config from Database.
      *
      * @param  int  $key
      * @return \Illuminate\Http\Response
@@ -289,11 +289,12 @@ class LAConfigController extends Controller
         if (isset($config->id)) {
             $config->delete();
         }
-        return redirect(config('laraadmin.adminRoute')."/la_configs");
+
+        return redirect(config('laraadmin.adminRoute').'/la_configs');
     }
 
     /**
-     * Edit specified config
+     * Edit specified config.
      *
      * @param  int  $key
      * @return \Illuminate\Http\Response
@@ -315,13 +316,13 @@ class LAConfigController extends Controller
         } else {
             return view('errors.404', [
                 'record_id' => $id,
-                'record_name' => "Configuration",
+                'record_name' => 'Configuration',
             ]);
         }
     }
 
     /**
-     * Update information / meta about Configuration
+     * Update information / meta about Configuration.
      *
      * @param  int  $key
      * @return \Illuminate\Http\Response
@@ -337,12 +338,12 @@ class LAConfigController extends Controller
                 $required = 0;
             }
 
-            //popup values for Field type : Dropdown
+            // popup values for Field type : Dropdown
             if ($request->field_type == 7 || $request->field_type == 15 || $request->field_type == 18 || $request->field_type == 20) {
                 if ($request->popup_value_type == 'table') {
                     $popup_vals = '@'.$request->popup_vals_table;
                 } elseif ($request->popup_value_type == 'list') {
-                    $popup_vals = array();
+                    $popup_vals = [];
                     $json = $request->popup_vals_list;
                     if (is_string($json)) {
                         $array = json_decode($json);
@@ -363,7 +364,6 @@ class LAConfigController extends Controller
             } else {
                 $popup_vals = '';
             }
-
 
             if (isset($request->minlength) && $request->minlength != '') {
                 $minlength = $request->minlength;
@@ -386,11 +386,11 @@ class LAConfigController extends Controller
             $config->popup_vals = $popup_vals;
             $config->save();
 
-            return redirect(config('laraadmin.adminRoute')."/la_configs#tab-".$request->section);
+            return redirect(config('laraadmin.adminRoute').'/la_configs#tab-'.$request->section);
         } else {
             return view('errors.404', [
                 'record_id' => $id,
-                'record_name' => "Configuration",
+                'record_name' => 'Configuration',
             ]);
         }
     }

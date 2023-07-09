@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -11,7 +11,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\LALog;
 
 class BlogPost extends Model
 {
@@ -38,22 +37,23 @@ class BlogPost extends Model
     }
 
     /**
-     * Get mapping array by key
+     * Get mapping array by key.
      *
      * @return array
      */
-    public static function arr($key = "id")
+    public static function arr($key = 'id')
     {
-        $results = BlogPost::all();
-        $arr = array();
+        $results = self::all();
+        $arr = [];
         foreach ($results as $result) {
             $arr[$result->$key] = $result;
         }
+
         return $arr;
     }
 
     /**
-     * Get the banner Image url
+     * Get the banner Image url.
      */
     public function bannerImage($large = false)
     {
@@ -66,11 +66,12 @@ class BlogPost extends Model
                 return asset('la-assets/img/post_banner.png');
             }
         }
+
         return null;
     }
 
     /**
-     * Get the user that owns post
+     * Get the user that owns post.
      */
     public function author()
     {
@@ -78,15 +79,15 @@ class BlogPost extends Model
     }
 
     /**
-     * Get the user that owns post
+     * Get the user that owns post.
      */
     public function date()
     {
-        return date("M d, Y", strtotime($this->post_date));
+        return date('M d, Y', strtotime($this->post_date));
     }
 
     /**
-     * Get the category that has post
+     * Get the category that has post.
      */
     public function category()
     {
@@ -94,7 +95,7 @@ class BlogPost extends Model
     }
 
     /**
-     * Get all events happened on Module
+     * Get all events happened on Module.
      *
      * @return mixed
      */
@@ -102,6 +103,7 @@ class BlogPost extends Model
     {
         $moduleConfigs = config('laraadmin.log.Blog_posts');
         $moduleConfigsArr = array_keys($moduleConfigs);
-        return LALog::where("context_id", $this->id)->whereIn("type", $moduleConfigsArr)->orderBy("created_at", "desc")->get();
+
+        return LALog::where('context_id', $this->id)->whereIn('type', $moduleConfigsArr)->orderBy('created_at', 'desc')->get();
     }
 }

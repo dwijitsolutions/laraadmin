@@ -1,18 +1,16 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Models;
 
-use Laraadmin\Entrust\EntrustPermission;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-use App\Models\LALog;
+use Laraadmin\Entrust\EntrustPermission;
 
 class Permission extends EntrustPermission
 {
@@ -39,7 +37,7 @@ class Permission extends EntrustPermission
     }
 
     /**
-     * Get all events happened on Module
+     * Get all events happened on Module.
      *
      * @return mixed
      */
@@ -47,6 +45,7 @@ class Permission extends EntrustPermission
     {
         $moduleConfigs = config('laraadmin.log.Permissions');
         $moduleConfigsArr = array_keys($moduleConfigs);
-        return LALog::where("context_id", $this->id)->whereIn("type", $moduleConfigsArr)->orderBy("created_at", "desc")->get();
+
+        return LALog::where('context_id', $this->id)->whereIn('type', $moduleConfigsArr)->orderBy('created_at', 'desc')->get();
     }
 }

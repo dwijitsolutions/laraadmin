@@ -1,26 +1,24 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Providers;
 
+use App\Helpers\LAHelper;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider;
 
-use App\Helpers\LAHelper;
-
-/**
- * Class LAProvider
- * @package App\Providers
+/***
+ * LaraAdmin Provider
  *
  * This is LaraAdmin Service Provider which looks after managing aliases, other required providers, blade directives
  * and Commands.
@@ -43,9 +41,9 @@ class LAProvider extends ServiceProvider
             __DIR__.'/Migrations' => base_path('database/migrations/laraadmin')
         ]);
         */
-        //echo "Laraadmin Migrations started...";
+        // echo "Laraadmin Migrations started...";
         // Artisan::call('migrate', ['--path' => "vendor/dwij/laraadmin/src/Migrations/"]);
-        //echo "Migrations completed !!!.";
+        // echo "Migrations completed !!!.";
         // Execute by php artisan vendor:publish --provider="App\Providers\LAProvider"
 
         /*
@@ -77,7 +75,8 @@ class LAProvider extends ServiceProvider
             } else {
                 $arr = json_decode($value);
             }
-            return !(count($arr) < $minVal);
+
+            return ! (count($arr) < $minVal);
         });
         Validator::extend('maxcount', function ($attribute, $value, $parameters, $validator) {
             $maxVal = intval($parameters[0]);
@@ -86,7 +85,8 @@ class LAProvider extends ServiceProvider
             } else {
                 $arr = json_decode($value);
             }
-            return !(count($arr) > $maxVal);
+
+            return ! (count($arr) > $maxVal);
         });
 
         /*
@@ -195,55 +195,61 @@ class LAProvider extends ServiceProvider
         // LAForm Input Maker
         Blade::directive('la_input', function ($expression) {
             if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = "(" . $expression . ")";
+                $expression = '('.$expression.')';
             }
+
             return "<?php echo LAFormMaker::input$expression; ?>";
         });
 
         // LAForm Input Maker
         Blade::directive('la_config_input', function ($expression) {
             if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = "(" . $expression . ")";
+                $expression = '('.$expression.')';
             }
+
             return "<?php echo LAFormMaker::config$expression; ?>";
         });
 
         // LAForm Form Maker
         Blade::directive('la_form', function ($expression) {
             if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = "(" . $expression . ")";
+                $expression = '('.$expression.')';
             }
+
             return "<?php echo LAFormMaker::form$expression; ?>";
         });
 
         // LAForm Maker - Display Values
         Blade::directive('la_display', function ($expression) {
             if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = "(" . $expression . ")";
+                $expression = '('.$expression.')';
             }
+
             return "<?php echo LAFormMaker::display$expression; ?>";
         });
 
         // LAForm Maker - Check Whether User has Module Access
         Blade::directive('la_access', function ($expression) {
             if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = "(" . $expression . ")";
+                $expression = '('.$expression.')';
             }
+
             return "<?php if(LAFormMaker::la_access$expression) { ?>";
         });
         Blade::directive('endla_access', function ($expression) {
-            return "<?php } ?>";
+            return '<?php } ?>';
         });
 
         // LAForm Maker - Check Whether User has Module Field Access
         Blade::directive('la_field_access', function ($expression) {
             if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = "(" . $expression . ")";
+                $expression = '('.$expression.')';
             }
+
             return "<?php if(LAFormMaker::la_field_access$expression) { ?>";
         });
         Blade::directive('endla_field_access', function ($expression) {
-            return "<?php } ?>";
+            return '<?php } ?>';
         });
 
         // Blade directive for Anchors for Ajax Page Load

@@ -1,31 +1,23 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Http\Controllers\LA;
 
-use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
-use App\Models\LALog;
 use App\Models\LAMenu;
 use App\Models\LAModule;
-use App\Models\LAModuleField;
-use App\Models\LAModuleFieldType;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 
-/**
- * Class LAMenuController
- * @package App\Http\Controllers\LA
+/***
+ * LAMenuController
  *
  * Works after managing Menus and their hierarchy
  */
@@ -38,7 +30,7 @@ class LAMenuController extends Controller
     }
 
     /**
-     * Display a listing of Menus
+     * Display a listing of Menus.
      *
      * @return \Illuminate\Http\Response
      */
@@ -46,7 +38,7 @@ class LAMenuController extends Controller
     {
         $modules = LAModule::all();
         // Send Menus with No Parent to Views
-        $menuItems = LAMenu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
+        $menuItems = LAMenu::where('parent', 0)->orderBy('hierarchy', 'asc')->get();
 
         return View('la.la_menus.index', [
             'menus' => $menuItems,
@@ -55,7 +47,7 @@ class LAMenuController extends Controller
     }
 
     /**
-     * Store a newly created Menu in Database
+     * Store a newly created Menu in Database.
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -67,7 +59,7 @@ class LAMenuController extends Controller
         $icon = $request->input('icon');
         $type = $request->input('type');
 
-        if ($type == "module") {
+        if ($type == 'module') {
             $module_id = $request->input('module_id');
             $module = LAModule::find($module_id);
             if (isset($module->id)) {
@@ -76,28 +68,28 @@ class LAMenuController extends Controller
                 $icon = $module->fa_icon;
             } else {
                 return response()->json([
-                    "status" => "failure",
-                    "message" => "Module does not exists"
+                    'status' => 'failure',
+                    'message' => 'Module does not exists'
                 ], 200);
             }
         }
         $menu = LAMenu::create([
-            "name" => $name,
-            "url" => $url,
-            "icon" => $icon,
-            "type" => $type,
-            "parent" => 0
+            'name' => $name,
+            'url' => $url,
+            'icon' => $icon,
+            'type' => $type,
+            'parent' => 0
         ]);
 
         // Set Menu Access For All Role
         $menu->set_access_to('all');
 
-        if ($type == "module") {
+        if ($type == 'module') {
             return response()->json([
-                "status" => "success"
+                'status' => 'success'
             ], 200);
         } else {
-            return redirect(config('laraadmin.adminRoute') . '/la_menus');
+            return redirect(config('laraadmin.adminRoute').'/la_menus');
         }
     }
 
@@ -116,12 +108,12 @@ class LAMenuController extends Controller
             'view_col' => true,
             'no_header' => true,
             'roles' => $roles,
-            'no_padding' => "no-padding"
+            'no_padding' => 'no-padding'
         ])->with('menu', $menu);
     }
 
     /**
-     * Update Custom Menu
+     * Update Custom Menu.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
@@ -140,11 +132,11 @@ class LAMenuController extends Controller
         $menu->icon = $icon;
         $menu->save();
 
-        return redirect(config('laraadmin.adminRoute') . '/la_menus');
+        return redirect(config('laraadmin.adminRoute').'/la_menus');
     }
 
     /**
-     * Remove the specified Menu from database
+     * Remove the specified Menu from database.
      *
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -154,11 +146,11 @@ class LAMenuController extends Controller
         LAMenu::find($id)->delete();
 
         // Redirecting to index() method for Listing
-        return redirect()->route(config('laraadmin.adminRoute') . '.la_menus.index');
+        return redirect()->route(config('laraadmin.adminRoute').'.la_menus.index');
     }
 
     /**
-     * Update Menu Hierarchy
+     * Update Menu Hierarchy.
      *
      * @return mixed
      */
@@ -175,7 +167,7 @@ class LAMenuController extends Controller
     }
 
     /**
-     * Save Menu hierarchy Recursively
+     * Save Menu hierarchy Recursively.
      *
      * @param $menuItem Menu Item Array
      * @param $num Hierarchy number
@@ -198,7 +190,7 @@ class LAMenuController extends Controller
     }
 
     /**
-     * Save Role access of Menu
+     * Save Role access of Menu.
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id Menu ID

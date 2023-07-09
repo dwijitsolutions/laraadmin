@@ -10,7 +10,7 @@ return [
     'mod_adm_panl' => 'for Modern Admin Panels',
     'comp_pckd' => 'Completely Packaged',
     'future_expn' => 'for Future expantion of Modules',
-    
+
     'architecture_designed' => 'An Architecture designed To Excel',
     'modular' => 'Modular',
     'modular_sub' => 'Making Data Management fast and enjoyable.',

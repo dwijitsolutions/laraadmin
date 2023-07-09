@@ -1,24 +1,19 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-
 use Laraadmin\Entrust\Traits\EntrustUserTrait;
-
-use App\Models\Employee;
-use App\Models\Customer;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -38,9 +33,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        "role",
-        "context_id",
-        "type"
+        'role',
+        'context_id',
+        'type'
     ];
 
     /**
@@ -79,21 +74,24 @@ class User extends Authenticatable
     }
 
     /**
-     * Get context object return for User - Employee / Customer
+     * Get context object return for User - Employee / Customer.
      *
-     * @return Object / NULL
+     * @return object / NULL
      */
     public function context()
     {
         if ($this->hasRole(Role::ctype('Employee', 'Name'))) {
             $employee = Employee::find($this->context_id);
-            $employee->context_type = "Employee";
+            $employee->context_type = 'Employee';
+
             return $employee;
         } elseif ($this->hasRole(Role::ctype('Customer', 'Name'))) {
             $customer = Customer::find($this->context_id);
-            $customer->context_type = "Customer";
+            $customer->context_type = 'Customer';
+
             return $customer;
         }
+
         return null;
     }
 
@@ -102,7 +100,7 @@ class User extends Authenticatable
      */
     public static function get($context_id, $context_type)
     {
-        $users = User::where('context_id', $context_id)->get();
+        $users = self::where('context_id', $context_id)->get();
         foreach ($users as $user) {
             // Check if Use belong to Context Type like "Employees" or "Customers"
             // e.g. $context_type = "Employees" then $user->hasRole(["SUPER_ADMIN", "ADMIN])
@@ -110,6 +108,7 @@ class User extends Authenticatable
                 return $user;
             }
         }
+
         return null;
     }
 
@@ -118,6 +117,6 @@ class User extends Authenticatable
      */
     public function roles()
     {
-        return $this->belongsToMany('App\Models\Role');
+        return $this->belongsToMany(Role::class);
     }
 }

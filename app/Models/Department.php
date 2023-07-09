@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -11,7 +11,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\LALog;
 
 class Department extends Model
 {
@@ -38,22 +37,23 @@ class Department extends Model
     }
 
     /**
-     * Get mapping array by key
+     * Get mapping array by key.
      *
      * @return array
      */
-    public static function arr($key = "id")
+    public static function arr($key = 'id')
     {
-        $results = Department::all();
-        $arr = array();
+        $results = self::all();
+        $arr = [];
         foreach ($results as $result) {
             $arr[$result->$key] = $result;
         }
+
         return $arr;
     }
 
     /**
-     * Get all events happened on Module
+     * Get all events happened on Module.
      *
      * @return mixed
      */
@@ -61,6 +61,7 @@ class Department extends Model
     {
         $moduleConfigs = config('laraadmin.log.Departments');
         $moduleConfigsArr = array_keys($moduleConfigs);
-        return LALog::where("context_id", $this->id)->whereIn("type", $moduleConfigsArr)->orderBy("created_at", "desc")->get();
+
+        return LALog::where('context_id', $this->id)->whereIn('type', $moduleConfigsArr)->orderBy('created_at', 'desc')->get();
     }
 }

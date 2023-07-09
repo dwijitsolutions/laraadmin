@@ -1,18 +1,16 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Models;
 
-use Laraadmin\Entrust\EntrustRole;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\LALog;
+use Laraadmin\Entrust\EntrustRole;
 
 class Role extends EntrustRole
 {
@@ -39,23 +37,24 @@ class Role extends EntrustRole
     }
 
     /**
-     * Get Roles Array with matching context type - Employee / Customer
+     * Get Roles Array with matching context type - Employee / Customer.
      *
      * @return array
      */
-    public static function ctype($type, $return_type = "Object")
+    public static function ctype($type, $return_type = 'Object')
     {
-        $empRoles = Role::where("context_type", $type)->get();
-        if ($return_type == "Object") {
+        $empRoles = self::where('context_type', $type)->get();
+        if ($return_type == 'Object') {
             return $empRoles;
-        } elseif ($return_type == "Name") {
-            $rolesArray = array();
+        } elseif ($return_type == 'Name') {
+            $rolesArray = [];
             foreach ($empRoles as $role) {
                 $rolesArray[] = $role->name;
             }
+
             return $rolesArray;
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -68,7 +67,7 @@ class Role extends EntrustRole
     }
 
     /**
-     * Get all events happened on Module
+     * Get all events happened on Module.
      *
      * @return mixed
      */
@@ -76,6 +75,7 @@ class Role extends EntrustRole
     {
         $moduleConfigs = config('laraadmin.log.Roles');
         $moduleConfigsArr = array_keys($moduleConfigs);
-        return LALog::where("context_id", $this->id)->whereIn("type", $moduleConfigsArr)->orderBy("created_at", "desc")->get();
+
+        return LALog::where('context_id', $this->id)->whereIn('type', $moduleConfigsArr)->orderBy('created_at', 'desc')->get();
     }
 }

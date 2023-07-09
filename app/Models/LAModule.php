@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -11,8 +11,6 @@ namespace App\Models;
 
 use App\Helpers\CodeGenerator;
 use App\Helpers\LAHelper;
-use App\Models\LAMenu;
-use App\Models\Role;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,20 +21,18 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
-/**
- * Class LAModule
- * @package App\Models
+/***
+ * LaraAdmin Module
  *
  * Most important Model of LaraAdmin which looks after Module, ModuleField Generation.
  * It also handles Module migrations via "generate" method to create Module Schema in Database.
- *
  */
 class LAModule extends Model
 {
     protected $table = 'la_modules';
 
     protected $fillable = [
-        "name", "name_db", "label", "view_col", "model", "controller", "is_gen", "fa_icon"
+        'name', 'name_db', 'label', 'view_col', 'model', 'controller', 'is_gen', 'fa_icon'
     ];
 
     protected $hidden = [
@@ -45,7 +41,7 @@ class LAModule extends Model
 
     public function lang_name()
     {
-        return app('translator')->get('la_' . Str::singular($this->name_db) . '.' . $this->name_db);
+        return app('translator')->get('la_'.Str::singular($this->name_db).'.'.$this->name_db);
     }
 
     /**
@@ -63,18 +59,18 @@ class LAModule extends Model
 
         // Check is Generated
         $is_gen = false;
-        if (file_exists(base_path('app/Http/Controllers/' . ($names->controller) . ".php"))) {
-            if (file_exists(base_path('app/Models/' . ($names->model) . ".php"))) {
+        if (file_exists(base_path('app/Http/Controllers/'.($names->controller).'.php'))) {
+            if (file_exists(base_path('app/Models/'.($names->model).'.php'))) {
                 $is_gen = true;
             }
         }
-        $module = LAModule::where('name', $names->module)->first();
-        if (!isset($module->id)) {
-            $module = LAModule::create([
+        $module = self::where('name', $names->module)->first();
+        if (! isset($module->id)) {
+            $module = self::create([
                 'name' => $names->module,
                 'label' => $names->label,
                 'name_db' => $names->table,
-                'view_col' => "",
+                'view_col' => '',
                 'model' => $names->model,
                 'controller' => $names->controller,
                 'fa_icon' => $names->fa_icon,
@@ -82,6 +78,7 @@ class LAModule extends Model
 
             ]);
         }
+
         return $module->id;
     }
 
@@ -96,28 +93,28 @@ class LAModule extends Model
      * @param $fields Array of Module fields
      * @throws Exception Throws exceptions if Invalid view_column_name provided.
      */
-    public static function generate($module_name, $module_name_db, $view_col, $faIcon = "fa-cube", $fields)
+    public static function generate($module_name, $module_name_db, $view_col, $faIcon, $fields)
     {
         $names = LAHelper::generateModuleNames($module_name, $faIcon);
-        $fields = LAModule::format_fields($module_name, $fields);
+        $fields = self::format_fields($module_name, $fields);
 
-        if (substr_count($view_col, " ") || substr_count($view_col, ".")) {
-            throw new Exception("Unable to generate migration for " . ($names->module) . " : Invalid view_column_name. 'This should be database friendly lowercase name.'", 1);
-        } elseif (!LAModule::validate_view_column($fields, $view_col) && $view_col != "id") {
-            throw new Exception("Unable to generate migration for " . ($names->module) . " : view_column_name not found in field list.", 1);
+        if (substr_count($view_col, ' ') || substr_count($view_col, '.')) {
+            throw new Exception('Unable to generate migration for '.($names->module)." : Invalid view_column_name. 'This should be database friendly lowercase name.'", 1);
+        } elseif (! self::validate_view_column($fields, $view_col) && $view_col != 'id') {
+            throw new Exception('Unable to generate migration for '.($names->module).' : view_column_name not found in field list.', 1);
         } else {
             // Check is Generated
             $is_gen = false;
-            if (file_exists(base_path('app/Http/Controllers/' . ($names->controller) . ".php"))) {
-                if (file_exists(base_path('app/Models/' . ($names->model) . ".php"))) {
+            if (file_exists(base_path('app/Http/Controllers/'.($names->controller).'.php'))) {
+                if (file_exists(base_path('app/Models/'.($names->model).'.php'))) {
                     $is_gen = true;
                 }
             }
 
             // Create Module if not exists
-            $module = LAModule::where('name', $names->module)->first();
-            if (!isset($module->id)) {
-                $module = LAModule::create([
+            $module = self::where('name', $names->module)->first();
+            if (! isset($module->id)) {
+                $module = self::create([
                     'name' => $names->module,
                     'label' => $names->label,
                     'name_db' => $names->table,
@@ -130,18 +127,18 @@ class LAModule extends Model
             }
 
             $ftypes = LAModuleFieldType::getFTypes();
-            //print_r($ftypes);
-            //print_r($module);
-            //print_r($fields);
+            // print_r($ftypes);
+            // print_r($module);
+            // print_r($fields);
 
             // Create Database Schema for table
             Schema::create($names->table, function (Blueprint $table) use ($fields, $module, $ftypes) {
                 $table->id();
                 foreach ($fields as $field) {
                     $mod = LAModuleField::where('module', $module->id)->where('colname', $field->colname)->first();
-                    if (!isset($mod->id)) {
-                        if ($field->field_type == "Multiselect" || $field->field_type == "Taginput") {
-                            if (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, "[")) {
+                    if (! isset($mod->id)) {
+                        if ($field->field_type == 'Multiselect' || $field->field_type == 'Taginput') {
+                            if (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, '[')) {
                                 $field->defaultvalue = json_decode($field->defaultvalue);
                             }
 
@@ -186,7 +183,7 @@ class LAModule extends Model
                     }
 
                     // Create Module field schema in database
-                    LAModule::create_field_schema($table, $field);
+                    self::create_field_schema($table, $field);
                 }
 
                 // $table->string('name');
@@ -204,7 +201,7 @@ class LAModule extends Model
                 // $table->date('date_hire');
                 // $table->date('date_left');
                 // $table->double('salary_cur');
-                if ($module->name_db == "users") {
+                if ($module->name_db == 'users') {
                     $table->rememberToken();
                     $table->timestamp('email_verified_at')->nullable();
                 }
@@ -215,7 +212,7 @@ class LAModule extends Model
     }
 
     /**
-     * Validates if given view_column_name exists in fields array
+     * Validates if given view_column_name exists in fields array.
      *
      * @param $fields Array of fields from migration file
      * @param $view_col View Column Name
@@ -230,11 +227,12 @@ class LAModule extends Model
                 break;
             }
         }
+
         return $found;
     }
 
     /**
-     * Method creates database table field via $table variable from Schema
+     * Method creates database table field via $table variable from Schema.
      * @param $table
      * @param $field
      * @param bool $update
@@ -246,7 +244,7 @@ class LAModule extends Model
             $ftypes = LAModuleFieldType::getFTypes();
             $field->field_type = array_search($field->field_type, $ftypes);
         }
-        if (!is_string($field->defaultvalue)) {
+        if (! is_string($field->defaultvalue)) {
             $defval = json_encode($field->defaultvalue);
         } else {
             $defval = $field->defaultvalue;
@@ -271,10 +269,10 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Checkbox':
@@ -283,9 +281,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->boolean($field->colname);
                 }
-                if ($field->defaultvalue == "true" || $field->defaultvalue == "false" || $field->defaultvalue == true || $field->defaultvalue == false) {
+                if ($field->defaultvalue == 'true' || $field->defaultvalue == 'false' || $field->defaultvalue == true || $field->defaultvalue == false) {
                     if (is_string($field->defaultvalue)) {
-                        if ($field->defaultvalue == "true") {
+                        if ($field->defaultvalue == 'true') {
                             $field->defaultvalue = true;
                         } else {
                             $field->defaultvalue = false;
@@ -302,12 +300,12 @@ class LAModule extends Model
                 } else {
                     $var = $table->double($field->colname, 15, 2);
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("0.0");
+                    $var->default('0.0');
                 } else {
-                    $var->default("0.0");
+                    $var->default('0.0');
                 }
                 break;
             case 'Date':
@@ -317,12 +315,12 @@ class LAModule extends Model
                     $var = $table->date($field->colname)->nullable();
                 }
 
-                if ($field->defaultvalue == null || $field->defaultvalue == "" || $field->defaultvalue == "NULL") {
+                if ($field->defaultvalue == null || $field->defaultvalue == '' || $field->defaultvalue == 'NULL') {
                     $var->default(null);
-                } elseif ($field->defaultvalue == "now()") {
+                } elseif ($field->defaultvalue == 'now()') {
                     $var->default(null);
                 } elseif ($field->required) {
-                    $var->default("1970-01-01");
+                    $var->default('1970-01-01');
                 } else {
                     $var->default($field->defaultvalue);
                 }
@@ -336,12 +334,12 @@ class LAModule extends Model
                     $var = $table->timestamp($field->colname)->nullable()->nullableTimestamps();
                 }
                 // $table->timestamp('created_at')->useCurrent();
-                if ($field->defaultvalue == null || $field->defaultvalue == "" || $field->defaultvalue == "NULL") {
+                if ($field->defaultvalue == null || $field->defaultvalue == '' || $field->defaultvalue == 'NULL') {
                     $var->default(null);
-                } elseif ($field->defaultvalue == "now()") {
+                } elseif ($field->defaultvalue == 'now()') {
                     $var->default(DB::raw('CURRENT_TIMESTAMP'));
                 } elseif ($field->required) {
-                    $var->default("1970-01-01 01:01:01");
+                    $var->default('1970-01-01 01:01:01');
                 } else {
                     $var->default($field->defaultvalue);
                 }
@@ -354,15 +352,15 @@ class LAModule extends Model
                     $var = $table->decimal($field->colname, 15, 2);
                 }
                 if ($field->defaultvalue == 0) {
-                    $var->default("0.0");
-                } elseif ($field->defaultvalue != "") {
+                    $var->default('0.0');
+                } elseif ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("0.0");
+                    $var->default('0.0');
                 }
                 break;
             case 'Dropdown':
-                if ($field->popup_vals == "") {
+                if ($field->popup_vals == '') {
                     if (is_int($field->defaultvalue)) {
                         if ($update) {
                             $var = $table->integer($field->colname)->unsigned()->nullable()->change();
@@ -382,22 +380,22 @@ class LAModule extends Model
                     }
                 }
                 $popup_vals = json_decode($field->popup_vals);
-                if (str_starts_with($field->popup_vals, "@")) {
-                    $foreign_table_name = str_replace("@", "", $field->popup_vals);
+                if (str_starts_with($field->popup_vals, '@')) {
+                    $foreign_table_name = str_replace('@', '', $field->popup_vals);
                     if ($update) {
                         $var = $table->unsignedBigInteger($field->colname)->nullable()->unsigned()->change();
-                        if ($field->defaultvalue == "" || $field->defaultvalue == "0") {
+                        if ($field->defaultvalue == '' || $field->defaultvalue == '0') {
                             $var->default(null);
                         } else {
                             $var->default($field->defaultvalue);
                         }
                         // TODO: SQLite Foreign Keys - does not dropForeign
                         // https://laravel.com/docs/5.7/upgrade
-                        $table->dropForeign($field->module_obj->name_db . "_" . $field->colname . "_foreign");
+                        $table->dropForeign($field->module_obj->name_db.'_'.$field->colname.'_foreign');
                         $table->foreign($field->colname)->references('id')->on($foreign_table_name);
                     } else {
                         $var = $table->unsignedBigInteger($field->colname)->nullable()->unsigned();
-                        if ($field->defaultvalue == "" || $field->defaultvalue == "0") {
+                        if ($field->defaultvalue == '' || $field->defaultvalue == '0') {
                             $var->default(null);
                         } else {
                             $var->default($field->defaultvalue);
@@ -410,10 +408,10 @@ class LAModule extends Model
                     } else {
                         $var = $table->string($field->colname)->nullable();
                     }
-                    if ($field->defaultvalue != "") {
+                    if ($field->defaultvalue != '') {
                         $var->default($field->defaultvalue);
                     } elseif ($field->required) {
-                        $var->default("");
+                        $var->default('');
                     }
                 } elseif (is_object($popup_vals)) {
                     // ############### Remaining
@@ -443,10 +441,10 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'File':
@@ -455,9 +453,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->unsignedBigInteger($field->colname)->unsigned()->nullable();
                 }
-                $table->foreign($field->colname)->references('id')->on("uploads");
+                $table->foreign($field->colname)->references('id')->on('uploads');
 
-                if ($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
+                if ($field->defaultvalue != '' && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
                     $var->default(null);
@@ -471,12 +469,12 @@ class LAModule extends Model
                 } else {
                     $var = $table->string($field->colname, 256);
                 }
-                if (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, "[")) {
+                if (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, '[')) {
                     $var->default($field->defaultvalue);
                 } elseif (is_array($field->defaultvalue)) {
                     $var->default(json_encode($field->defaultvalue));
                 } else {
-                    $var->default("[]");
+                    $var->default('[]');
                 }
                 break;
             case 'Float':
@@ -485,10 +483,10 @@ class LAModule extends Model
                 } else {
                     $var = $table->float($field->colname)->nullable();
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("0.0");
+                    $var->default('0.0');
                 }
                 break;
             case 'HTML':
@@ -500,7 +498,7 @@ class LAModule extends Model
                 if (isset($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Image':
@@ -509,9 +507,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->unsignedBigInteger($field->colname)->unsigned()->nullable();
                 }
-                $table->foreign($field->colname)->references('id')->on("uploads");
+                $table->foreign($field->colname)->references('id')->on('uploads');
 
-                if ($field->defaultvalue != "" && is_numeric($field->defaultvalue)) {
+                if ($field->defaultvalue != '' && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
                     $var->default(null);
@@ -527,10 +525,10 @@ class LAModule extends Model
                 } else {
                     $var = $table->json($field->colname);
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } else {
-                    $var->default("{}");
+                    $var->default('{}');
                 }
                 break;
             case 'Integer':
@@ -540,10 +538,10 @@ class LAModule extends Model
                 } else {
                     $var = $table->integer($field->colname, false);
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } else {
-                    $var->default("0");
+                    $var->default('0');
                 }
                 break;
             case 'List':
@@ -577,10 +575,10 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Multiselect':
@@ -592,19 +590,19 @@ class LAModule extends Model
                 if (is_array($field->defaultvalue)) {
                     $field->defaultvalue = json_encode($field->defaultvalue);
                     $var->default($field->defaultvalue);
-                } elseif (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, "[")) {
+                } elseif (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, '[')) {
                     $var->default($field->defaultvalue);
-                } elseif ($field->defaultvalue == "" || $field->defaultvalue == null) {
-                    $var->default("[]");
+                } elseif ($field->defaultvalue == '' || $field->defaultvalue == null) {
+                    $var->default('[]');
                 } elseif (is_string($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
                     $var->default($field->defaultvalue);
                 } elseif (is_int($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
-                    //echo "int: ".$field->defaultvalue;
+                    // echo "int: ".$field->defaultvalue;
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("[]");
+                    $var->default('[]');
                 }
                 break;
             case 'Name':
@@ -622,10 +620,10 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength);
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Password':
@@ -643,15 +641,15 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Radio':
                 $var = null;
-                if ($field->popup_vals == "") {
+                if ($field->popup_vals == '') {
                     if (is_int($field->defaultvalue)) {
                         if ($update) {
                             $var = $table->integer($field->colname)->unsigned()->change();
@@ -670,7 +668,7 @@ class LAModule extends Model
                         break;
                     }
                 }
-                if (is_string($field->popup_vals) && str_starts_with($field->popup_vals, "@")) {
+                if (is_string($field->popup_vals) && str_starts_with($field->popup_vals, '@')) {
                     if ($update) {
                         $var = $table->integer($field->colname)->unsigned()->change();
                     } else {
@@ -685,10 +683,10 @@ class LAModule extends Model
                     } else {
                         $var = $table->string($field->colname)->nullable();
                     }
-                    if ($field->defaultvalue != "") {
+                    if ($field->defaultvalue != '') {
                         $var->default($field->defaultvalue);
                     } elseif ($field->required) {
-                        $var->default("");
+                        $var->default('');
                     }
                 } elseif (is_object($popup_vals)) {
                     // ############### Remaining
@@ -721,9 +719,9 @@ class LAModule extends Model
                 if (isset($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Taginput':
@@ -733,20 +731,20 @@ class LAModule extends Model
                 } else {
                     $var = $table->string($field->colname, 1000)->nullable();
                 }
-                if (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, "[")) {
+                if (is_string($field->defaultvalue) && str_starts_with($field->defaultvalue, '[')) {
                     $field->defaultvalue = json_decode($field->defaultvalue);
                 }
 
                 if (is_string($field->defaultvalue)) {
                     $field->defaultvalue = json_encode([$field->defaultvalue]);
-                    //echo "string: ".$field->defaultvalue;
+                    // echo "string: ".$field->defaultvalue;
                     $var->default($field->defaultvalue);
                 } elseif (is_array($field->defaultvalue)) {
                     $field->defaultvalue = json_encode($field->defaultvalue);
-                    //echo "array: ".$field->defaultvalue;
+                    // echo "array: ".$field->defaultvalue;
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Textarea':
@@ -763,10 +761,10 @@ class LAModule extends Model
                     } else {
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
-                    if ($field->defaultvalue != "") {
+                    if ($field->defaultvalue != '') {
                         $var->default($field->defaultvalue);
                     } elseif ($field->required) {
-                        $var->default("");
+                        $var->default('');
                     }
                 }
                 break;
@@ -785,10 +783,10 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'URL':
@@ -806,10 +804,10 @@ class LAModule extends Model
                         $var = $table->string($field->colname, $field->maxlength)->nullable();
                     }
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("");
+                    $var->default('');
                 }
                 break;
             case 'Location':
@@ -819,10 +817,10 @@ class LAModule extends Model
                 } else {
                     $var = $table->string($field->colname, 30)->nullable();
                 }
-                if ($field->defaultvalue != "" && str_contains($field->defaultvalue, ",")) {
+                if ($field->defaultvalue != '' && str_contains($field->defaultvalue, ',')) {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("0.0,0.0");
+                    $var->default('0.0,0.0');
                 }
                 break;
             case 'Color':
@@ -832,12 +830,12 @@ class LAModule extends Model
                 } else {
                     $var = $table->string($field->colname, 25)->nullable();
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("#000");
+                    $var->default('#000');
                 } else {
-                    $var->default("#000");
+                    $var->default('#000');
                 }
                 break;
             case 'Time':
@@ -847,12 +845,12 @@ class LAModule extends Model
                 } else {
                     $var = $table->string($field->colname, 4)->nullable();
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } elseif ($field->required) {
-                    $var->default("0000");
+                    $var->default('0000');
                 } else {
-                    $var->default("0000");
+                    $var->default('0000');
                 }
                 break;
             case 'Duration':
@@ -862,7 +860,7 @@ class LAModule extends Model
                 } else {
                     $var = $table->integer($field->colname, false)->unsigned();
                 }
-                if ($field->defaultvalue != "") {
+                if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
                 } else {
                     $var->default(0);
@@ -882,13 +880,13 @@ class LAModule extends Model
                 $table->unique($field->colname);
             }
         }
-        if (isset($var) && $field->comment != "") {
+        if (isset($var) && $field->comment != '') {
             $var->comment($field->comment);
         }
     }
 
     /**
-     * This method process and alters user created migration fields array to fit into standard field Context / Metedata
+     * This method process and alters user created migration fields array to fit into standard field Context / Metedata.
      *
      * Note: field array type change
      * Earlier we were taking sequential array for fields, but from version 1.1 we are using different format
@@ -903,29 +901,29 @@ class LAModule extends Model
      */
     public static function format_fields($module_name, $fields)
     {
-        $out = array();
+        $out = [];
         foreach ($fields as $field) {
             // Check if field format is New
             if (LAHelper::is_assoc_array($field)) {
-                $obj = (object)$field;
+                $obj = (object) $field;
 
-                if (!isset($obj->colname)) {
-                    throw new Exception("Migration " . $module_name . " -  Field does not have colname", 1);
-                } elseif (!isset($obj->label)) {
-                    throw new Exception("Migration " . $module_name . " -  Field does not have label", 1);
-                } elseif (!isset($obj->field_type)) {
-                    throw new Exception("Migration " . $module_name . " -  Field does not have field_type", 1);
+                if (! isset($obj->colname)) {
+                    throw new Exception('Migration '.$module_name.' -  Field does not have colname', 1);
+                } elseif (! isset($obj->label)) {
+                    throw new Exception('Migration '.$module_name.' -  Field does not have label', 1);
+                } elseif (! isset($obj->field_type)) {
+                    throw new Exception('Migration '.$module_name.' -  Field does not have field_type', 1);
                 }
-                if (!isset($obj->unique)) {
+                if (! isset($obj->unique)) {
                     $obj->unique = 0;
                 }
-                if (!isset($obj->defaultvalue)) {
+                if (! isset($obj->defaultvalue)) {
                     $obj->defaultvalue = '';
                 }
-                if (!isset($obj->minlength)) {
+                if (! isset($obj->minlength)) {
                     $obj->minlength = 0;
                 }
-                if (!isset($obj->maxlength)) {
+                if (! isset($obj->maxlength)) {
                     $obj->maxlength = 0;
                 } else {
                     // Because maxlength above 256 will not be supported by Unique
@@ -935,10 +933,10 @@ class LAModule extends Model
                         $obj->maxlength = $obj->maxlength;
                     }
                 }
-                if (!isset($obj->required)) {
+                if (! isset($obj->required)) {
                     $obj->required = 0;
                 }
-                if (!isset($obj->listing_col)) {
+                if (! isset($obj->listing_col)) {
                     $obj->listing_col = 1;
                 } else {
                     if ($obj->listing_col == true) {
@@ -948,8 +946,8 @@ class LAModule extends Model
                     }
                 }
 
-                if (!isset($obj->popup_vals)) {
-                    $obj->popup_vals = "";
+                if (! isset($obj->popup_vals)) {
+                    $obj->popup_vals = '';
                 } else {
                     if (is_array($obj->popup_vals)) {
                         $obj->popup_vals = json_encode($obj->popup_vals);
@@ -957,34 +955,34 @@ class LAModule extends Model
                         $obj->popup_vals = $obj->popup_vals;
                     }
                 }
-                if (!isset($obj->comment)) {
-                    $obj->comment = "";
+                if (! isset($obj->comment)) {
+                    $obj->comment = '';
                 }
                 // var_dump($obj);
                 $out[] = $obj;
             } else {
                 // Handle Old field format - Sequential Array
-                $obj = (object)array();
+                $obj = (object) [];
                 $obj->colname = $field[0];
                 $obj->label = $field[1];
                 $obj->field_type = $field[2];
 
-                if (!isset($field[3])) {
+                if (! isset($field[3])) {
                     $obj->unique = 0;
                 } else {
                     $obj->unique = $field[3];
                 }
-                if (!isset($field[4])) {
+                if (! isset($field[4])) {
                     $obj->defaultvalue = '';
                 } else {
                     $obj->defaultvalue = $field[4];
                 }
-                if (!isset($field[5])) {
+                if (! isset($field[5])) {
                     $obj->minlength = 0;
                 } else {
                     $obj->minlength = $field[5];
                 }
-                if (!isset($field[6])) {
+                if (! isset($field[6])) {
                     $obj->maxlength = 0;
                 } else {
                     // Because maxlength above 256 will not be supported by Unique
@@ -994,15 +992,15 @@ class LAModule extends Model
                         $obj->maxlength = $field[6];
                     }
                 }
-                if (!isset($field[7])) {
+                if (! isset($field[7])) {
                     $obj->required = 0;
                 } else {
                     $obj->required = $field[7];
                 }
                 $obj->listing_col = 1;
 
-                if (!isset($field[8])) {
-                    $obj->popup_vals = "";
+                if (! isset($field[8])) {
+                    $obj->popup_vals = '';
                 } else {
                     if (is_array($field[8])) {
                         $obj->popup_vals = json_encode($field[8]);
@@ -1013,12 +1011,13 @@ class LAModule extends Model
                 $out[] = $obj;
             }
         }
+
         return $out;
     }
 
     /**
      * Get Module Object by passing Module Name / id
-     * It also includes array of Module fields
+     * It also includes array of Module fields.
      *
      * $module = LAModule::get($module_name);
      *
@@ -1029,20 +1028,21 @@ class LAModule extends Model
     {
         $module = null;
         if (is_int($module_name)) {
-            $module = LAModule::find($module_name);
+            $module = self::find($module_name);
         } else {
-            $module = LAModule::where('name', $module_name)->orWhere('name_db', $module_name)->first();
+            $module = self::where('name', $module_name)->orWhere('name_db', $module_name)->first();
         }
 
         // If Module is found in database also attach its field array to it.
         if (isset($module)) {
             $moduleArr = $module->toArray();
             $fields = LAModuleField::where('module', $moduleArr['id'])->orderBy('sort', 'asc')->get()->toArray();
-            $fields2 = array();
+            $fields2 = [];
             foreach ($fields as $field) {
                 $fields2[$field['colname']] = $field;
             }
             $module->fields = $fields2;
+
             return $module;
         } else {
             return null;
@@ -1050,7 +1050,7 @@ class LAModule extends Model
     }
 
     /**
-     * Get Module by table name
+     * Get Module by table name.
      *
      * $module = LAModule::getByTable($table_name);
      *
@@ -1059,17 +1059,18 @@ class LAModule extends Model
      */
     public static function getByTable($table_name)
     {
-        $module = LAModule::where('name_db', $table_name)->first();
+        $module = self::where('name_db', $table_name)->first();
         if (isset($module)) {
             $module = $module->toArray();
-            return LAModule::get($module['name']);
+
+            return self::get($module['name']);
         } else {
             return null;
         }
     }
 
     /**
-     * Get Array of Values for Dropdown, Multiselect, Taginput, Radio from Module
+     * Get Array of Values for Dropdown, Multiselect, Taginput, Radio from Module.
      *
      * $array = LAModule::getDDArray($module_name);
      *
@@ -1078,27 +1079,28 @@ class LAModule extends Model
      */
     public static function getDDArray($module_name)
     {
-        $module = LAModule::where('name', $module_name)->first();
+        $module = self::where('name', $module_name)->first();
         if (isset($module)) {
             $model_name = $module->model;
-            $model = "App\\Models\\" . $module->model;
+            $model = 'App\\Models\\'.$module->model;
 
             $result = $model::all();
-            $out = array();
+            $out = [];
             foreach ($result as $row) {
                 $view_col = $module->view_col;
                 $out[$row->id] = $row->{$view_col};
             }
+
             return $out;
         } else {
-            return array();
+            return [];
         }
     }
 
     /**
      * Create Validations rules array for Laravel Validations using Module Field Context / Metadata
      * Used in LaraAdmin generated Controllers for store and update.
-     * This generates array of validation rules for whole Module
+     * This generates array of validation rules for whole Module.
      *
      *
      * @param $module_name Module Name
@@ -1108,52 +1110,52 @@ class LAModule extends Model
      */
     public static function validateRules($module_name, $request, $isEdit = false)
     {
-        $module = LAModule::get($module_name);
+        $module = self::get($module_name);
         $rules = [];
         if (isset($module)) {
             $ftypes = LAModuleFieldType::getFTypes2();
             foreach ($module->fields as $field) {
                 if (isset($request->{$field['colname']})) {
-                    $col = "";
+                    $col = '';
                     if ($field['required']) {
-                        $col .= "required|";
+                        $col .= 'required|';
                     }
-                    if (in_array($ftypes[$field['field_type']], array( "Currency", "Decimal"))) {
+                    if (in_array($ftypes[$field['field_type']], ['Currency', 'Decimal'])) {
                         // No min + max length
-                    } elseif ($ftypes[$field['field_type']] == "List") {
+                    } elseif ($ftypes[$field['field_type']] == 'List') {
                         if ($field['minlength'] != 0) {
-                            $col .= "mincount:" . $field['minlength'] . "|";
+                            $col .= 'mincount:'.$field['minlength'].'|';
                         }
                         if ($field['maxlength'] != 0) {
-                            $col .= "maxcount:" . $field['maxlength'] . "|";
+                            $col .= 'maxcount:'.$field['maxlength'].'|';
                         }
-                    } elseif ($ftypes[$field['field_type']] == "Taginput") {
+                    } elseif ($ftypes[$field['field_type']] == 'Taginput') {
                         if ($field['minlength'] != 0) {
-                            $col .= "mincount:" . $field['minlength'] . "|";
+                            $col .= 'mincount:'.$field['minlength'].'|';
                         }
                         if ($field['maxlength'] != 0) {
-                            $col .= "maxcount:" . $field['maxlength'] . "|";
+                            $col .= 'maxcount:'.$field['maxlength'].'|';
                         }
-                    } elseif ($ftypes[$field['field_type']] == "Checklist") {
+                    } elseif ($ftypes[$field['field_type']] == 'Checklist') {
                         if ($field['minlength'] != 0) {
-                            $col .= "mincount:" . $field['minlength'] . "|";
+                            $col .= 'mincount:'.$field['minlength'].'|';
                         }
                         if ($field['maxlength'] != 0) {
-                            $col .= "maxcount:" . $field['maxlength'] . "|";
+                            $col .= 'maxcount:'.$field['maxlength'].'|';
                         }
                     } else {
-                        if ($ftypes[$field['field_type']] == "Integer") {
-                            $col .= "numeric|"; //TODO check
+                        if ($ftypes[$field['field_type']] == 'Integer') {
+                            $col .= 'numeric|'; // TODO check
                         }
                         if ($field['minlength'] != 0) {
-                            $col .= "min:" . $field['minlength'] . "|";
+                            $col .= 'min:'.$field['minlength'].'|';
                         }
                         if ($field['maxlength'] != 0) {
-                            $col .= "max:" . $field['maxlength'] . "|";
+                            $col .= 'max:'.$field['maxlength'].'|';
                         }
                     }
-                    if ($field['unique'] && !$isEdit) {
-                        $col .= "unique:" . $module->name_db . ",deleted_at,NULL";
+                    if ($field['unique'] && ! $isEdit) {
+                        $col .= 'unique:'.$module->name_db.',deleted_at,NULL';
                     }
                     // 'name' => 'required|unique|min:5|max:256',
                     // 'author' => 'required|max:50',
@@ -1161,11 +1163,12 @@ class LAModule extends Model
                     // 'pages' => 'integer|max:5',
                     // 'genre' => 'max:500',
                     // 'description' => 'max:1000'
-                    if ($col != "") {
-                        $rules[$field['colname']] = trim($col, "|");
+                    if ($col != '') {
+                        $rules[$field['colname']] = trim($col, '|');
                     }
                 }
             }
+
             return $rules;
         } else {
             return $rules;
@@ -1181,19 +1184,19 @@ class LAModule extends Model
      */
     public static function insert($module_name, $request)
     {
-        $module = LAModule::get($module_name);
+        $module = self::get($module_name);
         if (isset($module)) {
             $model_name = $module->model;
-            $model = "App\\Models\\" . $module->model;
+            $model = 'App\\Models\\'.$module->model;
 
             // Delete if unique rows available which are deleted
             $old_row = null;
             $uniqueFields = LAModuleField::where('module', $module->id)->where('unique', '1')->get()->toArray();
             foreach ($uniqueFields as $field) {
-                Log::debug("insert: " . $module->name_db . " - " . $field['colname'] . " - " . $request->{$field['colname']});
+                Log::debug('insert: '.$module->name_db.' - '.$field['colname'].' - '.$request->{$field['colname']});
                 $old_row = DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->first();
                 if (isset($old_row->id)) {
-                    Log::debug("deleting: " . $module->name_db . " - " . $field['colname'] . " - " . $request->{$field['colname']});
+                    Log::debug('deleting: '.$module->name_db.' - '.$field['colname'].' - '.$request->{$field['colname']});
                     DB::table($module->name_db)->whereNotNull('deleted_at')->where($field['colname'], $request->{$field['colname']})->delete();
                 }
             }
@@ -1203,8 +1206,9 @@ class LAModule extends Model
                 // To keep old & new row id remain same
                 $row->id = $old_row->id;
             }
-            $row = LAModule::processDBRow($module, $request, $row);
+            $row = self::processDBRow($module, $request, $row);
             $row->save();
+
             return $row->id;
         } else {
             return null;
@@ -1212,7 +1216,7 @@ class LAModule extends Model
     }
 
     /**
-     * This method updates data from Request to Database for given Module and Row Id
+     * This method updates data from Request to Database for given Module and Row Id.
      *
      * @param $module_name Module Name
      * @param $request \Illuminate\Http\Request Object
@@ -1221,15 +1225,16 @@ class LAModule extends Model
      */
     public static function updateRow($module_name, $request, $id)
     {
-        $module = LAModule::get($module_name);
+        $module = self::get($module_name);
         if (isset($module)) {
             $model_name = $module->model;
-            $model = "App\\Models\\" . $module->model;
+            $model = 'App\\Models\\'.$module->model;
 
-            //$row = new $module_path;
+            // $row = new $module_path;
             $row = $model::find($id);
-            $row = LAModule::processDBRow($module, $request, $row);
+            $row = self::processDBRow($module, $request, $row);
             $row->save();
+
             return $row->id;
         } else {
             return null;
@@ -1238,7 +1243,7 @@ class LAModule extends Model
 
     /**
      * Process Row Data According to its Field Type & Context / Metadata
-     * Helps to save and update database records
+     * Helps to save and update database records.
      *
      * @param $module Module Name
      * @param $request \Illuminate\Http\Request Object
@@ -1250,68 +1255,68 @@ class LAModule extends Model
         $ftypes = LAModuleFieldType::getFTypes2();
 
         foreach ($module->fields as $field) {
-            if (isset($request->{$field['colname']}) || isset($request->{$field['colname'] . "_hidden"}) || $ftypes[$field['field_type']] == "Textarea") {
+            if (isset($request->{$field['colname']}) || isset($request->{$field['colname'].'_hidden'}) || $ftypes[$field['field_type']] == 'Textarea') {
                 switch($ftypes[$field['field_type']]) {
                     case 'Integer':
                         if (isset($request->{$field['colname']}) && $request->{$field['colname']} != '') {
                             $row->{$field['colname']} = $request->{$field['colname']};
                         } else {
-                            $row->{$field['colname']} = "0";
+                            $row->{$field['colname']} = '0';
                         }
                         break;
                     case 'Currency':
                         if (isset($request->{$field['colname']}) && $request->{$field['colname']} != '') {
                             $row->{$field['colname']} = $request->{$field['colname']};
                         } else {
-                            $row->{$field['colname']} = "0.00";
+                            $row->{$field['colname']} = '0.00';
                         }
                         break;
                     case 'Checkbox':
                         if (isset($request->{$field['colname']})) {
                             $row->{$field['colname']} = true;
-                        } elseif (isset($request->{$field['colname'] . "_hidden"})) {
+                        } elseif (isset($request->{$field['colname'].'_hidden'})) {
                             $row->{$field['colname']} = false;
                         }
                         break;
                     case 'Date':
-                        $null_date = $request->{"null_date_" . $field['colname']};
-                        if (isset($null_date) && $null_date == "true") {
+                        $null_date = $request->{'null_date_'.$field['colname']};
+                        if (isset($null_date) && $null_date == 'true') {
                             $request->{$field['colname']} = null;
-                        } elseif ($request->{$field['colname']} != "") {
+                        } elseif ($request->{$field['colname']} != '') {
                             $date = $request->{$field['colname']};
-                            $d2 = date_parse_from_format("d/m/Y", $date);
-                            $request->{$field['colname']} = date("Y-m-d", strtotime($d2['year'] . "-" . $d2['month'] . "-" . $d2['day']));
+                            $d2 = date_parse_from_format('d/m/Y', $date);
+                            $request->{$field['colname']} = date('Y-m-d', strtotime($d2['year'].'-'.$d2['month'].'-'.$d2['day']));
                         } else {
-                            $request->{$field['colname']} = date("Y-m-d");
+                            $request->{$field['colname']} = date('Y-m-d');
                         }
                         $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Datetime':
-                        $null_date = $request->{"null_date_" . $field['colname']};
-                        if (isset($null_date) && $null_date == "true") {
+                        $null_date = $request->{'null_date_'.$field['colname']};
+                        if (isset($null_date) && $null_date == 'true') {
                             $request->{$field['colname']} = null;
-                        } elseif ($request->{$field['colname']} != "") {
+                        } elseif ($request->{$field['colname']} != '') {
                             $date = $request->{$field['colname']};
-                            $d2 = date_parse_from_format("d/m/Y h:i A", $date);
-                            $request->{$field['colname']} = date("Y-m-d H:i:s", strtotime($d2['year'] . "-" . $d2['month'] . "-" . $d2['day'] . " " . substr($date, 11)));
+                            $d2 = date_parse_from_format('d/m/Y h:i A', $date);
+                            $request->{$field['colname']} = date('Y-m-d H:i:s', strtotime($d2['year'].'-'.$d2['month'].'-'.$d2['day'].' '.substr($date, 11)));
                         } else {
-                            $request->{$field['colname']} = date("Y-m-d H:i:s");
+                            $request->{$field['colname']} = date('Y-m-d H:i:s');
                         }
                         $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Dropdown':
-                        if ($request->{$field['colname']} == "0") {
-                            if (str_starts_with($field['popup_vals'], "@")) {
+                        if ($request->{$field['colname']} == '0') {
+                            if (str_starts_with($field['popup_vals'], '@')) {
                                 $request->{$field['colname']} = DB::raw('NULL');
-                            } elseif (str_starts_with($field['popup_vals'], "[")) {
-                                $request->{$field['colname']} = "";
+                            } elseif (str_starts_with($field['popup_vals'], '[')) {
+                                $request->{$field['colname']} = '';
                             }
                         }
                         $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Image':
                         $image = $request->{$field['colname']};
-                        if ($image == 0 || $image == "0") {
+                        if ($image == 0 || $image == '0') {
                             $row->{$field['colname']} = null;
                         } else {
                             $row->{$field['colname']} = $image;
@@ -1329,15 +1334,15 @@ class LAModule extends Model
                         $row->{$field['colname']} = json_encode($request->{$field['colname']});
                         break;
                     case 'Textarea':
-                        if (!isset($request->{$field['colname']})) {
-                            $row->{$field['colname']} = "";
+                        if (! isset($request->{$field['colname']})) {
+                            $row->{$field['colname']} = '';
                         } else {
                             $row->{$field['colname']} = $request->{$field['colname']};
                         }
                         break;
                     case 'File':
                         $file = $request->{$field['colname']};
-                        if ($file == 0 || $file == "0") {
+                        if ($file == 0 || $file == '0') {
                             $row->{$field['colname']} = null;
                         } else {
                             $row->{$field['colname']} = $request->{$field['colname']};
@@ -1345,32 +1350,32 @@ class LAModule extends Model
                         break;
                     case 'Files':
                         $files = json_decode($request->{$field['colname']});
-                        $files2 = array();
+                        $files2 = [];
                         foreach ($files as $file) {
-                            $files2[] = "" . $file;
+                            $files2[] = ''.$file;
                         }
                         $row->{$field['colname']} = json_encode($files2);
                         break;
                     case 'Time':
                         $time = $request->{$field['colname']};
                         if (strlen($time) >= 7) {
-                            $arr = explode(" ", $time);
-                            $arr2 = explode(":", $arr[0]);
+                            $arr = explode(' ', $time);
+                            $arr2 = explode(':', $arr[0]);
                             $hour = intval($arr2[0]);
                             $minute = intval($arr2[1]);
                             $ampm = trim($arr[1]);
-                            if ($ampm == "PM" && $hour < 12) {
+                            if ($ampm == 'PM' && $hour < 12) {
                                 $hour = $hour + 12;
-                            } elseif ($ampm == "AM" && $hour == 12) {
+                            } elseif ($ampm == 'AM' && $hour == 12) {
                                 $hour = 0;
                             }
 
                             // Prepend 0
                             if ($hour < 10) {
-                                $hour = "0".$hour;
+                                $hour = '0'.$hour;
                             }
                             if ($minute < 10) {
-                                $minute = "0".$minute;
+                                $minute = '0'.$minute;
                             }
                             $time24 = $hour.$minute;
                             $row->{$field['colname']} = $time24;
@@ -1382,22 +1387,24 @@ class LAModule extends Model
                 }
             }
         }
+
         return $row;
     }
 
     /**
-     * Count Number of rows in Table of given Module
+     * Count Number of rows in Table of given Module.
      *
      * @param $module_name Module Name
      * @return int Number of rows in Module Table. -1 if Module doesn't exists.
      */
     public static function itemCount($module_name)
     {
-        $module = LAModule::get($module_name);
+        $module = self::get($module_name);
         if (isset($module)) {
             $model_name = $module->model;
-            if (file_exists(base_path('app/Models/' . $model_name . ".php"))) {
-                $model = "App\\Models\\" . $model_name;
+            if (file_exists(base_path('app/Models/'.$model_name.'.php'))) {
+                $model = 'App\\Models\\'.$model_name;
+
                 return $model::count();
             } else {
                 return -1;
@@ -1408,7 +1415,7 @@ class LAModule extends Model
     }
 
     /**
-     * Get Module Access for all roles or specific role
+     * Get Module Access for all roles or specific role.
      *
      * $role_accesses = LAModule::getRoleAccess($id);
      *
@@ -1418,21 +1425,21 @@ class LAModule extends Model
      */
     public static function getRoleAccess($module_id, $specific_role = 0)
     {
-        $module = LAModule::find($module_id);
-        $module = LAModule::get($module->name);
+        $module = self::find($module_id);
+        $module = self::get($module->name);
 
         if ($specific_role) {
             $roles_arr = DB::table('roles')->where('id', $specific_role)->get();
         } else {
             $roles_arr = DB::table('roles')->get();
         }
-        $roles = array();
+        $roles = [];
 
-        $arr_field_access = array(
+        $arr_field_access = [
             'invisible' => 0,
             'readonly' => 1,
             'write' => 2
-        );
+        ];
 
         foreach ($roles_arr as $role) {
             // get Current Module permissions for this role
@@ -1453,7 +1460,7 @@ class LAModule extends Model
 
             // get Current Module Fields permissions for this role
 
-            $role->fields = array();
+            $role->fields = [];
             foreach ($module->fields as $field) {
                 // find role field permission
                 $field_perm = DB::table('role_la_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
@@ -1464,15 +1471,16 @@ class LAModule extends Model
                     $field['access'] = 0;
                 }
                 $role->fields[$field['id']] = $field;
-                //$role->fields[$field['id']] = $field_perm->access;
+                // $role->fields[$field['id']] = $field_perm->access;
             }
             $roles[] = $role;
         }
+
         return $roles;
     }
 
     /**
-     * Get Specific Module Access for login user or specific user ($user_id)
+     * Get Specific Module Access for login user or specific user ($user_id).
      *
      * LAModule::hasAccess($module_id, $access_type, $user_id);
      *
@@ -1481,17 +1489,17 @@ class LAModule extends Model
      * @param int $user_id User id for which Access will be checked
      * @return bool Returns true if access is there or false
      */
-    public static function hasAccess($module_id, $access_type = "view", $user_id = 0)
+    public static function hasAccess($module_id, $access_type = 'view', $user_id = 0)
     {
-        $roles = array();
+        $roles = [];
 
         if (is_string($module_id)) {
-            $module = LAModule::get($module_id);
+            $module = self::get($module_id);
             $module_id = $module->id;
         }
 
-        if ($access_type == null || $access_type == "") {
-            $access_type = "view";
+        if ($access_type == null || $access_type == '') {
+            $access_type = 'view';
         }
 
         if ($user_id) {
@@ -1505,7 +1513,7 @@ class LAModule extends Model
         foreach ($roles->get() as $role) {
             $module_perm = DB::table('role_la_module')->where('role_id', $role->id)->where('module_id', $module_id)->first();
             if (isset($module_perm->id)) {
-                if (isset($module_perm->{"acc_" . $access_type}) && $module_perm->{"acc_" . $access_type} == 1) {
+                if (isset($module_perm->{'acc_'.$access_type}) && $module_perm->{'acc_'.$access_type} == 1) {
                     return true;
                 } else {
                     continue;
@@ -1514,11 +1522,12 @@ class LAModule extends Model
                 continue;
             }
         }
+
         return false;
     }
 
     /**
-     * Get Module Field Access for role and access type
+     * Get Module Field Access for role and access type.
      *
      * LAModule::hasFieldAccess($module_id, $field_id, $access_type, $user_id);
      *
@@ -1528,9 +1537,9 @@ class LAModule extends Model
      * @param int $user_id User id for which Access will be checked
      * @return bool Returns true if access is there or false
      */
-    public static function hasFieldAccess($module_id, $field_id, $access_type = "view", $user_id = 0)
+    public static function hasFieldAccess($module_id, $field_id, $access_type = 'view', $user_id = 0)
     {
-        $roles = array();
+        $roles = [];
 
         // \Log::debug("module_id: ".$module_id." field_id: ".$field_id." access_type: ".$access_type);
 
@@ -1539,7 +1548,7 @@ class LAModule extends Model
         }
 
         if (is_string($module_id)) {
-            $module = LAModule::get($module_id);
+            $module = self::get($module_id);
             $module_id = $module->id;
         }
 
@@ -1548,8 +1557,8 @@ class LAModule extends Model
             $field_id = $field_object->id;
         }
 
-        if ($access_type == null || $access_type == "") {
-            $access_type = "view";
+        if ($access_type == null || $access_type == '') {
+            $access_type = 'view';
         }
 
         if ($user_id) {
@@ -1566,10 +1575,10 @@ class LAModule extends Model
         foreach ($roles->get() as $role) {
             $module_perm = DB::table('role_la_module')->where('role_id', $role->id)->where('module_id', $module_id)->first();
             if (isset($module_perm->id)) {
-                if ($access_type == "view" && isset($module_perm->{"acc_" . $access_type}) && $module_perm->{"acc_" . $access_type} == 1) {
+                if ($access_type == 'view' && isset($module_perm->{'acc_'.$access_type}) && $module_perm->{'acc_'.$access_type} == 1) {
                     $hasModuleAccess = true;
                     break;
-                } elseif ($access_type == "write" && ((isset($module_perm->{"acc_create"}) && $module_perm->{"acc_create"} == 1) || (isset($module_perm->{"acc_edit"}) && $module_perm->{"acc_edit"} == 1))) {
+                } elseif ($access_type == 'write' && ((isset($module_perm->{'acc_create'}) && $module_perm->{'acc_create'} == 1) || (isset($module_perm->{'acc_edit'}) && $module_perm->{'acc_edit'} == 1))) {
                     $hasModuleAccess = true;
                     break;
                 } else {
@@ -1582,9 +1591,9 @@ class LAModule extends Model
         if ($hasModuleAccess) {
             $module_field_perm = DB::table('role_la_module_fields')->where('role_id', $role->id)->where('field_id', $field_id)->first();
             if (isset($module_field_perm->access)) {
-                if ($access_type == "view" && ($module_field_perm->{"access"} == "readonly" || $module_field_perm->{"access"} == "write")) {
+                if ($access_type == 'view' && ($module_field_perm->{'access'} == 'readonly' || $module_field_perm->{'access'} == 'write')) {
                     return true;
-                } elseif ($access_type == "write" && $module_field_perm->{"access"} == "write") {
+                } elseif ($access_type == 'write' && $module_field_perm->{'access'} == 'write') {
                     return true;
                 } else {
                     return false;
@@ -1595,12 +1604,13 @@ class LAModule extends Model
         } else {
             return false;
         }
+
         return false;
     }
 
     /**
      * Set Default Access for given Module and Role
-     * Helps to set Full Module Access for Super Admin
+     * Helps to set Full Module Access for Super Admin.
      *
      * LAModule::setDefaultRoleAccess($module_id, $role_id);
      *
@@ -1608,16 +1618,16 @@ class LAModule extends Model
      * @param $role_id Role ID
      * @param string $access_type Access Type - full / readonly
      */
-    public static function setDefaultRoleAccess($module_id, $role_id, $access_type = "readonly")
+    public static function setDefaultRoleAccess($module_id, $role_id, $access_type = 'readonly')
     {
-        $module  = null;
+        $module = null;
 
         if (is_string($module_id)) {
-            $module = LAModule::get($module_id);
+            $module = self::get($module_id);
             $module_id = $module->id;
         } else {
-            $module = LAModule::find($module_id);
-            $module = LAModule::get($module->name);
+            $module = self::find($module_id);
+            $module = self::get($module->name);
         }
 
         // Log::debug('LAModule:setDefaultRoleAccess ('.$module_id.', '.$role_id.', '.$access_type.')');
@@ -1628,29 +1638,29 @@ class LAModule extends Model
         $access_create = 0;
         $access_edit = 0;
         $access_delete = 0;
-        $access_fields = "invisible";
+        $access_fields = 'invisible';
 
-        if ($access_type == "full") {
+        if ($access_type == 'full') {
             $access_view = 1;
             $access_create = 1;
             $access_edit = 1;
             $access_delete = 1;
-            $access_fields = "write";
-        } elseif ($access_type == "readonly") {
+            $access_fields = 'write';
+        } elseif ($access_type == 'readonly') {
             $access_view = 1;
             $access_create = 0;
             $access_edit = 0;
             $access_delete = 0;
 
-            $access_fields = "readonly";
+            $access_fields = 'readonly';
         }
 
-        $now = date("Y-m-d H:i:s");
+        $now = date('Y-m-d H:i:s');
 
         // 1. Set Module Access
 
         $module_perm = DB::table('role_la_module')->where('role_id', $role->id)->where('module_id', $module->id)->first();
-        if (!isset($module_perm->id)) {
+        if (! isset($module_perm->id)) {
             DB::insert('insert into role_la_module (role_id, module_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$role->id, $module->id, $access_view, $access_create, $access_edit, $access_delete, $now, $now]);
         } else {
             DB::table('role_la_module')->where('role_id', $role->id)->where('module_id', $module->id)->update(['acc_view' => $access_view, 'acc_create' => $access_create, 'acc_edit' => $access_edit, 'acc_delete' => $access_delete]);
@@ -1661,7 +1671,7 @@ class LAModule extends Model
         foreach ($module->fields as $field) {
             // find role field permission
             $field_perm = DB::table('role_la_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->first();
-            if (!isset($field_perm->id)) {
+            if (! isset($field_perm->id)) {
                 DB::insert('insert into role_la_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field['id'], $access_fields, $now, $now]);
             } else {
                 DB::table('role_la_module_fields')->where('role_id', $role->id)->where('field_id', $field['id'])->update(['access' => $access_fields]);
@@ -1671,7 +1681,7 @@ class LAModule extends Model
 
     /**
      * Set Default Access for given Module Field and Role
-     * Helps to set Full Module Access for Super Admin when new field is created
+     * Helps to set Full Module Access for Super Admin when new field is created.
      *
      * LAModule::setDefaultFieldRoleAccess($field_id, $role_id);
      *
@@ -1679,26 +1689,26 @@ class LAModule extends Model
      * @param $role_id Role ID
      * @param string $access_type Access Type - full / readonly
      */
-    public static function setDefaultFieldRoleAccess($field_id, $role_id, $access_type = "readonly")
+    public static function setDefaultFieldRoleAccess($field_id, $role_id, $access_type = 'readonly')
     {
         $field = LAModuleField::find($field_id);
-        $module = LAModule::get($field->module);
+        $module = self::get($field->module);
 
         $role = DB::table('roles')->where('id', $role_id)->first();
 
-        $access_fields = "invisible";
+        $access_fields = 'invisible';
 
-        if ($access_type == "full") {
-            $access_fields = "write";
-        } elseif ($access_type == "readonly") {
-            $access_fields = "readonly";
+        if ($access_type == 'full') {
+            $access_fields = 'write';
+        } elseif ($access_type == 'readonly') {
+            $access_fields = 'readonly';
         }
 
-        $now = date("Y-m-d H:i:s");
+        $now = date('Y-m-d H:i:s');
 
         // find role field permission
         $field_perm = DB::table('role_la_module_fields')->where('role_id', $role->id)->where('field_id', $field->id)->first();
-        if (!isset($field_perm->id)) {
+        if (! isset($field_perm->id)) {
             DB::insert('insert into role_la_module_fields (role_id, field_id, access, created_at, updated_at) values (?, ?, ?, ?, ?)', [$role->id, $field->id, $access_fields, $now, $now]);
         } else {
             DB::table('role_la_module_fields')->where('role_id', $role->id)->where('field_id', $field->id)->update(['access' => $access_fields]);
@@ -1707,7 +1717,7 @@ class LAModule extends Model
 
     /**
      * Get list of Columns to display in Index Page for a particular Module
-     * Also Filters the columns for Access control
+     * Also Filters the columns for Access control.
      *
      * LAModule::getListingColumns('Employees')
      *
@@ -1719,20 +1729,20 @@ class LAModule extends Model
     {
         $module = null;
         if (is_int($module_id_name)) {
-            $module = LAModule::get($module_id_name);
+            $module = self::get($module_id_name);
         } else {
-            $module = LAModule::where('name', $module_id_name)->first();
+            $module = self::where('name', $module_id_name)->first();
         }
         $listing_cols = LAModuleField::where('module', $module->id)->where('listing_col', 1)->orderBy('sort', 'asc')->get()->toArray();
 
         if ($isObjects) {
-            $id_col = array('label' => 'id', 'colname' => 'id');
+            $id_col = ['label' => 'id', 'colname' => 'id'];
         } else {
             $id_col = 'id';
         }
-        $listing_cols_temp = array($id_col);
+        $listing_cols_temp = [$id_col];
         foreach ($listing_cols as $col) {
-            if (LAModule::hasFieldAccess($module->id, $col['id'])) {
+            if (self::hasFieldAccess($module->id, $col['id'])) {
                 if ($isObjects) {
                     $listing_cols_temp[] = $col;
                 } else {
@@ -1740,12 +1750,13 @@ class LAModule extends Model
                 }
             }
         }
+
         return $listing_cols_temp;
     }
 
     /**
      * Get list of Columns to display in Index Page for a particular Module
-     * Also Filters the columns for Access control
+     * Also Filters the columns for Access control.
      *
      * LAModule::getListingColumns('Employees')
      *
@@ -1758,13 +1769,13 @@ class LAModule extends Model
         $listing_cols = LAModuleField::where('module', $this->id)->where('listing_col', 1)->orderBy('sort', 'asc')->get()->toArray();
 
         if ($isObjects) {
-            $id_col = array('label' => 'id', 'colname' => 'id');
+            $id_col = ['label' => 'id', 'colname' => 'id'];
         } else {
             $id_col = 'id';
         }
-        $listing_cols_temp = array($id_col);
+        $listing_cols_temp = [$id_col];
         foreach ($listing_cols as $col) {
-            if (LAModule::hasFieldAccess($this->id, $col['id'])) {
+            if (self::hasFieldAccess($this->id, $col['id'])) {
                 if ($isObjects) {
                     $listing_cols_temp[] = $col;
                 } else {
@@ -1772,22 +1783,23 @@ class LAModule extends Model
                 }
             }
         }
+
         return $listing_cols_temp;
     }
 
     /**
-    * Update Basic Module Information
-    *
-    * LAModule::update($module_name, $view_col, $icon);
-    *
-    * @param text $module_name Module Name
-    * @param text $view_col View Column Name to be changed
-    * @param text $icon Font Awesome Icon to be changed
-    * @return boolean success Return true if success
-    */
+     * Update Basic Module Information.
+     *
+     * LAModule::update($module_name, $view_col, $icon);
+     *
+     * @param text $module_name Module Name
+     * @param text $view_col View Column Name to be changed
+     * @param text $icon Font Awesome Icon to be changed
+     * @return bool success Return true if success
+     */
     public static function update2($module_name, $view_col, $icon)
     {
-        $module = LAModule::where('name', $module_name)->first();
+        $module = self::where('name', $module_name)->first();
         if (isset($module->id)) {
             $module->view_col = $view_col;
             $module->fa_icon = $icon;
@@ -1798,8 +1810,10 @@ class LAModule extends Model
                 $menu->icon = $icon;
                 $menu->save();
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -1813,14 +1827,14 @@ class LAModule extends Model
     public static function deleteModule($id, $return_response = false)
     {
         $permission_msg = '';
-        $correct_file_perms = "0644";
-        $correct_dir_perms = "0755";
-        $modules = LAModule::all();
+        $correct_file_perms = '0644';
+        $correct_dir_perms = '0755';
+        $modules = self::all();
 
         if (is_numeric($id)) {
-            $module = LAModule::find($id);
+            $module = self::find($id);
         } else {
-            $module = LAModule::where('name', $id)->orWhere('name_db', $id)->first();
+            $module = self::where('name', $id)->orWhere('name_db', $id)->first();
         }
 
         // ===================================================
@@ -1830,53 +1844,53 @@ class LAModule extends Model
         // Migration
         $mfiles = scandir(base_path('database/migrations/'));
         foreach ($mfiles as $mfile) {
-            if (str_contains($mfile, "create_" . $module->name_db . "_table")) {
-                $perms = LAHelper::fileperms(base_path('database/migrations/' . $mfile));
-                if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (str_contains($mfile, 'create_'.$module->name_db.'_table')) {
+                $perms = LAHelper::fileperms(base_path('database/migrations/'.$mfile));
+                if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                     $permission_msg .= 'Please Give permission to database/migrations<br>';
                 }
             }
         }
         // Admin Route
         if (LAHelper::laravel_ver() >= 5.3) {
-            $file_admin_routes = base_path("routes/admin_routes.php");
+            $file_admin_routes = base_path('routes/admin_routes.php');
         } else {
-            $file_admin_routes = base_path("app/Http/admin_routes.php");
+            $file_admin_routes = base_path('app/Http/admin_routes.php');
         }
         if (file_exists($file_admin_routes)) {
             $perms = LAHelper::fileperms($file_admin_routes);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                 $permission_msg .= 'Please Give permission to routes<br>';
             }
         }
         // Models
-        if ($module->model == "User" || $module->model == "Role" || $module->model == "Permission") {
-            $model_file = app_path($module->model . '.php');
+        if ($module->model == 'User' || $module->model == 'Role' || $module->model == 'Permission') {
+            $model_file = app_path($module->model.'.php');
         } else {
-            $model_file = app_path('Models/' . $module->model . '.php');
+            $model_file = app_path('Models/'.$module->model.'.php');
         }
         if (file_exists($model_file)) {
             $perms = LAHelper::fileperms($model_file);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                 $permission_msg .= 'Please Give permission to '.$model_file.'<br>';
             }
         }
         // View Files
-        $views_dir = resource_path('views/la/' . $module->name_db);
+        $views_dir = resource_path('views/la/'.$module->name_db);
         if (file_exists($views_dir)) {
             // Directory
             $perms = LAHelper::fileperms($views_dir);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                 $permission_msg .= 'Please Give permission to '.$views_dir.'<br>';
             }
 
             // Directory Files
             $views = scandir($views_dir);
             foreach ($views as $view) {
-                if ($view != "." && $view != "..") {
-                    $file = $views_dir ."/" . $view;
+                if ($view != '.' && $view != '..') {
+                    $file = $views_dir.'/'.$view;
                     $perms = LAHelper::fileperms($file);
-                    if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+                    if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                         $permission_msg .= 'Please Give permission to '.$file.'<br>';
                     }
                 }
@@ -1884,34 +1898,34 @@ class LAModule extends Model
         }
 
         // Controller
-        $file = app_path('Http/Controllers/LA/' . $module->controller . '.php');
+        $file = app_path('Http/Controllers/LA/'.$module->controller.'.php');
         if (file_exists($file)) {
             $perms = LAHelper::fileperms($file);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                 $permission_msg .= 'Please Give permission to '.$file.'<br>';
             }
         }
         // Observer
-        $file = app_path('Observers/' . $module->model . 'Observer.php');
+        $file = app_path('Observers/'.$module->model.'Observer.php');
         if (file_exists($file)) {
             $perms = LAHelper::fileperms($file);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                 $permission_msg .= 'Please Give permission to '.$file.'<br>';
             }
         }
         // Language file
         $config = CodeGenerator::generateConfig($module->name, $module->icon, false);
-        $langFile = resource_path('lang/en/' . $config->langFile) . ".php";
+        $langFile = resource_path('lang/en/'.$config->langFile).'.php';
         if (file_exists($langFile)) {
             $perms = LAHelper::fileperms($langFile);
-            if (!LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
+            if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
                 $permission_msg .= 'Please Give permission to '.$langFile.'<br>';
             }
         }
 
         // return if need permission
         if ($permission_msg != '') {
-            return redirect()->route(config('laraadmin.adminRoute') . '.la_modules.index', ['modules' => $modules, 'msg' => $permission_msg, 'err_module' => $module->name]);
+            return redirect()->route(config('laraadmin.adminRoute').'.la_modules.index', ['modules' => $modules, 'msg' => $permission_msg, 'err_module' => $module->name]);
         }
 
         // ===================================================
@@ -1931,13 +1945,13 @@ class LAModule extends Model
         }
 
         // Delete Resource Views directory
-        if (file_exists(resource_path('views/la/' . $module->name_db))) {
-            File::cleanDirectory(resource_path('views/la/' . $module->name_db));
+        if (file_exists(resource_path('views/la/'.$module->name_db))) {
+            File::cleanDirectory(resource_path('views/la/'.$module->name_db));
         }
 
         // Delete Controller
-        if (file_exists(app_path('/Http/Controllers/LA/' . $module->controller . '.php'))) {
-            File::delete(app_path('/Http/Controllers/LA/' . $module->controller . '.php'));
+        if (file_exists(app_path('/Http/Controllers/LA/'.$module->controller.'.php'))) {
+            File::delete(app_path('/Http/Controllers/LA/'.$module->controller.'.php'));
         }
 
         // Delete Language File
@@ -1946,30 +1960,32 @@ class LAModule extends Model
         }
         // Modify Migration for Deletion
         // Find existing migration file
-        $fileExistName = "";
+        $fileExistName = '';
         foreach ($mfiles as $mfile) {
-            if (str_contains($mfile, "create_" . $module->name_db . "_table")) {
-                $migrationClassName = ucfirst(Str::camel("create_" . $module->name_db . "_table"));
+            if (str_contains($mfile, 'create_'.$module->name_db.'_table')) {
+                $migrationClassName = ucfirst(Str::camel('create_'.$module->name_db.'_table'));
 
-                $templateDirectory = base_path("/app/Stubs");
-                $migrationData = file_get_contents($templateDirectory . "/migration_removal.stub");
-                $migrationData = str_replace("__migration_class_name__", $migrationClassName, $migrationData);
-                $migrationData = str_replace("__db_table_name__", $module->name_db, $migrationData);
-                file_put_contents(base_path('database/migrations/' . $mfile), $migrationData);
+                $templateDirectory = base_path('/app/Stubs');
+                $migrationData = file_get_contents($templateDirectory.'/migration_removal.stub');
+                $migrationData = str_replace('__migration_class_name__', $migrationClassName, $migrationData);
+                $migrationData = str_replace('__db_table_name__', $module->name_db, $migrationData);
+                file_put_contents(base_path('database/migrations/'.$mfile), $migrationData);
             }
         }
 
         // Delete Admin Routes
-        while (LAHelper::getLineWithString($file_admin_routes, "LA\\" . $module->controller) != -1) {
-            $line = LAHelper::getLineWithString($file_admin_routes, "LA\\" . $module->controller);
-            $fileData = file_get_contents($file_admin_routes);
-            $fileData = str_replace($line, "", $fileData); ///\r|\n/
-            file_put_contents($file_admin_routes, $fileData);
+        while (LAHelper::getLineWithString($file_admin_routes, 'LA\\'.$module->controller) != -1) {
+            $line = LAHelper::getLineWithString($file_admin_routes, 'LA\\'.$module->controller);
+            if (is_string($line)) {
+                $fileData = file_get_contents($file_admin_routes);
+                $fileData = str_replace($line, '', $fileData); // /\r|\n/
+                file_put_contents($file_admin_routes, $fileData);
+            }
         }
-        if (LAHelper::getLineWithString($file_admin_routes, "=== " . $module->name . " ===") != -1) {
-            $line = LAHelper::getLineWithString($file_admin_routes, "=== " . $module->name . " ===");
+        if (LAHelper::getLineWithString($file_admin_routes, '=== '.$module->name.' ===') != -1) {
+            $line = LAHelper::getLineWithString($file_admin_routes, '=== '.$module->name.' ===');
             $fileData = file_get_contents($file_admin_routes);
-            $fileData = str_replace($line."", "", $fileData); ///\r|\n/
+            $fileData = str_replace($line.'', '', $fileData); // /\r|\n/
             file_put_contents($file_admin_routes, $fileData);
         }
 
@@ -1979,15 +1995,15 @@ class LAModule extends Model
         }
 
         // Delete Observer
-        if (file_exists(app_path('/Observers/' . $module->model . 'Observer.php'))) {
-            File::delete(app_path('/Observers/' . $module->model . 'Observer.php'));
+        if (file_exists(app_path('/Observers/'.$module->model.'Observer.php'))) {
+            File::delete(app_path('/Observers/'.$module->model.'Observer.php'));
         }
         if (file_exists(app_path('Providers/LAProvider.php'))) {
             $file_observer = app_path('Providers/LAProvider.php');
-            if (LAHelper::getLineWithString($file_observer, "\\App\\Observers\\" . $module->model) != -1) {
-                $line = LAHelper::getLineWithString($file_observer, "\\App\\Observers\\" . $module->model);
+            if (LAHelper::getLineWithString($file_observer, '\\App\\Observers\\'.$module->model) != -1) {
+                $line = LAHelper::getLineWithString($file_observer, '\\App\\Observers\\'.$module->model);
                 $observerfileData1 = file_get_contents($file_observer);
-                $observerfileData = str_replace($line."", "", $observerfileData1); ///\r|\n/
+                $observerfileData = str_replace($line.'', '', $observerfileData1); // /\r|\n/
                 file_put_contents($file_observer, $observerfileData);
             }
         }
@@ -2002,36 +2018,36 @@ class LAModule extends Model
         $module->delete();
 
         if ($return_response) {
-            return array('modules' => $modules,'msg' => $permission_msg, 'err_module' => $module);
+            return ['modules' => $modules, 'msg' => $permission_msg, 'err_module' => $module];
         } else {
             return true;
         }
     }
 
     /**
-    * Remove Ultiselect values when deleted
-    *
-    * LAModule::clearMultiselects($module_name, $id);
-    *
-    * @param text $module_name Module Name
-    * @param text $id View Record id
-    * @return boolean success Return true if success
-    */
+     * Remove Ultiselect values when deleted.
+     *
+     * LAModule::clearMultiselects($module_name, $id);
+     *
+     * @param text $module_name Module Name
+     * @param text $id View Record id
+     * @return bool success Return true if success
+     */
     public static function clearMultiselects($module_name, $id)
     {
         Log::debug("$module_name::deleting('$id')");
 
-        $module = LAModule::where('name', $module_name)->first();
+        $module = self::where('name', $module_name)->first();
 
         if (isset($module->id)) {
             $fields = LAModuleField::where('field_type', '15')->where('popup_vals', '@'.$module->name_db)->get();
 
             foreach ($fields as $field) {
-                $field_module = LAModule::find($field->module);
+                $field_module = self::find($field->module);
                 $existing_records = DB::table($field_module->name_db)->where($field->colname, 'LIKE', '%"'.$id.'"%')->get();
                 foreach ($existing_records as $record) {
                     $colname = $field->colname;
-                    $record_array = array();
+                    $record_array = [];
                     $json = json_decode($record->$colname);
                     foreach ($json as $key => $value) {
                         if ($value != $id) {
@@ -2042,8 +2058,10 @@ class LAModule extends Model
                     DB::table($field_module->name_db)->where('id', $record->id)->update([$field->colname => $new_record]);
                 }
             }
+
             return true;
         }
+
         return false;
     }
 }

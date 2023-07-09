@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -10,19 +10,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Laraadmin\Entrust\EntrustFacade as Entrust;
-use App\Helpers\LAHelper;
-
-use App\Models\LALog;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use App\Models\Role;
+use Laraadmin\Entrust\EntrustFacade as Entrust;
 
-/**
- * Class Menu
- * @package App\Models
+/***
+ * LaraAdmin Menu
  *
  * Menu Model which looks after Menus in Sidebar and Navbar
  */
@@ -47,7 +39,7 @@ class LAMenu extends Model
      */
     public function has_role_access($role_id)
     {
-        if (!Entrust::hasRole('SUPER_ADMIN')) {
+        if (! Entrust::hasRole('SUPER_ADMIN')) {
             $role_id = intval($role_id);
             $roles = $this->roles;
             foreach ($roles as $role) {
@@ -55,6 +47,7 @@ class LAMenu extends Model
                     return true;
                 }
             }
+
             return false;
         } else {
             return true;
@@ -66,32 +59,32 @@ class LAMenu extends Model
      */
     public function set_access_to($role_ids)
     {
-        if (is_string($role_ids) && $role_ids == "all") {
+        if (is_string($role_ids) && $role_ids == 'all') {
             $roles = Role::all();
-            $role_ids = array();
+            $role_ids = [];
             foreach ($roles as $role) {
-                $role_ids[] = "".$role->id;
+                $role_ids[] = ''.$role->id;
             }
-        } elseif (is_string($role_ids) && $role_ids == "remove_all") {
-            $role_ids = array();
+        } elseif (is_string($role_ids) && $role_ids == 'remove_all') {
+            $role_ids = [];
         }
         if (is_array($role_ids)) {
             $roles = Role::all();
             foreach ($roles as $role) {
-                if (in_array("".$role->id, $role_ids)) {
-                    if (!$this->has_role_access($role->id)) {
+                if (in_array(''.$role->id, $role_ids)) {
+                    if (! $this->has_role_access($role->id)) {
                         // Give Access
                         $this->roles()->attach($role->id);
 
                         // Add LALog
-                        LALog::make("Roles.MENU_ROLE_ATTACHED", [
+                        LALog::make('Roles.MENU_ROLE_ATTACHED', [
                             'title' => "'".$this->name."' - Menu '".$role->name."' - role Attached by - ".Auth::user()->name,
                             'module_id' => 'Roles',
                             'context_id' => $this->id,
                             'context2_id' => $role->id,
-                            'content' => "{}",
+                            'content' => '{}',
                             'user_id' => Auth::user()->id,
-                            'notify_to' => "[]"
+                            'notify_to' => '[]'
                         ]);
                     }
                 } elseif ($this->has_role_access($role->id)) {
@@ -99,14 +92,14 @@ class LAMenu extends Model
                     $this->roles()->detach($role->id);
 
                     // Add LALog
-                    LALog::make("Roles.MENU_ROLE_DETACHED", [
+                    LALog::make('Roles.MENU_ROLE_DETACHED', [
                         'title' => "'".$this->name."' - Menu '".$role->name."' - role Detached by - ".Auth::user()->name,
                         'module_id' => 'Roles',
                         'context_id' => $this->id,
                         'context2_id' => $role->id,
-                        'content' => "{}",
+                        'content' => '{}',
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
                 }
             }
@@ -118,7 +111,7 @@ class LAMenu extends Model
      */
     public function user_access($user_id)
     {
-        if ($this->type == "custom") {
+        if ($this->type == 'custom') {
             $access = false;
             $user = User::find($user_id);
             foreach ($user->roles as $role) {
@@ -126,6 +119,7 @@ class LAMenu extends Model
                     $access = true;
                 }
             }
+
             return $access;
         } else {
             return true;

@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -10,19 +10,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use App\Helpers\LAHelper;
 
-/**
- * Class LAConfig
- * @package App\Models
- *
- * Config Class looks after LaraAdmin configurations.
- * Check details on https://laraadmin.com/docs
+/***
+ * LaraAdmin Config Class looks after LaraAdmin configurations
+ * Check details on https://laraadmin.com/docs.
  */
 class LAConfig extends Model
 {
@@ -35,7 +26,7 @@ class LAConfig extends Model
     protected $guarded = [];
 
     /**
-     * Get configuration string value by using key such as 'sitename'
+     * Get configuration string value by using key such as 'sitename'.
      *
      * LAConfig::getByKey('sitename');
      *
@@ -44,7 +35,7 @@ class LAConfig extends Model
      */
     public static function getByKey($key)
     {
-        $row = LAConfig::where('key', $key)->first();
+        $row = self::where('key', $key)->first();
         if (isset($row->value)) {
             return $row->value;
         } else {
@@ -53,7 +44,7 @@ class LAConfig extends Model
     }
 
     /**
-     * Get all configuration as object
+     * Get all configuration as object.
      *
      * LAConfig::getAll();
      *
@@ -61,11 +52,12 @@ class LAConfig extends Model
      */
     public static function getAll()
     {
-        $configs = array();
-        $configs_db = LAConfig::all();
+        $configs = [];
+        $configs_db = self::all();
         foreach ($configs_db as $row) {
             $configs[$row->key] = $row->value;
         }
-        return (object)$configs;
+
+        return (object) $configs;
     }
 }

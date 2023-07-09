@@ -1,15 +1,15 @@
 <?php
-/**
+/***
  * Migration generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use App\Models\LAModule;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRolesTable extends Migration
 {
@@ -20,71 +20,71 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        LAModule::generate("Roles", 'roles', 'name', 'fa-user-plus', [
+        LAModule::generate('Roles', 'roles', 'name', 'fa-user-plus', [
             [
-                "colname" => "name",
-                "label" => "Name",
-                "field_type" => "Name",
-                "unique" => true,
-                "defaultvalue" => "",
-                "minlength" => 1,
-                "maxlength" => 250,
-                "required" => true,
-                "listing_col" => true
+                'colname' => 'name',
+                'label' => 'Name',
+                'field_type' => 'Name',
+                'unique' => true,
+                'defaultvalue' => '',
+                'minlength' => 1,
+                'maxlength' => 250,
+                'required' => true,
+                'listing_col' => true
             ], [
-                "colname" => "display_name",
-                "label" => "Display Name",
-                "field_type" => "String",
-                "unique" => false,
-                "defaultvalue" => "",
-                "minlength" => 0,
-                "maxlength" => 250,
-                "required" => true,
-                "listing_col" => true
+                'colname' => 'display_name',
+                'label' => 'Display Name',
+                'field_type' => 'String',
+                'unique' => false,
+                'defaultvalue' => '',
+                'minlength' => 0,
+                'maxlength' => 250,
+                'required' => true,
+                'listing_col' => true
             ], [
-                "colname" => "description",
-                "label" => "Description",
-                "field_type" => "Textarea",
-                "unique" => false,
-                "defaultvalue" => "",
-                "minlength" => 0,
-                "maxlength" => 1000,
-                "required" => false,
-                "listing_col" => false
+                'colname' => 'description',
+                'label' => 'Description',
+                'field_type' => 'Textarea',
+                'unique' => false,
+                'defaultvalue' => '',
+                'minlength' => 0,
+                'maxlength' => 1000,
+                'required' => false,
+                'listing_col' => false
             ], [
-                "colname" => "parent",
-                "label" => "Parent Role",
-                "field_type" => "Dropdown",
-                "unique" => false,
-                "defaultvalue" => NULL,
-                "required" => false,
-                "listing_col" => true,
-                "popup_vals" => "@roles",
+                'colname' => 'parent',
+                'label' => 'Parent Role',
+                'field_type' => 'Dropdown',
+                'unique' => false,
+                'defaultvalue' => null,
+                'required' => false,
+                'listing_col' => true,
+                'popup_vals' => '@roles',
             ], [
-                "colname" => "context_type",
-                "label" => "Context Type",
-                "field_type" => "Dropdown",
-                "unique" => false,
-                "defaultvalue" => "Employee",
-                "minlength" => 0,
-                "maxlength" => 0,
-                "required" => false,
-                "listing_col" => true,
-                "popup_vals" => ["Employee", "Customer"],
+                'colname' => 'context_type',
+                'label' => 'Context Type',
+                'field_type' => 'Dropdown',
+                'unique' => false,
+                'defaultvalue' => 'Employee',
+                'minlength' => 0,
+                'maxlength' => 0,
+                'required' => false,
+                'listing_col' => true,
+                'popup_vals' => ['Employee', 'Customer'],
             ], [
-                "colname" => "dept",
-                "label" => "Department",
-                "field_type" => "Dropdown",
-                "unique" => false,
-                "defaultvalue" => "1",
-                "minlength" => 0,
-                "maxlength" => 0,
-                "required" => false,
-                "listing_col" => true,
-                "popup_vals" => "@departments",
+                'colname' => 'dept',
+                'label' => 'Department',
+                'field_type' => 'Dropdown',
+                'unique' => false,
+                'defaultvalue' => '1',
+                'minlength' => 0,
+                'maxlength' => 0,
+                'required' => false,
+                'listing_col' => true,
+                'popup_vals' => '@departments',
             ]
         ]);
-        
+
         /*
         LAModule::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
 

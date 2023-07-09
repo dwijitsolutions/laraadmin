@@ -1,20 +1,16 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Observers;
 
-use Illuminate\Support\Facades\Log;
-use App\Models\LAModule;
-use App\Models\LAModuleField;
-use Illuminate\Support\Facades\DB;
-
 use App\Models\Backup;
+use App\Models\LAModule;
 
 class BackupObserver
 {

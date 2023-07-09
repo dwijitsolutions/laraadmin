@@ -1,35 +1,31 @@
 <?php
-/**
+/***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use User;
-
-use App\Models\LAModule;
 use App\Models\LAMenu;
+use App\Models\LAModule;
 use App\Models\Role;
 use DateTime;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use User;
 
-/**
- * Class LAHelper
- * @package App\Helpers
- *
- * This is LaraAdmin Helper class contains methods required for Admin Panel functionality.
+/***
+ * LaraAdmin Helper
  */
 class LAHelper
 {
     /**
-     * Gives various names of Module in Object like label, table, model, controller, singular
+     * Gives various names of Module in Object like label, table, model, controller, singular.
      *
      * $names = LAHelper::generateModuleNames($module_name);
      *
@@ -39,9 +35,9 @@ class LAHelper
      */
     public static function generateModuleNames($module_name, $icon)
     {
-        $array = array();
+        $array = [];
         $module_name = trim($module_name);
-        $module_name = str_replace(" ", "_", $module_name);
+        $module_name = str_replace(' ', '_', $module_name);
 
         $config = CodeGenerator::generateConfig($module_name, $icon, false);
 
@@ -63,13 +59,13 @@ class LAHelper
         // $array['singular_l'] = strtolower(Str::singular($module_name));
         // $array['singular_c'] = ucfirst(Str::singular($module_name));
 
-        return (object)$array;
+        return (object) $array;
     }
 
     /**
      * Get list of Database tables excluding LaraAdmin Context tables like
      * backups, la_configs, la_menus, migrations, la_modules, la_module_fields, la_module_field_types
-     * password_resets, permissions, permission_role, role_la_module, role_la_module_fields, role_user
+     * password_resets, permissions, permission_role, role_la_module, role_la_module_fields, role_user.
      *
      * Method currently supports MySQL and SQLite databases
      *
@@ -82,35 +78,35 @@ class LAHelper
      */
     public static function getDBTables($remove_tables = [])
     {
-        if (env('DB_CONNECTION') == "sqlite") {
+        if (env('DB_CONNECTION') == 'sqlite') {
             $tables_sqlite = DB::select('select * from sqlite_master where type="table"');
-            $tables = array();
+            $tables = [];
             foreach ($tables_sqlite as $table) {
                 if ($table->tbl_name != 'sqlite_sequence') {
                     $tables[] = $table->tbl_name;
                 }
             }
-        } elseif (env('DB_CONNECTION') == "pgsql") {
+        } elseif (env('DB_CONNECTION') == 'pgsql') {
             $tables_pgsql = DB::select("SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema = 'public' ORDER BY table_name;");
-            $tables = array();
+            $tables = [];
             foreach ($tables_pgsql as $table) {
                 $tables[] = $table->table_name;
             }
-        } elseif (env('DB_CONNECTION') == "mysql") {
+        } elseif (env('DB_CONNECTION') == 'mysql') {
             $tables = DB::select('SHOW TABLES');
         } else {
             $tables = DB::select('SHOW TABLES');
         }
 
-        $tables_out = array();
+        $tables_out = [];
         foreach ($tables as $table) {
-            $table = (array)$table;
+            $table = (array) $table;
             $tables_out[] = array_values($table)[0];
         }
         if (in_array(-1, $remove_tables)) {
-            $remove_tables2 = array();
+            $remove_tables2 = [];
         } else {
-            $remove_tables2 = array(
+            $remove_tables2 = [
                 'backups',
                 'la_configs',
                 'la_menus',
@@ -124,13 +120,13 @@ class LAHelper
                 'role_la_module',
                 'role_la_module_fields',
                 'role_user'
-            );
+            ];
         }
         $remove_tables = array_merge($remove_tables, $remove_tables2);
         $remove_tables = array_unique($remove_tables);
         $tables_out = array_diff($tables_out, $remove_tables);
 
-        $tables_out2 = array();
+        $tables_out2 = [];
         foreach ($tables_out as $table) {
             $tables_out2[$table] = $table;
         }
@@ -139,7 +135,7 @@ class LAHelper
     }
 
     /**
-     * Get Array of All Modules
+     * Get Array of All Modules.
      *
      * $modules = LAHelper::getModuleNames([]);
      *
@@ -150,13 +146,13 @@ class LAHelper
     {
         $modules = LAModule::all();
 
-        $modules_out = array();
+        $modules_out = [];
         foreach ($modules as $module) {
             $modules_out[] = $module->name;
         }
         $modules_out = array_diff($modules_out, $remove_modules);
 
-        $modules_out2 = array();
+        $modules_out2 = [];
         foreach ($modules_out as $module) {
             $modules_out2[$module] = $module;
         }
@@ -166,7 +162,7 @@ class LAHelper
 
     /**
      * Method to parse the dropdown, Multiselect, Taginput and radio values which are linked with
-     * either other tables via "@" e.g. "@employees" or string array of values
+     * either other tables via "@" e.g. "@employees" or string array of values.
      *
      * This function parse the either case and gives output in html labels.
      * Used only in show.blade.php of modules
@@ -179,24 +175,25 @@ class LAHelper
     public static function parseValues($value)
     {
         // return $value;
-        $valueOut = "";
+        $valueOut = '';
         if (strpos($value, '[') !== false) {
             $arr = json_decode($value);
             foreach ($arr as $key) {
-                $valueOut .= "<div class='label label-primary'>" . $key . "</div> ";
+                $valueOut .= "<div class='label label-primary'>".$key.'</div> ';
             }
         } elseif (strpos($value, ',') !== false) {
-            $arr = array_map('trim', explode(",", $value));
+            $arr = array_map('trim', explode(',', $value));
             foreach ($arr as $key) {
-                $valueOut .= "<div class='label label-primary'>" . $key . "</div> ";
+                $valueOut .= "<div class='label label-primary'>".$key.'</div> ';
             }
         } elseif (strpos($value, '@') !== false) {
-            $valueOut .= "<b data-toggle='tooltip' data-placement='top' title='From " . str_replace("@", "", $value) . " table' class='text-primary'>" . $value . "</b>";
-        } elseif ($value == "") {
-            $valueOut .= "";
+            $valueOut .= "<b data-toggle='tooltip' data-placement='top' title='From ".str_replace('@', '', $value)." table' class='text-primary'>".$value.'</b>';
+        } elseif ($value == '') {
+            $valueOut .= '';
         } else {
-            $valueOut = "<div class='label label-primary'>" . $value . "</div> ";
+            $valueOut = "<div class='label label-primary'>".$value.'</div> ';
         }
+
         return $valueOut;
     }
 
@@ -214,15 +211,15 @@ class LAHelper
         if ($commandObject) {
             $commandObject->$type($text);
         } else {
-            if ($type == "line") {
-                $type = "info";
+            if ($type == 'line') {
+                $type = 'info';
             }
             Log::$type($text);
         }
     }
 
     /**
-     * Method copies folder recursively into another
+     * Method copies folder recursively into another.
      *
      * LAHelper::recurse_copy("", "");
      *
@@ -235,12 +232,12 @@ class LAHelper
         @mkdir($dst, 0777, true);
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
-                if (is_dir($src . '/' . $file)) {
-                    LAHelper::recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                if (is_dir($src.'/'.$file)) {
+                    self::recurse_copy($src.'/'.$file, $dst.'/'.$file);
                 } else {
                     // ignore files
-                    if (!in_array($file, [".DS_Store"])) {
-                        copy($src . '/' . $file, $dst . '/' . $file);
+                    if (! in_array($file, ['.DS_Store'])) {
+                        copy($src.'/'.$file, $dst.'/'.$file);
                     }
                 }
             }
@@ -249,7 +246,7 @@ class LAHelper
     }
 
     /**
-     * Method deletes folder and its content
+     * Method deletes folder and its content.
      *
      * LAHelper::recurse_delete("");
      *
@@ -260,11 +257,11 @@ class LAHelper
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (is_dir($dir . "/" . $object)) {
-                        LAHelper::recurse_delete($dir . "/" . $object);
+                if ($object != '.' && $object != '..') {
+                    if (is_dir($dir.'/'.$object)) {
+                        self::recurse_delete($dir.'/'.$object);
                     } else {
-                        unlink($dir . "/" . $object);
+                        unlink($dir.'/'.$object);
                     }
                 }
             }
@@ -273,7 +270,7 @@ class LAHelper
     }
 
     /**
-     * Generate Random Password
+     * Generate Random Password.
      *
      * $password = LAHelper::gen_password();
      *
@@ -289,21 +286,22 @@ class LAHelper
         $length = rand($chars_min, $chars_max);
         $selection = 'aeuoyibcdfghjklmnpqrstvwxz';
         if ($include_numbers) {
-            $selection .= "1234567890";
+            $selection .= '1234567890';
         }
         if ($include_special_chars) {
-            $selection .= "!@\"#$%&[]{}?|";
+            $selection .= '!@"#$%&[]{}?|';
         }
-        $password = "";
+        $password = '';
         for ($i = 0; $i < $length; $i++) {
             $current_letter = $use_upper_case ? (rand(0, 1) ? strtoupper($selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))]) : $selection[(rand() % strlen($selection))];
             $password .= $current_letter;
         }
+
         return $password;
     }
 
     /**
-     * Get url of image by using $upload_id
+     * Get url of image by using $upload_id.
      *
      * LAHelper::img($upload_id);
      *
@@ -314,14 +312,14 @@ class LAHelper
     {
         $upload = \App\Models\Upload::find($upload_id);
         if (isset($upload->id)) {
-            return url("files/" . $upload->hash . DIRECTORY_SEPARATOR . $upload->name);
+            return url('files/'.$upload->hash.DIRECTORY_SEPARATOR.$upload->name);
         } else {
-            return "";
+            return '';
         }
     }
 
     /**
-     * Get Thumbnail image path of Uploaded image
+     * Get Thumbnail image path of Uploaded image.
      *
      * LAHelper::createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height);
      *
@@ -345,14 +343,14 @@ class LAHelper
         $dest_x = intval(($thumbnail_width - $new_width) / 2);
         $dest_y = intval(($thumbnail_height - $new_height) / 2);
         if ($original_type === 1) {
-            $imgt = "ImageGIF";
-            $imgcreatefrom = "ImageCreateFromGIF";
+            $imgt = 'ImageGIF';
+            $imgcreatefrom = 'ImageCreateFromGIF';
         } elseif ($original_type === 2) {
-            $imgt = "ImageJPEG";
-            $imgcreatefrom = "ImageCreateFromJPEG";
+            $imgt = 'ImageJPEG';
+            $imgcreatefrom = 'ImageCreateFromJPEG';
         } elseif ($original_type === 3) {
-            $imgt = "ImagePNG";
-            $imgcreatefrom = "ImageCreateFromPNG";
+            $imgt = 'ImagePNG';
+            $imgcreatefrom = 'ImageCreateFromPNG';
         } else {
             return false;
         }
@@ -371,12 +369,13 @@ class LAHelper
         }
         imagecopyresampled($new_image, $old_image, $dest_x, $dest_y, 0, 0, $new_width, $new_height, $original_width, $original_height);
         $imgt($new_image, $thumbpath);
+
         return file_exists($thumbpath);
     }
 
     /**
      * Print the menu editor view.
-     * This needs to be done recursively
+     * This needs to be done recursively.
      *
      * LAHelper::print_menu_editor($menu)
      *
@@ -385,40 +384,41 @@ class LAHelper
      */
     public static function print_menu_editor($menu)
     {
-        $editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute') . '.la_menus.destroy', $menu->id], 'method' => 'delete', 'style' => 'display:inline']);
+        $editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute').'.la_menus.destroy', $menu->id], 'method' => 'delete', 'style' => 'display:inline']);
         $editing .= '<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-times"></i></button>';
         $editing .= \Collective\Html\FormFacade::close();
-        $editing .= '<a href="'.url(config('laraadmin.adminRoute') . '/la_menus/'.$menu->id).'" class="btn btn-xs btn-success pull-right"><i class="fa fa-key"></i></a>';
-        if ($menu->type != "module") {
-            $info = (object)array();
+        $editing .= '<a href="'.url(config('laraadmin.adminRoute').'/la_menus/'.$menu->id).'" class="btn btn-xs btn-success pull-right"><i class="fa fa-key"></i></a>';
+        if ($menu->type != 'module') {
+            $info = (object) [];
             $info->id = $menu->id;
             $info->name = $menu->name;
             $info->url = $menu->url;
             $info->type = $menu->type;
             $info->icon = $menu->icon;
 
-            $editing .= '<a class="editMenuBtn btn btn-xs btn-warning pull-right" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
+            $editing .= '<a class="editMenuBtn btn btn-xs btn-warning pull-right" info=\''.json_encode($info).'\'><i class="fa fa-edit"></i></a>';
         }
-        $str = '<li class="dd-item dd3-item" data-id="' . $menu->id . '">
+        $str = '<li class="dd-item dd3-item" data-id="'.$menu->id.'">
 			<div class="dd-handle dd3-handle"></div>
-			<div class="dd3-content"><i class="fa ' . $menu->icon . '"></i> ' . $menu->name . ' ' . $editing . '</div>';
+			<div class="dd3-content"><i class="fa '.$menu->icon.'"></i> '.$menu->name.' '.$editing.'</div>';
 
-        $childrens = LAMenu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+        $childrens = LAMenu::where('parent', $menu->id)->orderBy('hierarchy', 'asc')->get();
 
         if (count($childrens) > 0) {
             $str .= '<ol class="dd-list">';
             foreach ($childrens as $children) {
-                $str .= LAHelper::print_menu_editor($children);
+                $str .= self::print_menu_editor($children);
             }
             $str .= '</ol>';
         }
         $str .= '</li>';
+
         return $str;
     }
 
-   /**
+    /**
      * Print the sidebar menu view.
-     * This needs to be done recursively
+     * This needs to be done recursively.
      *
      * LAHelper::print_menu($menu)
      *
@@ -427,32 +427,32 @@ class LAHelper
      */
     public static function print_menu($menu, $active = false)
     {
-        $childrens = LAMenu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+        $childrens = LAMenu::where('parent', $menu->id)->orderBy('hierarchy', 'asc')->get();
 
-        $str = "";
-        $treeview = "";
-        $subviewSign = "";
+        $str = '';
+        $treeview = '';
+        $subviewSign = '';
         if (count($childrens)) {
-            $treeview = " class=\"treeview\"";
+            $treeview = ' class="treeview"';
             $subviewSign = '<i class="fa fa-angle-left pull-right"></i>';
         }
         $active_str = '';
         if ($active) {
             $active_str = 'class="active"';
         }
-        $url = "#";
-        if ($menu->url != "#") {
-            $url = url(config("laraadmin.adminRoute") . '/' . $menu->url);
+        $url = '#';
+        if ($menu->url != '#') {
+            $url = url(config('laraadmin.adminRoute').'/'.$menu->url);
         }
         $ajaxload = config('laraadmin.ajaxload');
-        if ($menu->url == "#" || $menu->name == "Messages" || $menu->name == "Dashboard") {
-            $ajaxload = "";
+        if ($menu->url == '#' || $menu->name == 'Messages' || $menu->name == 'Dashboard') {
+            $ajaxload = '';
         }
         if ($menu->user_access(Auth::User()->id)) {
             if (count($childrens)) {
                 $access = false;
                 foreach ($childrens as $children) {
-                    if ($children->type == "custom") {
+                    if ($children->type == 'custom') {
                         if ($menu->user_access(Auth::User()->id)) {
                             $access = true;
                         }
@@ -464,25 +464,25 @@ class LAHelper
                     }
                 }
                 if ($access) {
-                    $str = '<li' . $treeview . ' ' . $active_str . '><a '.$ajaxload.' href="' . $url . '"><i class="fa ' . $menu->icon . '"></i> <span>' . LAHelper::real_module_name($menu->name) . '</span> ' . $subviewSign . '</a>';
+                    $str = '<li'.$treeview.' '.$active_str.'><a '.$ajaxload.' href="'.$url.'"><i class="fa '.$menu->icon.'"></i> <span>'.self::real_module_name($menu->name).'</span> '.$subviewSign.'</a>';
                 } else {
                     $str = '';
                 }
             } else {
-                $str = '<li' . $treeview . ' ' . $active_str . '><a '.$ajaxload.' href="' . $url . '"><i class="fa ' . $menu->icon . '"></i> <span>' . LAHelper::real_module_name($menu->name) . '</span> ' . $subviewSign . '</a>';
+                $str = '<li'.$treeview.' '.$active_str.'><a '.$ajaxload.' href="'.$url.'"><i class="fa '.$menu->icon.'"></i> <span>'.self::real_module_name($menu->name).'</span> '.$subviewSign.'</a>';
             }
 
             if (count($childrens)) {
                 $str .= '<ul class="treeview-menu">';
                 foreach ($childrens as $children) {
-                    if ($children->type == "custom") {
+                    if ($children->type == 'custom') {
                         if ($menu->user_access(Auth::User()->id)) {
-                            $str .= LAHelper::print_menu($children);
+                            $str .= self::print_menu($children);
                         }
                     } else {
                         $module = LAModule::get($children->url);
                         if (LAModule::hasAccess($module->id)) {
-                            $str .= LAHelper::print_menu($children);
+                            $str .= self::print_menu($children);
                         }
                     }
                 }
@@ -490,12 +490,13 @@ class LAHelper
             }
             $str .= '</li>';
         }
+
         return $str;
     }
 
     /**
      * Print the top navbar menu view.
-     * This needs to be done recursively
+     * This needs to be done recursively.
      *
      * LAHelper::print_menu_topnav($menu)
      *
@@ -505,14 +506,14 @@ class LAHelper
      */
     public static function print_menu_topnav($menu, $active = false)
     {
-        $childrens = LAMenu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+        $childrens = LAMenu::where('parent', $menu->id)->orderBy('hierarchy', 'asc')->get();
 
-        $treeview = "";
-        $treeview2 = "";
-        $subviewSign = "";
+        $treeview = '';
+        $treeview2 = '';
+        $subviewSign = '';
         if (count($childrens)) {
-            $treeview = " class=\"dropdown\"";
-            $treeview2 = " class=\"dropdown-toggle\" data-toggle=\"dropdown\"";
+            $treeview = ' class="dropdown"';
+            $treeview2 = ' class="dropdown-toggle" data-toggle="dropdown"';
             $subviewSign = ' <span class="caret"></span>';
         }
         $active_str = '';
@@ -520,74 +521,73 @@ class LAHelper
             $active_str = 'class="active"';
         }
 
-        $str = '<li ' . $treeview . '' . $active_str . '><a ' . $treeview2 . ' href="' . url(config("laraadmin.adminRoute") . '/' . $menu->url) . '">' . LAHelper::real_module_name($menu->name) . $subviewSign . '</a>';
+        $str = '<li '.$treeview.''.$active_str.'><a '.$treeview2.' href="'.url(config('laraadmin.adminRoute').'/'.$menu->url).'">'.self::real_module_name($menu->name).$subviewSign.'</a>';
 
         if (count($childrens)) {
             $str .= '<ul class="dropdown-menu" role="menu">';
             foreach ($childrens as $children) {
-                $str .= LAHelper::print_menu_topnav($children);
+                $str .= self::print_menu_topnav($children);
             }
             $str .= '</ul>';
         }
         $str .= '</li>';
+
         return $str;
     }
 
     /**
-     * Get Menu for User
+     * Get Menu for User.
      */
     public static function get_user_menu($user)
     {
-        $menuItems = LAMenu::where("parent", 0)->orderBy('hierarchy', 'asc')->get();
-        $menuList = array();
+        $menuItems = LAMenu::where('parent', 0)->orderBy('hierarchy', 'asc')->get();
+        $menuList = [];
         foreach ($menuItems as $menu) {
-            if ($menu->type == "module") {
+            if ($menu->type == 'module') {
                 $temp_module_obj = LAModule::get($menu->name);
-                if (LAModule::hasAccess($temp_module_obj->id, "view", $user->id)) {
-                    if (isset($module->id) && $module->name == $menu->name) {
-                        $menuList[] = LAHelper::get_menu($menu, $user);
-                    } else {
-                        $menuList[] = LAHelper::get_menu($menu, $user);
-                    }
+                if (LAModule::hasAccess($temp_module_obj->id, 'view', $user->id)) {
+                    $menuList[] = self::get_menu($menu, $user);
                 }
             } else {
                 if ($menu->user_access($user->id)) {
-                    $menuList[] = LAHelper::get_menu($menu, $user);
+                    $menuList[] = self::get_menu($menu, $user);
                 }
             }
         }
+
         return $menuList;
     }
+
     /**
-     * Get menu data
+     * Get menu data.
      */
     public static function get_menu($menu, $user)
     {
-        $childrens = LAMenu::where("parent", $menu->id)->orderBy('hierarchy', 'asc')->get();
+        $childrens = LAMenu::where('parent', $menu->id)->orderBy('hierarchy', 'asc')->get();
 
-        if ($menu->url != "#") {
-            $menu->url = url(config("laraadmin.adminRoute") . '/' . $menu->url);
+        if ($menu->url != '#') {
+            $menu->url = url(config('laraadmin.adminRoute').'/'.$menu->url);
         }
         $menu->is_ajaxload = true;
-        if ($menu->url == "#" || $menu->name == "Messages") {
+        if ($menu->url == '#' || $menu->name == 'Messages') {
             $menu->is_ajaxload = false;
         }
 
         if (count($childrens)) {
-            $menu_childrens = array();
+            $menu_childrens = [];
             foreach ($childrens as $children) {
-                if ($children->type == "custom") {
+                if ($children->type == 'custom') {
                     if ($children->user_access($user->id)) {
-                        $menu_childrens[] = LAHelper::get_menu($children, $user);
+                        $menu_childrens[] = self::get_menu($children, $user);
                     }
                 } else {
                     $module = LAModule::get($children->url);
                     if (isset($module->id)) {
-                        if (LAModule::hasAccess($module->id, "view", $user->id)) {
-                            $menu_childrens[] = LAHelper::get_menu($children, $user);
+                        if (LAModule::hasAccess($module->id, 'view', $user->id)) {
+                            $menu_childrens[] = self::get_menu($children, $user);
                         }
                     } else {
-                        $menu_childrens[] = LAHelper::get_menu($children, $user);
+                        $menu_childrens[] = self::get_menu($children, $user);
                     }
                 }
             }
@@ -595,12 +595,13 @@ class LAHelper
         }
         unset($menu['created_at']);
         unset($menu['updated_at']);
+
         return $menu;
     }
 
     /**
      * Print the role hierarchy view.
-     * This needs to be done recursively
+     * This needs to be done recursively.
      *
      * LAHelper::print_roles($role)
      *
@@ -609,24 +610,25 @@ class LAHelper
      */
     public static function print_roles($role)
     {
-        $childrens = Role::where("parent", $role->id)->get();
+        $childrens = Role::where('parent', $role->id)->get();
         $role_count = $role->users->count();
         $str = '<li class="dd-item" data-id="'.$role->id.'">
                 <div class="dd-handle"></div>
                 <div class="dd-content">
-                    <div class="dd-handle" role_id="'.$role->id.'" style="">'.$role->name .'<span title="Role ID" class="pull-right">'. $role->id.'<span class="badge badge-success" title="Employee Count">'.$role_count.'</span></span></div></div>';
-        $str = '<li class="dd-item dd3-item" data-id="' . $role->id . '">
+                    <div class="dd-handle" role_id="'.$role->id.'" style="">'.$role->name.'<span title="Role ID" class="pull-right">'.$role->id.'<span class="badge badge-success" title="Employee Count">'.$role_count.'</span></span></div></div>';
+        $str = '<li class="dd-item dd3-item" data-id="'.$role->id.'">
 			<div class="dd-handle dd3-handle"></div>
-			<div class="dd3-content">'.$role->name .'<span title="Role ID" class="pull-right"><span class="badge badge-success" title="Employee Count">'.$role_count.'</span></span></div>';
+			<div class="dd3-content">'.$role->name.'<span title="Role ID" class="pull-right"><span class="badge badge-success" title="Employee Count">'.$role_count.'</span></span></div>';
         if (count($childrens) > 0) {
             $str .= '<ol class="dd-list">';
             foreach ($childrens as $children) {
-                $str .= LAHelper::print_roles($children);
-                //$str .= json_encode($children);
+                $str .= self::print_roles($children);
+                // $str .= json_encode($children);
             }
             $str .= '</ol>';
         }
         $str .= '</li>';
+
         return $str;
     }
 
@@ -641,26 +643,27 @@ class LAHelper
     {
         $var = App::VERSION();
 
-        if (str_starts_with($var, "5.2")) {
+        if (str_starts_with($var, '5.2')) {
             return 5.2;
-        } elseif (str_starts_with($var, "5.3")) {
+        } elseif (str_starts_with($var, '5.3')) {
             return 5.3;
-        } elseif (str_starts_with($var, "5.4")) {
+        } elseif (str_starts_with($var, '5.4')) {
             return 5.4;
-        } elseif (str_starts_with($var, "5.5")) {
+        } elseif (str_starts_with($var, '5.5')) {
             return 5.5;
-        } elseif (str_starts_with($var, "5.6")) {
+        } elseif (str_starts_with($var, '5.6')) {
             return 5.6;
-        } elseif (substr_count($var, ".") == 3) {
-            $var = substr($var, 0, strrpos($var, "."));
-            return $var . "-str";
+        } elseif (substr_count($var, '.') == 3) {
+            $var = substr($var, 0, strrpos($var, '.'));
+
+            return $var.'-str';
         } else {
             return floatval($var);
         }
     }
 
     /**
-     * Get real Module name by replacing underscores within name
+     * Get real Module name by replacing underscores within name.
      *
      * @param $name Module Name with whitespace filled by underscores
      * @return mixed return Module Name
@@ -668,11 +671,12 @@ class LAHelper
     public static function real_module_name($name)
     {
         $name = str_replace('_', ' ', $name);
+
         return $name;
     }
 
     /**
-     * Get complete line within file by comparing passed substring $str
+     * Get complete line within file by comparing passed substring $str.
      *
      * LAHelper::getLineWithString()
      *
@@ -688,11 +692,12 @@ class LAHelper
                 return $line;
             }
         }
+
         return -1;
     }
 
     /**
-     * Get complete line within given file contents by comparing passed substring $str
+     * Get complete line within given file contents by comparing passed substring $str.
      *
      * LAHelper::getLineWithString2()
      *
@@ -708,6 +713,7 @@ class LAHelper
                 return $line;
             }
         }
+
         return -1;
     }
 
@@ -721,17 +727,21 @@ class LAHelper
      */
     public static function setenv($param, $value)
     {
-        $envfile = LAHelper::openFile('.env');
-        $line = LAHelper::getLineWithString('.env', $param . '=');
-        $envfile = str_replace($line, $param . "=" . $value . "\n", $envfile);
+        $envfile = self::openFile('.env');
+        $line = self::getLineWithString('.env', $param.'=');
+        if (is_string($line)) {
+            $envfile = str_replace($line, $param.'='.$value."\n", $envfile);
+        } else {
+            $envfile = $envfile."\n".$param.'='.$value."\n";
+        }
         file_put_contents('.env', $envfile);
 
         $_ENV[$param] = $value;
-        putenv($param . "=" . $value);
+        putenv($param.'='.$value);
     }
 
     /**
-     * Get file contents
+     * Get file contents.
      *
      * @param $from file path
      * @return string file contents in String
@@ -739,11 +749,12 @@ class LAHelper
     public static function openFile($from)
     {
         $md = file_get_contents($from);
+
         return $md;
     }
 
     /**
-     * Delete file
+     * Delete file.
      *
      * LAHelper::deleteFile();
      *
@@ -757,7 +768,7 @@ class LAHelper
     }
 
     /**
-     * Get Migration file name by passing matching table name
+     * Get Migration file name by passing matching table name.
      *
      * LAHelper::get_migration_file("students_table");
      *
@@ -769,17 +780,18 @@ class LAHelper
         $mfiles = scandir(base_path('database/migrations/'));
         foreach ($mfiles as $mfile) {
             if (str_contains($mfile, $file_name)) {
-                $mgr_file = base_path('database/migrations/' . $mfile);
+                $mgr_file = base_path('database/migrations/'.$mfile);
                 if (file_exists($mgr_file)) {
-                    return 'database/migrations/' . $mfile;
+                    return 'database/migrations/'.$mfile;
                 }
             }
         }
-        return "";
+
+        return '';
     }
 
     /**
-     * Check if passed array is associative
+     * Check if passed array is associative.
      *
      * @param array $array array to be checked associative or not
      * @return bool true if associative
@@ -795,10 +807,9 @@ class LAHelper
     }
 
     /**
-     * Replace last occurance of string
+     * Replace last occurance of string.
      *
      * LAHelper::str_lreplace("", "", $object);
-     *
      */
     public static function str_lreplace($search, $replace, $subject)
     {
@@ -806,11 +817,12 @@ class LAHelper
         if ($pos !== false) {
             $subject = substr_replace($subject, $replace, $pos, strlen($search));
         }
+
         return $subject;
     }
 
     /**
-     * Get File Permissions in Octal
+     * Get File Permissions in Octal.
      *
      * @param $file File Path
      * @return mixed return file permissions in Octal "0777"
@@ -821,7 +833,7 @@ class LAHelper
     }
 
     /**
-     * Compare File Permissions in Octal
+     * Compare File Permissions in Octal.
      *
      * @param $file File Path
      * @return mixed return true if File Permissions are good.
@@ -840,11 +852,12 @@ class LAHelper
         if (intval($perm_given[3]) < $perm_required[3]) {
             return false;
         }
+
         return true;
     }
 
     /**
-     * Check if mail can be sent. i.e. Mail Configuration is OK
+     * Check if mail can be sent. i.e. Mail Configuration is OK.
      *
      * if(LAHelper::is_mail()) {}
      *
@@ -852,11 +865,11 @@ class LAHelper
      */
     public static function is_mail()
     {
-        return (env('MAIL_USERNAME') !== null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "" && env('MAIL_USERNAME') != "smtp.mailtrap.ios");
+        return env('MAIL_USERNAME') !== null && env('MAIL_USERNAME') != 'null' && env('MAIL_USERNAME') != '' && env('MAIL_USERNAME') != 'smtp.mailtrap.ios';
     }
 
     /**
-     * Download File
+     * Download File.
      *
      * @param $src File Path, $dest File destination path
      * @return mixed return result.
@@ -878,24 +891,25 @@ class LAHelper
         $page = curl_exec($ch);
         $curl_error_str = curl_error($ch);
         curl_close($ch);
-        $r = array("page" => $page, "curl_error_str" => $curl_error_str);
+        $r = ['page' => $page, 'curl_error_str' => $curl_error_str];
+
         return $r;
     }
 
     /**
-     * Verify Correct Date Format
+     * Verify Correct Date Format.
      */
     public static function isDateFormat($date)
     {
-        return (DateTime::createFromFormat('Y-m-d H:i:s', $date) !== false);
+        return DateTime::createFromFormat('Y-m-d H:i:s', $date) !== false;
     }
 
     /**
-     * Print Date in Readable Format
+     * Print Date in Readable Format.
      */
     public static function dateFormat($date)
     {
-        return date("M d, Y / H:i:s", strtotime($date));
+        return date('M d, Y / H:i:s', strtotime($date));
     }
 
     // Converts to DB Timestamp
@@ -903,10 +917,10 @@ class LAHelper
     // return == 2016-08-22
     public static function cvt2ts($time_reg)
     {
-        if ($time_reg != "00-00-0000" && $time_reg != '') {
-            $arr = explode("-", $time_reg);
+        if ($time_reg != '00-00-0000' && $time_reg != '') {
+            $arr = explode('-', $time_reg);
             if (strlen($arr[2]) == 4) {
-                return $arr[2]."-".$arr[1]."-".$arr[0];
+                return $arr[2].'-'.$arr[1].'-'.$arr[0];
             } else {
                 return $time_reg;
             }

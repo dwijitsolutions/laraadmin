@@ -1,35 +1,33 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Http\Controllers\LA;
 
+use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
+use App\Models\LAConfig;
+use App\Models\LALog;
+use App\Models\LAModule;
+use App\Models\LAModuleField;
+use App\Models\Role;
+use App\Models\User;
+use Collective\Html\FormFacade as Form;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Yajra\DataTables\DataTables;
-use Collective\Html\FormFacade as Form;
-use App\Helpers\LAHelper;
-use App\Models\LAModule;
-use App\Models\LAModuleField;
-use App\Models\LALog;
-use App\Models\LAConfig;
-
-use App\Models\User;
-use App\Models\Employee;
-use App\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class EmployeesController extends Controller
 {
@@ -46,7 +44,7 @@ class EmployeesController extends Controller
         $module = LAModule::get('Employees');
 
         if (LAModule::hasAccess($module->id)) {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 // TODO: Implement good Query Builder
                 return Employee::all();
             } else {
@@ -57,13 +55,13 @@ class EmployeesController extends Controller
                 ]);
             }
         } else {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -86,11 +84,11 @@ class EmployeesController extends Controller
      */
     public function store(Request $request)
     {
-        if (LAModule::hasAccess("Employees", "create")) {
-            if ($request->ajax() && !isset($request->quick_add)) {
-                $request->merge((array)json_decode($request->getContent()));
+        if (LAModule::hasAccess('Employees', 'create')) {
+            if ($request->ajax() && ! isset($request->quick_add)) {
+                $request->merge((array) json_decode($request->getContent()));
             }
-            $rules = LAModule::validateRules("Employees", $request);
+            $rules = LAModule::validateRules('Employees', $request);
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -99,25 +97,24 @@ class EmployeesController extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
-                    , 400]);
+                        'errors' => $validator->errors(), 400]);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
             }
 
-            $insert_id = LAModule::insert("Employees", $request);
+            $insert_id = LAModule::insert('Employees', $request);
 
             $employee = Employee::find($insert_id);
 
             // Add LALog
-            LALog::make("Employees.EMPLOYEE_CREATED", [
-                'title' => "Employee ".$employee->name." Created",
+            LALog::make('Employees.EMPLOYEE_CREATED', [
+                'title' => 'Employee '.$employee->name.' Created',
                 'module_id' => 'Employees',
                 'context_id' => $employee->id,
                 'content' => $employee,
                 'user_id' => Auth::user()->id,
-                'notify_to' => "[]"
+                'notify_to' => '[]'
             ]);
 
             // generate password
@@ -132,39 +129,39 @@ class EmployeesController extends Controller
             ]);
 
             // update user role
-            $roles = (array) $request->{"role[]"};
+            $roles = (array) $request->{'role[]'};
             foreach ($roles as $role) {
                 $role = Role::find($role);
                 $user->attachRole($role);
             }
 
-            LALog::make("Users.USER_CREATED", [
-                'title' => "User ".$user->name." Created",
+            LALog::make('Users.USER_CREATED', [
+                'title' => 'User '.$user->name.' Created',
                 'module_id' => 'Users',
                 'context_id' => $user->id,
                 'content' => $user,
                 'user_id' => Auth::user()->id,
-                'notify_to' => "[]"
+                'notify_to' => '[]'
             ]);
 
             if (LAHelper::is_mail()) {
                 // Send mail to User for Password
                 Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {
                     $m->from(LAConfig::getByKey('default_email'), LAConfig::getByKey('sitename'));
-                    $m->to($user->email, $user->name)->subject(LAConfig::getByKey('sitename') . ' - Your Login Credentials');
+                    $m->to($user->email, $user->name)->subject(LAConfig::getByKey('sitename').' - Your Login Credentials');
                 });
             } else {
-                Log::info("User created: username: ".$user->email." Password: ".$password);
+                Log::info('User created: username: '.$user->email.' Password: '.$password);
             }
             if ($request->ajax() || isset($request->quick_add)) {
                 return response()->json([
                     'status' => 'success',
                     'object' => $employee,
                     'message' => 'Employee updated successfully!',
-                    'redirect' => url(config('laraadmin.adminRoute') . '/employees')
+                    'redirect' => url(config('laraadmin.adminRoute').'/employees')
                 ], 201);
             } else {
-                return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+                return redirect()->route(config('laraadmin.adminRoute').'.employees.index');
             }
         } else {
             if ($request->ajax() || isset($request->quick_add)) {
@@ -173,7 +170,7 @@ class EmployeesController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -187,28 +184,28 @@ class EmployeesController extends Controller
      */
     public function show(Request $request, $id)
     {
-        if (LAModule::hasAccess("Employees", "view")) {
+        if (LAModule::hasAccess('Employees', 'view')) {
             $employee = Employee::find($id);
             if (isset($employee->id)) {
-                if ($request->ajax() && !isset($request->_pjax)) {
+                if ($request->ajax() && ! isset($request->_pjax)) {
                     return $employee;
                 } else {
                     $module = LAModule::get('Employees');
                     $module->row = $employee;
 
                     // Get User Table Information
-                    $user = User::get($id, "Employee");
+                    $user = User::get($id, 'Employee');
 
                     return view('la.employees.show', [
                         'user' => $user,
                         'module' => $module,
                         'view_col' => $module->view_col,
                         'no_header' => true,
-                        'no_padding' => "no-padding"
+                        'no_padding' => 'no-padding'
                     ])->with('employee', $employee);
                 }
             } else {
-                if ($request->ajax() && !isset($request->_pjax)) {
+                if ($request->ajax() && ! isset($request->_pjax)) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Record not found'
@@ -216,18 +213,18 @@ class EmployeesController extends Controller
                 } else {
                     return view('errors.404', [
                         'record_id' => $id,
-                        'record_name' => ucfirst("employee"),
+                        'record_name' => ucfirst('employee'),
                     ]);
                 }
             }
         } else {
-            if ($request->ajax() && !isset($request->_pjax)) {
+            if ($request->ajax() && ! isset($request->_pjax)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -240,7 +237,7 @@ class EmployeesController extends Controller
      */
     public function edit($id)
     {
-        if (LAModule::hasAccess("Employees", "edit")) {
+        if (LAModule::hasAccess('Employees', 'edit')) {
             $employee = Employee::find($id);
             if (isset($employee->id)) {
                 $module = LAModule::get('Employees');
@@ -248,7 +245,7 @@ class EmployeesController extends Controller
                 $module->row = $employee;
 
                 // Get User Table Information
-                $user = User::get($id, "Employee");
+                $user = User::get($id, 'Employee');
 
                 return view('la.employees.edit', [
                     'module' => $module,
@@ -258,11 +255,11 @@ class EmployeesController extends Controller
             } else {
                 return view('errors.404', [
                     'record_id' => $id,
-                    'record_name' => ucfirst("employee"),
+                    'record_name' => ucfirst('employee'),
                 ]);
             }
         } else {
-            return redirect(config('laraadmin.adminRoute') . "/");
+            return redirect(config('laraadmin.adminRoute').'/');
         }
     }
 
@@ -275,11 +272,11 @@ class EmployeesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (LAModule::hasAccess("Employees", "edit")) {
+        if (LAModule::hasAccess('Employees', 'edit')) {
             if ($request->ajax()) {
-                $request->merge((array)json_decode($request->getContent()));
+                $request->merge((array) json_decode($request->getContent()));
             }
-            $rules = LAModule::validateRules("Employees", $request, true);
+            $rules = LAModule::validateRules('Employees', $request, true);
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -288,7 +285,7 @@ class EmployeesController extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
+                        'errors' => $validator->errors()
                     ], 400);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
@@ -299,13 +296,13 @@ class EmployeesController extends Controller
 
             if (isset($employee_old->id)) {
                 // Update Data
-                LAModule::updateRow("Employees", $request, $id);
+                LAModule::updateRow('Employees', $request, $id);
 
                 $employee_new = Employee::find($id);
 
                 // Add LALog
-                LALog::make("Employees.EMPLOYEE_UPDATED", [
-                    'title' => "Employee ".$employee_new->name." Updated",
+                LALog::make('Employees.EMPLOYEE_UPDATED', [
+                    'title' => 'Employee '.$employee_new->name.' Updated',
                     'module_id' => 'Employees',
                     'context_id' => $employee_new->id,
                     'content' => [
@@ -313,27 +310,27 @@ class EmployeesController extends Controller
                         'new' => $employee_new
                     ],
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 // Update User
-                $user_old = User::get($id, "Employee");
-                $user = User::get($id, "Employee");
+                $user_old = User::get($id, 'Employee');
+                $user = User::get($id, 'Employee');
                 $user->name = $request->name;
                 $user->email = $request->email_primary;
                 $user->save();
 
                 // update user role
                 $user->detachRoles();
-                $key = "role[]";
-                $roles = (array) $request->{"role[]"};
+                $key = 'role[]';
+                $roles = (array) $request->{'role[]'};
                 foreach ($roles as $role) {
                     $role = Role::find($role);
                     $user->attachRole($role);
                 }
 
-                LALog::make("Users.USER_UPDATED", [
-                    'title' => "User ".$user->name." Updated",
+                LALog::make('Users.USER_UPDATED', [
+                    'title' => 'User '.$user->name.' Updated',
                     'module_id' => 'Users',
                     'context_id' => $user->id,
                     'content' => [
@@ -341,7 +338,7 @@ class EmployeesController extends Controller
                         'new' => $user
                     ],
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 if ($request->ajax()) {
@@ -349,10 +346,10 @@ class EmployeesController extends Controller
                         'status' => 'success',
                         'object' => $employee_new,
                         'message' => 'Employee updated successfully!',
-                        'redirect' => url(config('laraadmin.adminRoute') . '/employees')
+                        'redirect' => url(config('laraadmin.adminRoute').'/employees')
                     ], 200);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.employees.index');
                 }
             } else {
                 if ($request->ajax()) {
@@ -363,7 +360,7 @@ class EmployeesController extends Controller
                 } else {
                     return view('errors.404', [
                         'record_id' => $id,
-                        'record_name' => ucfirst("employee"),
+                        'record_name' => ucfirst('employee'),
                     ]);
                 }
             }
@@ -374,7 +371,7 @@ class EmployeesController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
@@ -388,43 +385,43 @@ class EmployeesController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        if (LAModule::hasAccess("Employees", "delete")) {
+        if (LAModule::hasAccess('Employees', 'delete')) {
             $employee = Employee::find($id);
             if (isset($employee->id)) {
                 $employee->delete();
 
                 // Add LALog
-                LALog::make("Employees.EMPLOYEE_DELETED", [
-                    'title' => "Employee ".$employee->name." Deleted",
+                LALog::make('Employees.EMPLOYEE_DELETED', [
+                    'title' => 'Employee '.$employee->name.' Deleted',
                     'module_id' => 'Employees',
                     'context_id' => $employee->id,
                     'content' => $employee,
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 // Delete User
-                $user = User::get($id, "Employee");
+                $user = User::get($id, 'Employee');
                 if (isset($user->id)) {
                     $user->delete();
                 }
-                LALog::make("Users.USER_DELETED", [
-                    'title' => "User ".$user->name." Deleted",
+                LALog::make('Users.USER_DELETED', [
+                    'title' => 'User '.$user->name.' Deleted',
                     'module_id' => 'Users',
                     'context_id' => $user->id,
                     'content' => $user,
                     'user_id' => Auth::user()->id,
-                    'notify_to' => "[]"
+                    'notify_to' => '[]'
                 ]);
 
                 if ($request->ajax()) {
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Record Deleted successfully!',
-                        'redirect' => url(config('laraadmin.adminRoute') . '/employees')
+                        'redirect' => url(config('laraadmin.adminRoute').'/employees')
                     ], 204);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.employees.index');
                 }
             } else {
                 if ($request->ajax()) {
@@ -433,7 +430,7 @@ class EmployeesController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return redirect()->route(config('laraadmin.adminRoute') . '.employees.index');
+                    return redirect()->route(config('laraadmin.adminRoute').'.employees.index');
                 }
             }
         } else {
@@ -443,13 +440,13 @@ class EmployeesController extends Controller
                     'message' => 'Unauthorized Access'
                 ], 403);
             } else {
-                return redirect(config('laraadmin.adminRoute') . "/");
+                return redirect(config('laraadmin.adminRoute').'/');
             }
         }
     }
 
     /**
-     * Server side Datatable fetch via Ajax
+     * Server side Datatable fetch via Ajax.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -470,7 +467,7 @@ class EmployeesController extends Controller
 
             for ($j = 0; $j < count($listing_cols); $j++) {
                 $col = $listing_cols[$j];
-                if (isset($fields_popup[$col]) && $fields_popup[$col]->field_type_str == "Image") {
+                if (isset($fields_popup[$col]) && $fields_popup[$col]->field_type_str == 'Image') {
                     if ($data->data[$i]->$col != 0) {
                         $img = \App\Models\Upload::find($data->data[$i]->$col);
                         if (isset($img->name)) {
@@ -479,10 +476,10 @@ class EmployeesController extends Controller
                             $data->data[$i]->$col = '<i class="menu-icon fa fa-user bg-red"></i>';
                         }
                     } else {
-                        $data->data[$i]->$col = "";
+                        $data->data[$i]->$col = '';
                     }
                 }
-                if (isset($fields_popup[$col]) && str_starts_with($fields_popup[$col]->popup_vals, "@")) {
+                if (isset($fields_popup[$col]) && str_starts_with($fields_popup[$col]->popup_vals, '@')) {
                     if ($col == $module->view_col) {
                         $data->data[$i]->$col = LAModuleField::getFieldValue($fields_popup[$col], $data->data[$i]->$col);
                     } else {
@@ -490,7 +487,7 @@ class EmployeesController extends Controller
                     }
                 }
                 if ($col == $module->view_col) {
-                    $data->data[$i]->$col = '<a '.config('laraadmin.ajaxload').' href="' . url(config('laraadmin.adminRoute') . '/employees/' . $data->data[$i]->id) . '">' . $data->data[$i]->$col . '</a>';
+                    $data->data[$i]->$col = '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/employees/'.$data->data[$i]->id).'">'.$data->data[$i]->$col.'</a>';
                 }
                 // else if($col == "author") {
                 //    $data->data[$i]->$col;
@@ -499,24 +496,25 @@ class EmployeesController extends Controller
 
             if ($this->show_action) {
                 $output = '';
-                if (LAModule::hasAccess("Employees", "edit")) {
-                    $output .= '<a '.config('laraadmin.ajaxload').' href="' . url(config('laraadmin.adminRoute') . '/employees/' . $data->data[$i]->id . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>';
+                if (LAModule::hasAccess('Employees', 'edit')) {
+                    $output .= '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/employees/'.$data->data[$i]->id.'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>';
                 }
 
-                if (LAModule::hasAccess("Employees", "delete")) {
-                    $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $data->data[$i]->id], 'method' => 'delete', 'style' => 'display:inline']);
+                if (LAModule::hasAccess('Employees', 'delete')) {
+                    $output .= Form::open(['route' => [config('laraadmin.adminRoute').'.employees.destroy', $data->data[$i]->id], 'method' => 'delete', 'style' => 'display:inline']);
                     $output .= ' <button class="btn btn-danger btn-xs" type="submit" data-toggle="tooltip" title="Delete"><i class="fa fa-times"></i></button>';
                     $output .= Form::close();
                 }
-                $data->data[$i]->dt_action = (string)$output;
+                $data->data[$i]->dt_action = (string) $output;
             }
         }
         $out->setData($data);
+
         return $out;
     }
 
     /**
-     * Change Employee Password
+     * Change Employee Password.
      *
      * @return
      */
@@ -528,11 +526,11 @@ class EmployeesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return Redirect::to(config('laraadmin.adminRoute') . '/employees/'.$id)->withErrors($validator);
+            return Redirect::to(config('laraadmin.adminRoute').'/employees/'.$id)->withErrors($validator);
         }
 
         $employee = Employee::find($id);
-        $user = User::get($employee->id, "Employee");
+        $user = User::get($employee->id, 'Employee');
         $user->password = bcrypt($request->password);
         $user->save();
 
@@ -546,9 +544,9 @@ class EmployeesController extends Controller
                 $m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials chnaged');
             });
         } else {
-            Log::info("User change_password: username: ".$user->email." Password: ".$request->password);
+            Log::info('User change_password: username: '.$user->email.' Password: '.$request->password);
         }
 
-        return redirect(config('laraadmin.adminRoute') . '/employees/'.$id.'#tab-account-settings');
+        return redirect(config('laraadmin.adminRoute').'/employees/'.$id.'#tab-account-settings');
     }
 }

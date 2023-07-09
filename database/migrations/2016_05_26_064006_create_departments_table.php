@@ -1,15 +1,15 @@
 <?php
-/**
+/***
  * Migration generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use App\Models\LAModule;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDepartmentsTable extends Migration
 {
@@ -20,40 +20,40 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        LAModule::generate("Departments", 'departments', 'name', 'fa-tags', [
+        LAModule::generate('Departments', 'departments', 'name', 'fa-tags', [
             [
-                "colname" => "name",
-                "label" => "Name",
-                "field_type" => "Name",
-                "unique" => true,
-                "defaultvalue" => "",
-                "minlength" => 1,
-                "maxlength" => 250,
-                "required" => true,
-                "listing_col" => true
+                'colname' => 'name',
+                'label' => 'Name',
+                'field_type' => 'Name',
+                'unique' => true,
+                'defaultvalue' => '',
+                'minlength' => 1,
+                'maxlength' => 250,
+                'required' => true,
+                'listing_col' => true
             ], [
-                "colname" => "tags",
-                "label" => "Tags",
-                "field_type" => "Taginput",
-                "unique" => false,
-                "defaultvalue" => [],
-                "minlength" => 0,
-                "maxlength" => 0,
-                "required" => false,
-                "listing_col" => false
+                'colname' => 'tags',
+                'label' => 'Tags',
+                'field_type' => 'Taginput',
+                'unique' => false,
+                'defaultvalue' => [],
+                'minlength' => 0,
+                'maxlength' => 0,
+                'required' => false,
+                'listing_col' => false
             ], [
-                "colname" => "color",
-                "label" => "Color",
-                "field_type" => "String",
-                "unique" => false,
-                "defaultvalue" => "",
-                "minlength" => 0,
-                "maxlength" => 50,
-                "required" => true,
-                "listing_col" => true
+                'colname' => 'color',
+                'label' => 'Color',
+                'field_type' => 'String',
+                'unique' => false,
+                'defaultvalue' => '',
+                'minlength' => 0,
+                'maxlength' => 50,
+                'required' => true,
+                'listing_col' => true
             ]
         ]);
-        
+
         /*
         LAModule::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
 

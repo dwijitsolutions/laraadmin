@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -11,21 +11,16 @@ namespace App\Http\Controllers\LA;
 
 use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
 use App\Models\LALog;
 use App\Models\LAModule;
-use Collective\Html\FormFacade as Form;
+use App\Models\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response as FacadeResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Laraadmin\Entrust\EntrustFacade as Entrust;
-use Yajra\DataTables\DataTables;
-
-use App\Models\Upload;
 
 class UploadsController extends Controller
 {
@@ -52,24 +47,24 @@ class UploadsController extends Controller
                 'module' => $module
             ]);
         } else {
-            return redirect(config('laraadmin.adminRoute')."/");
+            return redirect(config('laraadmin.adminRoute').'/');
         }
     }
 
     /**
-     * Get file
+     * Get file.
      *
      * @return \Illuminate\Http\Response
      */
     public function get_file(Request $request, $hash, $name)
     {
-        $upload = Upload::where("hash", $hash)->first();
+        $upload = Upload::where('hash', $hash)->first();
 
         // Validate Upload Hash & Filename
-        if (!isset($upload->id) || $upload->name != $name) {
+        if (! isset($upload->id) || $upload->name != $name) {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access 1"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access 1'
             ]);
         }
 
@@ -80,33 +75,33 @@ class UploadsController extends Controller
         }
 
         // Validate if Image is Public
-        if (!$upload->public && !isset(Auth::user()->id)) {
+        if (! $upload->public && ! isset(Auth::user()->id)) {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access 2",
+                'status' => 'failure',
+                'message' => 'Unauthorized Access 2',
             ]);
         }
 
         if ($upload->public || Entrust::hasRole('SUPER_ADMIN') || Auth::user()->id == $upload->user_id) {
             $path = $upload->path;
 
-            if (!File::exists($path)) {
+            if (! File::exists($path)) {
                 abort(404);
             }
 
             // Check if thumbnail
             $size = $request->input('s');
             if (isset($size)) {
-                if (!is_numeric($size)) {
+                if (! is_numeric($size)) {
                     $size = 150;
                 }
-                $thumbpath = storage_path("thumbnails/".basename($upload->path)."-".$size."x".$size);
+                $thumbpath = storage_path('thumbnails/'.basename($upload->path).'-'.$size.'x'.$size);
 
                 if (File::exists($thumbpath)) {
                     $path = $thumbpath;
                 } else {
                     // Create Thumbnail
-                    LAHelper::createThumbnail($upload->path, $thumbpath, $size, $size, "transparent");
+                    LAHelper::createThumbnail($upload->path, $thumbpath, $size, $size, 'transparent');
                     $path = $thumbpath;
                 }
             }
@@ -119,26 +114,26 @@ class UploadsController extends Controller
                 return response()->download($path, $upload->name);
             } else {
                 $response = FacadeResponse::make($file, 200);
-                $response->header("Content-Type", $type);
+                $response->header('Content-Type', $type);
             }
 
             return $response;
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access 3"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access 3'
             ]);
         }
     }
 
     /**
-     * Upload fiels via DropZone.js
+     * Upload fiels via DropZone.js.
      *
      * @return \Illuminate\Http\Response
      */
     public function upload_files(Request $request)
     {
-        if (LAModule::hasAccess("Uploads", "create")) {
+        if (LAModule::hasAccess('Uploads', 'create')) {
             if ($request->hasFile('file')) {
                 /*
                 $rules = array(
@@ -156,7 +151,7 @@ class UploadsController extends Controller
                 $folder = storage_path('uploads');
                 $filename = $file->getClientOriginalName();
 
-                $date_append = date("Y-m-d-His-");
+                $date_append = date('Y-m-d-His-');
                 $upload_success = $request->file('file')->move($folder, $date_append.$filename);
 
                 if ($upload_success) {
@@ -170,18 +165,18 @@ class UploadsController extends Controller
                     }
 
                     $upload = Upload::create([
-                        "name" => $filename,
-                        "path" => $folder.DIRECTORY_SEPARATOR.$date_append.$filename,
-                        "extension" => pathinfo($filename, PATHINFO_EXTENSION),
-                        "caption" => "",
-                        "hash" => "",
-                        "public" => $public,
-                        "user_id" => Auth::user()->id
+                        'name' => $filename,
+                        'path' => $folder.DIRECTORY_SEPARATOR.$date_append.$filename,
+                        'extension' => pathinfo($filename, PATHINFO_EXTENSION),
+                        'caption' => '',
+                        'hash' => '',
+                        'public' => $public,
+                        'user_id' => Auth::user()->id
                     ]);
                     // apply unique random hash to file
                     while (true) {
                         $hash = strtolower(Str::random(20));
-                        if (!Upload::where("hash", $hash)->count()) {
+                        if (! Upload::where('hash', $hash)->count()) {
                             $upload->hash = $hash;
                             break;
                         }
@@ -189,22 +184,22 @@ class UploadsController extends Controller
                     $upload->save();
 
                     // Add LALog
-                    LALog::make("Uploads.UPLOAD_CREATED", [
-                        'title' => "Upload Created",
+                    LALog::make('Uploads.UPLOAD_CREATED', [
+                        'title' => 'Upload Created',
                         'module_id' => 'Uploads',
                         'context_id' => $upload->id,
                         'content' => $upload,
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
 
                     return response()->json([
-                        "status" => "success",
-                        "upload" => $upload
+                        'status' => 'success',
+                        'upload' => $upload
                     ], 200);
                 } else {
                     return response()->json([
-                        "status" => "error"
+                        'status' => 'error'
                     ], 400);
                 }
             } else {
@@ -212,21 +207,21 @@ class UploadsController extends Controller
             }
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access'
             ]);
         }
     }
 
     /**
-     * Get all files from uploads folder
+     * Get all files from uploads folder.
      *
      * @return \Illuminate\Http\Response
      */
     public function uploaded_files()
     {
-        if (LAModule::hasAccess("Uploads", "view")) {
-            $uploads = array();
+        if (LAModule::hasAccess('Uploads', 'view')) {
+            $uploads = [];
 
             // print_r(Auth::user()->roles);
             if (Entrust::hasRole('SUPER_ADMIN')) {
@@ -239,9 +234,9 @@ class UploadsController extends Controller
                     $uploads = Upload::all();
                 }
             }
-            $uploads2 = array();
+            $uploads2 = [];
             foreach ($uploads as $upload) {
-                $u = (object) array();
+                $u = (object) [];
                 $u->id = $upload->id;
                 $u->name = $upload->name;
                 $u->extension = $upload->extension;
@@ -267,20 +262,20 @@ class UploadsController extends Controller
             return response()->json(['uploads' => $uploads2]);
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access'
             ]);
         }
     }
 
     /**
-     * Update Uploads Caption
+     * Update Uploads Caption.
      *
      * @return \Illuminate\Http\Response
      */
     public function update_caption(Request $request)
     {
-        if (LAModule::hasAccess("Uploads", "edit")) {
+        if (LAModule::hasAccess('Uploads', 'edit')) {
             $file_id = $request->input('file_id');
             $caption = $request->input('caption');
 
@@ -293,8 +288,8 @@ class UploadsController extends Controller
                     $upload->save();
 
                     // Add LALog
-                    LALog::make("Uploads.UPLOAD_UPDATED", [
-                        'title' => "Upload Caption Updated",
+                    LALog::make('Uploads.UPLOAD_UPDATED', [
+                        'title' => 'Upload Caption Updated',
                         'module_id' => 'Uploads',
                         'context_id' => $upload->id,
                         'content' => [
@@ -302,40 +297,40 @@ class UploadsController extends Controller
                             'new' => $upload
                         ],
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
 
                     return response()->json([
-                        'status' => "success"
+                        'status' => 'success'
                     ]);
                 } else {
                     return response()->json([
-                        'status' => "failure",
-                        'message' => "Upload not found"
+                        'status' => 'failure',
+                        'message' => 'Upload not found'
                     ]);
                 }
             } else {
                 return response()->json([
-                    'status' => "failure",
-                    'message' => "Upload not found"
+                    'status' => 'failure',
+                    'message' => 'Upload not found'
                 ]);
             }
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access'
             ]);
         }
     }
 
     /**
-     * Update Uploads Filename
+     * Update Uploads Filename.
      *
      * @return \Illuminate\Http\Response
      */
     public function update_filename(Request $request)
     {
-        if (LAModule::hasAccess("Uploads", "edit")) {
+        if (LAModule::hasAccess('Uploads', 'edit')) {
             $file_id = $request->input('file_id');
             $filename = $request->input('filename');
 
@@ -343,7 +338,7 @@ class UploadsController extends Controller
             $upload = Upload::find($file_id);
 
             $folder = storage_path('uploads');
-            $date_append = date("Y-m-d-His-");
+            $date_append = date('Y-m-d-His-');
             if (isset($upload->id)) {
                 if ($upload->user_id == Auth::user()->id || Entrust::hasRole('SUPER_ADMIN')) {
                     $basename = basename($upload_old->path, $upload_old->extension);
@@ -355,8 +350,8 @@ class UploadsController extends Controller
                     $upload->save();
 
                     // Add LALog
-                    LALog::make("Uploads.UPLOAD_UPDATED", [
-                        'title' => "Upload filename Updated",
+                    LALog::make('Uploads.UPLOAD_UPDATED', [
+                        'title' => 'Upload filename Updated',
                         'module_id' => 'Uploads',
                         'context_id' => $upload->id,
                         'content' => [
@@ -364,40 +359,40 @@ class UploadsController extends Controller
                             'new' => $upload
                         ],
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
 
                     return response()->json([
-                        'status' => "success"
+                        'status' => 'success'
                     ]);
                 } else {
                     return response()->json([
-                        'status' => "failure",
-                        'message' => "Unauthorized Access 1"
+                        'status' => 'failure',
+                        'message' => 'Unauthorized Access 1'
                     ]);
                 }
             } else {
                 return response()->json([
-                    'status' => "failure",
-                    'message' => "Upload not found"
+                    'status' => 'failure',
+                    'message' => 'Upload not found'
                 ]);
             }
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access'
             ]);
         }
     }
 
     /**
-     * Update Uploads Public Visibility
+     * Update Uploads Public Visibility.
      *
      * @return \Illuminate\Http\Response
      */
     public function update_public(Request $request)
     {
-        if (LAModule::hasAccess("Uploads", "edit")) {
+        if (LAModule::hasAccess('Uploads', 'edit')) {
             $file_id = $request->input('file_id');
             $public = $request->input('public');
             if (isset($public)) {
@@ -416,8 +411,8 @@ class UploadsController extends Controller
 
                     // Add LALog
                     if ($public != $upload_old->public) {
-                        LALog::make("Uploads.UPLOAD_UPDATED", [
-                            'title' => "Upload is_public Updated",
+                        LALog::make('Uploads.UPLOAD_UPDATED', [
+                            'title' => 'Upload is_public Updated',
                             'module_id' => 'Uploads',
                             'context_id' => $upload->id,
                             'content' => [
@@ -425,29 +420,29 @@ class UploadsController extends Controller
                                 'new' => $upload
                             ],
                             'user_id' => Auth::user()->id,
-                            'notify_to' => "[]"
+                            'notify_to' => '[]'
                         ]);
                     }
 
                     return response()->json([
-                        'status' => "success"
+                        'status' => 'success'
                     ]);
                 } else {
                     return response()->json([
-                        'status' => "failure",
-                        'message' => "Unauthorized Access 1"
+                        'status' => 'failure',
+                        'message' => 'Unauthorized Access 1'
                     ]);
                 }
             } else {
                 return response()->json([
-                    'status' => "failure",
-                    'message' => "Upload not found"
+                    'status' => 'failure',
+                    'message' => 'Upload not found'
                 ]);
             }
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access'
             ]);
         }
     }
@@ -459,7 +454,7 @@ class UploadsController extends Controller
      */
     public function delete_file(Request $request)
     {
-        if (LAModule::hasAccess("Uploads", "delete")) {
+        if (LAModule::hasAccess('Uploads', 'delete')) {
             $file_id = $request->input('file_id');
 
             $upload = Upload::find($file_id);
@@ -469,34 +464,34 @@ class UploadsController extends Controller
                     $upload->delete();
 
                     // Add LALog
-                    LALog::make("Uploads.UPLOAD_DELETED", [
-                        'title' => "Upload Deleted",
+                    LALog::make('Uploads.UPLOAD_DELETED', [
+                        'title' => 'Upload Deleted',
                         'module_id' => 'Uploads',
                         'context_id' => $upload->id,
                         'content' => $upload,
                         'user_id' => Auth::user()->id,
-                        'notify_to' => "[]"
+                        'notify_to' => '[]'
                     ]);
 
                     return response()->json([
-                        'status' => "success"
+                        'status' => 'success'
                     ]);
                 } else {
                     return response()->json([
-                        'status' => "failure",
-                        'message' => "Unauthorized Access 1"
+                        'status' => 'failure',
+                        'message' => 'Unauthorized Access 1'
                     ]);
                 }
             } else {
                 return response()->json([
-                    'status' => "failure",
-                    'message' => "Upload not found"
+                    'status' => 'failure',
+                    'message' => 'Upload not found'
                 ]);
             }
         } else {
             return response()->json([
-                'status' => "failure",
-                'message' => "Unauthorized Access"
+                'status' => 'failure',
+                'message' => 'Unauthorized Access'
             ]);
         }
     }
@@ -504,6 +499,7 @@ class UploadsController extends Controller
     public function update_local_upload_paths()
     {
         Upload::update_local_upload_paths();
-        return redirect(config('laraadmin.adminRoute') . '/uploads');
+
+        return redirect(config('laraadmin.adminRoute').'/uploads');
     }
 }

@@ -1,17 +1,16 @@
 <?php
-/**
+/***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
 namespace App\Listeners;
 
-use App\Models\User;
 use App\Models\LALog;
-use App\Models\LAModule;
+use App\Models\User;
 use Illuminate\Auth\Events\Logout;
 
 class LogSuccessfulLogout
@@ -38,13 +37,13 @@ class LogSuccessfulLogout
         $eventJSON = json_decode(json_encode($event));
 
         if (isset($eventJSON->user)) {
-            LALog::make("Users.USER_LOGOUT", [
-                'title' => "User ".$eventJSON->user->name." Logout",
+            LALog::make('Users.USER_LOGOUT', [
+                'title' => 'User '.$eventJSON->user->name.' Logout',
                 'module_id' => 'Users',
                 'context_id' => $eventJSON->user->id,
-                'content' => "{}",
+                'content' => '{}',
                 'user_id' => $eventJSON->user->id,
-                'notify_to' => "[]"
+                'notify_to' => '[]'
             ]);
         }
     }

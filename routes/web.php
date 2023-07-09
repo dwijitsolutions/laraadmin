@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/home', [HomeController::class, 'index']);
 Route::get(config('laraadmin.blogRoute'), [BlogPostsController::class, 'show_blog']);
-Route::get(config('laraadmin.blogRoute') . '/{post_url}', [BlogPostsController::class, 'show_post']);
+Route::get(config('laraadmin.blogRoute').'/{post_url}', [BlogPostsController::class, 'show_post']);
 Route::get('/category/{category_url}', [BlogPostsController::class, 'show_category']);
 
 Route::post('/inquiry', function (Illuminate\Http\Request $request) {
@@ -32,8 +32,9 @@ Route::post('/inquiry', function (Illuminate\Http\Request $request) {
         $to = LAConfig::getByKey('default_email');
         $to_name = LAConfig::getByKey('sitename');
         $m->from(LAConfig::getByKey('default_email'), LAConfig::getByKey('sitename'));
-        $m->to($to, $to_name)->subject("New Inquiry - " . $request->input('name'));
+        $m->to($to, $to_name)->subject('New Inquiry - '.$request->input('name'));
     });
+
     return redirect()->back()->with('success', 'Your message is delivered successfully !');
 });
 
@@ -49,4 +50,4 @@ Route::get('files/{hash}/{name}', [UploadsController::class, 'get_file']);
 
 /* ================== Call LaraAdmin Routes  ================== */
 
-require __DIR__ . '/admin.php';
+require __DIR__.'/admin.php';

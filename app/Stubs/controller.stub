@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -93,7 +93,7 @@ class __controller_class_name__ extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
+                        'errors' => $validator->errors()
                     , 400]);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();
@@ -239,7 +239,7 @@ class __controller_class_name__ extends Controller
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Validation error',
-                        'errors' => $validator->messages()
+                        'errors' => $validator->errors()
                     ], 400);
                 } else {
                     return redirect()->back()->withErrors($validator)->withInput();

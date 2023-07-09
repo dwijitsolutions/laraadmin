@@ -1,6 +1,7 @@
 .DS_Store
 .env
 .idea/
+.php-cs-fixer.cache
 .phpunit.cache
 .phpunit.result.cache
 Homestead.json

@@ -1,15 +1,15 @@
 <?php
-/**
+/***
  * Migration generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateLAModuleFieldsTable extends Migration
 {
@@ -29,14 +29,14 @@ class CreateLAModuleFieldsTable extends Migration
             $table->unsignedBigInteger('field_type')->unsigned();
             $table->foreign('field_type')->references('id')->on('la_module_field_types');
             $table->boolean('unique')->default(false);
-            $table->string('defaultvalue')->default("")->nullable();
+            $table->string('defaultvalue')->default('')->nullable();
             $table->integer('minlength')->default(0);
             $table->integer('maxlength')->unsigned()->default(0);
             $table->boolean('required')->default(false);
             $table->text('popup_vals');
             $table->integer('sort')->unsigned()->default(0);
             $table->boolean('listing_col')->default(true);
-            $table->string('comment')->default("")->nullable();
+            $table->string('comment')->default('')->nullable();
             $table->timestamps();
         });
     }

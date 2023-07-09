@@ -1,8 +1,8 @@
 <?php
-/**
+/***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
- * LaraAdmin is Proprietary Software created by Dwij IT Solutions. Use of LaraAdmin requires Paid Licence issued by Dwij IT Solutions.
+ * LaraAdmin is open-sourced software licensed under the MIT license.
  * Developed by: Dwij IT Solutions
  * Developer Website: https://dwijitsolutions.com
  */
@@ -10,16 +10,13 @@
 namespace App\Http\Controllers\LA;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
-use Illuminate\Http\Request;
 use App\Models\BlogPost;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Upload;
 
 /**
- * Class DashboardController
- * @package App\Http\Controllers
+ * Dashboard Controller.
  */
 class DashboardController extends Controller
 {
@@ -44,6 +41,7 @@ class DashboardController extends Controller
         $customers_count = Customer::count();
         $employee_count = Employee::count();
         $upload_count = Upload::count();
+
         return view('la.dashboard', [
             'blog_post_count' => $blog_post_count,
             'customers_count' => $customers_count,
