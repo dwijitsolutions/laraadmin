@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class LABasicTest extends TestCase
 {
     /**
      * Basic setup before testing.
@@ -21,14 +21,15 @@ class ExampleTest extends TestCase
     }
 
     /**
-     * A basic test example.
+     * Validate Homepage.
      *
      * @return void
      */
-    public function test_example()
+    public function testExample()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
+        $response->assertSee('LaraAdmin');
     }
 }

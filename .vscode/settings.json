@@ -17,7 +17,9 @@
         "**/*.git": true,
         "**/*.DS_Store": true,
         "bootstrap/**": true,
-        "node_modules/**": true
+        "node_modules/**": true,
+        ".php-cs-fixer.cache": true,
+        ".phpunit.result.cache": true
     },
     "git.mergeEditor": false
 }
