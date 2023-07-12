@@ -2,9 +2,15 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
-class LABasicTest extends TestCase
+/***
+ * Basic Page tests
+ *
+ * php artisan test --filter LABasicTest
+ */
+class LABasicTest extends DuskTestCase
 {
     /**
      * Basic setup before testing.
@@ -25,11 +31,50 @@ class LABasicTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testHomepage()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('LaraAdmin');
+    }
+
+    /**
+     * Test Login Page.
+     *
+     * @return void
+     */
+    public function testLoginPage()
+    {
+        $response = $this->get('/login');
+        $response->assertRedirect('/register');
+    }
+
+    /**
+     * Test Register Page.
+     *
+     * @return void
+     */
+    public function testRegisterPage()
+    {
+        $response = $this->get('/register');
+        $response->assertSee('Register Super Admin');
+    }
+
+    /**
+     * Test required fields on registration page.
+     *
+     * @return void
+     */
+    public function testRegistrationPageRequiredFields()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/register')
+                ->assertSee('Register Super Admin')
+                ->click('btn-register')
+                ->assertSee('The name field is required')
+                ->assertSee('The email field is required')
+                ->assertSee('The password field is required');
+        });
     }
 }
