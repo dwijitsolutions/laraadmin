@@ -1,0 +1,67 @@
+<?php
+/***
+ * Model generated using LaraAdmin
+ * Help: https://laraadmin.com
+ * LaraAdmin is open-sourced software licensed under the MIT license.
+ * Developed by: Dwij IT Solutions
+ * Developer Website: https://dwijitsolutions.com
+ */
+
+namespace App\Models;
+
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\LALog;
+
+class __model_class_name__ extends Model
+{
+    use SoftDeletes;
+
+    protected $table = '__db_table_name__';
+
+    protected $hidden = [
+
+    ];
+
+    protected $guarded = [];
+
+    protected $dates = ['deleted_at'];
+
+    /**
+     * Get the index name for the model.
+     *
+     * @return string
+     */
+    public function searchableAs()
+    {
+        return '__db_table_name___index';
+    }
+
+    /**
+     * Get mapping array by key
+     *
+     * @return array
+     */
+    public static function arr($key = "id")
+    {
+        $results = __model_class_name__::all();
+        $arr = array();
+        foreach ($results as $result) {
+            $arr[$result->$key] = $result;
+        }
+        return $arr;
+    }
+
+    /**
+     * Get all events happened on Module
+     *
+     * @return mixed
+     */
+    public function timeline()
+    {
+        $moduleConfigs = config('laraadmin.log.__module_name__');
+        $moduleConfigsArr = array_keys($moduleConfigs);
+        return LALog::where("context_id", $this->id)->whereIn("type", $moduleConfigsArr)->orderBy("created_at", "desc")->get();
+    }
+}

@@ -1,5 +1,25 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-	"editor.tabSize": 4,
-	"editor.insertSpaces": true
+    "[php]": {
+        "editor.defaultFormatter": "junstyle.php-cs-fixer"
+    },
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter",
+        "editor.tabSize": 2
+    },
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 4,
+    "files.exclude": {
+        "**/*.git": true,
+        "**/*.DS_Store": true,
+        "bootstrap/**": true,
+        "node_modules/**": true,
+        ".php-cs-fixer.cache": true,
+        ".phpunit.result.cache": true
+    },
+    "git.mergeEditor": false
 }
