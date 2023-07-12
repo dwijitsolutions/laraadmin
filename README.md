@@ -39,7 +39,7 @@ CRUD Model Listing & Add:
 
 CRUD Model View:
 
-![LaraAdmin CRUD Model View](https//laraadmin.com/img/laraadmin/laraadmin-row-view.jpg)
+![LaraAdmin CRUD Model View](https://laraadmin.com/img/laraadmin/laraadmin-row-view.jpg)
 
 Online Code Editor:
 ![Online Code Editor](https://laraadmin.com/img/laraadmin/laraadmin-online-code-editor.jpg)
@@ -47,6 +47,8 @@ Online Code Editor:
 ### Installation & Documentation
 
 Documentation for the LaraAdmin can be found on the [LaraAdmin website](https://laraadmin.com/docs/1.1).
+> **Warning**
+> Documentation is not ready yet for version 1.1
 
 ### Contributing
 
