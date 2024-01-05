@@ -18,7 +18,7 @@
         "source": "https://github.com/dwijitsolutions/laraadmin"
     },
     "require": {
-        "php": "^7.3|^8.0",
+        "php": ">=^7.3|^8.0",
         "doctrine/dbal": "^3.5",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
