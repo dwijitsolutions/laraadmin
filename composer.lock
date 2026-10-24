@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "283cf487fab30e1364ab5407284e6dd8",
+    "content-hash": "ab7981bcca7942dd89f72046a980d34a",
     "packages": [
         {
             "name": "brick/math",
@@ -1064,10 +1064,16 @@
         {
             "name": "laraadmin/entrust",
             "version": "7.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laraadmin/entrust.git",
+                "reference": "8fdb0f8a47f891e081c5e704633470a2fbb09471"
+            },
             "dist": {
-                "type": "path",
-                "url": "../packages/entrust",
-                "reference": "1c1a6394ee9050fa1c7e8929983ebf6bec564853"
+                "type": "zip",
+                "url": "https://api.github.com/repos/laraadmin/entrust/zipball/8fdb0f8a47f891e081c5e704633470a2fbb09471",
+                "reference": "8fdb0f8a47f891e081c5e704633470a2fbb09471",
+                "shasum": ""
             },
             "require": {
                 "illuminate/cache": "^12.0|^13.0",
@@ -1134,10 +1140,10 @@
                 "permission",
                 "roles"
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/laraadmin/entrust/tree/7.0.0"
+            },
+            "time": "2026-10-24T08:43:31+00:00"
         },
         {
             "name": "laraadmin/html",

@@ -49,11 +49,8 @@
     ],
     "repositories": [
         {
-            "type": "path",
-            "url": "../packages/entrust",
-            "options": {
-                "symlink": true
-            }
+            "type": "vcs",
+            "url": "https://github.com/laraadmin/entrust.git"
         },
         {
             "type": "vcs",
