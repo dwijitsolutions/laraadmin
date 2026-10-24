@@ -119,11 +119,7 @@ class CodeGenerator
         $templateDirectory = base_path('/app/Stubs');
 
         LAHelper::log('info', 'Appending LAProvider...', $comm);
-        if (LAHelper::laravel_ver() == 5.3) {
-            $providerFile = base_path('/app/Providers/LAProvider.php');
-        } else {
-            $providerFile = base_path('/app/Providers/LAProvider.php'); // need to check - madhavi
-        }
+        $providerFile = base_path('/app/Providers/LAProvider.php');
 
         $contents = file_get_contents($providerFile);
         $contents_append = file_get_contents($templateDirectory.'/observer_boot.stub');

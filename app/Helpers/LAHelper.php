@@ -634,10 +634,13 @@ class LAHelper
     }
 
     /**
-     * Get laravel version. very important in installation and handling Laravel 5.3 changes.
+     * Get laravel version. Was used to handle Laravel 5.2 / 5.3 differences.
      *
      * LAHelper::laravel_ver()
      *
+     * @deprecated 1.13.0 LaraAdmin no longer branches on the Laravel version. Kept for code outside LaraAdmin
+     *             that still calls it; note it returns a non-numeric string for four-part versions. Use
+     *             app()->version() instead.
      * @return float|string laravel version
      */
     public static function laravel_ver()
