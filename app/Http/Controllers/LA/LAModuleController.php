@@ -407,11 +407,7 @@ class LAModuleController extends Controller
         $arr = [];
 
         // Routes
-        if (LAHelper::laravel_ver() >= 5.3) {
-            $file_admin_routes = base_path('routes/admin_routes.php');
-        } else {
-            $file_admin_routes = base_path('app/Http/admin_routes.php');
-        }
+        $file_admin_routes = base_path('routes/admin.php');
         if (file_exists($file_admin_routes)) {
             $class = '';
             $perms = LAHelper::fileperms($file_admin_routes);

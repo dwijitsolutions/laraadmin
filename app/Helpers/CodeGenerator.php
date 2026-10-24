@@ -257,11 +257,7 @@ class CodeGenerator
         $templateDirectory = base_path('/app/Stubs');
 
         LAHelper::log('info', 'Appending routes...', $comm);
-        if (\App\Helpers\LAHelper::laravel_ver() >= 5.3) {
-            $routesFile = base_path('routes/admin_routes.php');
-        } else {
-            $routesFile = app_path('Http/admin_routes.php');
-        }
+        $routesFile = base_path('routes/admin.php');
 
         $contents = file_get_contents($routesFile);
 

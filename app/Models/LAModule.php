@@ -1871,11 +1871,7 @@ class LAModule extends Model
             }
         }
         // Admin Route
-        if (LAHelper::laravel_ver() >= 5.3) {
-            $file_admin_routes = base_path('routes/admin_routes.php');
-        } else {
-            $file_admin_routes = base_path('app/Http/admin_routes.php');
-        }
+        $file_admin_routes = base_path('routes/admin.php');
         if (file_exists($file_admin_routes)) {
             $perms = LAHelper::fileperms($file_admin_routes);
             if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
@@ -1958,7 +1954,8 @@ class LAModule extends Model
         }
 
         // Delete Module Fields
-        $la_module_fields = LAModuleField::where('module', $module->id);
+        $la_module_fields = LAModuleField::where('module', $module->id)->get();
+        DB::table('role_la_module_fields')->whereIn('field_id', $la_module_fields->pluck('id'))->delete();
         foreach ($la_module_fields as $field) {
             $field->delete();
         }
@@ -1992,13 +1989,15 @@ class LAModule extends Model
             }
         }
 
-        // Delete Admin Routes
-        while (LAHelper::getLineWithString($file_admin_routes, 'LA\\'.$module->controller) != -1) {
-            $line = LAHelper::getLineWithString($file_admin_routes, 'LA\\'.$module->controller);
-            if (is_string($line)) {
-                $fileData = file_get_contents($file_admin_routes);
-                $fileData = str_replace($line, '', $fileData); // /\r|\n/
-                file_put_contents($file_admin_routes, $fileData);
+        // Delete Admin Routes - lines generated from routes.stub reference '<Controller>' or '<Controller>@method'
+        foreach (["'".$module->controller."'", "'".$module->controller.'@'] as $routeNeedle) {
+            while (LAHelper::getLineWithString($file_admin_routes, $routeNeedle) != -1) {
+                $line = LAHelper::getLineWithString($file_admin_routes, $routeNeedle);
+                if (is_string($line)) {
+                    $fileData = file_get_contents($file_admin_routes);
+                    $fileData = str_replace($line, '', $fileData); // /\r|\n/
+                    file_put_contents($file_admin_routes, $fileData);
+                }
             }
         }
         if (LAHelper::getLineWithString($file_admin_routes, '=== '.$module->name.' ===') != -1) {
@@ -2033,7 +2032,9 @@ class LAModule extends Model
             Schema::enableForeignKeyConstraints();
         }
 
-        // Delete Module
+        // Delete Module - keep its activity logs, detached from the module
+        DB::table('role_la_module')->where('module_id', $module->id)->delete();
+        DB::table('la_logs')->where('module_id', $module->id)->update(['module_id' => null]);
         $module->delete();
 
         if ($return_response) {

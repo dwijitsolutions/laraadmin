@@ -575,6 +575,7 @@ class LAModuleField extends Model
         });
 
         // Delete Context
+        DB::table('role_la_module_fields')->where('field_id', $field->id)->delete();
         $field->delete();
 
         return true;
