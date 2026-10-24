@@ -18,27 +18,24 @@
         "source": "https://github.com/dwijitsolutions/laraadmin"
     },
     "require": {
-        "php": "^7.3|^8.0",
-        "doctrine/dbal": "^3.5",
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "laraadmin/entrust": "6.0.3",
-        "laravel/framework": "^8.75",
-        "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.4",
-        "laravelcollective/html": "^6.3",
-        "spatie/laravel-backup": "^6.16",
-        "yajra/laravel-datatables-oracle": "^9.21"
+        "php": "^8.3",
+        "guzzlehttp/guzzle": "^7.8",
+        "laraadmin/entrust": "^7.0",
+        "laraadmin/html": "^7.0",
+        "laravel/framework": "^13.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^3.0",
+        "laravel/ui": "^4.6",
+        "spatie/laravel-backup": "^10.0",
+        "yajra/laravel-datatables-oracle": "^13.0"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
-        "fakerphp/faker": "^1.9.1",
-        "friendsofphp/php-cs-fixer": "^3.14",
-        "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^5.10",
-        "phpunit/phpunit": "^9.5.10"
+        "fakerphp/faker": "^1.23",
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "laravel/sail": "^1.41",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^12.0"
     },
     "authors": [
         {
@@ -52,8 +49,18 @@
     ],
     "repositories": [
         {
-            "url": "https://github.com/laraadmin/entrust.git",
-            "type": "git"
+            "type": "path",
+            "url": "../packages/entrust",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../packages/html",
+            "options": {
+                "symlink": true
+            }
         }
     ],
     "autoload": {
@@ -99,6 +106,6 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
