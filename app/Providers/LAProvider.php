@@ -105,12 +105,6 @@ class LAProvider extends ServiceProvider
         \App\Models\BlogPost::observe(\App\Observers\BlogPostObserver::class);
         \App\Models\LALog::observe(\App\Observers\LALogObserver::class);
         // End of Boot - Please do not edit this line.
-
-        // Support Enum Data Type
-        // if(file_exists(base_path('.env'))) {
-        //     $platform = Schema::getConnection()->getDoctrineSchemaManager()->getDatabasePlatform();
-        //     $platform->registerDoctrineTypeMapping('enum', 'string');
-        // }
     }
 
     /**
@@ -135,7 +129,7 @@ class LAProvider extends ServiceProvider
         // Collective HTML & Form Helper
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);
         // For Datatables
-        $this->app->register(\Yajra\Datatables\DatatablesServiceProvider::class);
+        $this->app->register(\Yajra\DataTables\DataTablesServiceProvider::class);
         // For Entrust
         $this->app->register(\Laraadmin\Entrust\EntrustServiceProvider::class);
         // For Spatie Backup
