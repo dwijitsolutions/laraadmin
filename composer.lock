@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ba417edfbb9fefbbeb5c586293ddf62",
+    "content-hash": "283cf487fab30e1364ab5407284e6dd8",
     "packages": [
         {
             "name": "brick/math",
@@ -1142,10 +1142,16 @@
         {
             "name": "laraadmin/html",
             "version": "7.0.0",
-            "dist": {
-                "type": "path",
-                "url": "../packages/html",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laraadmin/html.git",
                 "reference": "342ecd16c23c50969ad351aa9007575e8290a7e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laraadmin/html/zipball/342ecd16c23c50969ad351aa9007575e8290a7e8",
+                "reference": "342ecd16c23c50969ad351aa9007575e8290a7e8",
+                "shasum": ""
             },
             "require": {
                 "illuminate/http": "^12.0|^13.0",
@@ -1205,10 +1211,7 @@
                 "issues": "https://github.com/laraadmin/html/issues",
                 "source": "https://github.com/laraadmin/html"
             },
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "time": "2026-10-24T05:43:09+00:00"
         },
         {
             "name": "laravel/framework",

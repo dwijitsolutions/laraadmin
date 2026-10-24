@@ -56,11 +56,8 @@
             }
         },
         {
-            "type": "path",
-            "url": "../packages/html",
-            "options": {
-                "symlink": true
-            }
+            "type": "vcs",
+            "url": "https://github.com/laraadmin/html.git"
         }
     ],
     "autoload": {
