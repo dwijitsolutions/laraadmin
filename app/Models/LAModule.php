@@ -232,6 +232,24 @@ class LAModule extends Model
     }
 
     /**
+     * Checks whether a column of an existing table already has a foreign key.
+     *
+     * @param Blueprint $table
+     * @param string $column
+     * @return bool
+     */
+    public static function hasForeignKey($table, $column)
+    {
+        foreach (Schema::getForeignKeys($table->getTable()) as $foreignKey) {
+            if ($foreignKey['columns'] === [$column]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Method creates database table field via $table variable from Schema.
      * @param $table
      * @param $field
@@ -452,7 +470,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->unsignedBigInteger($field->colname)->unsigned()->nullable();
                 }
-                $table->foreign($field->colname)->references('id')->on('uploads');
+                if (! $update || ! self::hasForeignKey($table, $field->colname)) {
+                    $table->foreign($field->colname)->references('id')->on('uploads');
+                }
 
                 if ($field->defaultvalue != '' && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
@@ -506,7 +526,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->unsignedBigInteger($field->colname)->unsigned()->nullable();
                 }
-                $table->foreign($field->colname)->references('id')->on('uploads');
+                if (! $update || ! self::hasForeignKey($table, $field->colname)) {
+                    $table->foreign($field->colname)->references('id')->on('uploads');
+                }
 
                 if ($field->defaultvalue != '' && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
@@ -524,11 +546,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->json($field->colname);
                 }
-                if ($field->defaultvalue != '') {
-                    $var->default($field->defaultvalue);
-                } else {
-                    $var->default('{}');
-                }
+                // MySQL 8 rejects literal defaults on JSON columns, so use an expression default
+                $jsonDefault = $field->defaultvalue != '' ? $field->defaultvalue : '{}';
+                $var->default(DB::raw('('.DB::getPdo()->quote($jsonDefault).')'));
                 break;
             case 'Integer':
                 $var = null;
