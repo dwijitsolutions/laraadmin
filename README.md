@@ -44,7 +44,21 @@ CRUD Model View:
 Online Code Editor:
 ![Online Code Editor](https://laraadmin.com/img/laraadmin/laraadmin-online-code-editor.jpg)
 
+### Requirements
+
+- PHP 8.3 or newer (tested on PHP 8.4)
+- Laravel 13
+- MySQL 8.0.13+ or MariaDB 10.2+
+
 ### Installation & Documentation
+
+```
+composer install
+cp .env.example .env && php artisan key:generate
+php artisan migrate --seed
+```
+
+Set `MAIL_FROM_ADDRESS` in `.env`: spatie/laravel-backup refuses to boot without a sender address. Then open the site and register: the first user becomes Super Admin.
 
 Documentation for the LaraAdmin can be found on the [LaraAdmin website](https://laraadmin.com/docs/1.1).
 > **Warning**
