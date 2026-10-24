@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -361,7 +362,7 @@ class LAHelper
             list($red, $green, $blue) = $background;
             $color = imagecolorallocate($new_image, $red, $green, $blue);
             imagefill($new_image, 0, 0, $color);
-        // apply transparent background only if is a png image
+            // apply transparent background only if is a png image
         } elseif ($background === 'transparent' && $original_type === 3) {
             imagesavealpha($new_image, true);
             $color = imagecolorallocatealpha($new_image, 0, 0, 0, 127);

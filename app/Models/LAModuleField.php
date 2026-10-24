@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -339,6 +340,7 @@ class LAModuleField extends Model
                 $external_module = DB::table('la_modules')->where('name_db', $external_table_name)->first();
                 if (isset($external_module->view_col)) {
                     $external_value_viewcol_name = $external_module->view_col;
+
                     // return $external_value[0]->$external_value_viewcol_name;
                     return '<a '.config('laraadmin.ajaxload').' href="'.url(config('laraadmin.adminRoute').'/'.$external_table_name.'/'.$external_value[0]->id).'">'.$external_value[0]->$external_value_viewcol_name.'</a>';
                 } else {

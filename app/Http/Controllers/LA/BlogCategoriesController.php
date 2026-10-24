@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -58,7 +59,7 @@ class BlogCategoriesController extends Controller
     /**
      * Store a newly created blog_category in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -178,7 +179,7 @@ class BlogCategoriesController extends Controller
     /**
      * Update the specified blog_category in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id blog_category ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -248,7 +249,7 @@ class BlogCategoriesController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -257,7 +258,7 @@ class BlogCategoriesController extends Controller
         $listing_cols = LAModule::getListingColumns('Blog_categories');
 
         $values = DB::table('blog_categories')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Blog_categories');

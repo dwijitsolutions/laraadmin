@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -271,7 +272,7 @@ class LAModule extends Model
         // ." - ".$defval." - ".$field->maxlength);
 
         // Create Field in Database for respective Field Type
-        switch($field->field_type) {
+        switch ($field->field_type) {
             case 'Address':
                 $var = null;
                 if ($field->maxlength == 0) {
@@ -1275,7 +1276,7 @@ class LAModule extends Model
 
         foreach ($module->fields as $field) {
             if (isset($request->{$field['colname']}) || isset($request->{$field['colname'].'_hidden'}) || $ftypes[$field['field_type']] == 'Textarea') {
-                switch($ftypes[$field['field_type']]) {
+                switch ($ftypes[$field['field_type']]) {
                     case 'Integer':
                         if (isset($request->{$field['colname']}) && $request->{$field['colname']} != '') {
                             $row->{$field['colname']} = $request->{$field['colname']};

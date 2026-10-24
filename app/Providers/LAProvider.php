@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -13,7 +14,6 @@ use App\Helpers\LAHelper;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -154,7 +154,7 @@ class LAProvider extends ServiceProvider
         $loader->alias('LAFormMaker', \App\Helpers\LAFormMaker::class);
 
         // For LaraAdmin Helper
-        $loader->alias('LAHelper', \App\Helpers\LAHelper::class);
+        $loader->alias('LAHelper', LAHelper::class);
 
         // LaraAdmin Module Model
         $loader->alias('LAModule', \App\Models\LAModule::class);

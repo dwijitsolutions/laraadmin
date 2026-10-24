@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -52,7 +53,7 @@ class LAModuleController extends Controller
     /**
      * Store a newly created Module.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
@@ -99,7 +100,7 @@ class LAModuleController extends Controller
     /**
      * Update the specified Module.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      */
     public function update(Request $request)
     {

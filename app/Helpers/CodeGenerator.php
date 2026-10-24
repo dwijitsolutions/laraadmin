@@ -119,7 +119,7 @@ class CodeGenerator
         $templateDirectory = base_path('/app/Stubs');
 
         LAHelper::log('info', 'Appending LAProvider...', $comm);
-        if (\App\Helpers\LAHelper::laravel_ver() == 5.3) {
+        if (LAHelper::laravel_ver() == 5.3) {
             $providerFile = base_path('/app/Providers/LAProvider.php');
         } else {
             $providerFile = base_path('/app/Providers/LAProvider.php'); // need to check - madhavi

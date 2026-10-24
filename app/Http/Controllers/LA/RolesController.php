@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -30,7 +31,7 @@ class RolesController extends Controller
     /**
      * Display a listing of the Roles.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -134,7 +135,7 @@ class RolesController extends Controller
     /**
      * Store a newly created role in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -208,7 +209,7 @@ class RolesController extends Controller
     /**
      * Display the specified role.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id role ID
      * @return mixed
      */
@@ -297,7 +298,7 @@ class RolesController extends Controller
     /**
      * Update the specified role in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id role ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -392,7 +393,7 @@ class RolesController extends Controller
     /**
      * Remove the specified role from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id role ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -447,7 +448,7 @@ class RolesController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -456,7 +457,7 @@ class RolesController extends Controller
         $listing_cols = LAModule::getListingColumns('Roles');
 
         $values = DB::table('roles')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Roles');

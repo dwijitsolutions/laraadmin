@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -31,7 +32,7 @@ class BackupsController extends Controller
     /**
      * Display a listing of the Backups.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -64,7 +65,7 @@ class BackupsController extends Controller
     /**
      * Create Backup using Spatie Backup Library.
      *
-     * @return \Illuminate\Http\Request
+     * @return Request
      */
     public function create_backup_ajax(Request $request)
     {
@@ -144,7 +145,7 @@ class BackupsController extends Controller
     /**
      * Remove the specified backup from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id backup ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -203,7 +204,7 @@ class BackupsController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -212,7 +213,7 @@ class BackupsController extends Controller
         $listing_cols = LAModule::getListingColumns('Backups');
 
         $values = DB::table('backups')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Backups');

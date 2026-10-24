@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Migration generated using LaraAdmin
  * Help: https://laraadmin.com
