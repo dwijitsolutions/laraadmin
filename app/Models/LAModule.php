@@ -295,10 +295,11 @@ class LAModule extends Model
                 }
                 break;
             case 'Currency':
+                // Laravel 11+ removed the total/places arguments of double(): new columns are plain DOUBLE
                 if ($update) {
-                    $var = $table->double($field->colname, 15, 2)->change();
+                    $var = $table->double($field->colname)->change();
                 } else {
-                    $var = $table->double($field->colname, 15, 2);
+                    $var = $table->double($field->colname);
                 }
                 if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
@@ -327,9 +328,7 @@ class LAModule extends Model
                 break;
             case 'Datetime':
                 if ($update) {
-                    // Timestamp Edit Not working - http://stackoverflow.com/questions/34774628/how-do-i-make-doctrine-support-timestamp-columns
-                    // Error Unknown column type "timestamp" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType()
-                    // $var = $table->timestamp($field->colname)->change();
+                    $var = $table->timestamp($field->colname)->nullable()->change();
                 } else {
                     $var = $table->timestamp($field->colname)->nullable()->nullableTimestamps();
                 }
