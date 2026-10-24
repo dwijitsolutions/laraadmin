@@ -25,8 +25,6 @@ class Upload extends Model
 
     protected $guarded = [];
 
-    protected $dates = ['deleted_at'];
-
     public static function add($filename, $caption = '', $user_id = null, $is_public = true)
     {
         $img = self::create([

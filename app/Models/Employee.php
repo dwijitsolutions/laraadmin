@@ -24,8 +24,6 @@ class Employee extends Model
 
     protected $guarded = [];
 
-    protected $dates = ['deleted_at'];
-
     /**
      * Get the index name for the model.
      *
