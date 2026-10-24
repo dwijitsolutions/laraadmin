@@ -1,17 +1,16 @@
 <p align="center">
   <img src="https://laraadmin.com/img/laraadmin-256.png">
-  <h1 align="center" style="margin-top:5px;">LaraAdmin 1.1</h1>
+  <h1 align="center" style="margin-top:5px;">LaraAdmin 1.13</h1>
 </p>
 
-[![Build Status](https://travis-ci.org/dwijitsolutions/laraadmin.svg?branch=master)](https://travis-ci.org/dwijitsolutions/laraadmin)
 [![License](https://poser.pugx.org/dwij/laraadmin/license.svg)](https://packagist.org/packages/dwij/laraadmin)
 [![Code Triagers Badge](https://www.codetriage.com/dwijitsolutions/laraadmin/badges/users.svg)](https://www.codetriage.com/dwijitsolutions/laraadmin)
 
 LaraAdmin is a Open source CRM for quick-start Admin based applications with features like Advanced CRUD Generation, Schema Manager and Workflows.
 
 > **Warning**
-> LaraAdmin 1.1 is not a package anymore.
-> Now it's a template.
+> Since version 1.1, LaraAdmin is not a package anymore.
+> It's a template: create your application from this repository.
 
 *Website: [LaraAdmin.com](https://laraadmin.com)*
 
@@ -62,7 +61,38 @@ Set `MAIL_FROM_ADDRESS` in `.env`: spatie/laravel-backup refuses to boot without
 
 Documentation for the LaraAdmin can be found on the [LaraAdmin website](https://laraadmin.com/docs/1.1).
 > **Warning**
-> Documentation is not ready yet for version 1.1
+> Documentation is written for version 1.1 and is not updated for 1.13 yet. See [What's new in 1.13](#whats-new-in-113) for the differences.
+
+### Running tests
+
+Tests run against a real MySQL database named `laraadmin_test` (configured in `phpunit.xml`):
+
+```
+./vendor/bin/phpunit
+composer sniff    # coding style check (composer lint to fix)
+```
+
+### What's new in 1.13
+
+LaraAdmin 1.13 moves from Laravel 8 to **Laravel 13** and runs on **PHP 8.3+ (tested on PHP 8.4)**.
+
+- Role-based access uses [laraadmin/entrust](https://github.com/laraadmin/entrust) 7.0.
+- Forms use [laraadmin/html](https://github.com/laraadmin/html) 7.0, a maintained fork of the abandoned `laravelcollective/html`. The `Form::`/`HTML::` API is unchanged.
+- `fruitcake/laravel-cors`, `doctrine/dbal` and `facade/ignition` are no longer needed.
+- Fixed:
+  - CRUD generation and module deletion
+  - editing File, Image and Datetime fields
+  - creating JSON fields on MySQL 8
+  - the Module Manager module page
+
+Notes when upgrading an application built on 1.1:
+
+- `MAIL_FROM_ADDRESS` must be set.
+- New Currency columns are `DOUBLE` instead of `DOUBLE(15,2)`. Changing a field's type to Integer makes the column `NOT NULL`, the same as creating one.
+- Sessions keep PHP serialization, so users stay logged in across the upgrade.
+- The application keeps the Laravel 8 directory structure (`app/Http/Kernel.php` and so on), which Laravel 13 still supports.
+
+Known issues and planned follow-ups are tracked in [engg-debt.md](engg-debt.md).
 
 ### Contributing
 
