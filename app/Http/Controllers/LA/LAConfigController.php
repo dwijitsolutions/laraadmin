@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -74,7 +75,7 @@ class LAConfigController extends Controller
     /**
      * Store a newly created config in database.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -165,7 +166,7 @@ class LAConfigController extends Controller
         foreach ($configs as $config) {
             $key = $config->key;
 
-            switch($ftypes[$config['field_type']]) {
+            switch ($ftypes[$config['field_type']]) {
                 case 'Checkbox':
                     if (isset($request->$key)) {
                         $value = true;

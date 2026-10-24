@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -49,7 +50,7 @@ class LAMenuController extends Controller
     /**
      * Store a newly created Menu in Database.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -115,7 +116,7 @@ class LAMenuController extends Controller
     /**
      * Update Custom Menu.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -192,7 +193,7 @@ class LAMenuController extends Controller
     /**
      * Save Role access of Menu.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id Menu ID
      * @return json
      */

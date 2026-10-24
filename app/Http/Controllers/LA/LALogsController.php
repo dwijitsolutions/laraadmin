@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -15,7 +16,6 @@ use App\Models\LAModule;
 use App\Models\LAModuleField;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
 class LALogsController extends Controller
@@ -25,7 +25,7 @@ class LALogsController extends Controller
     /**
      * Display a listing of the LA_logs.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -58,7 +58,7 @@ class LALogsController extends Controller
     /**
      * Display the specified la_log.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id la_log ID
      * @return mixed
      */
@@ -70,7 +70,7 @@ class LALogsController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -80,7 +80,7 @@ class LALogsController extends Controller
         $listing_cols[] = 'created_at';
 
         $values = DB::table('la_logs')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('LA_logs');

@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -11,7 +12,6 @@ namespace App\Observers;
 
 use App\Models\LALog;
 use App\Models\LAModule;
-use Illuminate\Support\Facades\Log;
 
 class LALogObserver
 {

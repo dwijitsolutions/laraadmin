@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -36,7 +37,7 @@ class EmployeesController extends Controller
     /**
      * Display a listing of the Employees.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -79,7 +80,7 @@ class EmployeesController extends Controller
     /**
      * Store a newly created employee in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -178,7 +179,7 @@ class EmployeesController extends Controller
     /**
      * Display the specified employee.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id employee ID
      * @return mixed
      */
@@ -266,7 +267,7 @@ class EmployeesController extends Controller
     /**
      * Update the specified employee in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id employee ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -379,7 +380,7 @@ class EmployeesController extends Controller
     /**
      * Remove the specified employee from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id employee ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -448,7 +449,7 @@ class EmployeesController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -457,7 +458,7 @@ class EmployeesController extends Controller
         $listing_cols = LAModule::getListingColumns('Employees');
 
         $values = DB::table('employees')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Employees');

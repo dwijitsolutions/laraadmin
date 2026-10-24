@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -33,7 +34,7 @@ class CustomersController extends Controller
     /**
      * Display a listing of the Customers.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -76,7 +77,7 @@ class CustomersController extends Controller
     /**
      * Store a newly created customer in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -179,7 +180,7 @@ class CustomersController extends Controller
     /**
      * Display the specified customer.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id customer ID
      * @return mixed
      */
@@ -259,7 +260,7 @@ class CustomersController extends Controller
     /**
      * Update the specified customer in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id customer ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -367,7 +368,7 @@ class CustomersController extends Controller
     /**
      * Remove the specified customer from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id customer ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -438,7 +439,7 @@ class CustomersController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -447,7 +448,7 @@ class CustomersController extends Controller
         $listing_cols = LAModule::getListingColumns('Customers');
 
         $values = DB::table('customers')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Customers');

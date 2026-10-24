@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Model generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -21,8 +22,6 @@ class Backup extends Model
     protected $hidden = [];
 
     protected $guarded = [];
-
-    protected $dates = ['deleted_at'];
 
     /**
      * Get the index name for the model.

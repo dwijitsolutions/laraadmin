@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com

@@ -9,7 +9,6 @@ $rules = [
     'no_unused_imports' => true,
     'blank_line_after_namespace' => true,
     'blank_line_after_opening_tag' => true,
-    'braces' => true,
     'cast_spaces' => true,
     'concat_space' => [
         'spacing' => 'none',
@@ -20,7 +19,6 @@ $rules = [
     'full_opening_tag' => true,
     'fully_qualified_strict_types' => true, // added by Shift
     'function_declaration' => true,
-    'function_typehint_space' => true,
     'heredoc_to_nowdoc' => true,
     'include' => true,
     'increment_style' => ['style' => 'post'],
@@ -60,9 +58,6 @@ $rules = [
     'no_short_bool_cast' => true,
     'no_singleline_whitespace_before_semicolons' => true,
     'no_spaces_after_function_name' => true,
-    'no_spaces_inside_parenthesis' => true,
-    'no_trailing_comma_in_list_call' => true,
-    'no_trailing_comma_in_singleline_array' => true,
     'no_trailing_whitespace' => true,
     'no_trailing_whitespace_in_comment' => true,
     'no_unreachable_default_argument_value' => true,
@@ -87,7 +82,6 @@ $rules = [
     'short_scalar_cast' => true,
     'simplified_null_return' => false, // disabled by Shift
     'single_blank_line_at_eof' => true,
-    'single_blank_line_before_namespace' => true,
     'single_import_per_statement' => true,
     'single_line_after_imports' => true,
     'single_line_comment_spacing' => true,
@@ -142,9 +136,22 @@ $rules = [
     'no_spaces_around_offset' => [
         'positions' => ['inside', 'outside'],
     ],
-    'visibility_required' => [
+
+    // php-cs-fixer 3.x: Replacements for rules deprecated before 4.0
+    'blank_lines_before_namespace' => true, // single_blank_line_before_namespace
+    'braces_position' => true, // braces
+    'control_structure_braces' => true, // braces
+    'control_structure_continuation_position' => true, // braces
+    'declare_parentheses' => true, // braces
+    'modifier_keywords' => [ // visibility_required
         'elements' => ['property', 'method', 'const'],
     ],
+    'no_multiple_statements_per_line' => true, // braces
+    'no_trailing_comma_in_singleline' => true, // no_trailing_comma_in_list_call, no_trailing_comma_in_singleline_array
+    'single_space_around_construct' => true, // braces
+    'spaces_inside_parentheses' => true, // no_spaces_inside_parenthesis
+    'statement_indentation' => true, // braces
+    'type_declaration_spaces' => true, // function_typehint_space
 
 ];
 

@@ -26,8 +26,6 @@ class __model_class_name__ extends Model
 
     protected $guarded = [];
 
-    protected $dates = ['deleted_at'];
-
     /**
      * Get the index name for the model.
      *

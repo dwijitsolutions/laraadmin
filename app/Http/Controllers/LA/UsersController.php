@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -91,7 +92,7 @@ class UsersController extends Controller
         } else {
             $values = DB::table('users')->select($listing_cols)->whereNull('deleted_at');
         }
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Users');

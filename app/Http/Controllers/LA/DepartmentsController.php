@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -28,7 +29,7 @@ class DepartmentsController extends Controller
     /**
      * Display a listing of the Departments.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -71,7 +72,7 @@ class DepartmentsController extends Controller
     /**
      * Store a newly created department in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -134,7 +135,7 @@ class DepartmentsController extends Controller
     /**
      * Display the specified department.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id department ID
      * @return mixed
      */
@@ -214,7 +215,7 @@ class DepartmentsController extends Controller
     /**
      * Update the specified department in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id department ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -299,7 +300,7 @@ class DepartmentsController extends Controller
     /**
      * Remove the specified department from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id department ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -354,7 +355,7 @@ class DepartmentsController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -363,7 +364,7 @@ class DepartmentsController extends Controller
         $listing_cols = LAModule::getListingColumns('Departments');
 
         $values = DB::table('departments')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Departments');

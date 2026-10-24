@@ -235,11 +235,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        // Zizaco/Entrust
-        'role' => \Laraadmin\Entrust\Middleware\EntrustRole::class,
-        'permission' => \Laraadmin\Entrust\Middleware\EntrustPermission::class,
-        'ability' => \Laraadmin\Entrust\Middleware\EntrustAbility::class,
-
         // DataTables
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],

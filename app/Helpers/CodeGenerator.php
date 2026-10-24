@@ -119,11 +119,7 @@ class CodeGenerator
         $templateDirectory = base_path('/app/Stubs');
 
         LAHelper::log('info', 'Appending LAProvider...', $comm);
-        if (\App\Helpers\LAHelper::laravel_ver() == 5.3) {
-            $providerFile = base_path('/app/Providers/LAProvider.php');
-        } else {
-            $providerFile = base_path('/app/Providers/LAProvider.php'); // need to check - madhavi
-        }
+        $providerFile = base_path('/app/Providers/LAProvider.php');
 
         $contents = file_get_contents($providerFile);
         $contents_append = file_get_contents($templateDirectory.'/observer_boot.stub');
@@ -257,11 +253,7 @@ class CodeGenerator
         $templateDirectory = base_path('/app/Stubs');
 
         LAHelper::log('info', 'Appending routes...', $comm);
-        if (\App\Helpers\LAHelper::laravel_ver() >= 5.3) {
-            $routesFile = base_path('routes/admin_routes.php');
-        } else {
-            $routesFile = app_path('Http/admin_routes.php');
-        }
+        $routesFile = base_path('routes/admin.php');
 
         $contents = file_get_contents($routesFile);
 

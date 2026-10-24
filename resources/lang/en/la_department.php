@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Language generated using LaraAdmin
  * Help: https://laraadmin.com

@@ -305,20 +305,20 @@ use App\Models\LAModuleField;
 					<div class="form-group">
 						<label for="colname">Column Name :</label>
 						<?php
-						$columns = Schema::getColumnListing($module->name_db);
-						
+						$columns = Schema::getColumns($module->name_db);
+
 						$col_list = array();
-						foreach($columns as $col) {
+						foreach($columns as $column) {
+							$col = $column['name'];
 							// check if this column exists in Module
 							$field = LAModuleField::where('colname', $col)->where('module', $module->id)->first();
 							if($col != 'id' && $col != 'deleted_at' && $col != 'created_at' && $col != 'updated_at' && !isset($field->id)) {
-								$column = DB::connection()->getDoctrineColumn($module->name_db, $col);
-								if($column->getDefault() == '') {
+								if($column['default'] === null || $column['default'] === '') {
 									$default = "None";
 								} else {
-									$default = $column->getDefault();
-								}									
-								$col_list[$col] = $col." - ".$column->getType().' - '.$column->getLength().' - '.$default; 
+									$default = $column['default'];
+								}
+								$col_list[$col] = $col." - ".$column['type'].' - '.$default;
 							}
 						}
 

@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -52,7 +53,7 @@ class LAModuleController extends Controller
     /**
      * Store a newly created Module.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
@@ -99,7 +100,7 @@ class LAModuleController extends Controller
     /**
      * Update the specified Module.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      */
     public function update(Request $request)
     {
@@ -407,11 +408,7 @@ class LAModuleController extends Controller
         $arr = [];
 
         // Routes
-        if (LAHelper::laravel_ver() >= 5.3) {
-            $file_admin_routes = base_path('routes/admin_routes.php');
-        } else {
-            $file_admin_routes = base_path('app/Http/admin_routes.php');
-        }
+        $file_admin_routes = base_path('routes/admin.php');
         if (file_exists($file_admin_routes)) {
             $class = '';
             $perms = LAHelper::fileperms($file_admin_routes);

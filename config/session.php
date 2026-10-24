@@ -198,4 +198,18 @@ return [
 
     'same_site' => 'lax',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | Laravel 13's skeleton defaults to "json". LaraAdmin keeps "php" so that
+    | sessions of existing installations stay valid across the upgrade.
+    |
+    | Supported: "php", "json"
+    |
+    */
+
+    'serialization' => 'php',
+
 ];

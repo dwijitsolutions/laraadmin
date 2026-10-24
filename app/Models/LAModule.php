@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -232,6 +233,24 @@ class LAModule extends Model
     }
 
     /**
+     * Checks whether a column of an existing table already has a foreign key.
+     *
+     * @param Blueprint $table
+     * @param string $column
+     * @return bool
+     */
+    public static function hasForeignKey($table, $column)
+    {
+        foreach (Schema::getForeignKeys($table->getTable()) as $foreignKey) {
+            if ($foreignKey['columns'] === [$column]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Method creates database table field via $table variable from Schema.
      * @param $table
      * @param $field
@@ -253,7 +272,7 @@ class LAModule extends Model
         // ." - ".$defval." - ".$field->maxlength);
 
         // Create Field in Database for respective Field Type
-        switch($field->field_type) {
+        switch ($field->field_type) {
             case 'Address':
                 $var = null;
                 if ($field->maxlength == 0) {
@@ -295,10 +314,11 @@ class LAModule extends Model
                 }
                 break;
             case 'Currency':
+                // Laravel 11+ removed the total/places arguments of double(): new columns are plain DOUBLE
                 if ($update) {
-                    $var = $table->double($field->colname, 15, 2)->change();
+                    $var = $table->double($field->colname)->change();
                 } else {
-                    $var = $table->double($field->colname, 15, 2);
+                    $var = $table->double($field->colname);
                 }
                 if ($field->defaultvalue != '') {
                     $var->default($field->defaultvalue);
@@ -327,9 +347,7 @@ class LAModule extends Model
                 break;
             case 'Datetime':
                 if ($update) {
-                    // Timestamp Edit Not working - http://stackoverflow.com/questions/34774628/how-do-i-make-doctrine-support-timestamp-columns
-                    // Error Unknown column type "timestamp" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType()
-                    // $var = $table->timestamp($field->colname)->change();
+                    $var = $table->timestamp($field->colname)->nullable()->change();
                 } else {
                     $var = $table->timestamp($field->colname)->nullable()->nullableTimestamps();
                 }
@@ -453,7 +471,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->unsignedBigInteger($field->colname)->unsigned()->nullable();
                 }
-                $table->foreign($field->colname)->references('id')->on('uploads');
+                if (! $update || ! self::hasForeignKey($table, $field->colname)) {
+                    $table->foreign($field->colname)->references('id')->on('uploads');
+                }
 
                 if ($field->defaultvalue != '' && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
@@ -507,7 +527,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->unsignedBigInteger($field->colname)->unsigned()->nullable();
                 }
-                $table->foreign($field->colname)->references('id')->on('uploads');
+                if (! $update || ! self::hasForeignKey($table, $field->colname)) {
+                    $table->foreign($field->colname)->references('id')->on('uploads');
+                }
 
                 if ($field->defaultvalue != '' && is_numeric($field->defaultvalue)) {
                     $var->default($field->defaultvalue);
@@ -525,11 +547,9 @@ class LAModule extends Model
                 } else {
                     $var = $table->json($field->colname);
                 }
-                if ($field->defaultvalue != '') {
-                    $var->default($field->defaultvalue);
-                } else {
-                    $var->default('{}');
-                }
+                // MySQL 8 rejects literal defaults on JSON columns, so use an expression default
+                $jsonDefault = $field->defaultvalue != '' ? $field->defaultvalue : '{}';
+                $var->default(DB::raw('('.DB::getPdo()->quote($jsonDefault).')'));
                 break;
             case 'Integer':
                 $var = null;
@@ -1256,7 +1276,7 @@ class LAModule extends Model
 
         foreach ($module->fields as $field) {
             if (isset($request->{$field['colname']}) || isset($request->{$field['colname'].'_hidden'}) || $ftypes[$field['field_type']] == 'Textarea') {
-                switch($ftypes[$field['field_type']]) {
+                switch ($ftypes[$field['field_type']]) {
                     case 'Integer':
                         if (isset($request->{$field['colname']}) && $request->{$field['colname']} != '') {
                             $row->{$field['colname']} = $request->{$field['colname']};
@@ -1852,11 +1872,7 @@ class LAModule extends Model
             }
         }
         // Admin Route
-        if (LAHelper::laravel_ver() >= 5.3) {
-            $file_admin_routes = base_path('routes/admin_routes.php');
-        } else {
-            $file_admin_routes = base_path('app/Http/admin_routes.php');
-        }
+        $file_admin_routes = base_path('routes/admin.php');
         if (file_exists($file_admin_routes)) {
             $perms = LAHelper::fileperms($file_admin_routes);
             if (! LAHelper::fileperms_cmp($perms, $correct_file_perms)) {
@@ -1939,7 +1955,8 @@ class LAModule extends Model
         }
 
         // Delete Module Fields
-        $la_module_fields = LAModuleField::where('module', $module->id);
+        $la_module_fields = LAModuleField::where('module', $module->id)->get();
+        DB::table('role_la_module_fields')->whereIn('field_id', $la_module_fields->pluck('id'))->delete();
         foreach ($la_module_fields as $field) {
             $field->delete();
         }
@@ -1973,13 +1990,15 @@ class LAModule extends Model
             }
         }
 
-        // Delete Admin Routes
-        while (LAHelper::getLineWithString($file_admin_routes, 'LA\\'.$module->controller) != -1) {
-            $line = LAHelper::getLineWithString($file_admin_routes, 'LA\\'.$module->controller);
-            if (is_string($line)) {
-                $fileData = file_get_contents($file_admin_routes);
-                $fileData = str_replace($line, '', $fileData); // /\r|\n/
-                file_put_contents($file_admin_routes, $fileData);
+        // Delete Admin Routes - lines generated from routes.stub reference '<Controller>' or '<Controller>@method'
+        foreach (["'".$module->controller."'", "'".$module->controller.'@'] as $routeNeedle) {
+            while (LAHelper::getLineWithString($file_admin_routes, $routeNeedle) != -1) {
+                $line = LAHelper::getLineWithString($file_admin_routes, $routeNeedle);
+                if (is_string($line)) {
+                    $fileData = file_get_contents($file_admin_routes);
+                    $fileData = str_replace($line, '', $fileData); // /\r|\n/
+                    file_put_contents($file_admin_routes, $fileData);
+                }
             }
         }
         if (LAHelper::getLineWithString($file_admin_routes, '=== '.$module->name.' ===') != -1) {
@@ -2014,7 +2033,9 @@ class LAModule extends Model
             Schema::enableForeignKeyConstraints();
         }
 
-        // Delete Module
+        // Delete Module - keep its activity logs, detached from the module
+        DB::table('role_la_module')->where('module_id', $module->id)->delete();
+        DB::table('la_logs')->where('module_id', $module->id)->update(['module_id' => null]);
         $module->delete();
 
         if ($return_response) {

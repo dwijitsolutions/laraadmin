@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -361,7 +362,7 @@ class LAHelper
             list($red, $green, $blue) = $background;
             $color = imagecolorallocate($new_image, $red, $green, $blue);
             imagefill($new_image, 0, 0, $color);
-        // apply transparent background only if is a png image
+            // apply transparent background only if is a png image
         } elseif ($background === 'transparent' && $original_type === 3) {
             imagesavealpha($new_image, true);
             $color = imagecolorallocatealpha($new_image, 0, 0, 0, 127);
@@ -633,10 +634,13 @@ class LAHelper
     }
 
     /**
-     * Get laravel version. very important in installation and handling Laravel 5.3 changes.
+     * Get laravel version. Was used to handle Laravel 5.2 / 5.3 differences.
      *
      * LAHelper::laravel_ver()
      *
+     * @deprecated 1.13.0 LaraAdmin no longer branches on the Laravel version. Kept for code outside LaraAdmin
+     *             that still calls it; note it returns a non-numeric string for four-part versions. Use
+     *             app()->version() instead.
      * @return float|string laravel version
      */
     public static function laravel_ver()

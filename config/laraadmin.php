@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Config generated using LaraAdmin
  * Help: https://laraadmin.com

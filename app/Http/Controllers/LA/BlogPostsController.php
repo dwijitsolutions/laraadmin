@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -29,7 +30,7 @@ class BlogPostsController extends Controller
     /**
      * Display a listing of the Blog_posts.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -72,7 +73,7 @@ class BlogPostsController extends Controller
     /**
      * Store a newly created blog_post in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -135,7 +136,7 @@ class BlogPostsController extends Controller
     /**
      * Display the specified blog_post.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id blog_post ID
      * @return mixed
      */
@@ -215,7 +216,7 @@ class BlogPostsController extends Controller
     /**
      * Update the specified blog_post in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id blog_post ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -300,7 +301,7 @@ class BlogPostsController extends Controller
     /**
      * Remove the specified blog_post from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id blog_post ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -355,7 +356,7 @@ class BlogPostsController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -364,7 +365,7 @@ class BlogPostsController extends Controller
         $listing_cols = LAModule::getListingColumns('Blog_posts');
 
         $values = DB::table('blog_posts')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Blog_posts');

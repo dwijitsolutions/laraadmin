@@ -107,4 +107,18 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | Classes allowed when unserializing cached values: null allows all, false
+    | allows none, or list them. LaraAdmin keeps null because Entrust caches
+    | Eloquent role and permission collections on taggable stores (Redis,
+    | Memcached). List those classes here to harden against gadget chains.
+    |
+    */
+
+    'serializable_classes' => null,
+
 ];

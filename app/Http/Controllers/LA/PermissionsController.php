@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Controller generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -30,7 +31,7 @@ class PermissionsController extends Controller
     /**
      * Display a listing of the Permissions.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function index(Request $request)
@@ -73,7 +74,7 @@ class PermissionsController extends Controller
     /**
      * Store a newly created permission in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -136,7 +137,7 @@ class PermissionsController extends Controller
     /**
      * Display the specified permission.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id permission ID
      * @return mixed
      */
@@ -219,7 +220,7 @@ class PermissionsController extends Controller
     /**
      * Update the specified permission in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id permission ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -304,7 +305,7 @@ class PermissionsController extends Controller
     /**
      * Remove the specified permission from storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id permission ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -359,7 +360,7 @@ class PermissionsController extends Controller
     /**
      * Server side Datatable fetch via Ajax.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function dtajax(Request $request)
@@ -368,7 +369,7 @@ class PermissionsController extends Controller
         $listing_cols = LAModule::getListingColumns('Permissions');
 
         $values = DB::table('permissions')->select($listing_cols)->whereNull('deleted_at');
-        $out = Datatables::of($values)->make();
+        $out = DataTables::of($values)->make();
         $data = $out->getData();
 
         $fields_popup = LAModuleField::getModuleFields('Permissions');

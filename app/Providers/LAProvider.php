@@ -1,4 +1,5 @@
 <?php
+
 /***
  * Code generated using LaraAdmin
  * Help: https://laraadmin.com
@@ -13,7 +14,6 @@ use App\Helpers\LAHelper;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -48,25 +48,24 @@ class LAProvider extends ServiceProvider
 
         /*
         |--------------------------------------------------------------------------
-        | Blade Directives for Entrust not working in Laravel 5.3
+        | Blade Directives for Entrust
         |--------------------------------------------------------------------------
         */
-        if (LAHelper::laravel_ver() >= 5.3) {
-            // Call to Entrust::hasRole
-            Blade::directive('role', function ($expression) {
-                return "<?php if (\\Entrust::hasRole({$expression})) : ?>";
-            });
 
-            // Call to Entrust::can
-            Blade::directive('permission', function ($expression) {
-                return "<?php if (\\Entrust::can({$expression})) : ?>";
-            });
+        // Call to Entrust::hasRole
+        Blade::directive('role', function ($expression) {
+            return "<?php if (\\Entrust::hasRole({$expression})) : ?>";
+        });
 
-            // Call to Entrust::ability
-            Blade::directive('ability', function ($expression) {
-                return "<?php if (\\Entrust::ability({$expression})) : ?>";
-            });
-        }
+        // Call to Entrust::can
+        Blade::directive('permission', function ($expression) {
+            return "<?php if (\\Entrust::can({$expression})) : ?>";
+        });
+
+        // Call to Entrust::ability
+        Blade::directive('ability', function ($expression) {
+            return "<?php if (\\Entrust::ability({$expression})) : ?>";
+        });
 
         Validator::extend('mincount', function ($attribute, $value, $parameters, $validator) {
             $minVal = intval($parameters[0]);
@@ -105,12 +104,6 @@ class LAProvider extends ServiceProvider
         \App\Models\BlogPost::observe(\App\Observers\BlogPostObserver::class);
         \App\Models\LALog::observe(\App\Observers\LALogObserver::class);
         // End of Boot - Please do not edit this line.
-
-        // Support Enum Data Type
-        // if(file_exists(base_path('.env'))) {
-        //     $platform = Schema::getConnection()->getDoctrineSchemaManager()->getDatabasePlatform();
-        //     $platform->registerDoctrineTypeMapping('enum', 'string');
-        // }
     }
 
     /**
@@ -135,7 +128,7 @@ class LAProvider extends ServiceProvider
         // Collective HTML & Form Helper
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);
         // For Datatables
-        $this->app->register(\Yajra\Datatables\DatatablesServiceProvider::class);
+        $this->app->register(\Yajra\DataTables\DataTablesServiceProvider::class);
         // For Entrust
         $this->app->register(\Laraadmin\Entrust\EntrustServiceProvider::class);
         // For Spatie Backup
@@ -160,7 +153,7 @@ class LAProvider extends ServiceProvider
         $loader->alias('LAFormMaker', \App\Helpers\LAFormMaker::class);
 
         // For LaraAdmin Helper
-        $loader->alias('LAHelper', \App\Helpers\LAHelper::class);
+        $loader->alias('LAHelper', LAHelper::class);
 
         // LaraAdmin Module Model
         $loader->alias('LAModule', \App\Models\LAModule::class);
@@ -194,45 +187,35 @@ class LAProvider extends ServiceProvider
 
         // LAForm Input Maker
         Blade::directive('la_input', function ($expression) {
-            if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = '('.$expression.')';
-            }
+            $expression = '('.$expression.')';
 
             return "<?php echo LAFormMaker::input$expression; ?>";
         });
 
         // LAForm Input Maker
         Blade::directive('la_config_input', function ($expression) {
-            if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = '('.$expression.')';
-            }
+            $expression = '('.$expression.')';
 
             return "<?php echo LAFormMaker::config$expression; ?>";
         });
 
         // LAForm Form Maker
         Blade::directive('la_form', function ($expression) {
-            if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = '('.$expression.')';
-            }
+            $expression = '('.$expression.')';
 
             return "<?php echo LAFormMaker::form$expression; ?>";
         });
 
         // LAForm Maker - Display Values
         Blade::directive('la_display', function ($expression) {
-            if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = '('.$expression.')';
-            }
+            $expression = '('.$expression.')';
 
             return "<?php echo LAFormMaker::display$expression; ?>";
         });
 
         // LAForm Maker - Check Whether User has Module Access
         Blade::directive('la_access', function ($expression) {
-            if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = '('.$expression.')';
-            }
+            $expression = '('.$expression.')';
 
             return "<?php if(LAFormMaker::la_access$expression) { ?>";
         });
@@ -242,9 +225,7 @@ class LAProvider extends ServiceProvider
 
         // LAForm Maker - Check Whether User has Module Field Access
         Blade::directive('la_field_access', function ($expression) {
-            if (LAHelper::laravel_ver() >= 5.3) {
-                $expression = '('.$expression.')';
-            }
+            $expression = '('.$expression.')';
 
             return "<?php if(LAFormMaker::la_field_access$expression) { ?>";
         });
