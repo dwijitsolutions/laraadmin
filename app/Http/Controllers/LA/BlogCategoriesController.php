@@ -53,7 +53,8 @@ class BlogCategoriesController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.blog_categories.index');
     }
 
     /**
@@ -136,10 +137,10 @@ class BlogCategoriesController extends Controller
                     'no_padding' => 'no-padding'
                 ])->with('blog_category', $blog_category);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('blog_category'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -166,10 +167,10 @@ class BlogCategoriesController extends Controller
                     'view_col' => $module->view_col,
                 ])->with('blog_category', $blog_category);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('blog_category'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -254,6 +255,13 @@ class BlogCategoriesController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Blog_categories', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Blog_categories');
         $listing_cols = LAModule::getListingColumns('Blog_categories');
 

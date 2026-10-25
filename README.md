@@ -72,6 +72,51 @@ Tests run against a real MySQL database named `laraadmin_test` (configured in `p
 composer sniff    # coding style check (composer lint to fix)
 ```
 
+### What's new in 1.13.1
+
+A security and bug-fix release. **Update every site built on LaraAdmin 1.1 or 1.13**, or apply the registration fix
+by hand (see below).
+
+Security fixes:
+
+- **Anyone could register as Super Admin.** The registration form is hidden once a user exists, but `POST /register`
+  with `context_type=Employee` still created a Super Admin. It is now refused (403) once any user exists. On sites
+  that can't update yet, add at the top of `RegisterController::create()`:
+  `if ($data['context_type'] == 'Employee' && \App\Models\User::count() != 0) { abort(403); }`.
+  Check the `users` table for accounts you don't recognise.
+- Any user with the admin panel permission could change any employee's password, the Super Admin's included. Only
+  the employee themself or a Super Admin can now.
+- These actions now check the user's module access: every module's listing data (`*_dt_ajax`), LA Logs details, the
+  role hierarchy, checklist updates, quick add forms, the unique value check and refreshing upload paths.
+- Field access is enforced when saving: a role can no longer write a field it may only view, even with a crafted
+  request.
+- Employee forms can no longer grant the Super Admin role.
+- Renaming an upload can no longer move the file out of `storage/uploads`.
+- Uploaded HTML and SVG files are downloaded instead of shown as pages of the site.
+- Downloading a backup needs create access to Backups (view access was enough).
+- Draft blog posts are no longer public.
+
+Bug fixes:
+
+- Logins and logouts are written to LA Logs again (the listeners were never registered).
+- Blog post pages failed with `Undefined array key "gallery"`. Views that show a field the module doesn't have now
+  render nothing for it instead of failing.
+- Editing an employee removed all their roles, and the Add Employee form never assigned them.
+- Customers added in the admin never got their login user.
+- Creating backups failed with spatie/laravel-backup 10. `config/backup.php` is now included: it backs up the
+  database and `storage/uploads`, and leaves the code and `.env` out.
+- Role and permission changes now apply immediately on Redis and Memcached caches.
+- New custom menus and menu access settings had no effect for roles other than Super Admin.
+- Quick add (the "+" next to a dropdown) never reported success.
+- Pages that crashed now return 404 or work: unknown records and blog categories, the password confirmation page,
+  module search, and resource routes that had no controller method (`users/create`, `uploads/{id}` and others).
+- An empty optional dropdown linked to a table no longer fails to save.
+- The CRUD generator writes files as `0644` instead of world-writable `0777`.
+
+Tests now open every page and submit every form and action as six kinds of users (guest, customer, admin without
+module access, read-only role, full-access role, Super Admin). `RouteCoverageTest` fails when a route is added
+without a test.
+
 ### What's new in 1.13
 
 LaraAdmin 1.13 moves from Laravel 8 to **Laravel 13** and runs on **PHP 8.3+ (tested on PHP 8.4)**.

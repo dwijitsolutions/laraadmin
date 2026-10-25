@@ -64,6 +64,10 @@ class LALogsController extends Controller
      */
     public function show(Request $request, $id)
     {
+        if (! LAModule::hasAccess('LA_logs', 'view')) {
+            return redirect(config('laraadmin.adminRoute').'/');
+        }
+
         return redirect()->route(config('laraadmin.adminRoute').'.la_logs.index');
     }
 
@@ -75,6 +79,13 @@ class LALogsController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('LA_logs', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('LA_logs');
         $listing_cols = LAModule::getListingColumns('LA_logs');
         $listing_cols[] = 'created_at';
@@ -133,6 +144,13 @@ class LALogsController extends Controller
      */
     public function get_lalog_details(Request $request, $id)
     {
+        if (! LAModule::hasAccess('LA_logs', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $lalog = LALog::find($id);
 
         return response()->json([

@@ -1275,6 +1275,10 @@ class LAModule extends Model
         $ftypes = LAModuleFieldType::getFTypes2();
 
         foreach ($module->fields as $field) {
+            // Fields the user may not write keep their value; the form does not show them either
+            if (Auth::check() && ! self::hasFieldAccess($module->id, $field['id'], 'write')) {
+                continue;
+            }
             if (isset($request->{$field['colname']}) || isset($request->{$field['colname'].'_hidden'}) || $ftypes[$field['field_type']] == 'Textarea') {
                 switch ($ftypes[$field['field_type']]) {
                     case 'Integer':
@@ -1325,6 +1329,10 @@ class LAModule extends Model
                         $row->{$field['colname']} = $request->{$field['colname']};
                         break;
                     case 'Dropdown':
+                        // '0' is the empty choice; '' is sent when the dropdown has no choices at all
+                        if ($request->{$field['colname']} === '' && str_starts_with($field['popup_vals'], '@')) {
+                            $request->{$field['colname']} = '0';
+                        }
                         if ($request->{$field['colname']} == '0') {
                             if (str_starts_with($field['popup_vals'], '@')) {
                                 $request->{$field['colname']} = DB::raw('NULL');

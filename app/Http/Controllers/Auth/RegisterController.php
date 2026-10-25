@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Employee;
@@ -9,6 +10,7 @@ use App\Models\LALog;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /***
@@ -20,7 +22,9 @@ use Illuminate\Support\Facades\Validator;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers;
+    use RegistersUsers {
+        register as protected registerUser;
+    }
 
     /**
      * Where to redirect users after login / registration.
@@ -39,6 +43,24 @@ class RegisterController extends Controller
         $this->middleware('guest');
 
         $this->redirectTo = '/'.config('laraadmin.adminRoute');
+    }
+
+    /**
+     * Handle a registration request.
+     *
+     * Registering as Employee creates the Super Admin, so it is only allowed while there are no users yet. The
+     * registration form is hidden after that, but the endpoint must refuse too.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function register(Request $request)
+    {
+        if ($request->input('context_type') == 'Employee' && User::count() != 0) {
+            abort(403);
+        }
+
+        return $this->registerUser($request);
     }
 
     /**
@@ -96,6 +118,8 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'context_type' => ['required', 'in:Employee,Customer'],
+            'phone' => ['required_if:context_type,Customer', 'nullable', 'string', 'min:5', 'max:15'],
         ]);
     }
 
@@ -138,6 +162,7 @@ class RegisterController extends Controller
             ]);
             $role = Role::where('name', 'SUPER_ADMIN')->first();
             $user->attachRole($role);
+            LAHelper::clearAccessCache();
 
             LALog::make('Employees.EMPLOYEE_CREATED', [
                 'title' => 'Employee '.$employee->name.' Created',
@@ -183,6 +208,7 @@ class RegisterController extends Controller
             ]);
             $customerRole = Role::where('name', 'CUSTOMER')->first();
             $user->attachRole($customerRole);
+            LAHelper::clearAccessCache();
 
             LALog::make('Customers.CUSTOMER_CREATED', [
                 'title' => 'Customer '.$customer->name.' Created',

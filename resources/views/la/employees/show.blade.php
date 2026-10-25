@@ -60,7 +60,7 @@
         <li class=""><a @ajaxload href="{{ url(config('laraadmin.adminRoute') . '/employees') }}" data-toggle="tooltip" data-placement="right" title="@lang('la_employee.back_to_employees')"><i class="fa fa-chevron-left"></i></a></li>
         <li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-info" data-target="#tab-info"><i class="fa fa-bars"></i> @lang('common.general_info')</a></li>
         <li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> @lang('common.timeline')</a></li>
-        @if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
+        @if($employee->id == Auth::user()->context_id || Entrust::hasRole("SUPER_ADMIN"))
             <li class=""><a role="tab" data-toggle="tab" href="#tab-account-settings" data-target="#tab-account-settings"><i class="fa fa-key"></i> @lang('la_employee.account_settings')</a></li>
         @endif
     </ul>

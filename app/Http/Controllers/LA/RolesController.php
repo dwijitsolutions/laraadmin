@@ -10,6 +10,7 @@
 
 namespace App\Http\Controllers\LA;
 
+use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LALog;
 use App\Models\LAModule;
@@ -90,7 +91,14 @@ class RolesController extends Controller
      */
     public function update_role_hierarchy(Request $request)
     {
-        $parents = $request->input('jsonData');
+        if (! LAModule::hasAccess('Roles', 'edit')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
+        $parents = (array) $request->input('jsonData');
         $parent_id = null;
 
         for ($i = 0; $i < count($parents); $i++) {
@@ -129,7 +137,8 @@ class RolesController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.roles.index');
     }
 
     /**
@@ -173,6 +182,7 @@ class RolesController extends Controller
             $role = Role::find($insert_id);
             $perm = Permission::where('name', 'ADMIN_PANEL')->first();
             $role->attachPermission($perm);
+            LAHelper::clearAccessCache();
 
             // Add LALog
             LALog::make('Roles.ROLE_CREATED', [
@@ -247,10 +257,10 @@ class RolesController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('role'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -285,10 +295,10 @@ class RolesController extends Controller
                     'view_col' => $module->view_col,
                 ])->with('role', $role);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('role'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -372,10 +382,10 @@ class RolesController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('role'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -453,6 +463,13 @@ class RolesController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Roles', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Roles');
         $listing_cols = LAModule::getListingColumns('Roles');
 

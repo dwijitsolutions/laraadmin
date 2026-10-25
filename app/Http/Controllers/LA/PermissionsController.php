@@ -10,6 +10,7 @@
 
 namespace App\Http\Controllers\LA;
 
+use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LALog;
 use App\Models\LAModule;
@@ -68,7 +69,8 @@ class PermissionsController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.permissions.index');
     }
 
     /**
@@ -169,10 +171,10 @@ class PermissionsController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('permission'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -207,10 +209,10 @@ class PermissionsController extends Controller
                     'view_col' => $module->view_col,
                 ])->with('permission', $permission);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('permission'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -284,10 +286,10 @@ class PermissionsController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('permission'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -365,6 +367,13 @@ class PermissionsController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Permissions', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Permissions');
         $listing_cols = LAModule::getListingColumns('Permissions');
 
@@ -427,21 +436,23 @@ class PermissionsController extends Controller
             $module->row = $permission;
             $roles = Role::all();
 
+            if (! isset($permission->id)) {
+                return redirect(config('laraadmin.adminRoute').'/permissions');
+            }
+
             foreach ($roles as $role) {
                 $permi_role_id = 'permi_role_'.$role->id;
                 $permission_set = $request->$permi_role_id;
+                $query = DB::table('permission_role')->where('permission_id', $permission->id)->where('role_id', $role->id);
                 if (isset($permission_set)) {
-                    $query = DB::table('permission_role')->where('permission_id', $id)->where('role_id', $role->id);
                     if ($query->count() == 0) {
-                        DB::insert('insert into permission_role (permission_id, role_id) values (?, ?)', [$id, $role->id]);
+                        DB::table('permission_role')->insert(['permission_id' => $permission->id, 'role_id' => $role->id]);
                     }
                 } else {
-                    $query = DB::table('permission_role')->where('permission_id', $id)->where('role_id', $role->id);
-                    if ($query->count() > 0) {
-                        DB::delete('delete from permission_role where permission_id = "'.$id.'" AND role_id = "'.$role->id.'" ');
-                    }
+                    $query->delete();
                 }
             }
+            LAHelper::clearAccessCache();
 
             return redirect(config('laraadmin.adminRoute').'/permissions/'.$id.'#tab-access');
         } else {

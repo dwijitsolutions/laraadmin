@@ -14,8 +14,11 @@ use App\Models\LAMenu;
 use App\Models\LAModule;
 use App\Models\Role;
 use DateTime;
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use User;
@@ -858,6 +861,23 @@ class LAHelper
         }
 
         return true;
+    }
+
+    /**
+     * Clear Entrust's cached roles and permissions.
+     *
+     * Entrust caches each user's roles and each role's permissions on taggable cache stores (Redis, Memcached), and
+     * does not clear them when roles or permissions are attached or detached. Call this after such changes, or they
+     * only apply once the cache expires.
+     *
+     * LAHelper::clearAccessCache();
+     */
+    public static function clearAccessCache()
+    {
+        if (Cache::getStore() instanceof TaggableStore) {
+            Cache::tags(Config::get('entrust.role_user_table'))->flush();
+            Cache::tags(Config::get('entrust.permission_role_table'))->flush();
+        }
     }
 
     /**

@@ -58,13 +58,13 @@ class UsersController extends Controller
                 if ($context->context_type == 'Employee') {
                     return redirect(config('laraadmin.adminRoute').'/employees/'.$context->id.'?_pjax=%23content-wrapper');
                 } elseif ($context->context_type == 'Customer') {
-                    return redirect(config('laraadmin.adminRoute').'/clients/'.$context->id.'?_pjax=%23content-wrapper');
+                    return redirect(config('laraadmin.adminRoute').'/customers/'.$context->id.'?_pjax=%23content-wrapper');
                 }
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('user'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -78,6 +78,13 @@ class UsersController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Users', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Users');
         $listing_cols = LAModule::getListingColumns('Users');
 

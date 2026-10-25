@@ -19,6 +19,7 @@ use App\Models\LAModule;
 use App\Models\LAModuleField;
 use App\Models\LAModuleFieldType;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Schema;
@@ -79,6 +80,9 @@ class LAModuleController extends Controller
     {
         $ftypes = LAModuleFieldType::getFTypes2();
         $module = LAModule::find($id);
+        if (! isset($module->id)) {
+            abort(404);
+        }
         $module = LAModule::get($module->name);
 
         $tables = LAHelper::getDBTables([]);
@@ -138,7 +142,7 @@ class LAModuleController extends Controller
      * Generate Modules CRUDs Views, Controller, Model, Routes, Menu and Set Default Full Access for Super Admin.
      *
      * @param $module_id Module ID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function generate_crud($module_id)
     {
@@ -174,7 +178,7 @@ class LAModuleController extends Controller
      * Generate Module Migrations.
      *
      * @param $module_id Module ID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function generate_migr($module_id)
     {
@@ -193,7 +197,7 @@ class LAModuleController extends Controller
      * for Super Admin.
      *
      * @param $module_id Module ID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function generate_migr_crud($module_id)
     {
@@ -244,7 +248,7 @@ class LAModuleController extends Controller
      * Updates Modules all files except routes.
      *
      * @param $module_id Module ID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function generate_update($module_id)
     {
@@ -284,6 +288,9 @@ class LAModuleController extends Controller
     public function set_view_col($module_id, $column_name)
     {
         $module = LAModule::find($module_id);
+        if (! isset($module->id) || ! LAModuleField::where('module', $module->id)->where('colname', $column_name)->exists()) {
+            abort(404);
+        }
         $module->view_col = $column_name;
         $module->save();
 
@@ -376,7 +383,7 @@ class LAModuleController extends Controller
      *
      * @param Request $request
      * @param $id Module ID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function save_module_field_sort(Request $request, $id)
     {
@@ -396,7 +403,7 @@ class LAModuleController extends Controller
      *
      * @param Request $request
      * @param $module_id Module ID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function get_module_files(Request $request, $module_id)
     {
@@ -520,6 +527,12 @@ class LAModuleController extends Controller
         $fields_req = [];
 
         $module = LAModule::get((int) $module_id);
+        if (! isset($module->id)) {
+            abort(404);
+        }
+        if (! LAModule::hasAccess($module->id, 'create')) {
+            abort(403);
+        }
         $module->quick_add_form = true;
         foreach ($module->fields as $field_name => $field) {
             if ($field['required']) {
@@ -547,24 +560,33 @@ class LAModuleController extends Controller
         $module = LAModule::get((int) $module_id);
 
         if (LAModule::hasAccess($module->name, 'create')) {
-            $request->quick_add = true;
+            $request->merge(['quick_add' => true]);
 
             $response = app('App\Http\Controllers\LA\\'.$module->controller)->store($request);
+            if (! $response instanceof JsonResponse) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Quick add is not supported by '.$module->controller
+                ]);
+            }
 
             $response = $response->getData();
 
-            if (isset($response->status) && $response->status == 'success' && isset($response->insert_id)) {
+            // store() returns the new record as "object" (generated controllers) or its id as "insert_id"
+            $insert_id = $response->object->id ?? $response->insert_id ?? null;
+            if (isset($response->status) && $response->status == 'success' && isset($insert_id)) {
                 $popup_vals = LAFormMaker::process_values($request->popup_vals);
 
                 return response()->json([
                     'status' => 'success',
-                    'insert_id' => $response->insert_id,
+                    'insert_id' => $insert_id,
                     'popup_vals' => $popup_vals
                 ]);
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $response->message
+                    'message' => $response->message ?? 'Error',
+                    'errors' => $response->errors ?? null
                 ]);
             }
         } else {
@@ -585,8 +607,17 @@ class LAModuleController extends Controller
     public function checklist_update(Request $request)
     {
         $module = LAModule::get((int) $request->module_id);
-        $row = DB::table($module->name_db)->where('id', $request->row_id)->first();
         $field = LAModuleField::find($request->module_field_id);
+        if (! isset($module->id) || ! isset($field->id) || $field->module != $module->id) {
+            return response()->json(['status' => 'error', 'message' => 'Field not found'], 404);
+        }
+        if (! LAModule::hasAccess($module->id, 'edit') || ! LAModule::hasFieldAccess($module->id, $field->id, 'write')) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized Access'], 403);
+        }
+        $row = DB::table($module->name_db)->where('id', $request->row_id)->whereNull('deleted_at')->first();
+        if (! isset($row->id)) {
+            return response()->json(['status' => 'error', 'message' => 'Record not found'], 404);
+        }
         $colname = $field->colname;
         $checklists = json_decode($row->$colname);
         $list = [];
@@ -601,5 +632,7 @@ class LAModuleController extends Controller
         }
         $list = json_encode($list);
         DB::table($module->name_db)->where('id', $request->row_id)->update([$colname => $list]);
+
+        return response()->json(['status' => 'success']);
     }
 }

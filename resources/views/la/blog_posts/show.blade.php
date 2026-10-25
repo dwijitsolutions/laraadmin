@@ -124,7 +124,6 @@
                             @la_display($module, 'post_date')
                             @la_display($module, 'excerpt')
                             @la_display($module, 'banner')
-                            @la_display($module, 'gallery')
                             @la_display($module, 'content')
                         </div>
                     </div>
