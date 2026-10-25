@@ -21,13 +21,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Backup\BackupDestination\BackupDestination;
+use Spatie\Backup\Helpers\Format;
 use Yajra\DataTables\DataTables;
 
 class BackupsController extends Controller
 {
     public $show_action = true;
-
-    public $backup_filepath = '/storage/backups/';
 
     /**
      * Display a listing of the Backups.
@@ -73,67 +74,45 @@ class BackupsController extends Controller
             $exitCode = Artisan::call('backup:run');
             $outputStr = Artisan::output();
 
-            if (LAHelper::getLineWithString2($outputStr, 'Copying ') == -1) {
-                if (LAHelper::getLineWithString2($outputStr, 'mysqldump: No such file or directory') != -1) {
-                    return response()->json([
-                        'status' => 'failed',
-                        'message' => 'Configure dump_command_path in config/database.php. Check console for error details.',
-                        'exitCode' => $exitCode,
-                        'output' => $outputStr
-                    ]);
-                }
-
+            // The backup just made is the newest one on the backup disk (config/backup.php)
+            $destination = BackupDestination::create(config('backup.backup.destination.disks')[0], config('backup.backup.name'));
+            $newest = $exitCode == 0 ? $destination->newestBackup() : null;
+            if (! isset($newest)) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Error while creating Backup.',
+                    'message' => LAHelper::getLineWithString2($outputStr, 'mysqldump') != -1
+                        ? 'Configure dump_binary_path in config/database.php. Check console for error details.'
+                        : 'Error while creating Backup.',
                     'exitCode' => $exitCode,
                     'output' => $outputStr
                 ]);
-            } else {
-                $dataStr = LAHelper::getLineWithString2($outputStr, 'Copying ');
-                if (is_string($dataStr)) {
-                    $dataStr = str_replace('Copying ', '', $dataStr);
-                    $dataStr = substr($dataStr, 0, strpos($dataStr, ')'));
-
-                    $file_name = substr($dataStr, 0, strpos($dataStr, '(') - 1);
-                    $name = str_replace('.zip', '', $file_name);
-                    $backup_size = substr($dataStr, strpos($dataStr, '(') + 7);
-
-                    $request->merge([
-                        'name' => $name,
-                        'file_name' => $file_name,
-                        'backup_size' => $backup_size,
-                    ]);
-                    $insert_id = LAModule::insert('Backups', $request);
-
-                    $backup = Backup::find($insert_id);
-
-                    // Add LALog
-                    LALog::make('Backups.BACKUP_CREATED', [
-                        'title' => 'Backup Created',
-                        'module_id' => 'Backups',
-                        'context_id' => $backup->id,
-                        'content' => $backup,
-                        'user_id' => Auth::user()->id,
-                        'notify_to' => '[]'
-                    ]);
-
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Backup successfully created.',
-                        'insert_id' => $insert_id,
-                        'exitCode' => $exitCode,
-                        'output' => $outputStr
-                    ]);
-                } else {
-                    return response()->json([
-                        'status' => 'failed',
-                        'message' => 'Unable to get Backup file name.',
-                        'exitCode' => $exitCode,
-                        'output' => $outputStr
-                    ]);
-                }
             }
+
+            $request->merge([
+                'name' => basename($newest->path(), '.zip'),
+                'file_name' => $newest->path(),
+                'backup_size' => Format::humanReadableSize($newest->sizeInBytes()),
+            ]);
+            $insert_id = LAModule::insert('Backups', $request);
+
+            $backup = Backup::find($insert_id);
+
+            LALog::make('Backups.BACKUP_CREATED', [
+                'title' => 'Backup Created',
+                'module_id' => 'Backups',
+                'context_id' => $backup->id,
+                'content' => $backup,
+                'user_id' => Auth::user()->id,
+                'notify_to' => '[]'
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Backup successfully created.',
+                'insert_id' => $insert_id,
+                'exitCode' => $exitCode,
+                'output' => $outputStr
+            ]);
         } else {
             return response()->json([
                 'status' => 'failed',
@@ -154,9 +133,10 @@ class BackupsController extends Controller
         if (LAModule::hasAccess('Backups', 'delete')) {
             $backup = Backup::find($id);
             if (isset($backup->id)) {
-                $path = str_replace('/storage', '', $this->backup_filepath.$backup->file_name);
-
-                unlink(storage_path($path));
+                $file = $this->backupFile($backup);
+                if (isset($file)) {
+                    $file[0]->delete($file[1]);
+                }
 
                 $backup->delete();
 
@@ -209,6 +189,13 @@ class BackupsController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Backups', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Backups');
         $listing_cols = LAModule::getListingColumns('Backups');
 
@@ -233,7 +220,7 @@ class BackupsController extends Controller
                 if ($col == $module->view_col) {
                     $data->data[$i]->$col = '<a href="'.url(config('laraadmin.adminRoute').'/downloadBackup/'.$data->data[$i]->id).'">'.$data->data[$i]->$col.'</a>';
                 } elseif ($col == 'file_name') {
-                    $data->data[$i]->$col = $this->backup_filepath.$data->data[$i]->$col;
+                    $data->data[$i]->$col = e($data->data[$i]->$col);
                 }
             }
 
@@ -258,18 +245,42 @@ class BackupsController extends Controller
 
     public function downloadBackup($id)
     {
-        $module = LAModule::get('Backups');
-        if (LAModule::hasAccess($module->id)) {
+        // A backup holds the whole database (user accounts included), so viewing the list is not enough
+        if (LAModule::hasAccess('Backups', 'create')) {
             $backup = Backup::find($id);
+            $file = isset($backup->id) ? $this->backupFile($backup) : null;
+            if (! isset($file)) {
+                abort(404);
+            }
 
-            $path = str_replace('/storage', '', $this->backup_filepath.$backup->file_name);
-
-            return response()->download(storage_path($path));
+            return $file[0]->download($file[1], basename($file[1]));
         } else {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'No rights to download Backup.'
-            ]);
+            ], 403);
         }
+    }
+
+    /**
+     * Disk and path of a backup's file, or null when the file is missing.
+     *
+     * Backups are on the disk configured in config/backup.php. Older LaraAdmin versions kept them in storage/backups.
+     *
+     * @param Backup $backup
+     * @return array|null [Filesystem, path]
+     */
+    protected function backupFile($backup)
+    {
+        $disk = Storage::disk(config('backup.backup.destination.disks')[0]);
+        if ($backup->file_name != '' && $disk->exists($backup->file_name)) {
+            return [$disk, $backup->file_name];
+        }
+        $legacy = Storage::build(['driver' => 'local', 'root' => storage_path('backups')]);
+        if ($backup->file_name != '' && $legacy->exists(basename($backup->file_name))) {
+            return [$legacy, basename($backup->file_name)];
+        }
+
+        return null;
     }
 }
