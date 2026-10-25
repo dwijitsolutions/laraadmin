@@ -41,6 +41,11 @@ class LAFormMaker
      */
     public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control', $params = [])
     {
+        // The module has no such field (e.g. it was deleted in Module Manager but a view still uses it)
+        if (! isset($module->fields[$field_name])) {
+            return '';
+        }
+
         // Check Field Write Aceess
         if (LAModule::hasFieldAccess($module->id, $module->fields[$field_name]['id'], $access_type = 'write')) {
             $row = null;
@@ -1224,6 +1229,11 @@ class LAFormMaker
      */
     public static function display($module, $field_name, $display_row = true, $params = [])
     {
+        // The module has no such field (e.g. it was deleted in Module Manager but a view still uses it)
+        if (! isset($module->fields[$field_name])) {
+            return '';
+        }
+
         // Check Field View Access
         if (LAModule::hasFieldAccess($module->id, $module->fields[$field_name]['id'], $access_type = 'view')) {
             $fieldObj = $module->fields[$field_name];
