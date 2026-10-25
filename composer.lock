@@ -1063,16 +1063,16 @@
         },
         {
             "name": "laraadmin/entrust",
-            "version": "7.0.0",
+            "version": "7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laraadmin/entrust.git",
-                "reference": "8fdb0f8a47f891e081c5e704633470a2fbb09471"
+                "reference": "030ddb09de08f3c714f2c0026172c8f124c04629"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laraadmin/entrust/zipball/8fdb0f8a47f891e081c5e704633470a2fbb09471",
-                "reference": "8fdb0f8a47f891e081c5e704633470a2fbb09471",
+                "url": "https://api.github.com/repos/laraadmin/entrust/zipball/030ddb09de08f3c714f2c0026172c8f124c04629",
+                "reference": "030ddb09de08f3c714f2c0026172c8f124c04629",
                 "shasum": ""
             },
             "require": {
@@ -1141,9 +1141,9 @@
                 "roles"
             ],
             "support": {
-                "source": "https://github.com/laraadmin/entrust/tree/7.0.0"
+                "source": "https://github.com/laraadmin/entrust/tree/7.0.1"
             },
-            "time": "2026-10-24T08:43:31+00:00"
+            "time": "2026-10-25T03:51:30+00:00"
         },
         {
             "name": "laraadmin/html",
