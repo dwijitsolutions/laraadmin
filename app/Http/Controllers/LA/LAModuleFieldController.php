@@ -113,8 +113,16 @@ class LAModuleFieldController extends Controller
 
         // Get Field
         $field = LAModuleField::find($field_id);
+        if (! isset($field->id) || ! $field->unique) {
+            return response()->json(['status' => 'error', 'message' => 'Unique field not found'], 404);
+        }
         // Get Module
         $module = LAModule::find($field->module);
+
+        // Used by the add / edit forms
+        if (! LAModule::hasAccess($module->id, 'create') && ! LAModule::hasAccess($module->id, 'edit')) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized Access'], 403);
+        }
 
         // echo $module->name_db." ".$field->colname." ".$request->field_value;
         $rowCount = DB::table($module->name_db)->where($field->colname, $request->field_value)->where('id', '!=', $request->row_id)->whereNull('deleted_at')->count();

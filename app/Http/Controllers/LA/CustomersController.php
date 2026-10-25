@@ -13,6 +13,7 @@ namespace App\Http\Controllers\LA;
 use App\Helpers\LAHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\LAConfig;
 use App\Models\LALog;
 use App\Models\LAModule;
 use App\Models\LAModuleField;
@@ -71,7 +72,8 @@ class CustomersController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.customers.index');
     }
 
     /**
@@ -118,7 +120,7 @@ class CustomersController extends Controller
             // Create User
             if (isset($request->create_user)) {
                 // Check if User Already Present
-                if (User::where('email', $request->email_primary)->first()) {
+                if (! User::where('email', $request->email_primary)->exists()) {
                     // generate password
                     $password = LAHelper::gen_password();
 
@@ -132,6 +134,7 @@ class CustomersController extends Controller
                     // attach customer role
                     $role = Role::where('name', 'CUSTOMER')->first();
                     $user->attachRole($role);
+                    LAHelper::clearAccessCache();
 
                     // Add LALog
                     LALog::make('Users.USER_CREATED', [
@@ -146,8 +149,8 @@ class CustomersController extends Controller
                     if (LAHelper::is_mail()) {
                         // Send mail to User his Password
                         Mail::send('emails.send_login_cred', ['user' => $user, 'password' => $password], function ($m) use ($user) {
-                            $m->from('hello@laraadmin.com', 'LaraAdmin');
-                            $m->to($user->email, $user->name)->subject('LaraAdmin - Your Login Credentials');
+                            $m->from(LAConfig::getByKey('default_email'), LAConfig::getByKey('sitename'));
+                            $m->to($user->email, $user->name)->subject(LAConfig::getByKey('sitename').' - Your Login Credentials');
                         });
                     } else {
                         Log::info('User created: username: '.$user->email.' Password: '.$password);
@@ -209,10 +212,10 @@ class CustomersController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('customer'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -247,10 +250,10 @@ class CustomersController extends Controller
                     'view_col' => $module->view_col,
                 ])->with('customer', $customer);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('customer'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -347,10 +350,10 @@ class CustomersController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('customer'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -444,6 +447,13 @@ class CustomersController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Customers', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Customers');
         $listing_cols = LAModule::getListingColumns('Customers');
 

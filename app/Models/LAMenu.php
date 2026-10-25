@@ -12,7 +12,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Laraadmin\Entrust\EntrustFacade as Entrust;
 
 /***
  * LaraAdmin Menu
@@ -40,19 +39,8 @@ class LAMenu extends Model
      */
     public function has_role_access($role_id)
     {
-        if (! Entrust::hasRole('SUPER_ADMIN')) {
-            $role_id = intval($role_id);
-            $roles = $this->roles;
-            foreach ($roles as $role) {
-                if ($role_id == $role->id) {
-                    return true;
-                }
-            }
-
-            return false;
-        } else {
-            return true;
-        }
+        // Whether the role is given this menu (Super Admins see every menu: see user_access())
+        return $this->roles()->where('roles.id', intval($role_id))->exists();
     }
 
     /**
@@ -115,6 +103,9 @@ class LAMenu extends Model
         if ($this->type == 'custom') {
             $access = false;
             $user = User::find($user_id);
+            if ($user->hasRole('SUPER_ADMIN')) {
+                return true;
+            }
             foreach ($user->roles as $role) {
                 if ($this->has_role_access($role->id)) {
                     $access = true;

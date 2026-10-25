@@ -63,10 +63,7 @@ class UploadsController extends Controller
 
         // Validate Upload Hash & Filename
         if (! isset($upload->id) || $upload->name != $name) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Unauthorized Access 1'
-            ]);
+            abort(404);
         }
 
         if ($upload->public == 1) {
@@ -77,10 +74,7 @@ class UploadsController extends Controller
 
         // Validate if Image is Public
         if (! $upload->public && ! isset(Auth::user()->id)) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Unauthorized Access 2',
-            ]);
+            abort(403);
         }
 
         if ($upload->public || Entrust::hasRole('SUPER_ADMIN') || Auth::user()->id == $upload->user_id) {
@@ -110,20 +104,19 @@ class UploadsController extends Controller
             $file = File::get($path);
             $type = File::mimeType($path);
 
+            // Files a browser would run as a page (HTML, SVG, XML) are only downloaded, never shown inline
             $download = $request->input('download');
-            if (isset($download)) {
+            if (isset($download) || in_array($type, ['text/html', 'application/xhtml+xml', 'image/svg+xml', 'text/xml', 'application/xml'], true)) {
                 return response()->download($path, $upload->name);
             } else {
                 $response = FacadeResponse::make($file, 200);
                 $response->header('Content-Type', $type);
+                $response->header('X-Content-Type-Options', 'nosniff');
             }
 
             return $response;
         } else {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Unauthorized Access 3'
-            ]);
+            abort(403);
         }
     }
 
@@ -333,7 +326,14 @@ class UploadsController extends Controller
     {
         if (LAModule::hasAccess('Uploads', 'edit')) {
             $file_id = $request->input('file_id');
-            $filename = $request->input('filename');
+            // A plain file name: the file must stay in the uploads folder
+            $filename = trim(basename(str_replace('\\', '/', (string) $request->input('filename'))));
+            if ($filename === '' || $filename === '.' || $filename === '..') {
+                return response()->json([
+                    'status' => 'failure',
+                    'message' => 'Invalid file name'
+                ]);
+            }
 
             $upload_old = Upload::find($file_id);
             $upload = Upload::find($file_id);
@@ -499,6 +499,10 @@ class UploadsController extends Controller
 
     public function update_local_upload_paths()
     {
+        if (! LAModule::hasAccess('Uploads', 'edit')) {
+            return redirect(config('laraadmin.adminRoute').'/');
+        }
+
         Upload::update_local_upload_paths();
 
         return redirect(config('laraadmin.adminRoute').'/uploads');

@@ -29,8 +29,8 @@ Route::group([
     'middleware' => ['web', 'auth', 'permission:ADMIN_PANEL', 'role:SUPER_ADMIN']
 ], function () {
     /* ================== Modules ================== */
-    Route::resource(config('laraadmin.adminRoute').'/la_modules', 'LAModuleController');
-    Route::resource(config('laraadmin.adminRoute').'/la_module_fields', 'LAModuleFieldController');
+    Route::resource(config('laraadmin.adminRoute').'/la_modules', 'LAModuleController')->except(['create', 'edit']);
+    Route::resource(config('laraadmin.adminRoute').'/la_module_fields', 'LAModuleFieldController')->except(['index', 'create', 'show']);
     Route::get(config('laraadmin.adminRoute').'/la_modules/generate_crud/{model_id}', 'LAModuleController@generate_crud');
     Route::get(config('laraadmin.adminRoute').'/la_modules/generate_migr/{model_id}', 'LAModuleController@generate_migr');
     Route::get(config('laraadmin.adminRoute').'/la_modules/generate_update/{model_id}', 'LAModuleController@generate_update');
@@ -60,16 +60,16 @@ Route::group([
         $commitComment = trim(exec('git log -n1 HEAD'));
         $commitDate = trim(exec('git log --pretty="%cd" -n1 HEAD'));
 
-        echo '<b>Last Commit: </b>'.$commitHash.' - '.$commitComment.' - '.$commitDate;
+        return '<b>Last Commit: </b>'.e($commitHash).' - '.e($commitComment).' - '.e($commitDate);
     });
 
     /* ================== Menu Editor ================== */
-    Route::resource(config('laraadmin.adminRoute').'/la_menus', 'LAMenuController');
+    Route::resource(config('laraadmin.adminRoute').'/la_menus', 'LAMenuController')->except(['create', 'edit']);
     Route::post(config('laraadmin.adminRoute').'/la_menus/update_hierarchy', 'LAMenuController@update_hierarchy');
     Route::post(config('laraadmin.adminRoute').'/la_menus_save_role_permissions/{id}', 'LAMenuController@la_menus_save_role_permissions');
 
     /* ================== Configuration ================== */
-    Route::resource(config('laraadmin.adminRoute').'/la_configs', 'LAConfigController');
+    Route::resource(config('laraadmin.adminRoute').'/la_configs', 'LAConfigController')->except(['create', 'show']);
     Route::post(config('laraadmin.adminRoute').'/la_configs/edit_save/{id}', 'LAConfigController@edit_save');
     Route::get(config('laraadmin.adminRoute').'/la_configs/ajax_destroy/{id}', 'LAConfigController@ajax_destroy');
 });
@@ -104,16 +104,16 @@ Route::group([
     Route::get(config('laraadmin.adminRoute').'/dashboard', 'DashboardController@index');
 
     /* ================== LALogs ================== */
-    Route::resource(config('laraadmin.adminRoute').'/la_logs', 'LALogsController');
+    Route::resource(config('laraadmin.adminRoute').'/la_logs', 'LALogsController')->only(['index', 'show']);
     Route::get(config('laraadmin.adminRoute').'/la_log_dt_ajax', 'LALogsController@dtajax');
     Route::post(config('laraadmin.adminRoute').'/get_lalog_details/{id}', 'LALogsController@get_lalog_details');
 
     /* ================== Users ================== */
-    Route::resource(config('laraadmin.adminRoute').'/users', 'UsersController');
+    Route::resource(config('laraadmin.adminRoute').'/users', 'UsersController')->only(['index', 'show']);
     Route::get(config('laraadmin.adminRoute').'/user_dt_ajax', 'UsersController@dtajax');
 
     /* ================== Uploads ================== */
-    Route::resource(config('laraadmin.adminRoute').'/uploads', 'UploadsController');
+    Route::resource(config('laraadmin.adminRoute').'/uploads', 'UploadsController')->only(['index']);
     Route::post(config('laraadmin.adminRoute').'/upload_files', 'UploadsController@upload_files');
     Route::get(config('laraadmin.adminRoute').'/uploaded_files', 'UploadsController@uploaded_files');
     Route::post(config('laraadmin.adminRoute').'/uploads_update_caption', 'UploadsController@update_caption');
@@ -148,7 +148,7 @@ Route::group([
     Route::get(config('laraadmin.adminRoute').'/customer_dt_ajax', 'CustomersController@dtajax');
 
     /* ================== Backups ================== */
-    Route::resource(config('laraadmin.adminRoute').'/backups', 'BackupsController');
+    Route::resource(config('laraadmin.adminRoute').'/backups', 'BackupsController')->only(['index', 'destroy']);
     Route::get(config('laraadmin.adminRoute').'/backup_dt_ajax', 'BackupsController@dtajax');
     Route::post(config('laraadmin.adminRoute').'/create_backup_ajax', 'BackupsController@create_backup_ajax');
     Route::get(config('laraadmin.adminRoute').'/downloadBackup/{id}', 'BackupsController@downloadBackup');

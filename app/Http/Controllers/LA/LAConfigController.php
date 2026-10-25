@@ -315,10 +315,10 @@ class LAConfigController extends Controller
                 'sections' => $sections
             ]);
         } else {
-            return view('errors.404', [
+            return response()->view('errors.404', [
                 'record_id' => $id,
                 'record_name' => 'Configuration',
-            ]);
+            ], 404);
         }
     }
 
@@ -389,10 +389,10 @@ class LAConfigController extends Controller
 
             return redirect(config('laraadmin.adminRoute').'/la_configs#tab-'.$request->section);
         } else {
-            return view('errors.404', [
+            return response()->view('errors.404', [
                 'record_id' => $id,
                 'record_name' => 'Configuration',
-            ]);
+            ], 404);
         }
     }
 }

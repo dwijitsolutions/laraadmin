@@ -566,9 +566,8 @@ class LAModuleField extends Model
         Schema::table($module->name_db, function ($table) use ($field, $module) {
             Schema::disableForeignKeyConstraints();
 
-            if (strpos($field->popup_vals, '@') !== false) {
-                // TODO: SQLite Foreign Keys - does not dropForeign
-                // https://laravel.com/docs/5.7/upgrade
+            // File / Image fields reference uploads too, not only "@table" Dropdowns
+            if (LAModule::hasForeignKey($table, $field->colname)) {
                 $table->dropForeign([$field->colname]);
             }
 

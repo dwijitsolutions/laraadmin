@@ -27,7 +27,7 @@ use Illuminate\Support\Str;
  */
 class CodeGenerator
 {
-    public static $default_file_access = 0777;
+    public static $default_file_access = 0644;
 
     /**
      * Generate Controller file.

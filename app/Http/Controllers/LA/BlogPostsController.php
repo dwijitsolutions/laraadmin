@@ -67,7 +67,8 @@ class BlogPostsController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.blog_posts.index');
     }
 
     /**
@@ -165,10 +166,10 @@ class BlogPostsController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('blog_post'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -203,10 +204,10 @@ class BlogPostsController extends Controller
                     'view_col' => $module->view_col,
                 ])->with('blog_post', $blog_post);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('blog_post'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -280,10 +281,10 @@ class BlogPostsController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('blog_post'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -361,6 +362,13 @@ class BlogPostsController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Blog_posts', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Blog_posts');
         $listing_cols = LAModule::getListingColumns('Blog_posts');
 
@@ -435,10 +443,11 @@ class BlogPostsController extends Controller
     public function show_category($url)
     {
         $category = BlogCategory::where('url', $url)->first();
-        $posts = BlogPost::where('status', 'Published')->where('category_id', $category->id)->orderBy('post_date', 'desc')->get();
-        $recent_posts = BlogPost::where('status', 'Published')->orderBy('post_date', 'desc')->limit(3)->get();
-        $categories = BlogCategory::all();
         if (isset($category->id)) {
+            $posts = BlogPost::where('status', 'Published')->where('category_id', $category->id)->orderBy('post_date', 'desc')->get();
+            $recent_posts = BlogPost::where('status', 'Published')->orderBy('post_date', 'desc')->limit(3)->get();
+            $categories = BlogCategory::all();
+
             return view('blog.category', [
                 'category' => $category,
                 'posts' => $posts,
@@ -446,10 +455,10 @@ class BlogPostsController extends Controller
                 'categories' => $categories
             ]);
         } else {
-            return view('errors.404', [
+            return response()->view('errors.404', [
                 'record_id' => $url,
                 'record_name' => ucfirst('blog category'),
-            ]);
+            ], 404);
         }
     }
 
@@ -460,7 +469,8 @@ class BlogPostsController extends Controller
      */
     public function show_post($url)
     {
-        $post = BlogPost::where('url', $url)->first();
+        // Drafts are not public
+        $post = BlogPost::where('url', $url)->where('status', 'Published')->first();
         if (isset($post->id)) {
             $recent_posts = BlogPost::where('status', 'Published')->orderBy('post_date', 'desc')->limit(3)->get();
 
@@ -469,10 +479,10 @@ class BlogPostsController extends Controller
                 'recent_posts' => $recent_posts
             ]);
         } else {
-            return view('errors.404', [
+            return response()->view('errors.404', [
                 'record_id' => $url,
                 'record_name' => ucfirst('blog post'),
-            ]);
+            ], 404);
         }
     }
 }

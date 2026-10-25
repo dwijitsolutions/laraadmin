@@ -74,7 +74,8 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.employees.index');
     }
 
     /**
@@ -130,11 +131,10 @@ class EmployeesController extends Controller
             ]);
 
             // update user role
-            $roles = (array) $request->{'role[]'};
-            foreach ($roles as $role) {
-                $role = Role::find($role);
+            foreach ($this->formRoles($request) as $role) {
                 $user->attachRole($role);
             }
+            LAHelper::clearAccessCache();
 
             LALog::make('Users.USER_CREATED', [
                 'title' => 'User '.$user->name.' Created',
@@ -212,10 +212,10 @@ class EmployeesController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('employee'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -254,10 +254,10 @@ class EmployeesController extends Controller
                     'user' => $user,
                 ])->with('employee', $employee);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('employee'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -315,20 +315,26 @@ class EmployeesController extends Controller
                 ]);
 
                 // Update User
-                $user_old = User::get($id, 'Employee');
                 $user = User::get($id, 'Employee');
+                if (! isset($user->id)) {
+                    // Before 1.13.1 saving this form removed all roles, so look the user up without them
+                    $user = User::where('context_id', $id)->where('email', $employee_old->email_primary)->first();
+                }
+                $user_old = clone $user;
                 $user->name = $request->name;
                 $user->email = $request->email_primary;
                 $user->save();
 
-                // update user role
+                // Update user roles. The form never offers Super Admin, so keep it if the user has it.
+                $isSuperAdmin = $user->hasRole('SUPER_ADMIN');
                 $user->detachRoles();
-                $key = 'role[]';
-                $roles = (array) $request->{'role[]'};
-                foreach ($roles as $role) {
-                    $role = Role::find($role);
+                foreach ($this->formRoles($request) as $role) {
                     $user->attachRole($role);
                 }
+                if ($isSuperAdmin) {
+                    $user->attachRole(Role::where('name', 'SUPER_ADMIN')->first());
+                }
+                LAHelper::clearAccessCache();
 
                 LALog::make('Users.USER_UPDATED', [
                     'title' => 'User '.$user->name.' Updated',
@@ -359,10 +365,10 @@ class EmployeesController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('employee'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -454,6 +460,13 @@ class EmployeesController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Employees', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Employees');
         $listing_cols = LAModule::getListingColumns('Employees');
 
@@ -515,12 +528,36 @@ class EmployeesController extends Controller
     }
 
     /**
+     * Employee roles chosen in the add / edit form ("role[]", sent as "role"). Super Admin can't be given here.
+     *
+     * @param Request $request
+     * @return \Illuminate\Support\Collection
+     */
+    private function formRoles(Request $request)
+    {
+        return Role::whereIn('id', (array) $request->input('role'))
+            ->where('context_type', 'Employee')
+            ->where('name', '!=', 'SUPER_ADMIN')
+            ->get();
+    }
+
+    /**
      * Change Employee Password.
      *
      * @return
      */
     public function change_password($id, Request $request)
     {
+        $employee = Employee::find($id);
+        $user = isset($employee->id) ? User::get($employee->id, 'Employee') : null;
+        if (! isset($user->id)) {
+            return redirect(config('laraadmin.adminRoute').'/employees');
+        }
+        // Only the employee themself or a Super Admin may change the password (as on the employee page)
+        if ($user->id != Auth::id() && ! Auth::user()->hasRole('SUPER_ADMIN')) {
+            return redirect(config('laraadmin.adminRoute').'/');
+        }
+
         $validator = Validator::make($request->all(), [
             'password' => 'required|min:6',
             'password_confirmation' => 'required|min:6|same:password'
@@ -530,8 +567,6 @@ class EmployeesController extends Controller
             return Redirect::to(config('laraadmin.adminRoute').'/employees/'.$id)->withErrors($validator);
         }
 
-        $employee = Employee::find($id);
-        $user = User::get($employee->id, 'Employee');
         $user->password = bcrypt($request->password);
         $user->save();
 

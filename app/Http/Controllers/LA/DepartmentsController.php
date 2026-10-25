@@ -66,7 +66,8 @@ class DepartmentsController extends Controller
      */
     public function create()
     {
-        //
+        // Records are added from the index page
+        return redirect()->route(config('laraadmin.adminRoute').'.departments.index');
     }
 
     /**
@@ -164,10 +165,10 @@ class DepartmentsController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('department'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -202,10 +203,10 @@ class DepartmentsController extends Controller
                     'view_col' => $module->view_col,
                 ])->with('department', $department);
             } else {
-                return view('errors.404', [
+                return response()->view('errors.404', [
                     'record_id' => $id,
                     'record_name' => ucfirst('department'),
-                ]);
+                ], 404);
             }
         } else {
             return redirect(config('laraadmin.adminRoute').'/');
@@ -279,10 +280,10 @@ class DepartmentsController extends Controller
                         'message' => 'Record not found'
                     ], 404);
                 } else {
-                    return view('errors.404', [
+                    return response()->view('errors.404', [
                         'record_id' => $id,
                         'record_name' => ucfirst('department'),
-                    ]);
+                    ], 404);
                 }
             }
         } else {
@@ -360,6 +361,13 @@ class DepartmentsController extends Controller
      */
     public function dtajax(Request $request)
     {
+        if (! LAModule::hasAccess('Departments', 'view')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized Access'
+            ], 403);
+        }
+
         $module = LAModule::get('Departments');
         $listing_cols = LAModule::getListingColumns('Departments');
 

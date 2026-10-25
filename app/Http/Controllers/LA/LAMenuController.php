@@ -102,7 +102,7 @@ class LAMenuController extends Controller
      */
     public function show($id)
     {
-        $menu = LAMenu::find($id);
+        $menu = LAMenu::findOrFail($id);
         $roles = Role::all();
 
         return view('la.la_menus.show', [
@@ -127,7 +127,7 @@ class LAMenuController extends Controller
         $icon = $request->input('icon');
         $type = $request->input('type');
 
-        $menu = LAMenu::find($id);
+        $menu = LAMenu::findOrFail($id);
         $menu->name = $name;
         $menu->url = $url;
         $menu->icon = $icon;
@@ -144,7 +144,7 @@ class LAMenuController extends Controller
      */
     public function destroy($id)
     {
-        LAMenu::find($id)->delete();
+        LAMenu::findOrFail($id)->delete();
 
         // Redirecting to index() method for Listing
         return redirect()->route(config('laraadmin.adminRoute').'.la_menus.index');
