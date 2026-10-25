@@ -1,8 +1,8 @@
 # Engineering Debt
 
-Known issues and follow-ups in LaraAdmin 1.13.0 (Laravel 13, PHP 8.4). Unless noted, each item
+Known issues and follow-ups in LaraAdmin 1.13 (Laravel 13, PHP 8.4). Unless noted, each item
 **predates the Laravel 13 upgrade** and behaves the same on 1.1.0 / Laravel 8. Line numbers refer to
-1.13.0.
+1.13.0 for items 1.1–3.2 and to 1.13.1 for later ones. Items fixed in 1.13.1 keep their number, marked as fixed.
 
 Each item has: what happens, why, a suggested fix, and the risk of the fix.
 
@@ -25,70 +25,28 @@ Each item has: what happens, why, a suggested fix, and the risk of the fix.
 - **Test:** `tests/Feature/ModuleSchemaTest.php` excludes `multiselect` from the unchanged-save
   comparison. Remove that exclusion once fixed.
 
-### 1.2 Resource routes for controller methods that don't exist (18 routes return 500)
+### 1.2 Resource routes for controller methods that don't exist (fixed in 1.13.1)
 
-- **What happens:** `GET` to these routes throws "Method ... does not exist" (HTTP 500):
+`routes/admin.php` limits each resource to the actions its controller implements; the routes that returned 500 no
+longer exist. Generated controllers' empty `create()` now redirects to the module's index page.
 
-  | Route (under `/admin`) | Missing method |
-  |---|---|
-  | `backups/create`, `backups/{id}`, `backups/{id}/edit` | `create`, `show`, `edit` |
-  | `la_configs/create`, `la_configs/{id}` | `create`, `show` |
-  | `la_logs/create`, `la_logs/{id}/edit` | `create`, `edit` |
-  | `la_menus/create`, `la_menus/{id}/edit` | `create`, `edit` |
-  | `la_module_fields`, `la_module_fields/create`, `la_module_fields/{id}` | `index`, `create`, `show` |
-  | `la_modules/create`, `la_modules/{id}/edit` | `create`, `edit` |
-  | `uploads/create`, `uploads/{id}`, `uploads/{id}/edit` | `create`, `show`, `edit` |
-  | `users/create`, `users/{id}/edit` | `create`, `edit` |
+### 1.3 Blog post page shows a `gallery` field that the module doesn't have (fixed in 1.13.1)
 
-- **Why:** `routes/admin.php` registers full `Route::resource(...)` routes, but these controllers only
-  implement some of the actions. Creation happens in modals that post to `store`.
-- **Suggested fix:** limit each resource to the implemented actions, e.g.
-  `Route::resource(...)->only(['index', 'store', 'update', 'destroy'])`, so missing actions return
-  404 instead of 500. Check each controller's actual methods first. `AdminSmokeTest` can then assert
-  404s.
-- **Risk:** low. It removes routes that never worked. Search views for `route('admin.<x>.create')`
-  and similar named-route references before removing names.
+The line is removed, and `LAFormMaker::display()` / `input()` render nothing for a field the module doesn't have.
 
-### 1.3 Blog post page shows a `gallery` field that the module doesn't have
+### 1.4 Blog category page crashes for an unknown category (fixed in 1.13.1)
 
-- **What happens:** `/admin/blog_posts/{id}` returns 500 with `Undefined array key "gallery"`.
-- **Why:** `resources/views/la/blog_posts/show.blade.php:127` has `@la_display($module, 'gallery')`, but
-  the Blog_posts module (`database/migrations/2017_11_20_063206_create_blog_posts_table.php`) has no
-  `gallery` field. `LAFormMaker::display()` (`app/Helpers/LAFormMaker.php:1228`) indexes
-  `$module->fields[$field_name]` without checking that it exists.
-- **Suggested fix:** remove the line (or add the field to the module). Optionally make
-  `LAFormMaker::display()` and `input()` return an empty string or throw a clear exception for unknown
-  fields.
+Unknown blog categories and posts return 404; draft posts are not public.
 
-### 1.4 Blog category page crashes for an unknown category
+### 1.5 Module search (`/admin/find/{module}`) cannot work (partly fixed in 1.13.1)
 
-- **What happens:** `/category/{url}` returns 500 (`Attempt to read property "id" on null`) when no
-  category matches.
-- **Why:** `BlogPostsController::show_category()` (`app/Http/Controllers/LA/BlogPostsController.php:438`)
-  uses `$category->id` in a query before its `isset($category->id)` check.
-- **Suggested fix:** use `BlogCategory::where('url', $url)->firstOrFail()` (404), or move the check up.
-  Look for the same pattern in `show_post()`.
+`SearchController::find()` no longer crashes: it returns 404 for unknown modules and for modules whose model doesn't
+use Laravel Scout's `Searchable`, and 403 without view access. Search itself still needs Scout: add
+`laravel/scout`, a driver and the `Searchable` trait to the models to enable the navbar search box.
 
-### 1.5 Module search (`/admin/find/{module}`) cannot work
+### 1.6 Password confirmation page has no layout (fixed in 1.13.1)
 
-- **What happens:** 500 for any module name. The admin header's search box calls this route
-  (`resources/views/la/layouts/partials/mainheader.blade.php:74`), so header search is broken.
-- **Why:** `SearchController::find()` (`app/Http/Controllers/LA/SearchController.php`):
-  - dereferences `LAModule::get()` without a null check;
-  - looks up `Roles`/`Users`/`Permissions` models in `\App\` instead of `\App\Models\`;
-  - calls `Model::search()`, which needs Laravel Scout. Scout isn't installed and no model uses
-    `Searchable`. The models do define `searchableAs()`.
-- **Suggested fix:** decide whether to support search. Either add `laravel/scout` with a driver and
-  the `Searchable` trait (plus fix the namespace and null check), or remove the route, controller and
-  `searchableAs()` methods together with the header search box.
-
-### 1.6 Password confirmation page has no layout
-
-- **What happens:** `/password/confirm` returns 500 (`View [layouts.app] not found`).
-- **Why:** `resources/views/auth/passwords/confirm.blade.php` comes from laravel/ui scaffolding and
-  extends `layouts.app`, which LaraAdmin doesn't ship. The other auth views use LaraAdmin's own layout.
-- **Suggested fix:** port the view to LaraAdmin's auth layout (as `auth/login.blade.php` does), or
-  remove the route if `password.confirm` isn't used.
+`auth/passwords/confirm.blade.php` uses LaraAdmin's auth layout.
 
 ### 1.7 `la:crud` doesn't grant Super Admin access to the generated module
 
@@ -109,6 +67,39 @@ Each item has: what happens, why, a suggested fix, and the risk of the fix.
 - **Suggested fix:** remove the module's block (the generated block between its `// <Module>` comment
   and the next entry) in `deleteModule()`. Make sure the `// More LALogs Configurations - Do not edit
   this line` marker stays intact.
+
+### 1.9 Required fields are only validated when they are sent
+
+- **What happens:** `LAModule::validateRules()` (`app/Models/LAModule.php`) adds rules only for fields present in
+  the request. Leaving a required field out of the request skips its `required` rule, so a record can be added
+  without it (for example quick add of a Department without a name).
+- **Why not fixed in 1.13.1:** sites may have customised Add forms that leave a required field out on purpose (and
+  rely on the column default). Enforcing it could break them in a patch release.
+- **Suggested fix:** when adding a record, require every required field the user may write
+  (`hasFieldAccess(..., 'write')`). Check the sites' Add forms first.
+
+### 1.10 Customer edit form's "Create user" checkbox does nothing
+
+- **What happens:** `CustomersController::update()` ignores `create_user`; a login user can only be created when the
+  customer is added.
+- **Suggested fix:** share the user creation code of `store()` and run it from `update()` when the customer has no
+  user yet.
+
+### 1.11 Field access uses only the first role that grants module access
+
+- **What happens:** `LAModule::hasFieldAccess()` stops at the first of the user's roles with access to the module
+  and uses that role's field access, even if another of the user's roles allows more.
+- **Suggested fix:** check the field access of every role that grants module access and return the highest.
+
+### 1.12 Bugs found while migrating sites to 1.13
+
+Sites carry their own fixes for these until they are fixed here:
+
+- The HTML field type is `VARCHAR(10000)`. Several HTML fields in one table exceed MySQL's row size in utf8mb4, and
+  converting existing `TEXT` content would truncate it. Use `TEXT` (as LaraAdmin Plus did).
+- `CodeGenerator::appendRoutes()` / `appendObservers()` and the migration lookup in `generateMigration()` decide
+  "already present" by substring: generating `Categories` or `Posts` is skipped when `BlogCategories` /
+  `BlogPosts` exist, and `Page` matches the "Ajax Page Load" comment in `LAProvider`.
 
 ## 2. Security
 
@@ -150,6 +141,38 @@ Each item has: what happens, why, a suggested fix, and the risk of the fix.
   Laravel 13 recommends `json`.
 - **Suggested fix:** switch to `json` in a later release. This logs everyone out once.
 
+### 2.4 Users who manage employees can give any role but Super Admin
+
+- **What:** a role with create / edit access to Employees can assign any Employee role, including roles with more
+  access than its own (1.13.1 already blocks `SUPER_ADMIN`).
+- **Suggested fix:** only offer and accept roles at or below the acting user's roles in the role hierarchy.
+
+### 2.5 Generated passwords are written to the log
+
+- **What:** when mail isn't configured (`LAHelper::is_mail()`), adding an employee or customer and changing an
+  employee's password write the plain password to the log (`Log::info(... Password: ...)`).
+- **Suggested fix:** show the password once to the admin instead, or send a password reset link; never log it.
+
+### 2.6 "Generate Migration + CRUD" gives every role full access
+
+- **What:** `LAModuleController::generate_migr_crud()` gives every role, Customers included, full access to the new
+  module and its menu. "Generate CRUD" gives it to Super Admin only.
+- **Suggested fix:** grant Super Admin only, as `generate_crud()` does, and let the admin grant other roles.
+
+### 2.7 Uploads accept any file type
+
+- **What:** `UploadsController::upload_files()` has no type or size validation (the rules are commented out). Since
+  1.13.1, HTML, SVG and XML files are always downloaded rather than shown inline, and files can't be renamed out of
+  `storage/uploads`.
+- **Suggested fix:** validate against a configurable list of extensions and a maximum size.
+
+### 2.8 Entrust doesn't clear its cache when roles or permissions change
+
+- **What:** on taggable caches (Redis, Memcached) laraadmin/entrust caches each user's roles and each role's
+  permissions, but `attachRole()` / `detachRole()` / `attachPermission()` / `detachPermission()` don't clear them.
+- **Workaround in 1.13.1:** LaraAdmin calls `LAHelper::clearAccessCache()` after each change it makes.
+- **Suggested fix:** clear the cache in those Entrust methods (laraadmin/entrust 7.0.1), then drop the workaround.
+
 ## 3. Decisions pending
 
 ### 3.1 Currency column type
@@ -176,12 +199,8 @@ These areas are not covered by automated tests or the HTTP crawl:
 - **In-browser behaviour:** DataTables rendering, select2, the upload dropzone, menu drag and drop
   (nestable), Module Manager modals and field sorting, pjax navigation. Server responses are tested;
   the JavaScript running against them isn't.
-- **Backups:** creating and downloading a backup (`BackupsController::create_backup_ajax` →
-  `backup:run`) with spatie/laravel-backup 10. It needs `mysqldump` on the host. The app has no
-  `config/backup.php`, so package defaults apply. Publish and review it.
-- **File uploads:** upload, public/private toggle and `files/{hash}/{name}` downloads.
-- **Mail:** employee/customer credential mails and the inquiry form through a real mailer (Symfony
-  Mailer replaced SwiftMailer in Laravel 9).
+- **Mail:** credential mails through a real mailer (Symfony Mailer replaced SwiftMailer in Laravel 9). Tests use
+  the array mailer.
 - **MariaDB:** only MySQL 8.0 was tested. JSON field defaults use an expression default (needs MySQL
   8.0.13+ / MariaDB 10.2+).
 
